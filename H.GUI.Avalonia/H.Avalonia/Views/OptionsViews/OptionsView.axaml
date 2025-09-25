@@ -30,7 +30,7 @@
 			<Border BorderBrush="LightGray"
                  BorderThickness="1">
 				<StackPanel  Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}">
-					<ListBox SelectionMode="Single" Margin="5,0" SelectedItem="{Binding Path=SelectedItem}">
+					<ListBox SelectionMode="Single" Margin="5,0" SelectedItem="{Binding Path=SelectedItem}" IsEnabled="{Binding AllowNavigation}">
 
 						<ListBoxItem Margin="-5, 0" IsEnabled="False" >
 							<TextBlock Foreground="Black" FontWeight="Bold" Text="File"/>
@@ -67,7 +67,7 @@
                 Height="100">
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center"
                         Margin="20,0">
-				<Button Content="Go Back" Classes="back-button" Command="{Binding OnCancelExecute}"  HorizontalAlignment="Center" Margin="10" />
+				<Button Content="Go Back" Classes="back-button" Command="{Binding OnCancelExecute}" IsEnabled="{Binding AllowNavigation}"  HorizontalAlignment="Center" Margin="10" />
 			</StackPanel>
 		</Border>
 	</Grid>

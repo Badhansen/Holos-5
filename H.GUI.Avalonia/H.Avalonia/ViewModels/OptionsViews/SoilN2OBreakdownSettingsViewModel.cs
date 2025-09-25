@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reflection.Metadata;
+using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using H.Core.Events;
 using H.Avalonia.ViewModels.OptionsViews.DataTransferObjects;
@@ -9,12 +10,13 @@ using H.Core.Models;
 using H.Core.Providers.Animals;
 using H.Avalonia.Services;
 using H.Core.Services.StorageService;
+using H.Infrastructure;
 using Prism.Events;
 using Prism.Regions;
 
 namespace H.Avalonia.ViewModels.OptionsViews
 {
-    public class SoilN2OBreakdownSettingsViewModel : ViewModelBase, IConfirmNavigationRequest
+    public class SoilN2OBreakdownSettingsViewModel : ViewModelBase//, IConfirmNavigationRequest
     {
         #region Fields
 
@@ -41,7 +43,12 @@ namespace H.Avalonia.ViewModels.OptionsViews
             set => SetProperty(ref _data, value);
         }
 
-        // Sets the instance of notification manager in the ErrorHandlerService
+        public double Total
+        {
+            get => _total;
+            set => SetProperty(ref _total, value);
+        }
+
         public new WindowNotificationManager NotificationManager
         {
             get => base.NotificationManager;
@@ -65,20 +72,21 @@ namespace H.Avalonia.ViewModels.OptionsViews
             }
             CalculateTotal();
             Data.PropertyChanged += ValidateTotalEquals100;
+            
             EventAggregator.GetEvent<ValidationErrorOccurredEvent>().Subscribe(LockOnInvalidEntries);
+            EventAggregator.GetEvent<ValidationPassOccurredEvent>().Subscribe(UnlockOnValidEntries);
         }
 
-        public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            if (_total == 100.0)
+            if (_entriesAreValid)
             {
                 Data.PropertyChanged -= ValidateTotalEquals100;
                 EventAggregator.GetEvent<ValidationErrorOccurredEvent>().Unsubscribe(LockOnInvalidEntries);
-                continuationCallback(_entriesAreValid);
+                EventAggregator.GetEvent<ValidationPassOccurredEvent>().Unsubscribe(UnlockOnValidEntries);
                 return;
             }
-            _errorHandlerService.HandleValidationError(string.Format(H.Core.Properties.Resources.SumOfMonthlyN2OInputsPercent, _total));
-            continuationCallback(_entriesAreValid);
+            _errorHandlerService.HandleValidationError(string.Format(H.Core.Properties.Resources.SumOfMonthlyN2OInputsPercent, Total));
         }
 
         #endregion
@@ -87,11 +95,18 @@ namespace H.Avalonia.ViewModels.OptionsViews
 
         private void CalculateTotal()
         {
-            _total = 0;
+            Total = 0;
             foreach (Months month in Enum.GetValues(typeof(Months)))
             {
-                _total += this.Data.MonthlyValues.GetValueByMonth(month);
+                Total += this.Data.MonthlyValues.GetValueByMonth(month);
             }
+            if (Total == 100)
+            {
+
+                EventAggregator.GetEvent<ValidationPassOccurredEvent>().Publish(new ErrorInformation(string.Format(H.Core.Properties.Resources.SumOfMonthlyN2OInputsPercent, Total)));
+                return;
+            }
+            EventAggregator.GetEvent<ValidationErrorOccurredEvent>().Publish(new ErrorInformation(string.Format(H.Core.Properties.Resources.SumOfMonthlyN2OInputsPercent, Total)));
         }
 
         #endregion
@@ -101,15 +116,16 @@ namespace H.Avalonia.ViewModels.OptionsViews
         private void ValidateTotalEquals100(object sender, PropertyChangedEventArgs e)
         {
             CalculateTotal();
-            if (_total == 100.00)
-            {
-                _entriesAreValid = true;
-            }
         }
 
-        private void LockOnInvalidEntries(ErrorInformation errorInformation)
+        private void LockOnInvalidEntries(MessageBase errorInformation)
         {
             _entriesAreValid = false;
+        }
+
+        private void UnlockOnValidEntries(MessageBase errorInformation)
+        {
+            _entriesAreValid = true;
         }
 
         #endregion

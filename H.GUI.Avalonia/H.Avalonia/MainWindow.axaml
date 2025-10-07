@@ -42,3 +42,4 @@
                         prism:RegionManager.RegionName="{x:Static local:UiRegions.FooterRegion}"/>
     </Grid>
 </Window>
+    

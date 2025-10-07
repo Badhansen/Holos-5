@@ -5,16 +5,12 @@ using Avalonia.Controls.Notifications;
 namespace H.Avalonia.Services;
 public interface IErrorHandlerService
 {
-    public WindowNotificationManager NotificationManager { get; set; }
-    /// <summary>
-    /// Handles a validation error, draws error (red) toast message to screen.
-    /// </summary>
-    /// <param name="validationMessage">The validation error message.</param>
-    void HandleValidationError(string validationMessage);
+    public WindowNotificationManagerService NotificationManagerService { get;  }
 
     /// <summary>
     /// Handles a validation warning, draws warning (orange) toast message to screen.
     /// </summary>
+    /// /// <param name="validationTitle">The validation warning title.</param>
     /// <param name="validationMessage">The validation warning message.</param>
-    void HandleValidationWarning(string validationMessage);
+    void HandleValidationWarning(string validationTitle, string validationMessage);
 }

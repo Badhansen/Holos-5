@@ -16,7 +16,7 @@ using Prism.Regions;
 
 namespace H.Avalonia.ViewModels.OptionsViews
 {
-    public class SoilN2OBreakdownSettingsViewModel : ViewModelBase//, IConfirmNavigationRequest
+    public class SoilN2OBreakdownSettingsViewModel : ViewModelBase
     {
         #region Fields
 
@@ -32,11 +32,13 @@ namespace H.Avalonia.ViewModels.OptionsViews
         public SoilN2OBreakdownSettingsViewModel(IStorageService storageService, IEventAggregator eventAggregator, IErrorHandlerService errorHandlerService) : base(storageService)
         {
             EventAggregator = eventAggregator;
-            _errorHandlerService = errorHandlerService as ErrorHandlerService;
+            _errorHandlerService = errorHandlerService;
         }
+
         #endregion
 
         #region Properties
+
         public SoilN2OBreakdownSettingsDTO Data
         {
             get => _data;
@@ -49,16 +51,6 @@ namespace H.Avalonia.ViewModels.OptionsViews
             set => SetProperty(ref _total, value);
         }
 
-        public new WindowNotificationManager NotificationManager
-        {
-            get => base.NotificationManager;
-            set
-            {
-                if (base.NotificationManager == value) return;
-                base.NotificationManager = value;
-                _errorHandlerService.NotificationManager = value;
-            }
-        }
         #endregion
 
         #region Public Methods
@@ -72,9 +64,6 @@ namespace H.Avalonia.ViewModels.OptionsViews
             }
             CalculateTotal();
             Data.PropertyChanged += ValidateTotalEquals100;
-            
-            EventAggregator.GetEvent<ValidationErrorOccurredEvent>().Subscribe(LockOnInvalidEntries);
-            EventAggregator.GetEvent<ValidationPassOccurredEvent>().Subscribe(UnlockOnValidEntries);
         }
 
         public override void OnNavigatedFrom(NavigationContext navigationContext)
@@ -82,11 +71,7 @@ namespace H.Avalonia.ViewModels.OptionsViews
             if (_entriesAreValid)
             {
                 Data.PropertyChanged -= ValidateTotalEquals100;
-                EventAggregator.GetEvent<ValidationErrorOccurredEvent>().Unsubscribe(LockOnInvalidEntries);
-                EventAggregator.GetEvent<ValidationPassOccurredEvent>().Unsubscribe(UnlockOnValidEntries);
-                return;
             }
-            _errorHandlerService.HandleValidationError(string.Format(H.Core.Properties.Resources.SumOfMonthlyN2OInputsPercent, Total));
         }
 
         #endregion
@@ -95,6 +80,7 @@ namespace H.Avalonia.ViewModels.OptionsViews
 
         private void CalculateTotal()
         {
+            double previousTotal = Total;
             Total = 0;
             foreach (Months month in Enum.GetValues(typeof(Months)))
             {
@@ -102,11 +88,18 @@ namespace H.Avalonia.ViewModels.OptionsViews
             }
             if (Total == 100)
             {
-
                 EventAggregator.GetEvent<ValidationPassOccurredEvent>().Publish(new ErrorInformation(string.Format(H.Core.Properties.Resources.SumOfMonthlyN2OInputsPercent, Total)));
+                _entriesAreValid = true;
                 return;
             }
-            EventAggregator.GetEvent<ValidationErrorOccurredEvent>().Publish(new ErrorInformation(string.Format(H.Core.Properties.Resources.SumOfMonthlyN2OInputsPercent, Total)));
+            // To avoid multiple warnings sent to logger and multiple event publications when user adjusts values
+            if (previousTotal == 100)
+            {
+                string warningString = Total < 100 ? H.Core.Properties.Resources.N2OPercentageLessThan100 : H.Core.Properties.Resources.N2OPercentageGreaterThan100;
+                _errorHandlerService.HandleValidationWarning(H.Core.Properties.Resources.NavigationLocked, warningString);
+                EventAggregator.GetEvent<ValidationErrorOccurredEvent>().Publish(new ErrorInformation(string.Format(H.Core.Properties.Resources.SumOfMonthlyN2OInputsPercent, Total)));
+            }
+            _entriesAreValid = false;
         }
 
         #endregion
@@ -116,16 +109,6 @@ namespace H.Avalonia.ViewModels.OptionsViews
         private void ValidateTotalEquals100(object sender, PropertyChangedEventArgs e)
         {
             CalculateTotal();
-        }
-
-        private void LockOnInvalidEntries(MessageBase errorInformation)
-        {
-            _entriesAreValid = false;
-        }
-
-        private void UnlockOnValidEntries(MessageBase errorInformation)
-        {
-            _entriesAreValid = true;
         }
 
         #endregion

@@ -14393,6 +14393,15 @@ namespace H.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Navigation locked..
+        /// </summary>
+        public static string NavigationLocked {
+            get {
+                return ResourceManager.GetString("NavigationLocked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New Brunswick.
         /// </summary>
         public static string NewBrunswick {

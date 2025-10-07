@@ -6339,4 +6339,7 @@ Please note: emissions related to the deposition or application of livestock man
   <data name="TitleSelectFarmFolder" xml:space="preserve">
     <value>Select Farm Folder</value>
   </data>
+  <data name="NavigationLocked" xml:space="preserve">
+    <value>Navigation locked.</value>
+  </data>
 </root>

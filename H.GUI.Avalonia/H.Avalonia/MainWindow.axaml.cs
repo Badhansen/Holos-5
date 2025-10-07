@@ -1,4 +1,7 @@
+using Avalonia;
 using Avalonia.Controls;
+using H.Avalonia.ViewModels;
+using System;
 
 namespace H.Avalonia
 {
@@ -7,6 +10,18 @@ namespace H.Avalonia
         public MainWindow()
         {
             InitializeComponent();
+            this.Opened += OnOpened;
         }
+
+        private void OnOpened(object? sender, EventArgs e)
+        {
+            if (ViewModel.NotificationManagerService.IsInitialized)
+                return;
+
+            if (ViewModel != null)
+                ViewModel.NotificationManagerService.Initialize(this);
+        }
+
+        private MainWindowViewModel? ViewModel => DataContext as MainWindowViewModel;
     }
 }

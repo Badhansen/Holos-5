@@ -5834,4 +5834,7 @@ Please note: emissions related to the deposition or application of livestock man
   <data name="TitleSelectFarmFolder" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="NavigationLocked" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
 </root>

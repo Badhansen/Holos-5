@@ -57,6 +57,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using ClimateResultsView = H.Avalonia.Views.ResultViews.ClimateResultsView;
 using KmlHelpers = H.Avalonia.Infrastructure.KmlHelpers;
 using SoilResultsView = H.Avalonia.Views.ResultViews.SoilResultsView;
@@ -76,7 +77,8 @@ namespace H.Avalonia
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = new MainWindow();
+                // Resolve through Prism so ViewModelLocator can run
+                desktop.MainWindow = (Window)CreateShell();
                 desktop.Exit += OnExit;
             }
 
@@ -123,6 +125,7 @@ namespace H.Avalonia
 
 
             // New development work
+            containerRegistry.RegisterForNavigation<MainWindow, MainWindowViewModel>();
             containerRegistry.RegisterForNavigation<Views.OptionsViews.OptionEvapotranspirationView, EvapotranspirationSettingsViewModel>();
             containerRegistry.RegisterForNavigation<Views.OptionsViews.OptionTemperatureView, TemperatureSettingsViewModel>();
             containerRegistry.RegisterForNavigation<Views.OptionsViews.OptionBarnTemperatureView, BarnTemperatureSettingsViewModel>();
@@ -208,6 +211,7 @@ namespace H.Avalonia
             containerRegistry.RegisterSingleton<IFarmResultsService_NEW, FarmResultsService_NEW>();
             containerRegistry.RegisterSingleton<IDietService, DefaultDietService>();
             containerRegistry.RegisterSingleton<IErrorHandlerService, ErrorHandlerService>();
+            containerRegistry.RegisterSingleton<IWindowNotificationManagerService, WindowNotificationManagerService>();
 
             // Unit conversion
             containerRegistry.RegisterSingleton<IUnitsOfMeasurementCalculator, UnitsOfMeasurementCalculator>();

@@ -12,7 +12,7 @@ namespace H.Avalonia.Services
     {
         #region Fields
 
-        private WindowNotificationManager? _notificationManager;
+        private WindowNotificationManager _notificationManager;
         private readonly ILogger _logger;
         private bool _isInitialized = false;
 
@@ -29,13 +29,16 @@ namespace H.Avalonia.Services
 
         #region Constructors
 
-        public WindowNotificationManagerService()
-        {
-        }
-
         public WindowNotificationManagerService(ILogger logger)
         {
-            _logger = logger;
+            if (logger != null)
+            {
+                _logger = logger;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
         }
 
         #endregion
@@ -44,23 +47,38 @@ namespace H.Avalonia.Services
 
         public void Initialize(TopLevel targetWindow)
         {
-            _logger.LogInformation("Initializing " + this + " to " + targetWindow);
             if (targetWindow == null)
             {
                 throw new ArgumentNullException(nameof(targetWindow));
             }
 
-            _notificationManager = new WindowNotificationManager(targetWindow)
+            if (!_isInitialized)
             {
-                Position = NotificationPosition.TopRight,
-                MaxItems = 1,
-                Margin = new(0, 5, 15, 0)
-            };
-            _isInitialized = true;
+                _logger.LogInformation("Initializing " + this + " to " + targetWindow);
+
+                _notificationManager = new WindowNotificationManager(targetWindow)
+                {
+                    Position = NotificationPosition.TopRight,
+                    MaxItems = 1,
+                    Margin = new(0, 5, 15, 0)
+                };
+                _isInitialized = true;
+                return;
+            }
+
+            if (_isInitialized)
+            {
+                _logger.LogWarning("{Service} attempted reinitialization.", nameof(WindowNotificationManagerService));
+            }
         }
 
         public void ShowToast(string title, string message, NotificationType type = NotificationType.Information, TimeSpan? duration = null)
         {
+            if (!_isInitialized)
+            {
+                _logger.LogWarning("Toast message sent to {Service} before initialization completed.", nameof(WindowNotificationManagerService));
+                return;
+            }
             _notificationManager?.Show(new Notification(title, message, type, duration ?? TimeSpan.FromSeconds(5)));
         }
 

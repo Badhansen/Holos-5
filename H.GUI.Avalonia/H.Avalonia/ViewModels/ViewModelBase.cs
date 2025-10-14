@@ -64,6 +64,27 @@ namespace H.Avalonia.ViewModels
             }
         }
 
+        protected ViewModelBase(IStorageService storageService, IEventAggregator eventAggregator)
+        {
+            if(eventAggregator != null)
+            {
+                this.EventAggregator = eventAggregator;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(eventAggregator));
+            }
+            if (storageService != null)
+            {
+                this.StorageService = storageService;
+                this.StorageService.Storage.ApplicationData.GlobalSettings.PropertyChanged += GlobalSettingsPropertyChanged;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(storageService));
+            }
+        }
+
         protected ViewModelBase(IRegionManager regionManager, IEventAggregator eventAggregator) : this(eventAggregator)
         {
             if (regionManager != null)

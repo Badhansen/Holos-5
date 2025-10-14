@@ -17,27 +17,37 @@ namespace H.Avalonia.Services
 
         #endregion
 
-        #region Properties
-
-        public WindowNotificationManagerService NotificationManagerService
-        {
-            get => _notificationManager as WindowNotificationManagerService;
-        }
-
-        #endregion
 
         #region Constructors
 
-        public ErrorHandlerService()
-        {
-
-        }
-
         public ErrorHandlerService(ILogger logger, IEventAggregator eventAggregator, IWindowNotificationManagerService windowNotificationManagerService)
         {
-            _logger = logger;
-            _eventAggregator = eventAggregator;
-            _notificationManager = windowNotificationManagerService;
+            if (logger != null)
+            {
+                _logger = logger;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
+
+            if (eventAggregator != null)
+            {
+                _eventAggregator = eventAggregator;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(eventAggregator));
+            }
+
+            if (windowNotificationManagerService != null)
+            {
+                _notificationManager = windowNotificationManagerService;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(windowNotificationManagerService));
+            }
         }
 
         #endregion
@@ -59,7 +69,7 @@ namespace H.Avalonia.Services
 
         private void ShowToastMessage(string toastTitle, string toastMessage, NotificationType type)
         {
-            NotificationManagerService.ShowToast(toastTitle, toastMessage, type);
+            _notificationManager.ShowToast(toastTitle, toastMessage, type);
         }
 
         #endregion

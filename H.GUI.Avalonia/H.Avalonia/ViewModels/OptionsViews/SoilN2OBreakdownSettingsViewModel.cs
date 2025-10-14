@@ -29,10 +29,16 @@ namespace H.Avalonia.ViewModels.OptionsViews
 
         #region Constructors
 
-        public SoilN2OBreakdownSettingsViewModel(IStorageService storageService, IEventAggregator eventAggregator, IErrorHandlerService errorHandlerService) : base(storageService)
+        public SoilN2OBreakdownSettingsViewModel(IStorageService storageService, IEventAggregator eventAggregator, IErrorHandlerService errorHandlerService) : base(storageService, eventAggregator)
         {
-            EventAggregator = eventAggregator;
-            _errorHandlerService = errorHandlerService;
+            if (errorHandlerService != null)
+            {
+                _errorHandlerService = errorHandlerService;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(errorHandlerService));
+            }
         }
 
         #endregion
@@ -92,12 +98,11 @@ namespace H.Avalonia.ViewModels.OptionsViews
                 _entriesAreValid = true;
                 return;
             }
-            // To avoid multiple warnings sent to logger and multiple event publications when user adjusts values
+            // To avoid multiple warnings sent to ErrorHandlerService when user adjusts values above or below 100% threshold
             if (previousTotal == 100)
             {
                 string warningString = Total < 100 ? H.Core.Properties.Resources.N2OPercentageLessThan100 : H.Core.Properties.Resources.N2OPercentageGreaterThan100;
                 _errorHandlerService.HandleValidationWarning(H.Core.Properties.Resources.NavigationLocked, warningString);
-                EventAggregator.GetEvent<ValidationErrorOccurredEvent>().Publish(new ErrorInformation(string.Format(H.Core.Properties.Resources.SumOfMonthlyN2OInputsPercent, Total)));
             }
             _entriesAreValid = false;
         }

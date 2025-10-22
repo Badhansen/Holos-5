@@ -11,7 +11,7 @@ using Tmds.DBus.Protocol;
 
 namespace H.Avalonia.ViewModels
 {
-    class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : ViewModelBase
     {
         #region Fields
 
@@ -32,7 +32,14 @@ namespace H.Avalonia.ViewModels
 
         public MainWindowViewModel(IWindowNotificationManagerService notificationManagerService) : base()
         {
-            _notificationManagerService = notificationManagerService;
+            if (notificationManagerService != null)
+            {
+                _notificationManagerService = notificationManagerService;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(notificationManagerService));
+            }
         }
 
         #endregion

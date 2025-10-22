@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using System;
+using System.Collections.Generic;
 
 namespace H.Avalonia.Services
 {
@@ -9,7 +10,20 @@ namespace H.Avalonia.Services
     /// </summary>
     public interface IWindowNotificationManagerService
     {
+        /// <summary>
+        /// Check if the notification manager has been initialized with a target window.
+        /// </summary>
         bool IsInitialized { get; }
+        /// <summary>
+        /// Allows getting or setting the maximum number of notifications that can be displayed at once.
+        /// </summary>
+        int maxDisplayedItems { get; set; }
+        /// <summary>
+        /// Gets the collection of currently active notifications.
+        /// Clears out automatically as notifications expire.
+        /// </summary>
+        IReadOnlyCollection<Notification> ActiveNotifications { get; }
+
         /// <summary>
         /// Initializes the notification manager with the window it will operate within.
         /// This method should be called once after the window is available from within the code-behind.
@@ -22,7 +36,7 @@ namespace H.Avalonia.Services
         /// </summary>
         /// <param name="title">Title for the toast.</param>
         /// <param name="message">The message content of the toast.</param>
-        /// <param name="type">The visual type of the notification (e.g., Information, Error). Defaults to an "Information" tier toast.</param>
+        /// <param name="type">The visual type of the notification (e.g., Information, Warning, Error). Defaults to an "Information" tier toast.</param>
         /// <param name="duration">Optional duration for how long the toast should be visible. Defaults to 5 seconds.</param>
         void ShowToast(string title, string message, NotificationType type = NotificationType.Information, TimeSpan? duration = null);
 

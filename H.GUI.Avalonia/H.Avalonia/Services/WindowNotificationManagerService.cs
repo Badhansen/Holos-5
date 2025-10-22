@@ -1,9 +1,13 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Castle.Core.Logging;
+using Microsoft.Extensions.Logging;
 using Prism.Events;
 using System;
-using Microsoft.Extensions.Logging;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Numerics;
+using System.Threading.Tasks;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace H.Avalonia.Services
@@ -15,6 +19,7 @@ namespace H.Avalonia.Services
         private WindowNotificationManager _notificationManager;
         private readonly ILogger _logger;
         private bool _isInitialized = false;
+        private readonly ConcurrentBag<Notification> _activeNotifications = new();
 
         #endregion
 
@@ -24,6 +29,20 @@ namespace H.Avalonia.Services
         {
             get => _isInitialized;
         }
+
+        public int maxDisplayedItems
+        {
+            get => _notificationManager?.MaxItems ?? 0;
+            set
+            {
+                if (value >= 0)
+                {
+                    _notificationManager.MaxItems = value;
+                }
+            }
+        }
+
+        public IReadOnlyCollection<Notification> ActiveNotifications => _activeNotifications;
 
         #endregion
 
@@ -60,13 +79,11 @@ namespace H.Avalonia.Services
                 {
                     Position = NotificationPosition.TopRight,
                     MaxItems = 1,
-                    Margin = new(0, 5, 15, 0)
+                    Margin = new(0, 5, 15, 0),
                 };
                 _isInitialized = true;
-                return;
             }
-
-            if (_isInitialized)
+            else
             {
                 _logger.LogWarning("{Service} attempted reinitialization.", nameof(WindowNotificationManagerService));
             }
@@ -79,7 +96,16 @@ namespace H.Avalonia.Services
                 _logger.LogWarning("Toast message sent to {Service} before initialization completed.", nameof(WindowNotificationManagerService));
                 return;
             }
-            _notificationManager?.Show(new Notification(title, message, type, duration ?? TimeSpan.FromSeconds(5)));
+
+            var notification = new Notification(title, message, type, duration ?? TimeSpan.FromSeconds(5));
+            _notificationManager?.Show(notification);
+            _activeNotifications.Add(notification);
+
+            // Remove notification from collection once timer expires
+            Task.Delay(notification.Expiration).ContinueWith(x =>
+            {
+                _activeNotifications.TryTake(out Notification discard);
+            });
         }
 
         #endregion

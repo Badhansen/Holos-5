@@ -37,8 +37,7 @@ namespace H.Avalonia.Services
         /// <param name="title">Title for the toast.</param>
         /// <param name="message">The message content of the toast.</param>
         /// <param name="type">The visual type of the notification (e.g., Information, Warning, Error). Defaults to an "Information" tier toast.</param>
-        /// <param name="duration">Optional duration for how long the toast should be visible. Defaults to 5 seconds.</param>
-        void ShowToast(string title, string message, NotificationType type = NotificationType.Information, TimeSpan? duration = null);
+        void ShowToast(string title, string message, NotificationType type = NotificationType.Information);
 
     }
 }

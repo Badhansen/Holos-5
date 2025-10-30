@@ -16,6 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using H.Avalonia.Views.ComponentViews;
 using System.Linq;
+using H.Avalonia.Services;
 
 namespace H.Avalonia.ViewModels.Results
 {
@@ -30,7 +31,6 @@ namespace H.Avalonia.ViewModels.Results
         private readonly GeographicDataProvider _geographicDataProvider;
         private readonly SoilResultsViewItemMap _soilResultsViewItemMap;
         private CancellationTokenSource _cancellationTokenSource;
-        private const double DefaultErrorNotificationTime = 10; 
 
         #endregion
 
@@ -40,7 +40,7 @@ namespace H.Avalonia.ViewModels.Results
         {
         }
 
-        public SoilResultsViewModel(IRegionManager regionManager, ExportHelpers exportHelpers, KmlHelpers kmlHelpers, GeographicDataProvider geographicDataProvider, Storage storage) : base(regionManager)
+        public SoilResultsViewModel(IRegionManager regionManager, IWindowNotificationManagerService notificationManager ,ExportHelpers exportHelpers, KmlHelpers kmlHelpers, GeographicDataProvider geographicDataProvider, Storage storage) : base(regionManager, notificationManager)
         {
             this.StoragePlaceholder = storage;
 
@@ -137,11 +137,7 @@ namespace H.Avalonia.ViewModels.Results
             }
             catch (IOException e)
             {
-                NotificationManager?.Show(new Notification("File being used.",
-                    e.Message,
-                    type: NotificationType.Error,
-                    expiration: TimeSpan.FromSeconds(DefaultErrorNotificationTime))
-                );
+                NotificationManager.ShowToast("File being used.", e.Message, NotificationType.Error);
             }
         }
 

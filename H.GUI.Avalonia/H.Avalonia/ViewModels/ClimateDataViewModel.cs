@@ -17,6 +17,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using H.Avalonia.Services;
 using H.Avalonia.Views.ResultViews;
 using ClimateResultsView = H.Avalonia.Views.ResultViews.ClimateResultsView;
 
@@ -29,7 +30,7 @@ namespace H.Avalonia.ViewModels
         private readonly IDialogService _dialogService;
         private readonly ImportHelpers _importHelper;
         private readonly ClimateViewItemMap _climateViewItemMap;
-        private const int DefaultNotificationTime = 10;
+        private IWindowNotificationManagerService _notificationManager;
 
         /// <summary>
         /// Allows navigation from the current view to the <see cref="SoilResultsView"/>.
@@ -86,7 +87,8 @@ namespace H.Avalonia.ViewModels
             IRegionManager regionManager, 
             ImportHelpers importHelper,
             IDialogService dialogService,
-            Storage storage) : base(regionManager)
+            Storage storage,
+            IWindowNotificationManagerService notificationManager) : base(regionManager, notificationManager)
         {
             _regionManager = regionManager;
             _importHelper = importHelper;
@@ -95,6 +97,15 @@ namespace H.Avalonia.ViewModels
             _climateViewItemMap = new ClimateViewItemMap();
 
             base.StoragePlaceholder = storage;
+
+            if (notificationManager != null)
+            {
+                _notificationManager = notificationManager;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(notificationManager));
+            }
         }
         
         /// <summary>
@@ -255,27 +266,15 @@ namespace H.Avalonia.ViewModels
             }
             catch (HeaderValidationException e)
             {
-                NotificationManager?.Show(new Notification("Invalid Header",
-                    e.Message,
-                    type: NotificationType.Error,
-                    expiration: TimeSpan.FromSeconds(DefaultNotificationTime))
-                );
+                NotificationManager.ShowToast("Invalid Header", e.Message, NotificationType.Error);
             }
             catch (TypeConverterException e)
             {
-                NotificationManager?.Show(new Notification("Invalid CSV Content",
-                    e.Message,
-                    type: NotificationType.Error,
-                    expiration: TimeSpan.FromSeconds(DefaultNotificationTime))
-                );
+                NotificationManager.ShowToast("Invalid CSV Content" , e.Message, NotificationType.Error);
             }
             catch (IOException e)
             {
-                NotificationManager?.Show(new Notification("File being used.",
-                    e.Message,
-                    type: NotificationType.Error,
-                    expiration: TimeSpan.FromSeconds(DefaultNotificationTime))
-                );
+                NotificationManager.ShowToast("File being used.", e.Message, NotificationType.Error);
             }
         }
 

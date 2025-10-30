@@ -14,24 +14,6 @@ public partial class FarmManagementView : UserControl
     }
 
     /// <summary>
-    /// Is used to attach the windows manager for displaying notifications.
-    /// </summary>
-    /// <param name="e"></param>
-    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        base.OnAttachedToVisualTree(e);
-
-        ViewModel.NotificationManager = new WindowNotificationManager(GetTopLevel());
-    }
-
-    /// <summary>
-    /// Get the toplevel window of the current window.
-    /// </summary>
-    /// <returns></returns>
-    /// <exception cref="NullReferenceException"></exception>
-    TopLevel GetTopLevel() => TopLevel.GetTopLevel(this) ?? throw new NullReferenceException("Invalid Owner");
-
-    /// <summary>
     /// Get the viewmodel associated with the view.
     /// </summary>
     private FarmManagementViewModel? ViewModel => DataContext as FarmManagementViewModel;

@@ -20,6 +20,10 @@ namespace H.Avalonia.Services
         private readonly ILogger _logger;
         private bool _isInitialized = false;
         private readonly ConcurrentBag<Notification> _activeNotifications = new();
+        private TimeSpan _successTimeSpan = TimeSpan.FromSeconds(5);
+        private TimeSpan _informationTimeSpan = TimeSpan.FromSeconds(5);
+        private TimeSpan _warningTimeSpan = TimeSpan.FromSeconds(10);
+        private TimeSpan _errorTimeSpan = TimeSpan.FromSeconds(10);
 
         #endregion
 
@@ -89,7 +93,7 @@ namespace H.Avalonia.Services
             }
         }
 
-        public void ShowToast(string title, string message, NotificationType type = NotificationType.Information, TimeSpan? duration = null)
+        public void ShowToast(string title, string message, NotificationType type = NotificationType.Information)
         {
             if (!_isInitialized)
             {
@@ -97,7 +101,22 @@ namespace H.Avalonia.Services
                 return;
             }
 
-            var notification = new Notification(title, message, type, duration ?? TimeSpan.FromSeconds(5));
+            // Determine duration based on notification type if not explicitly provided
+            TimeSpan duration = _informationTimeSpan;
+            switch (type)
+            {
+                case NotificationType.Success:
+                    duration = _successTimeSpan;
+                    break;
+                case NotificationType.Warning:
+                    duration = _warningTimeSpan;
+                    break;
+                case NotificationType.Error: 
+                    duration = _errorTimeSpan;
+                    break;
+            }
+
+            var notification = new Notification(title, message, type, duration);
             _notificationManager?.Show(notification);
             _activeNotifications.Add(notification);
 

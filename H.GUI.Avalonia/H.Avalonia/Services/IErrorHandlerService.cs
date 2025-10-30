@@ -11,4 +11,10 @@ public interface IErrorHandlerService
     /// /// <param name="validationTitle">The validation warning title.</param>
     /// <param name="validationMessage">The validation warning message.</param>
     void HandleValidationWarning(string validationTitle, string validationMessage);
+    /// <summary>
+    /// Handles a non interrupting error by logging the error, and draw warning (orange) toast message to screen.
+    /// </summary>
+    /// /// <param name="validationTitle">The validation warning title.</param>
+    /// <param name="validationMessage">The validation warning message.</param>
+    void HandleNonInterruptingError(string errorTitle, string errorMessage);
 }

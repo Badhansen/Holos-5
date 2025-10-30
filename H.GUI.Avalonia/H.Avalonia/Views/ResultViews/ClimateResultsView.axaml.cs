@@ -26,8 +26,6 @@ namespace H.Avalonia.Views.ResultViews
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
         {
             base.OnAttachedToVisualTree(e);
-
-            ViewModel.NotificationManager = new WindowNotificationManager(GetTopLevel());
         }
 
         private void GoBackPanel_OnPointerPressed(object? sender, PointerPressedEventArgs e)

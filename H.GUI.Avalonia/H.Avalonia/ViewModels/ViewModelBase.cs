@@ -15,6 +15,7 @@ using Avalonia;
 using Avalonia.Threading;
 using System;
 using System.Threading.Tasks;
+using H.Avalonia.Services;
 using H.Core.Helpers;
 
 namespace H.Avalonia.ViewModels
@@ -49,6 +50,18 @@ namespace H.Avalonia.ViewModels
             else
             {
                 throw new ArgumentNullException(nameof(storageService));
+            }
+        }
+
+        protected ViewModelBase(IStorageService storageService, IWindowNotificationManagerService notificationManager) : this(storageService)
+        {
+            if (notificationManager != null)
+            {
+                this.NotificationManager = notificationManager;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(notificationManager));
             }
         }
 
@@ -118,6 +131,18 @@ namespace H.Avalonia.ViewModels
             }
         }
 
+        protected ViewModelBase(IRegionManager regionManager, IStorageService storageService, IWindowNotificationManagerService notificationManager) : this(regionManager, storageService)
+        {
+            if (notificationManager != null)
+            {
+                this.NotificationManager = notificationManager;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(notificationManager));
+            }
+        }
+
         protected ViewModelBase(
             IRegionManager regionManager, 
             IEventAggregator eventAggregator,
@@ -155,6 +180,18 @@ namespace H.Avalonia.ViewModels
             }
         }
 
+        protected ViewModelBase(IRegionManager regionManager, IWindowNotificationManagerService notificationManager) : this(regionManager)
+        {
+            if (notificationManager != null)
+            {
+                this.NotificationManager = notificationManager;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(notificationManager));
+            }
+        }
+
         #endregion
 
         #region Properties
@@ -168,7 +205,7 @@ namespace H.Avalonia.ViewModels
         /// <summary>
         /// The notification manager that handles displaying notifications on the page.
         /// </summary>
-        public WindowNotificationManager NotificationManager { get; set; }
+        public IWindowNotificationManagerService NotificationManager { get; set; }
 
         protected IRegionManager RegionManager
         {
@@ -271,14 +308,6 @@ namespace H.Avalonia.ViewModels
             {
                 AddError(nameof(ViewName), H.Core.Properties.Resources.ErrorNameCannotBeEmpty);
                 return;
-            }
-        }
-
-        private void SetActiveFarm(IStorageService storageService)
-        {
-            if (storageService != null)
-            {
-                //this.ActiveFarm = storageService.GetActiveFarm();
             }
         }
 

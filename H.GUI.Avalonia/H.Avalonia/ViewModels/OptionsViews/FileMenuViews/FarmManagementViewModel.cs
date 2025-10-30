@@ -10,6 +10,7 @@ using Prism.Regions;
 using H.Avalonia.Views.FarmCreationViews;
 using System.ComponentModel;
 using Avalonia.Controls.Notifications;
+using H.Avalonia.Services;
 
 namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
 {
@@ -19,12 +20,21 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
         private ObservableCollection<Farm> _farms;
         private Farm _selectedFarm;
         private string _searchText;
+        private IWindowNotificationManagerService _notificationManager;
         #endregion
 
         #region Constructors
 
-        public FarmManagementViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IStorageService storageService) : base(regionManager, eventAggregator, storageService)
+        public FarmManagementViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IStorageService storageService, IWindowNotificationManagerService notificationManager) : base(regionManager, eventAggregator, storageService)
         {
+            if (notificationManager != null)
+            {
+                _notificationManager = notificationManager;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(notificationManager));
+            }
             RemoveFarm = new DelegateCommand(OnRemoveFarmExecute, OnRemoveFarmCanExecute);
             Farms = new ObservableCollection<Farm>();
         }
@@ -105,12 +115,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
             }
             else
             {
-                NotificationManager?.Show(new Notification(
-                    title: "Cannot Delete Current Farm",
-                    message: "Holos is unable to delete the current farm when no other farms exist.",
-                    type: NotificationType.Warning,
-                    expiration: TimeSpan.FromSeconds(10))
-                    );
+                NotificationManager.ShowToast("Cannot Delete Current Farm", "Holos is unable to delete the current farm when no other farms exist.", NotificationType.Warning);
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using Prism.Regions;
+﻿using H.Avalonia.Services;
+using Prism.Regions;
 using Prism.Commands;
 
 namespace H.Avalonia.ViewModels.Results
@@ -10,6 +11,10 @@ namespace H.Avalonia.ViewModels.Results
         protected ResultsViewModelBase() { }
 
         protected ResultsViewModelBase(IRegionManager regionManager) : base(regionManager)
+        {
+        }
+
+        protected ResultsViewModelBase(IRegionManager regionManager, IWindowNotificationManagerService notificationManager) : base(regionManager, notificationManager)
         {
         }
 

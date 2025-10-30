@@ -50,7 +50,6 @@ public partial class FileImportFarmView : UserControl
                 if (DataContext is FileImportFarmViewModel vm)
                 {
                     vm.Farms.Clear();
-                    vm.NotificationManager = new WindowNotificationManager(topLevel);
                     var farms = await vm.GetFarmsFromExportFileAsync(files[0].Path.LocalPath);
                     if (farms != null)
                     {
@@ -83,7 +82,6 @@ public partial class FileImportFarmView : UserControl
                 if (DataContext is FileImportFarmViewModel vm)
                 {
                     vm.Farms.Clear();
-                    vm.NotificationManager = new WindowNotificationManager(topLevel);
                     var farms = await vm.GetExportedFarmsFromDirectoryRecursivelyAsync(folder[0].Path.LocalPath);
                     if (farms != null)
                     {

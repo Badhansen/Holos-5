@@ -29,6 +29,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using H.Avalonia.Services;
 using H.Avalonia.Views.ResultViews;
 using H.Core.Services;
 using H.Core.Services.StorageService;
@@ -48,8 +49,6 @@ namespace H.Avalonia.ViewModels
         private MPoint _navigationPoint;
         private ImportHelpers _importHelper;
         private SoilViewItemMap _soilViewItemMap;
-        private const int DefaultErrorNotificationTime = 10;
-        private const int DefaultInformationNotificationTime = 5;
 
         private ObservableCollection<Province> _provinces;
 
@@ -149,7 +148,8 @@ namespace H.Avalonia.ViewModels
             IDialogService dialogService, 
             ICountrySettings countrySettings,
             IStorageService storageService,
-            Storage storage) : base(regionManager, storageService)
+            Storage storage,
+            IWindowNotificationManagerService notificationManager) : base(regionManager, storageService, notificationManager)
         {
             if (countrySettings != null)
             {
@@ -403,27 +403,15 @@ namespace H.Avalonia.ViewModels
             }
             catch (HeaderValidationException e)
             {
-                NotificationManager?.Show(new Notification("Invalid Header",
-                    e.Message,
-                    type: NotificationType.Error,
-                    expiration: TimeSpan.FromSeconds(DefaultErrorNotificationTime))
-                );
+                NotificationManager.ShowToast("Invalid Header", e.Message, NotificationType.Error);
             }
             catch (TypeConverterException e)
             {
-                NotificationManager?.Show(new Notification("Invalid CSV Content",
-                    e.Message,
-                    type: NotificationType.Error,
-                    expiration: TimeSpan.FromSeconds(DefaultErrorNotificationTime))
-                );
+                NotificationManager.ShowToast("Invalid CSV Content", e.Message, NotificationType.Error);
             }
             catch (IOException e)
             {
-                NotificationManager?.Show(new Notification("File being used.",
-                    e.Message,
-                    type: NotificationType.Error,
-                    expiration: TimeSpan.FromSeconds(DefaultErrorNotificationTime))
-                );
+                NotificationManager.ShowToast("File being used.", e.Message, NotificationType.Error);
             }
         }
 
@@ -490,11 +478,7 @@ namespace H.Avalonia.ViewModels
             if (string.IsNullOrEmpty(Address))
             {
                 Trace.TraceInformation($@"Cannot find location as an empty address was entered.");
-                NotificationManager?.Show(new Notification("Address field empty",
-                    Core.Properties.Resources.MessageEmptyAddress,
-                    type: NotificationType.Information,
-                    expiration: TimeSpan.FromSeconds(DefaultInformationNotificationTime))
-                );
+                NotificationManager.ShowToast("Address field empty", Core.Properties.Resources.MessageEmptyAddress, NotificationType.Information);
                 return;
             }
             try
@@ -507,11 +491,7 @@ namespace H.Avalonia.ViewModels
             catch (ArgumentOutOfRangeException e)
             {
                 Trace.TraceInformation($@"{e.Message}. Exception thrown in {nameof(OnGetCoordinates)} by class {nameof(SoilDataViewModel)}");
-                NotificationManager?.Show(new Notification("Invalid Address",
-                    Core.Properties.Resources.MessageIncorrectAddress,
-                    type: NotificationType.Error,
-                    expiration: TimeSpan.FromSeconds(DefaultErrorNotificationTime))
-                );
+                NotificationManager.ShowToast("Invalid Address", Core.Properties.Resources.MessageIncorrectAddress, NotificationType.Error);
             }
         }
 
@@ -524,11 +504,7 @@ namespace H.Avalonia.ViewModels
             if (string.IsNullOrEmpty(address))
             {
                 Trace.TraceInformation($@"Cannot find the coordinate. Please enter correct latitude and longitude values");
-                NotificationManager?.Show(new Notification("Incorrect Coordinate",
-                    Core.Properties.Resources.MessageInValidCoordinateEntered,
-                    type: NotificationType.Information,
-                    expiration: TimeSpan.FromSeconds(DefaultInformationNotificationTime))
-                );
+                NotificationManager.ShowToast("Incorrect Coordinate", Core.Properties.Resources.MessageInValidCoordinateEntered, NotificationType.Information);
                 return;
             }
 
@@ -560,11 +536,7 @@ namespace H.Avalonia.ViewModels
             if (string.IsNullOrEmpty(address))
             {
                 Trace.TraceInformation($@"Incorrect coordinate location cannot find matching address.");
-                NotificationManager?.Show(new Notification("Cannot find address",
-                    Core.Properties.Resources.MessageIncorrectLocationSelected,
-                    type: NotificationType.Information,
-                    expiration: TimeSpan.FromSeconds(DefaultInformationNotificationTime))
-                );
+                NotificationManager.ShowToast("Cannot find address", Core.Properties.Resources.MessageIncorrectLocationSelected, NotificationType.Information);
                 return;
             }
             Address = address;

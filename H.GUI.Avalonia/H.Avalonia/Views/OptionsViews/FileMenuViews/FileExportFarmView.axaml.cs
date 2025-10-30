@@ -31,7 +31,6 @@ public partial class FileExportFarmView : UserControl
             var topLevel = TopLevel.GetTopLevel(this);
             if (topLevel != null)
             {
-                vm.NotificationManager = new WindowNotificationManager(topLevel);
                 vm.SelectedFarms = vm.SelectedFarms.OrderBy(obj => obj.Name).ToList();
                 string fileName = string.Join(",", vm.SelectedFarms.Select(farm => farm.Name));
                 var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions

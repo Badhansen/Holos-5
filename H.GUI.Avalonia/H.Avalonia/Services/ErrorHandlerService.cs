@@ -63,6 +63,13 @@ namespace H.Avalonia.Services
             ShowToastMessage(validationTitle, validationMessage, NotificationType.Warning);
         }
 
+        public void HandleNonInterruptingError(string errorTitle, string errorMessage)
+        {
+            _logger.LogWarning("Error: {ErrorMessage}", errorMessage);
+
+            ShowToastMessage(errorTitle, errorMessage, NotificationType.Error);
+        }
+
         #endregion
 
         #region Private Methods

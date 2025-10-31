@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Avalonia.Controls.Notifications;
 using Avalonia.Platform;
 using Avalonia.Headless;
 using Avalonia.Markup.Xaml;
@@ -120,6 +121,21 @@ namespace H.Avalonia.Test.Services
             _service.ShowToast("Test Title5", "Test Message5");
 
             Assert.AreEqual(5, _service.ActiveNotifications.Count);
+        }
+
+        // Adds unnecessary time to execution of tests, so ignored by default
+        [TestMethod]
+        [Ignore]
+        public void TestMessageTimer()
+        {
+            _service = new WindowNotificationManagerService(_loggerMock);
+            _service.Initialize(_window);
+            _service.ShowToast("Test Title1", "Test Message1", NotificationType.Success);
+            _service.ShowToast("Test Title2", "Test Message2", NotificationType.Error);
+
+            Thread.Sleep(TimeSpan.FromSeconds(6));
+
+            Assert.AreEqual(1, _service.ActiveNotifications.Count);
         }
     }
 }

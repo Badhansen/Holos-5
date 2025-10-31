@@ -83,5 +83,14 @@ namespace H.Avalonia.Test.Services
 
             _mockNotificationManager.Verify(x => x.ShowToast("Test Title", "Test Message", NotificationType.Information), Times.AtMostOnce);
         }
+
+        [TestMethod]
+        public void TestHandleNonInterruptingError()
+        {
+            _service = new ErrorHandlerService(_loggerMock, _eventAggregatorMock, _notificationManagerMock);
+            _service.HandleNonInterruptingError("Error Title", "Error Message");
+            _mockLogger.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.AtMostOnce);
+            _mockNotificationManager.Verify(x => x.ShowToast("Error Title", "Error Message", NotificationType.Error), Times.AtMostOnce);
+        }
     }
 }

@@ -81,7 +81,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
                 });
 
                 // Show success notification to the user with the exported file name
-                NotificationManager.ShowToast(H.Core.Properties.Resources.LabelSuccess, "Climate data has been successfully exported for" + " " + $"{file.Name}", NotificationType.Success);
+                NotificationManager.ShowToast(H.Core.Properties.Resources.LabelSuccess, String.Format(H.Core.Properties.Resources.ExportClimateDataSuccess, file.Name), NotificationType.Success);
             }
             catch (Exception ex)
             {

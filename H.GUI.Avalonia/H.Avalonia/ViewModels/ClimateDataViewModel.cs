@@ -266,15 +266,15 @@ namespace H.Avalonia.ViewModels
             }
             catch (HeaderValidationException e)
             {
-                NotificationManager.ShowToast("Invalid Header", e.Message, NotificationType.Error);
+                NotificationManager.ShowToast(H.Core.Properties.Resources.InvalidHeader, e.Message, NotificationType.Error);
             }
             catch (TypeConverterException e)
             {
-                NotificationManager.ShowToast("Invalid CSV Content" , e.Message, NotificationType.Error);
+                NotificationManager.ShowToast(H.Core.Properties.Resources.InvalidCSVContent, e.Message, NotificationType.Error);
             }
             catch (IOException e)
             {
-                NotificationManager.ShowToast("File being used.", e.Message, NotificationType.Error);
+                NotificationManager.ShowToast(H.Core.Properties.Resources.FileInUse, e.Message, NotificationType.Error);
             }
         }
 

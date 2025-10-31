@@ -21,7 +21,6 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
         private ObservableCollection<Farm> _farms;
         private Farm _selectedFarm;
         private string _searchText;
-        private IWindowNotificationManagerService _notificationManager;
         #endregion
 
         #region Constructors
@@ -114,7 +113,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
             }
             else
             {
-                NotificationManager.ShowToast("Cannot Delete Current Farm", "Holos is unable to delete the current farm when no other farms exist.", NotificationType.Warning);
+                NotificationManager.ShowToast(H.Core.Properties.Resources.CantDeleteCurrentFarmTitle, H.Core.Properties.Resources.CantDeleteCurrentFarmBody, NotificationType.Warning);
             }
         }
 

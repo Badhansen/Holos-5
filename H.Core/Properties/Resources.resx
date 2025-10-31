@@ -6387,4 +6387,34 @@ Please note: emissions related to the deposition or application of livestock man
   <data name="NavigationLocked" xml:space="preserve">
     <value>Navigation locked.</value>
   </data>
+  <data name="InvalidHeaderTitle" xml:space="preserve">
+    <value>Invalid Header</value>
+  </data>
+  <data name="InvalidCSVContentTitle" xml:space="preserve">
+    <value>Invalid CSV Content</value>
+  </data>
+  <data name="FileInUse" xml:space="preserve">
+    <value>File currently in use.</value>
+  </data>
+  <data name="CantDeleteCurrentFarmTitle" xml:space="preserve">
+    <value>Cannot Delete Current Farm</value>
+  </data>
+  <data name="CantDeleteCurrentFarmBody" xml:space="preserve">
+    <value>Holos is unable to delete the current farm when no other farms exist.</value>
+  </data>
+  <data name="ExportClimateDataSuccess" xml:space="preserve">
+    <value>Climate data has been successfully exported for {0}.</value>
+  </data>
+  <data name="AddressFieldEmpty" xml:space="preserve">
+    <value>Address field empty</value>
+  </data>
+  <data name="InvalidAddress" xml:space="preserve">
+    <value>Invalid Address</value>
+  </data>
+  <data name="IncorrectCoordinate" xml:space="preserve">
+    <value>Incorrect coordinate</value>
+  </data>
+  <data name="CantFindAddress" xml:space="preserve">
+    <value>Cannot find address</value>
+  </data>
 </root>

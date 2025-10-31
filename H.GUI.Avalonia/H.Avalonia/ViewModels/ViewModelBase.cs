@@ -175,12 +175,20 @@ namespace H.Avalonia.ViewModels
             if (storageService != null)
             {
                 this.StorageService = storageService;
-                this.StorageService.Storage.ApplicationData.GlobalSettings.PropertyChanged +=
-                    GlobalSettingsPropertyChanged;
+                this.StorageService.Storage.ApplicationData.GlobalSettings.PropertyChanged += GlobalSettingsPropertyChanged;
             }
             else
             {
                 throw new ArgumentNullException(nameof(storageService));
+            }
+
+            if (eventAggregator != null)
+            {
+                this.EventAggregator = eventAggregator;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(eventAggregator));
             }
         }
 

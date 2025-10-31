@@ -1151,6 +1151,32 @@ namespace H.Core.Models
             }
         }
 
+        public IEnumerable<CropViewItem> GetAllCropViewItems()
+        {
+            var result = new List<CropViewItem>();
+
+            foreach (var fieldSystemComponent in this.FieldSystemComponents)
+            {
+                foreach (var viewItem in fieldSystemComponent.CropViewItems)
+                {
+                    result.Add(viewItem);
+                }
+
+                foreach (var viewItem in fieldSystemComponent.CoverCrops)
+                {
+                    result.Add(viewItem);
+                }
+            }
+
+            var stageState = this.GetFieldSystemDetailsStageState();
+            foreach (var viewItem in stageState.DetailsScreenViewCropViewItems)
+            {
+                result.Add(viewItem);
+            }
+
+            return result;
+        }
+
         #endregion
 
         #region Event Handlers

@@ -26,6 +26,7 @@ using H.Core.Models.Animals.Poultry.Chicken;
 using H.Core.Models.Animals.Poultry.Turkey;
 using H.Core.Services.StorageService;
 using H.Infrastructure;
+using Microsoft.Extensions.Logging;
 using ReactiveUI;
 
 namespace H.Avalonia.ViewModels.ComponentViews
@@ -52,7 +53,7 @@ namespace H.Avalonia.ViewModels.ComponentViews
             this.SelectedComponent = this.AvailableComponents.First();
         }
 
-        public ChooseComponentsViewModel(IEventAggregator eventAggregator, IRegionManager regionManager, IStorageService storageService) : base(regionManager, eventAggregator, storageService)
+        public ChooseComponentsViewModel(IEventAggregator eventAggregator, IRegionManager regionManager, IStorageService storageService, ILogger logger) : base(regionManager, eventAggregator, storageService, logger)
         {
             this.PropertyChanged += OnPropertyChanged;
             this.AvailableComponents = new ObservableCollection<ComponentBase>();

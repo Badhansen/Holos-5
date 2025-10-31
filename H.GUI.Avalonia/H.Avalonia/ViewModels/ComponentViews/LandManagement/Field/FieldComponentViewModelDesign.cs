@@ -2,6 +2,7 @@
 using H.Core.Calculators.UnitsOfMeasurement;
 using H.Core.Enumerations;
 using H.Core.Factories;
+using H.Core.Factories.Crops;
 using H.Core.Models;
 using H.Core.Services.LandManagement.Fields;
 using H.Core.Services.StorageService;
@@ -32,11 +33,16 @@ public class FieldComponentViewModelDesign : FieldComponentViewModel
             DisplayUnitStrings = new DisplayUnitStrings()
             {
                 HectaresString = "(ha)",
+                MillimetersPerHectareString = "(mm ha⁻¹)",
+                KilogramsPerHectareString = "(kg ha⁻¹)"
             }
         };
+
+        base.SelectedCropDto = new CropDto();
+        base.SelectedCropDto.AmountOfIrrigation = 100;
     }
 
-    public FieldComponentViewModelDesign(IRegionManager regionManager, IEventAggregator eventAggregator, IStorageService storageService, IFieldComponentDtoFactory fieldComponentDtoFactory, ICropFactory cropFactory, IFieldComponentService fieldComponentService, IUnitsOfMeasurementCalculator unitsOfMeasurementCalculator, ILogger logger) : base(regionManager, eventAggregator, storageService, fieldComponentService, unitsOfMeasurementCalculator, logger)
+    public FieldComponentViewModelDesign(IRegionManager regionManager, IEventAggregator eventAggregator, IStorageService storageService, IFieldFactory fieldFactory, ICropFactory cropFactory, IFieldComponentService fieldComponentService, ILogger logger) : base(regionManager, eventAggregator, storageService, fieldComponentService, logger, cropFactory)
     {
     }
 }

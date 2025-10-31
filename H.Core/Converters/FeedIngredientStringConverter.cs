@@ -87,7 +87,7 @@ namespace H.Core.Converters {
                 case "bermudagrasscynodondactlyoncoastalhayearlyhead":
                     return IngredientType.BermudaGrassCoastalHayEarlyHead;
                 case "bermudagrasscynodondactlyontiftonhaywkgrowth":
-                    return IngredientType.BermudaGrassCoastalHayEarlyHead;
+                    return IngredientType.BermudaGrassTiftonHayThreeTo4WeekGrowth;
                 case "bermudagrassfresh":
                     return IngredientType.BermudaGrassFresh;
                 case "bermudagrasshay":
@@ -243,7 +243,7 @@ namespace H.Core.Converters {
                 case "cornsilage":
                     return IngredientType.CornSilage;
                 case "cornsnaplage":
-                    return IngredientType.BermudaGrassSilage;
+                    return IngredientType.CornSnaplage;
                 case "cornstalklage":
                     return IngredientType.CornStalklage;
                 case "cornstalks":
@@ -285,7 +285,7 @@ namespace H.Core.Converters {
                 case "cottonburrs":
                     return IngredientType.CottonBurrs;
                 case "cottongintrash":
-                    return IngredientType.BermudaGrassSilage;
+                    return IngredientType.CottonGinTrash;
                 case "cottonseed":
                     return IngredientType.CottonSeed;
                 case "cottonseedfullfat":
@@ -391,7 +391,7 @@ namespace H.Core.Converters {
                 case "grainsorghumstalks":
                     return IngredientType.ForageGrainSorghumStalks;
                 case "grainsorghumflaked":
-                    return IngredientType.CornGrainSteamFlaked;
+                    return IngredientType.ForageGrainSorghumFlaked;
                 case "grainsorghumhighmoisture":
                     return IngredientType.ForageGrainSorghumHighMoisture;
                 case "grapepomacedry":
@@ -765,7 +765,7 @@ namespace H.Core.Converters {
                 case "sugarcanehay":
                     return IngredientType.SugarcaneHay;
                 case "sugarcanesilage":
-                    return IngredientType.SudangrassSilage;
+                    return IngredientType.SugarcaneSilage;
                 case "sugarbeetmolasses":
                     return IngredientType.SugarbeetMolasses;
                 case "sugarbeetpulp":
@@ -813,7 +813,7 @@ namespace H.Core.Converters {
                 case "triticalegrain":
                     return IngredientType.TriticaleGrain;
                 case "triticalehay":
-                    return IngredientType.TimothyHay;
+                    return IngredientType.TriticaleHay;
                 case "triticalesilage":
                     return IngredientType.TriticaleSilage;
                 case "triticalesilageheaded":
@@ -917,7 +917,7 @@ namespace H.Core.Converters {
                 case "magnesiumsulfateheptahydrate":
                     return IngredientType.MagnesiumSulfateHeptahydrate;
                 case "manganesecarbonate":
-                    return IngredientType.MagnesiumCarbonate;
+                    return IngredientType.ManganeseCarbonate;
                 case "manganeseoxide":
                     return IngredientType.ManganeseOxide;
                 case "manganesesulfatemonohydrate":

@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:field="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Field"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="H.Avalonia.FieldComponentStep2View">
+
+    <Design.DataContext>
+        <field:FieldComponentViewModelDesign/>
+    </Design.DataContext>
+
+    <StackPanel>
+
+        <StackPanel>
+            <TextBlock Name="HeaderTextBlock"
+                       Classes="step-number">Step #2</TextBlock>
+
+            <TextBlock Name="SubHeaderTextBlock"
+                       Classes="step-number-description">Enter field history</TextBlock>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal">
+            <Button Command="{Binding AddCropCommand}" Classes="add-group" Content="Add Crop"/>
+            <Button Command="{Binding RemoveCropCommand}" Classes="add-group" Content="Remove Crop"/>
+        </StackPanel>
+
+        <DataGrid ItemsSource="{Binding Path= SelectedFieldSystemComponentDto.CropDtos}"
+                  SelectedItem="{Binding Path=SelectedCropDto}"
+                  AutoGenerateColumns="False"
+                  HorizontalAlignment="Left"
+                  Height="300"
+                  BorderThickness="1"
+                  GridLinesVisibility="All">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Width="Auto"
+                                    Header="Year"
+                                    Binding="{Binding Path=Year}"
+                                    IsReadOnly="True"/>
+
+                <DataGridTemplateColumn MinWidth="120"  Header="Crop" IsReadOnly="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox x:Name="combo"
+                                      MinWidth="200"
+                                      ItemsSource="{Binding Path=ValidCropTypes}"
+                                      SelectedItem="{Binding Path=CropType}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </StackPanel>
+</UserControl>

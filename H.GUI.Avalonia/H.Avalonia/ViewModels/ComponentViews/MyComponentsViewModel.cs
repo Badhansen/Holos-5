@@ -9,6 +9,8 @@ using H.Core.Models;
 using H.Core.Services;
 using H.Core.Services.LandManagement.Fields;
 using H.Core.Services.StorageService;
+using Microsoft.Extensions.Logging;
+using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 
@@ -33,7 +35,7 @@ public class MyComponentsViewModel : ViewModelBase
         this.MyComponents = new ObservableCollection<ComponentBase>();
     }
 
-    public MyComponentsViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IStorageService storageService, IComponentInitializationService componentInitializationService) : base(regionManager, eventAggregator, storageService)
+    public MyComponentsViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IStorageService storageService, IComponentInitializationService componentInitializationService, ILogger logger) : base(regionManager, eventAggregator, storageService, logger)
     {
         if (componentInitializationService != null)
         {
@@ -48,6 +50,9 @@ public class MyComponentsViewModel : ViewModelBase
 
         this.MyComponents = new ObservableCollection<ComponentBase>();
         
+        // Initialize the RemoveComponent command
+        RemoveComponent = new DelegateCommand(OnRemoveComponentExecute, OnRemoveComponentCanExecute);
+        
         base.EventAggregator.GetEvent<ComponentAddedEvent>().Subscribe(OnComponentAddedEvent);
         base.EventAggregator.GetEvent<EditingComponentsCompletedEvent>().Subscribe(OnEditingComponentsCompletedEvent);
     }
@@ -59,7 +64,11 @@ public class MyComponentsViewModel : ViewModelBase
     public ComponentBase SelectedComponent
     {
         get => _selectedComponent;
-        set => SetProperty(ref _selectedComponent, value);
+        set 
+        {
+            SetProperty(ref _selectedComponent, value);
+            RemoveComponent.RaiseCanExecuteChanged();
+        }
     }
 
     public ObservableCollection<ComponentBase> MyComponents
@@ -72,6 +81,8 @@ public class MyComponentsViewModel : ViewModelBase
         get => _selectedFarm;
         set => SetProperty(ref _selectedFarm, value);
     }
+
+    public DelegateCommand RemoveComponent { get; }
 
     #endregion
 
@@ -94,6 +105,8 @@ public class MyComponentsViewModel : ViewModelBase
             }
 
             base.IsInitialized = true;
+
+            this.SelectedComponent = this.MyComponents.FirstOrDefault();
         }
     }
 
@@ -114,10 +127,27 @@ public class MyComponentsViewModel : ViewModelBase
     {
         if (this.SelectedComponent != null)
         {
-            this.MyComponents.Remove(this.SelectedComponent);
+            // Store the component to remove since the SelectedComponent will be null after removal from the local collection
+            var componentToRemove = this.SelectedComponent;
+
+            // Remove from the local collection
+            this.MyComponents.Remove(componentToRemove);
+            
+            // Remove from the farm's Components collection
+            base.ActiveFarm.Components.Remove(componentToRemove);
 
             this.SelectedComponent = this.MyComponents.LastOrDefault();
+
+            if (this.MyComponents.Any() == false)
+            {
+                this.ClearActiveView();
+            }
         }
+    }
+
+    private bool OnRemoveComponentCanExecute()
+    {
+        return this.SelectedComponent != null;
     }
 
     private void OnComponentAddedEvent(ComponentBase componentBase)

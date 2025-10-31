@@ -14,9 +14,11 @@ using System.Collections;
 using Avalonia;
 using Avalonia.Threading;
 using System;
+using System.Configuration;
 using System.Threading.Tasks;
 using H.Avalonia.Services;
 using H.Core.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace H.Avalonia.ViewModels
 {
@@ -31,6 +33,7 @@ namespace H.Avalonia.ViewModels
         private IRegionManager _regionManager;
         private IStorageService _storageService;
         private string _viewName;
+        protected ILogger Logger;
 
         #endregion
 
@@ -62,6 +65,18 @@ namespace H.Avalonia.ViewModels
             else
             {
                 throw new ArgumentNullException(nameof(notificationManager));
+            }
+        }
+
+        protected ViewModelBase(IStorageService storageService, ILogger logger) : this(storageService)
+        {
+            if (logger != null)
+            {
+                Logger = logger;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(logger));
             }
         }
 
@@ -144,20 +159,35 @@ namespace H.Avalonia.ViewModels
         }
 
         protected ViewModelBase(
-            IRegionManager regionManager, 
+            IRegionManager regionManager,
             IEventAggregator eventAggregator,
-            IStorageService storageService) : this(regionManager, storageService)
+            IStorageService storageService, ILogger logger) : this(regionManager, storageService)
         {
+            if (logger != null)
+            {
+                this.Logger = logger;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
+
             if (storageService != null)
             {
                 this.StorageService = storageService;
-                this.StorageService.Storage.ApplicationData.GlobalSettings.PropertyChanged += GlobalSettingsPropertyChanged;
+                this.StorageService.Storage.ApplicationData.GlobalSettings.PropertyChanged +=
+                    GlobalSettingsPropertyChanged;
             }
             else
             {
                 throw new ArgumentNullException(nameof(storageService));
             }
+        }
 
+        protected ViewModelBase(IRegionManager regionManager,
+            IEventAggregator eventAggregator,
+            IStorageService storageService, IWindowNotificationManagerService notificationManager) : this(regionManager, storageService)
+        {
             if(eventAggregator != null)
             {
                 this.EventAggregator = eventAggregator;
@@ -165,6 +195,15 @@ namespace H.Avalonia.ViewModels
             else
             {
                 throw new ArgumentNullException(nameof(eventAggregator));
+            }
+
+            if (notificationManager != null)
+            {
+                this.NotificationManager = notificationManager;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(notificationManager));
             }
         }
 
@@ -257,6 +296,7 @@ namespace H.Avalonia.ViewModels
 
         public virtual void InitializeViewModel(ComponentBase component)
         {
+            Logger.LogDebug("initializing " + component);
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

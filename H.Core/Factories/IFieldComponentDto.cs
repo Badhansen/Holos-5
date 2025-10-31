@@ -1,11 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using H.Core.Factories.Crops;
 
 namespace H.Core.Factories;
 
-public interface IFieldComponentDto : INotifyPropertyChanged
+public interface IFieldComponentDto : IDto
 {
-    public string Name { get; set; }
     ObservableCollection<ICropDto> CropDtos { get; set; }
 
     /// <summary>

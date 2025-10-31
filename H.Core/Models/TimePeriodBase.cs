@@ -83,7 +83,7 @@ namespace H.Core.Models
             get { return _endYear; }
             set 
             {
-                if (value < this.StartYear)
+                if ((value < this.StartYear) || value <= 0)
                 {
                     return;
                 }
@@ -121,6 +121,11 @@ namespace H.Core.Models
 
         private void OnEndYearChanged()
         {
+            if (this.EndYear <= 0)
+            {
+                return;
+            }
+
             this.End = new DateTime(this.EndYear, this.End.Month, this.End.Day);
         }
 

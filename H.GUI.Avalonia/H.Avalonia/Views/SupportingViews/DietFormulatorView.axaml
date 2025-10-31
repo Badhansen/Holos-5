@@ -1,0 +1,121 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="600"
+             xmlns:properties="clr-namespace:H.Core.Properties;assembly=H.Core"
+             xmlns:vm="clr-namespace:H.Avalonia.ViewModels.SupportingViews"
+             x:Class="H.Avalonia.Views.SupportingViews.DietFormulatorView">
+
+    <Design.DataContext>
+        <vm:DietFormulatorViewModelDesign />
+    </Design.DataContext>
+
+    <StackPanel Margin="20">
+        
+        <!-- Header -->
+        <TextBlock Text="{x:Static properties:Resources.LabelDietFormulator}" 
+                   FontSize="24" 
+                   FontWeight="Bold" 
+                   Margin="0,0,0,20"
+                   HorizontalAlignment="Center" />
+
+        <!-- Search Bar -->
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="0,0,0,20">
+            <Grid Width="300" VerticalAlignment="Center">
+                <TextBox Text="{Binding SearchText}" 
+                         Watermark="Search diets..." 
+                         VerticalContentAlignment="Center" 
+                         VerticalAlignment="Center" 
+                         Foreground="#696969" 
+                         BorderBrush="#EDEDED" 
+                         BorderThickness="2" 
+                         FontWeight="SemiBold" 
+                         Padding="40,10,0,10" />
+                <Image Source="avares://H.Avalonia/Assets/Images/Icons/search-icon.png" 
+                       Width="20" 
+                       Height="20" 
+                       VerticalAlignment="Center" 
+                       HorizontalAlignment="Left" 
+                       Margin="10,0"/>
+            </Grid>
+        </StackPanel>
+
+        <!-- Diet Data Grid -->
+        <DataGrid SelectedItem="{Binding SelectedDiet}" 
+                  ItemsSource="{Binding Diets}"  
+                  AutoGenerateColumns="False" 
+                  Margin="0,20,0,0" 
+                  Padding="20" 
+                  GridLinesVisibility="All" 
+                  IsReadOnly="True" 
+                  Height="400" 
+                  BorderThickness="2"  
+                  BorderBrush="#EDEDED" 
+                  CornerRadius="10" 
+                  Background="#f5f5f5">
+            
+            <DataGrid.Styles>
+                <Style Selector="DataGridColumnHeader">
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="FontSize" Value="14" />
+                </Style>
+            </DataGrid.Styles>
+
+            <DataGrid.Columns>
+                <!-- Diet Name -->
+                <DataGridTextColumn Header="{x:Static properties:Resources.LabelName}" 
+                                    Binding="{Binding Name}" 
+                                    Width="200" />
+                
+                <!-- Animal Type -->
+                <DataGridTextColumn Header="{x:Static properties:Resources.LabelAnimalType}" 
+                                    Binding="{Binding AnimalType}" 
+                                    Width="150" />
+                
+                <!-- Diet Type -->
+                <DataGridTextColumn Header="{x:Static properties:Resources.LabelDietType}" 
+                                    Binding="{Binding DietType}" 
+                                    Width="150" />
+                
+                <!-- Crude Protein -->
+                <DataGridTextColumn Header="{x:Static properties:Resources.LabelCrudeProtein}" 
+                                    Binding="{Binding CrudeProtein, StringFormat='{}{0:F2}'}" 
+                                    Width="120" />
+                
+                <!-- Total Digestible Nutrient -->
+                <DataGridTextColumn Header="{x:Static properties:Resources.LabelTotalDigestibleNutrient}" 
+                                    Binding="{Binding TotalDigestibleNutrient, StringFormat='{}{0:F2}'}" 
+                                    Width="120" />
+                
+                <!-- Forage -->
+                <DataGridTextColumn Header="{x:Static properties:Resources.LabelForage}" 
+                                    Binding="{Binding Forage, StringFormat='{}{0:F2}'}" 
+                                    Width="100" />
+                
+                <!-- Daily Dry Matter Feed Intake -->
+                <DataGridTextColumn Header="{x:Static properties:Resources.LabelDailyDryMatterFeedIntake}" 
+                                    Binding="{Binding DailyDryMatterFeedIntakeOfFeed, StringFormat='{}{0:F2}'}" 
+                                    Width="150" />
+                
+                <!-- Methane Conversion Factor -->
+                <DataGridTextColumn Header="{x:Static properties:Resources.LabelMethaneConversionFactor}" 
+                                    Binding="{Binding MethaneConversionFactor, StringFormat='{}{0:F3}'}" 
+                                    Width="150" />
+                
+                <!-- Comments -->
+                <DataGridTextColumn Header="{x:Static properties:Resources.LabelComments}" 
+                                    Binding="{Binding Comments}" 
+                                    Width="200" />
+                
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Status Bar -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+            <TextBlock Text="Total Diets: " FontWeight="SemiBold" />
+            <TextBlock Text="{Binding Diets.Count}" FontWeight="Bold" />
+        </StackPanel>
+
+    </StackPanel>
+</UserControl>

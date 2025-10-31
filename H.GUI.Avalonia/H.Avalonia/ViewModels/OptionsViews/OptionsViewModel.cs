@@ -4,6 +4,7 @@ using H.Avalonia.Events;
 using H.Avalonia.Views.ComponentViews;
 using H.Avalonia.Views.FarmCreationViews;
 using H.Core.Events;
+using H.Avalonia.Views.SupportingViews;
 using H.Core.Models;
 using Prism.Events;
 using Prism.Regions;
@@ -115,6 +116,12 @@ namespace H.Avalonia.ViewModels.OptionsViews
                         base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(Views.OptionsViews.FileMenuViews.FileExportManureView));
                         break;
                     // Settings Menu
+                    case "Diets":
+                        base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(DietFormulatorView));
+                        break;
+                    case "Ingredients":
+                        base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(FeedIngredientsView));
+                        break;
                     case "Farm":
                         base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(Views.OptionsViews.OptionFarmView));
                         break;

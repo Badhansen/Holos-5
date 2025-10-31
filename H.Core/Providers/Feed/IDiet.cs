@@ -2,5 +2,9 @@
 
 public interface IDiet
 {
-    string Name { get; }
+    public interface IDiet
+    {
+        string Name { get; }
+        IList<IFeedIngredient> Ingredients { get; }
+    }
 }

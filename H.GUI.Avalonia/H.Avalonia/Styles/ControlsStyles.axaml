@@ -5,11 +5,11 @@
             <!-- Add Controls for Previewer Here -->
         </Border>
     </Design.PreviewWith>
-    
+
     <!-- Button Styles -->
     <Style Selector="Button">
         <Setter Property="Cursor" Value="Hand"/>
-        <Setter Property="Background" Value="DarkGreen" />
+        <Setter Property="Background" Value="{StaticResource DefaultHighlightBrush}" />
 		<Setter Property="Foreground" Value="White" />
 		<Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Padding" Value="50, 10"/>
@@ -96,6 +96,7 @@
         <Setter Property="BorderThickness" Value="1" />
     </Style>
 
+
 	<!-- TextBlock Styles -->
 	<Style Selector="TextBlock.title-textblock">
 		<Setter Property="FontWeight" Value="Bold"/>
@@ -111,21 +112,50 @@
 		<Setter Property="FontStyle" Value="Italic"/>
 	</Style>
 
+    <Style Selector="TextBlock.step-number">
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{StaticResource DefaultHighlightBrush}"/>
+        <Setter Property="TextDecorations" Value="Underline"/>
+        <Setter Property="Margin" Value="0,0,0,14"/>
+    </Style>
+
+    <Style Selector="TextBlock.step-number-description">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontStyle" Value="Italic"/>
+        <Setter Property="Foreground" Value="#605D5D"/>
+        <Setter Property="Margin" Value="0,0,4,0"/>
+    </Style>
+
 	<!-- TextBox Styles -->
 	<Style Selector="TextBox.view-title">
 		<Setter Property="FontSize" Value="36"/>
 		<Setter Property="FontWeight" Value="Bold"/>
-		<Setter Property="Margin" Value="10,10,0,0"/>
+		<Setter Property="Margin" Value="0,10,0,0"/>
 		<Setter Property="Foreground" Value="#605D5D"/>
 		<Setter Property="BorderThickness" Value="0"/>
 	</Style>
 	
 	<!-- Border Styles -->
 	<Style Selector="Border.title-underline">
-		<Setter Property="BorderBrush" Value="#D7D7D7"/>
+		<Setter Property="BorderBrush" Value="DarkGray"/>
 		<Setter Property="BorderThickness" Value="0,0,0,3"/>
 		<Setter Property="Margin" Value="0,10,0,0"/>
 	</Style>
+
+    <Style Selector="Border.control-separator">
+        <Setter Property="BorderBrush" Value="#D7D7D7"/>
+        <Setter Property="BorderThickness" Value="0,0,0,3"/>
+        <Setter Property="Margin" Value="0,10,0,0"/>
+    </Style>
+
+    <Style Selector="GridSplitter.default-horizontal-style">
+        <Setter Property="ResizeDirection" Value="Rows"/>
+        <Setter Property="Height" Value="1"/>
+        <Setter Property="Background" Value="LightGray"/>
+        <Setter Property="BorderThickness" Value="0,0,0,3"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    </Style>
 
 	<!-- DataValidationErrors Styles-->
 	    <!--Textblock-->
@@ -144,4 +174,22 @@
 				</DataTemplate>
 			</Setter>
 		</Style>
+
+	<!-- Label Styles -->
+	<!-- Style for labels that appear before input boxes -->
+	<Style Selector="Label.input-label">
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Foreground" Value="RoyalBlue"/>
+		<Setter Property="MinWidth" Value="220"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+	</Style>
+	
+	<!-- Style for unit labels -->
+	<Style Selector="Label.unit-label">
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="MinWidth" Value="120"/>
+        <Setter Property="FontStyle" Value="Italic"/>
+	</Style>
 </Styles>

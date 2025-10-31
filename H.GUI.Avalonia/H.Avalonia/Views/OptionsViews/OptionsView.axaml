@@ -51,6 +51,8 @@
 					<ListBoxItem Content="Soil"/>
 					<ListBoxItem Content="Temperature"/>
 					<ListBoxItem Content="Barn Temperatures"/>
+                        <ListBoxItem Content="Diets"/>
+                        <ListBoxItem Content="Ingredients"/>
 					<ListBoxItem Content="Precipitation"/>
 					<ListBoxItem Content="Evapotranspiration"/>
 					<ListBoxItem Content="Soil N2O Breakdown"/>

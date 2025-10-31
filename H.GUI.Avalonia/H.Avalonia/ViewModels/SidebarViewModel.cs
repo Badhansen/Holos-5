@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using H.Core.Services.StorageService;
+using Microsoft.Extensions.Logging;
 
 namespace H.Avalonia.ViewModels
 {
@@ -26,7 +27,7 @@ namespace H.Avalonia.ViewModels
             Title = Core.Properties.Resources.ApplicationTitle;
         }
 
-        public SidebarViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IStorageService storageService) : base(regionManager, eventAggregator, storageService)
+        public SidebarViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IStorageService storageService, ILogger logger) : base(regionManager, eventAggregator, storageService, logger)
         {
             Title = Core.Properties.Resources.ApplicationTitle;
             _regionManager = regionManager;

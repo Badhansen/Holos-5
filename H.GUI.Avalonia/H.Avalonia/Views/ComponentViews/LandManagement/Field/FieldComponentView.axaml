@@ -1,0 +1,72 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:field="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Field"
+             xmlns:fieldViews="clr-namespace:H.Avalonia.Views.ComponentViews.LandManagement.Field"
+             xmlns:properties="clr-namespace:H.Avalonia.Infrastructure.Properties;assembly=H.Avalonia.Infrastructure"
+             xmlns:avalonia="clr-namespace:H.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="950"
+             x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Field.FieldComponentView">
+
+	<Design.DataContext>
+		<field:FieldComponentViewModelDesign/>
+	</Design.DataContext>
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<!-- Title -->
+			<RowDefinition Height="Auto"/>
+			<!-- Content -->
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+
+		<StackPanel Grid.Row="0">
+			<!-- Title -->
+			<TextBox Classes="view-title" Text="{Binding Path=SelectedFieldSystemComponentDto.Name}"/>
+			<Border Classes="title-underline"/>
+		</StackPanel>
+
+		<Grid Grid.Row="1">
+			<Grid.RowDefinitions>
+				<!-- Step 1 row -->
+                <RowDefinition Height="Auto"/>
+
+                <!-- Step 1 GridSplitter row -->
+				<RowDefinition Height="Auto"/>
+
+                <!-- Step 2 row -->
+				<RowDefinition/>
+
+                <!-- Step 2 GridSplitter row -->
+				<RowDefinition Height="Auto"/>
+
+                <!-- Step 3 row -->
+				<RowDefinition/>
+				
+			</Grid.RowDefinitions>
+
+			<!-- Begin step 1 -->
+
+			<fieldViews:FieldComponentStep1View Grid.Row="0" Margin="{StaticResource DefaultUserControlMargin}"/>
+
+			<!-- End step 1 -->
+
+			<GridSplitter Grid.Row="1" Classes="default-horizontal-style"/>
+
+			<!-- Begin step 2 -->
+
+			<avalonia:FieldComponentStep2View Grid.Row="2" Margin="{StaticResource DefaultUserControlMargin}"/>
+
+			<!-- End step 2 -->
+
+			<GridSplitter Grid.Row="3" Classes="default-horizontal-style"/>
+
+			<!-- Begin step 3 -->
+			<avalonia:SelectedCropTabView Grid.Row="4"/>
+
+			<!-- End step 3 -->
+		</Grid>
+	</Grid>
+</UserControl>

@@ -13,7 +13,7 @@ public class FieldComponentDtoFactoryTest
 {
     #region Fields
 
-    private IFieldComponentDtoFactory _factory;
+    private IFieldFactory _factory;
 
     #endregion
 
@@ -32,11 +32,9 @@ public class FieldComponentDtoFactoryTest
     [TestInitialize]
     public void TestInitialize()
     {
-        var mockCropDtoFactory = new Mock<ICropFactory>();
-        var mockUnitsOfMeasurementCalculator = new Mock<IUnitsOfMeasurementCalculator>();
         var mockContainerProvider = new Mock<IContainerProvider>();
 
-        _factory = new FieldComponentDtoFactory(mockCropDtoFactory.Object, mockUnitsOfMeasurementCalculator.Object, mockContainerProvider.Object);
+        _factory = new FieldFactory(mockContainerProvider.Object);
     }
 
     [TestCleanup]

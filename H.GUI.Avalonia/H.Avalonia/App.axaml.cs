@@ -19,6 +19,7 @@ using H.Avalonia.ViewModels.FarmCreationViews;
 using H.Avalonia.ViewModels.OptionsViews;
 using H.Avalonia.ViewModels.OptionsViews.FileMenuViews;
 using H.Avalonia.ViewModels.Results;
+using H.Avalonia.ViewModels.SupportingViews;
 using H.Avalonia.ViewModels.SupportingViews.CountrySelection;
 using H.Avalonia.ViewModels.SupportingViews.Disclaimer;
 using H.Avalonia.ViewModels.SupportingViews.MeasurementProvince;
@@ -26,7 +27,10 @@ using H.Avalonia.ViewModels.SupportingViews.RegionSelection;
 using H.Avalonia.ViewModels.SupportingViews.Start;
 using H.Avalonia.Views;
 using H.Avalonia.Views.ComponentViews;
+using H.Avalonia.Views.ComponentViews.LandManagement.Field;
 using H.Avalonia.Views.FarmCreationViews;
+using H.Avalonia.Views.ResultViews;
+using H.Avalonia.Views.SupportingViews;
 using H.Avalonia.Services;
 using H.Avalonia.Views.SupportingViews.CountrySelection;
 using H.Avalonia.Views.SupportingViews.Disclaimer;
@@ -36,12 +40,18 @@ using H.Core;
 using H.Core.Calculators.UnitsOfMeasurement;
 using H.Core.Enumerations;
 using H.Core.Factories;
+using H.Core.Factories.FarmFactory;
 using H.Core.Mappers;
+using H.Core.Models.Animals;
+using H.Core.Models.LandManagement.Fields;
 using H.Core.Providers;
+using H.Core.Providers.Energy;
 using H.Core.Providers.Feed;
 using H.Core.Services;
+using H.Core.Services.Animals;
 using H.Core.Services.Countries;
 using H.Core.Services.DietService;
+using H.Core.Services.Initialization;
 using H.Core.Services.LandManagement.Fields;
 using H.Core.Services.Provinces;
 using H.Core.Services.StorageService;
@@ -56,6 +66,7 @@ using Prism.Regions;
 using System;
 using System.Text.RegularExpressions;
 using System.Threading;
+using H.Core.Factories.Crops;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using ClimateResultsView = H.Avalonia.Views.ResultViews.ClimateResultsView;
@@ -98,6 +109,24 @@ namespace H.Avalonia
         /// <param name="containerRegistry"></param>
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            #region Storage Registrations
+
+            // V5 object
+            containerRegistry.RegisterSingleton<Storage>();
+
+            // V4 object
+            containerRegistry.RegisterSingleton<IStorage, H.Core.Storage>();
+
+            containerRegistry.RegisterSingleton<IStorageService, DefaultStorageService>();
+
+
+            var storage = Container.Resolve<IStorage>();
+            storage.Load();
+            var b = base.Container.Resolve<IStorageService>();
+            var c = b.GetActiveFarm();
+
+            #endregion
+
             // Logging
             this.SetUpLogging(containerRegistry);
 
@@ -112,7 +141,7 @@ namespace H.Avalonia
             containerRegistry.RegisterForNavigation<SoilResultsView, SoilResultsViewModel>();
             containerRegistry.RegisterForNavigation<MyComponentsView, MyComponentsViewModel>();
             containerRegistry.RegisterForNavigation<ChooseComponentsView, ChooseComponentsViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.LandManagement.FieldComponentView, FieldComponentViewModel>();
+            containerRegistry.RegisterForNavigation<FieldComponentView, FieldComponentViewModel>();
             containerRegistry.RegisterForNavigation<Views.OptionsViews.OptionsView, OptionsViewModel>();
             containerRegistry.RegisterForNavigation<Views.OptionsViews.SelectOptionView, SelectOptionViewModel>();
             containerRegistry.RegisterForNavigation<Views.OptionsViews.OptionFarmView, FarmSettingsViewModel>();
@@ -175,22 +204,16 @@ namespace H.Avalonia
             containerRegistry.RegisterForNavigation<Views.OptionsViews.FileMenuViews.FileExportClimateView, FileExportClimateViewModel>();
             containerRegistry.RegisterForNavigation<Views.OptionsViews.FileMenuViews.FileExportManureView, FileExportManureViewModel>();
 
+            // Diet
+            containerRegistry.RegisterForNavigation<Views.SupportingViews.DietFormulatorView, DietFormulatorViewModel>();
+            containerRegistry.RegisterForNavigation<Views.SupportingViews.FeedIngredientsView, FeedIngredientsViewModel>();
+
             // Blank Page
             containerRegistry.RegisterForNavigation<Views.BlankView, BlankViewModel>();
 
             //containerRegistry.RegisterSingleton<ResultsViewModelBase>();
 
-            #region Storage Registrations
 
-            // V5 object
-            containerRegistry.RegisterSingleton<Storage>();
-
-            // V4 object
-            containerRegistry.RegisterSingleton<IStorage, H.Core.Storage>();
-
-            containerRegistry.RegisterSingleton<IStorageService, DefaultStorageService>();
-
-            #endregion
 
             // Providers
             containerRegistry.RegisterSingleton<GeographicDataProvider>();
@@ -210,24 +233,42 @@ namespace H.Avalonia
             containerRegistry.RegisterSingleton<IFieldComponentService, FieldComponentService>();
             containerRegistry.RegisterSingleton<IFarmResultsService_NEW, FarmResultsService_NEW>();
             containerRegistry.RegisterSingleton<IDietService, DefaultDietService>();
+            containerRegistry.RegisterSingleton<ICropInitializationService, CropInitializationService>();
+            containerRegistry.RegisterSingleton<IAnimalComponentService, AnimalComponentService>();
+            containerRegistry.RegisterSingleton<IManagementPeriodService, ManagementPeriodService>();
             containerRegistry.RegisterSingleton<IErrorHandlerService, ErrorHandlerService>();
             containerRegistry.RegisterSingleton<IWindowNotificationManagerService, WindowNotificationManagerService>();
 
             // Unit conversion
             containerRegistry.RegisterSingleton<IUnitsOfMeasurementCalculator, UnitsOfMeasurementCalculator>();
+
+            var a = Container.Resolve<IUnitsOfMeasurementCalculator>();
             
             // Dialogs
             containerRegistry.RegisterDialog<DeleteRowDialog, DeleteRowDialogViewModel>();
 
             // Factories
-            containerRegistry.RegisterSingleton<ICropFactory, CropFactory>();
-            containerRegistry.RegisterSingleton<IFieldComponentDtoFactory, FieldComponentDtoFactory>();
             containerRegistry.RegisterSingleton<IDietFactory, DietFactory>();
+            containerRegistry.RegisterSingleton<IFarmFactory, FarmFactory>();
+            containerRegistry.RegisterSingleton<IManagementPeriodFactory, ManagementPeriodFactory>();
+
+            containerRegistry.Register(typeof(IFactory<CropDto>), typeof(CropFactory));
+            containerRegistry.Register(typeof(IFactory<FieldSystemComponentDto>), typeof(FieldFactory));
+            containerRegistry.Register(typeof(IFactory<AnimalComponentDto>), typeof(AnimalComponentFactory));
+
+            containerRegistry.Register(typeof(ICropFactory), typeof(CropFactory));
+            containerRegistry.Register(typeof(IFieldFactory), typeof(FieldFactory));
+            containerRegistry.RegisterSingleton<IAnimalComponentFactory, AnimalComponentFactory>();
+
+            // Tables
+            containerRegistry.RegisterSingleton<ITable50FuelEnergyEstimatesProvider, Table50FuelEnergyEstimatesProvider>();
 
             // Mappers
             this.SetupMappers(containerRegistry);
 
             this.SetUpCaching(containerRegistry);
+
+            this.SetupTransferServices(containerRegistry);
         }
 
         protected override AvaloniaObject CreateShell()
@@ -254,11 +295,8 @@ namespace H.Avalonia
             regionManager.RegisterViewWithRegion(UiRegions.ContentRegion, typeof(FarmOpenExistingView));
 
             var geographicProvider = Container.Resolve<GeographicDataProvider>();
-            geographicProvider.Initialize();
+            geographicProvider.Initialize(); 
             Container.Resolve<KmlHelpers>();
-
-            var storage = Container.Resolve<IStorage>();
-            storage.Load();
         }
 
         private void SetLanguage()
@@ -300,11 +338,74 @@ namespace H.Avalonia
             containerRegistry.RegisterInstance(typeof(ILogger), logger);
         }
 
+        private void SetupTransferServices(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.Register(typeof(ITransferService<,>), typeof(TransferService<,>));
+
+            // Register TransferService for CropViewItem and CropDto using the named mapper
+            containerRegistry.Register<ITransferService<CropViewItem, CropDto>>(() =>
+            {
+                var unitsCalculator = base.Container.Resolve<IUnitsOfMeasurementCalculator>();
+                var cropDtoFactory = base.Container.Resolve<IFactory<CropDto>>();
+                var dtoToModelMapper = base.Container.Resolve<IMapper>(nameof(CropDtoToCropViewItemMapper));
+                var modelToDtoMapper = base.Container.Resolve<IMapper>(nameof(CropViewItemToCropDtoMapper));
+
+                // If TransferService supports injecting IMapper, pass it here.
+                // If not, you may need to refactor TransferService to accept IMapper via constructor.
+                return new TransferService<CropViewItem, CropDto>(
+                    unitsOfMeasurementCalculator: unitsCalculator,
+                    dtoFactory: cropDtoFactory,
+                    dtoToModelMapper: dtoToModelMapper,
+                    modelToDtoMapper: modelToDtoMapper
+                );
+            });
+
+            // Register TransferService for CropViewItem and CropDto using the named mapper
+            containerRegistry.Register<ITransferService<FieldSystemComponent, FieldSystemComponentDto>>(() =>
+            {
+                var unitsCalculator = base.Container.Resolve<IUnitsOfMeasurementCalculator>();
+                var cropDtoFactory = base.Container.Resolve<IFactory<FieldSystemComponentDto>>();
+                var dtoToModelMapper = base.Container.Resolve<IMapper>(nameof(FieldDtoToFieldComponentMapper));
+                var modelToDtoMapper = base.Container.Resolve<IMapper>(nameof(FieldComponentToDtoMapper));
+
+                // If TransferService supports injecting IMapper, pass it here.
+                // If not, you may need to refactor TransferService to accept IMapper via constructor.
+                return new TransferService<FieldSystemComponent, FieldSystemComponentDto>(
+                    unitsOfMeasurementCalculator: unitsCalculator,
+                    dtoFactory: cropDtoFactory,
+                    dtoToModelMapper: dtoToModelMapper,
+                    modelToDtoMapper: modelToDtoMapper
+                );
+            });
+
+
+            // Register TransferService for CropViewItem and CropDto using the named mapper
+            containerRegistry.Register<ITransferService<AnimalComponentBase, AnimalComponentDto>>(() =>
+            {
+                var unitsCalculator = base.Container.Resolve<IUnitsOfMeasurementCalculator>();
+                var animalDtoFactory = base.Container.Resolve<IFactory<AnimalComponentDto>>();
+                var dtoToModelMapper = base.Container.Resolve<IMapper>(nameof(AnimalComponentDtoToAnimalComponentMapper));
+                var modelToDtoMapper = base.Container.Resolve<IMapper>(nameof(AnimalComponentBaseToAnimalComponentDtoMapper));
+
+                // If TransferService supports injecting IMapper, pass it here.
+                // If not, you may need to refactor TransferService to accept IMapper via constructor.
+                return new TransferService<AnimalComponentBase, AnimalComponentDto>(
+                    unitsOfMeasurementCalculator: unitsCalculator,
+                    dtoFactory: animalDtoFactory,
+                    dtoToModelMapper: dtoToModelMapper,
+                    modelToDtoMapper: modelToDtoMapper
+                );
+            });
+
+
+            var ld = base.Container.Resolve< IComponentInitializationService> ();
+        }
+
         private void SetupMappers(IContainerRegistry containerRegistry)
         {
             var cropDtoToCropDtoConfiguration = new MapperConfiguration(expression =>
             {
-                expression.AddProfile<CropDtoCropDtoMapper>();
+                expression.AddProfile<CropDtoToCropDtoMapper>();
             });
 
             var cropDtoToCropVieItemConfiguration = new MapperConfiguration(expression =>
@@ -322,17 +423,65 @@ namespace H.Avalonia
                 expression.AddProfile<FieldComponentToDtoMapper>();
             });
 
+            var fieldDtoToFieldComponentConfiguration = new MapperConfiguration(expression =>
+            {
+                expression.AddProfile<FieldDtoToFieldComponentMapper>();
+            });
+
             var fieldDtoToFieldDtoConfiguration = new MapperConfiguration(expression =>
             {
                 expression.AddProfile<FieldDtoToFieldDtoMapper>();
             });
 
+            var feedIngredientToFeedIngredientConfiguration = new MapperConfiguration(expression =>
+            {
+                expression.AddProfile<FeedIngredientToFeedIngredientMapper>();
+            });
+
+            var animalComponentDtoToAnimalComponentConfiguration = new MapperConfiguration(expression =>
+            {
+                expression.AddProfile<AnimalComponentDtoToAnimalComponentMapper>();
+            });
+
+            var animalComponentDtoToAnimalComponentDtoConfiguration = new MapperConfiguration(expression =>
+            {
+                expression.AddProfile<AnimalComponentDtoToAnimalComponentDtoMapper>();
+            });
+
+            var animalComponentToAnimalComponentDtoConfiguration = new MapperConfiguration(expression =>
+            {
+                expression.AddProfile<AnimalComponentBaseToAnimalComponentDtoMapper>();
+            });
+
+            var managementPeriodDtoToManagementPeriodDtoConfiguration = new MapperConfiguration(expression =>
+            {
+                expression.AddProfile<ManagementPeriodDtoToManagementPeriodDtoMapper>();
+            });
+
+            var managementPeriodToManagementPeriodDtoConfiguration = new MapperConfiguration(expression =>
+            {
+                expression.AddProfile<ManagementPeriodToManagementPeriodDtoMapper>();
+            });
+
+            var managementPeriodDtoToManagementPeriodConfiguration = new MapperConfiguration(expression =>
+            {
+                expression.AddProfile<ManagementPeriodDtoToManagementPeriodMapper>();
+            });
+
             // Register named mappers
-            containerRegistry.RegisterInstance<IMapper>(cropDtoToCropDtoConfiguration.CreateMapper(), nameof(CropDtoCropDtoMapper));
-            containerRegistry.RegisterInstance<IMapper>(cropDtoToCropVieItemConfiguration.CreateMapper(), nameof(CropDtoToCropViewItemMapper));
-            containerRegistry.RegisterInstance<IMapper>(cropViewItemToCropVieItemConfiguration.CreateMapper(), nameof(CropViewItemToCropDtoMapper));
-            containerRegistry.RegisterInstance<IMapper>(fieldComponentToFieldDtoConfiguration.CreateMapper(), nameof(FieldComponentToDtoMapper));
-            containerRegistry.RegisterInstance<IMapper>(fieldDtoToFieldDtoConfiguration.CreateMapper(), nameof(FieldDtoToFieldDtoMapper));
+            containerRegistry.RegisterInstance(cropDtoToCropDtoConfiguration.CreateMapper(), nameof(CropDtoToCropDtoMapper));
+            containerRegistry.RegisterInstance(cropDtoToCropVieItemConfiguration.CreateMapper(), nameof(CropDtoToCropViewItemMapper));
+            containerRegistry.RegisterInstance(cropViewItemToCropVieItemConfiguration.CreateMapper(), nameof(CropViewItemToCropDtoMapper));
+            containerRegistry.RegisterInstance(fieldComponentToFieldDtoConfiguration.CreateMapper(), nameof(FieldComponentToDtoMapper));
+            containerRegistry.RegisterInstance(fieldDtoToFieldComponentConfiguration.CreateMapper(), nameof(FieldDtoToFieldComponentMapper));
+            containerRegistry.RegisterInstance(fieldDtoToFieldDtoConfiguration.CreateMapper(), nameof(FieldDtoToFieldDtoMapper));
+            containerRegistry.RegisterInstance(feedIngredientToFeedIngredientConfiguration.CreateMapper(), nameof(FeedIngredientToFeedIngredientMapper));
+            containerRegistry.RegisterInstance(animalComponentDtoToAnimalComponentConfiguration.CreateMapper(), nameof(AnimalComponentDtoToAnimalComponentMapper));
+            containerRegistry.RegisterInstance(animalComponentDtoToAnimalComponentDtoConfiguration.CreateMapper(), nameof(AnimalComponentDtoToAnimalComponentDtoMapper));
+            containerRegistry.RegisterInstance(animalComponentToAnimalComponentDtoConfiguration.CreateMapper(), nameof(AnimalComponentBaseToAnimalComponentDtoMapper));
+            containerRegistry.RegisterInstance(managementPeriodDtoToManagementPeriodDtoConfiguration.CreateMapper(), nameof(ManagementPeriodDtoToManagementPeriodDtoMapper));
+            containerRegistry.RegisterInstance(managementPeriodToManagementPeriodDtoConfiguration.CreateMapper(), nameof(ManagementPeriodToManagementPeriodDtoMapper));
+            containerRegistry.RegisterInstance(managementPeriodDtoToManagementPeriodConfiguration.CreateMapper(), nameof(ManagementPeriodDtoToManagementPeriodMapper));
         }
     }
 }

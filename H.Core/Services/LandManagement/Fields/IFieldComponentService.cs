@@ -1,12 +1,12 @@
 ﻿using H.Core.Factories;
+using H.Core.Factories.Crops;
 using H.Core.Models;
 using H.Core.Models.LandManagement.Fields;
 
 namespace H.Core.Services.LandManagement.Fields;
 
-public interface IFieldComponentService :  IFieldComponentDtoFactory, ICropFactory
+public interface IFieldComponentService 
 {
-
     /// <summary>
     /// When adding a new crop to the field, the year must be the next in order so that all years of the field history are consecutive.
     /// </summary>
@@ -34,18 +34,13 @@ public interface IFieldComponentService :  IFieldComponentDtoFactory, ICropFacto
     void ResetAllYears(IEnumerable<ICropDto> cropDtos);
 
     /// <summary>
-    /// Crates a unique component name when adding a field to the farm
-    /// </summary>
-    string GetUniqueFieldName(IEnumerable<FieldSystemComponent> components);
-
-    /// <summary>
     /// Responsible for transferring user input bound to a <see cref="FieldSystemComponentDto"/> to an internal <see cref="FieldSystemComponent"/> before being stored internally.
     /// Method will convert values according to the selected units of measurement.
     /// </summary>
     /// <param name="fieldComponentDto">The object that is bound to the view and collects user input</param>
     /// <param name="fieldSystemComponent">The internal domain object that is used as the basis for input to GHG calculations</param>
     /// <returns>The <see cref="FieldSystemComponent"/> once all values have been transferred</returns>
-    FieldSystemComponent TransferFieldDtoToSystem(IFieldComponentDto fieldComponentDto,
+    FieldSystemComponent TransferFieldDtoToSystem(FieldSystemComponentDto fieldComponentDto,
         FieldSystemComponent fieldSystemComponent);
 
     /// <summary>
@@ -95,4 +90,6 @@ public interface IFieldComponentService :  IFieldComponentDtoFactory, ICropFacto
     /// <param name="fieldSystemComponent">The associated <see cref="FieldSystemComponent"/> that contains the <see cref="CropViewItem"/> to be removed</param>
     /// <param name="cropDto">The <see cref="CropDto"/> that identifies which <see cref="CropViewItem"/> to remove</param>
     void RemoveCropFromSystem(FieldSystemComponent fieldSystemComponent, ICropDto cropDto);
+
+    CropViewItem GetCropViewItemFromDto(ICropDto cropDto, FieldSystemComponent fieldSystemComponent);
 }

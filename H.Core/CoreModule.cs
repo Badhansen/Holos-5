@@ -14,6 +14,7 @@ using H.Core.Providers.Precipitation;
 using H.Core.Providers.Soil;
 using H.Core.Providers.Temperature;
 using H.Core.Services;
+using H.Core.Services.DietService;
 using H.Core.Services.LandManagement;
 using Prism.Ioc;
 using Prism.Modularity;
@@ -55,6 +56,10 @@ namespace H.Core
             containerRegistry.RegisterSingleton<IFeedIngredientProvider, FeedIngredientProvider>();
 
             containerRegistry.RegisterSingleton<IUnitsOfMeasurementCalculator, UnitsOfMeasurementCalculator>();
+            
+            // Diet services
+            containerRegistry.RegisterSingleton<IDietFactory, DietFactory>();
+            containerRegistry.RegisterSingleton<IDietService, DefaultDietService>();
         }
 
         public void OnInitialized(IContainerProvider containerProvider)

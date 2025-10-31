@@ -6339,6 +6339,51 @@ Please note: emissions related to the deposition or application of livestock man
   <data name="TitleSelectFarmFolder" xml:space="preserve">
     <value>Select Farm Folder</value>
   </data>
+  <data name="LabelDietFormulator" xml:space="preserve">
+    <value>Diet Formulator</value>
+  </data>
+  <data name="LabelDietType" xml:space="preserve">
+    <value>Diet Type</value>
+  </data>
+  <data name="LabelCrudeProtein" xml:space="preserve">
+    <value>Crude Protein (%)</value>
+  </data>
+  <data name="LabelTotalDigestibleNutrient" xml:space="preserve">
+    <value>Total Digestible Nutrient (%)</value>
+  </data>
+  <data name="LabelForage" xml:space="preserve">
+    <value>Forage (%)</value>
+  </data>
+  <data name="LabelDailyDryMatterFeedIntake" xml:space="preserve">
+    <value>Daily Dry Matter Feed Intake (kg/day)</value>
+  </data>
+  <data name="LabelMethaneConversionFactor" xml:space="preserve">
+    <value>Methane Conversion Factor</value>
+  </data>
+  <data name="LabelBiomassCoefficientProduct" xml:space="preserve">
+    <value>Biomass Coefficient Product:</value>
+  </data>
+  <data name="LabelBiomassCoefficientStraw" xml:space="preserve">
+    <value>Biomass Coefficient Straw:</value>
+  </data>
+  <data name="LabelBiomassCoefficientRoots" xml:space="preserve">
+    <value>Biomass Coefficient Roots:</value>
+  </data>
+  <data name="LabelBiomassCoefficientExtraroots" xml:space="preserve">
+    <value>Biomass Coefficient Extraroots:</value>
+  </data>
+  <data name="LabelUnitless" xml:space="preserve">
+    <value>(unitless)</value>
+  </data>
+  <data name="TabHeaderGeneral" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="TabHeaderResidues" xml:space="preserve">
+    <value>Residues</value>
+  </data>
+  <data name="TabHeaderFertilizer" xml:space="preserve">
+    <value>Fertilizer</value>
+  </data>
   <data name="NavigationLocked" xml:space="preserve">
     <value>Navigation locked.</value>
   </data>

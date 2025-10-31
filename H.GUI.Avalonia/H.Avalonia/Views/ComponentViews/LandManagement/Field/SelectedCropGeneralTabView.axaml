@@ -1,0 +1,66 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:field="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Field"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="H.Avalonia.SelectedCropGeneralTabView">
+
+	<Design.DataContext>
+		<field:FieldComponentViewModelDesign/>
+	</Design.DataContext>
+
+	<ContentControl Content="{Binding SelectedCropDto}">
+		<ContentControl.ContentTemplate>
+			<DataTemplate>
+				<StackPanel>
+					<Grid VerticalAlignment="Top" HorizontalAlignment="Left">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition MinWidth="160"/>
+							<ColumnDefinition MinWidth="120"/>
+							<ColumnDefinition MinWidth="120"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+						</Grid.RowDefinitions>
+
+						<!-- Yield Row -->
+						<Label Grid.Row="0" 
+                               Grid.Column="0" 
+                               Content="Yield (wet weight):"  
+                               Classes="input-label" />
+
+						<NumericUpDown Name="YieldNumericUpDown" 
+                                       Grid.Row="0" 
+                                       Grid.Column="1" 
+                                       Minimum="0" 
+                                       Value="{Binding WetYield}"/>
+
+						<Label Grid.Row="0"
+                               Grid.Column="2"
+                               Content="{Binding DataContext.StorageService.Storage.ApplicationData.DisplayUnitStrings.KilogramsPerHectareString, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                               Classes="unit-label"/>
+
+						<!-- Irrigation Row -->
+						<Label Grid.Row="1" 
+                               Grid.Column="0" 
+                               Content="Amount of irrigation:" 
+                               Classes="input-label" />
+
+						<NumericUpDown Name="IrrigationNumericUpDown" 
+                                       Grid.Row="1" 
+                                       Grid.Column="1" 
+                                       Minimum="0" 
+                                       Value="{Binding AmountOfIrrigation}"/>
+
+						<Label Grid.Row="1"
+                               Grid.Column="2"
+                               Content="{Binding DataContext.StorageService.Storage.ApplicationData.DisplayUnitStrings.MillimetersPerHectareString, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                               Classes="unit-label"/>
+					</Grid>
+				</StackPanel>
+			</DataTemplate>
+		</ContentControl.ContentTemplate>
+	</ContentControl>
+</UserControl>

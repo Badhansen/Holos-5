@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:field="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Field"
+             xmlns:properties="clr-namespace:H.Core.Properties;assembly=H.Core"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="H.Avalonia.SelectedCropResiduesTabView">
+
+	<Design.DataContext>
+		<field:FieldComponentViewModelDesign/>
+	</Design.DataContext>
+
+	<ContentControl Content="{Binding SelectedCropDto}">
+		<ContentControl.ContentTemplate>
+			<DataTemplate>
+				<StackPanel>
+					<Grid VerticalAlignment="Top" HorizontalAlignment="Left">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition MinWidth="220"/>
+							<ColumnDefinition MinWidth="120"/>
+							<ColumnDefinition MinWidth="120"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+						</Grid.RowDefinitions>
+
+						<!-- Biomass Coefficient Product Row -->
+						<Label Grid.Row="0" Grid.Column="0" Classes="input-label" Content="{x:Static properties:Resources.LabelBiomassCoefficientProduct}"/>
+						<NumericUpDown Name="BiomassCoefficientProductNumericUpDown" Grid.Row="0" Grid.Column="1" Minimum="0" Value="{Binding BiomassCoefficientProduct}"/>
+						<Label Grid.Row="0" Grid.Column="2" Classes="unit-label" Content="{x:Static properties:Resources.LabelUnitless}"/>
+
+						<!-- Biomass Coefficient Straw Row -->
+						<Label Grid.Row="1" Grid.Column="0" Classes="input-label" Content="{x:Static properties:Resources.LabelBiomassCoefficientStraw}"/>
+						<NumericUpDown Name="BiomassCoefficientStrawNumericUpDown" Grid.Row="1" Grid.Column="1" Minimum="0" Value="{Binding BiomassCoefficientStraw}"/>
+						<Label Grid.Row="1" Grid.Column="2" Classes="unit-label" Content="{x:Static properties:Resources.LabelUnitless}"/>
+
+						<!-- Biomass Coefficient Roots Row -->
+						<Label Grid.Row="2" Grid.Column="0" Classes="input-label" Content="{x:Static properties:Resources.LabelBiomassCoefficientRoots}"/>
+						<NumericUpDown Name="BiomassCoefficientRootsNumericUpDown" Grid.Row="2" Grid.Column="1" Minimum="0" Value="{Binding BiomassCoefficientRoots}"/>
+						<Label Grid.Row="2" Grid.Column="2" Classes="unit-label" Content="{x:Static properties:Resources.LabelUnitless}"/>
+
+						<!-- Biomass Coefficient Extraroots Row -->
+						<Label Grid.Row="3" Grid.Column="0" Classes="input-label" Content="{x:Static properties:Resources.LabelBiomassCoefficientExtraroots}"/>
+						<NumericUpDown Name="BiomassCoefficientExtrarootsNumericUpDown" Grid.Row="3" Grid.Column="1" Minimum="0" Value="{Binding BiomassCoefficientExtraroot}"/>
+						<Label Grid.Row="3" Grid.Column="2" Classes="unit-label" Content="{x:Static properties:Resources.LabelUnitless}"/>
+					</Grid>
+				</StackPanel>
+			</DataTemplate>
+		</ContentControl.ContentTemplate>
+	</ContentControl>
+</UserControl>

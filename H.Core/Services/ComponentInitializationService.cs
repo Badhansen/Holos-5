@@ -1,5 +1,7 @@
 ﻿using H.Core.Models;
+using H.Core.Models.Animals;
 using H.Core.Models.LandManagement.Fields;
+using H.Core.Services.Animals;
 using H.Core.Services.LandManagement.Fields;
 using H.Core.Services.StorageService;
 
@@ -11,13 +13,23 @@ public class ComponentInitializationService : IComponentInitializationService
 
     private readonly IFieldComponentService _fieldComponentService;
     private readonly IStorageService _storageService;
+    private IAnimalComponentService _animalComponentService;
 
     #endregion
 
     #region Constructors
 
-    public ComponentInitializationService(IStorageService storageService, IFieldComponentService fieldComponentService)
+    public ComponentInitializationService(IStorageService storageService, IFieldComponentService fieldComponentService, IAnimalComponentService animalComponentService)
     {
+        if (animalComponentService  != null)
+        {
+            _animalComponentService = animalComponentService; 
+        }
+        else
+        {
+            throw new ArgumentNullException(nameof(animalComponentService));
+        }
+
         if (storageService != null)
         {
             _storageService = storageService;
@@ -45,9 +57,13 @@ public class ComponentInitializationService : IComponentInitializationService
     {
         var activeFarm = _storageService.GetActiveFarm();
 
-        if (componentBase.GetType() == typeof(FieldSystemComponent))
+        if (componentBase is FieldSystemComponent fieldSystemComponent)
         {
-            _fieldComponentService.InitializeFieldSystemComponent(activeFarm, componentBase as FieldSystemComponent);
+            _fieldComponentService.InitializeFieldSystemComponent(activeFarm, fieldSystemComponent);
+        }
+        else if (componentBase is AnimalComponentBase animalComponentBase)
+        {
+            _animalComponentService.InitializeComponent(activeFarm, animalComponentBase);
         }
     } 
 

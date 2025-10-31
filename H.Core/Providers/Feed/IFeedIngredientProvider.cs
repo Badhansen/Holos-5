@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
+using H.Core.Enumerations;
 
 namespace H.Core.Providers.Feed
 {
     public interface IFeedIngredientProvider
     {
-        IList<FeedIngredient> GetBeefFeedIngredients();
-        IList<FeedIngredient> GetDairyFeedIngredients();
-        IList<FeedIngredient> GetSwineFeedIngredients();
+        IList<IFeedIngredient> GetBeefFeedIngredients();
+        IList<IFeedIngredient> GetDairyFeedIngredients();
+        IList<IFeedIngredient> GetSwineFeedIngredients();
+        IReadOnlyCollection<IFeedIngredient> GetIngredientsForDiet(AnimalType animalType, DietType dietType);
+        IReadOnlyCollection<IFeedIngredient> GetAllIngredientsForAnimalType(AnimalType animalType);
         
-        FeedIngredient CopyIngredient(FeedIngredient ingredient, double defaultPercentageInDiet);
+        FeedIngredient CopyIngredient(IFeedIngredient ingredient, double defaultPercentageInDiet);
     }
 }

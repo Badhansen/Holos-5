@@ -4,7 +4,9 @@ using H.Core.Enumerations;
 using H.Core.Models;
 using H.Core.Models.Animals;
 using H.Core.Models.Animals.OtherAnimals;
+using H.Core.Services.Animals;
 using H.Core.Services.StorageService;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace H.Avalonia.Test.ViewModels.ComponentViews.OtherAnimals
@@ -18,6 +20,7 @@ namespace H.Avalonia.Test.ViewModels.ComponentViews.OtherAnimals
         private Mock<IStorage> _mockStorage;
         private IStorage _storageMock;
         private ApplicationData _applicationData;
+        private Mock<IAnimalComponentService> _mockAnimalComponentService;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
@@ -39,8 +42,11 @@ namespace H.Avalonia.Test.ViewModels.ComponentViews.OtherAnimals
             _applicationData = new ApplicationData();
             _mockStorage.Setup(x => x.ApplicationData).Returns(_applicationData);
             _mockStorageService.Setup(x => x.Storage).Returns(_storageMock);
+            var mockLogger = new Mock<ILogger>();
+            _mockAnimalComponentService = new Mock<IAnimalComponentService>();
+            var mockManagementPeriodService = new Mock<IManagementPeriodService>();
 
-            _viewModel = new HorsesComponentViewModel(_storageServiceMock);
+            _viewModel = new HorsesComponentViewModel(mockLogger.Object, _mockAnimalComponentService.Object, _storageServiceMock, mockManagementPeriodService.Object);
         }
 
         [TestCleanup]
@@ -67,8 +73,8 @@ namespace H.Avalonia.Test.ViewModels.ComponentViews.OtherAnimals
         [TestMethod]
         public void TestConstructorInitializingCollections()
         {
-            Assert.IsNotNull(_viewModel.ManagementPeriodViewModels);
-            Assert.AreEqual(0, _viewModel.ManagementPeriodViewModels.Count);
+            Assert.IsNotNull(_viewModel.ManagementPeriodDtos);
+            Assert.AreEqual(0, _viewModel.ManagementPeriodDtos.Count);
             Assert.IsNotNull(_viewModel.Groups);
             Assert.AreEqual(0, _viewModel.Groups.Count);
         }
@@ -88,17 +94,17 @@ namespace H.Avalonia.Test.ViewModels.ComponentViews.OtherAnimals
         public void TestHandleAddManagementPeriodEvent()
         {
             string expectedPeriodName = "Period #0";
-            DateTime expectedStartDate = new DateTime(2024, 01, 01);
-            DateTime expectedEndDate = new DateTime(2025, 01, 01);
+            DateTime expectedStart = new DateTime(2024, 01, 01);
+            DateTime expectedEnd = new DateTime(2025, 01, 01);
             int expectedDays = 364;
 
             _viewModel.HandleAddManagementPeriodEvent();
 
-            Assert.AreEqual(1, _viewModel.ManagementPeriodViewModels.Count);
-            Assert.AreEqual(expectedPeriodName, _viewModel.ManagementPeriodViewModels[0].PeriodName);
-            Assert.AreEqual(expectedStartDate, _viewModel.ManagementPeriodViewModels[0].StartDate);
-            Assert.AreEqual(expectedEndDate, _viewModel.ManagementPeriodViewModels[0].EndDate);
-            Assert.AreEqual(expectedDays, _viewModel.ManagementPeriodViewModels[0].NumberOfDays);
+            Assert.AreEqual(1, _viewModel.ManagementPeriodDtos.Count);
+            Assert.AreEqual(expectedPeriodName, _viewModel.ManagementPeriodDtos[0].Name);
+            Assert.AreEqual(expectedStart, _viewModel.ManagementPeriodDtos[0].Start);
+            Assert.AreEqual(expectedEnd, _viewModel.ManagementPeriodDtos[0].End);
+            Assert.AreEqual(expectedDays, _viewModel.ManagementPeriodDtos[0].NumberOfDays);
         }
 
         [TestMethod]
@@ -116,10 +122,10 @@ namespace H.Avalonia.Test.ViewModels.ComponentViews.OtherAnimals
             
            _viewModel.AddExistingManagementPeriods();
 
-            Assert.AreEqual(testManagementPeriod.GroupName, _viewModel.ManagementPeriodViewModels[0].PeriodName);
-            Assert.AreEqual(testManagementPeriod.Start, _viewModel.ManagementPeriodViewModels[0].StartDate);
-            Assert.AreEqual(testManagementPeriod.End, _viewModel.ManagementPeriodViewModels[0].EndDate);
-            Assert.AreEqual(testManagementPeriod.NumberOfDays, _viewModel.ManagementPeriodViewModels[0].NumberOfDays);
+            Assert.AreEqual(testManagementPeriod.GroupName, _viewModel.ManagementPeriodDtos[0].Name);
+            Assert.AreEqual(testManagementPeriod.Start, _viewModel.ManagementPeriodDtos[0].Start);
+            Assert.AreEqual(testManagementPeriod.End, _viewModel.ManagementPeriodDtos[0].End);
+            Assert.AreEqual(testManagementPeriod.NumberOfDays, _viewModel.ManagementPeriodDtos[0].NumberOfDays);
         }
 
         [TestMethod]

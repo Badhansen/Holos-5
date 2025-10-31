@@ -1,3 +1,4 @@
+using H.Avalonia.Views.ComponentViews.LandManagement.Field;
 using H.Core.Models;
 
 namespace H.Avalonia.ViewModels.ComponentViews;
@@ -12,7 +13,7 @@ public class ComponentTypeToViewTypeMapper
 
         if (component.ComponentType == ComponentType.Field)
         {
-            return nameof(Views.ComponentViews.LandManagement.FieldComponentView);
+            return nameof(FieldComponentView);
         }
 
         if (component.ComponentType == ComponentType.Rotation)

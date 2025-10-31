@@ -1,5 +1,7 @@
 ﻿using H.Core.Enumerations;
+using H.Core.Services.Animals;
 using H.Core.Services.StorageService;
+using Microsoft.Extensions.Logging;
 
 namespace H.Avalonia.ViewModels.ComponentViews.OtherAnimals
 {
@@ -7,7 +9,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.OtherAnimals
     {
         #region Constructors
 
-        public GoatsComponentViewModel(IStorageService storageService) : base(storageService) 
+        public GoatsComponentViewModel(ILogger logger, IAnimalComponentService componentService, IStorageService storageService, IManagementPeriodService managementPeriodService) : base(logger, componentService, storageService, managementPeriodService)
         {
             ViewName = "Goats";
             OtherAnimalType = AnimalType.Goats;

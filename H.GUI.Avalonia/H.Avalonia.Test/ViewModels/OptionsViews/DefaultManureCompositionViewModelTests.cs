@@ -4,6 +4,7 @@ using H.Core.Enumerations;
 using H.Core.Models;
 using H.Core.Providers.Animals;
 using H.Core.Services.StorageService;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Prism.Events;
 using Prism.Regions;
@@ -23,6 +24,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews
         private Mock<IStorage> _mockStorage;
         private IStorage _storageMock;
         private ApplicationData _applicationData;
+        private Mock<ILogger> _mockLogger;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
@@ -46,6 +48,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews
             _mockStorage = new Mock<IStorage>();
             _storageMock = _mockStorage.Object;
             _applicationData = new ApplicationData();
+            _mockLogger = new Mock<Microsoft.Extensions.Logging.ILogger>();
         }
 
         [TestCleanup]
@@ -68,7 +71,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews
             _mockStorageService.Setup(x => x.Storage).Returns(_storageMock);
             _mockStorageService.Setup(x => x.GetActiveFarm()).Returns(testFarm);
             
-            _viewModel = new DefaultManureCompositionViewModel(_regionManagerMock, _eventAggregatorMock, _storageServiceMock);
+            _viewModel = new DefaultManureCompositionViewModel(_regionManagerMock, _eventAggregatorMock, _storageServiceMock, _mockLogger.Object);
 
             Assert.AreEqual(1, _viewModel.DefaultManureDTOs.Count);
             Assert.AreEqual(testDataClassInstance.MoistureContent, _viewModel.DefaultManureDTOs[0].MoistureContent);
@@ -92,7 +95,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews
             _mockStorageService.Setup(x => x.Storage).Returns(_storageMock);
             _mockStorageService.Setup(x => x.GetActiveFarm()).Returns(testFarm);
 
-            _viewModel = new DefaultManureCompositionViewModel(_regionManagerMock, _eventAggregatorMock, _storageServiceMock);
+            _viewModel = new DefaultManureCompositionViewModel(_regionManagerMock, _eventAggregatorMock, _storageServiceMock, _mockLogger.Object);
             _viewModel.OnNavigatedTo(null); // implicitly calling private method SetStrings()
 
             Assert.AreEqual("Total nitrogen (% wet weight)", _viewModel.NitrogenFractionHeader);
@@ -113,7 +116,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews
             _mockStorageService.Setup(x => x.Storage).Returns(_storageMock);
             _mockStorageService.Setup(x => x.GetActiveFarm()).Returns(testFarm);
 
-            _viewModel = new DefaultManureCompositionViewModel(_regionManagerMock, _eventAggregatorMock, _storageServiceMock);
+            _viewModel = new DefaultManureCompositionViewModel(_regionManagerMock, _eventAggregatorMock, _storageServiceMock, _mockLogger.Object);
             _viewModel.OnNavigatedTo(null); // implicitly calling private method SetStrings()
 
             Assert.AreEqual("Total nitrogen (% wet weight)", _viewModel.NitrogenFractionHeader);
@@ -125,7 +128,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews
         [TestMethod]
         public void TestConstructuroThrowsExceptionOnNullConstructorParameter()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new DefaultManureCompositionViewModel(null, null, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new DefaultManureCompositionViewModel(null, null, null, null));
         }
     }
 }

@@ -1,6 +1,11 @@
+using AutoMapper;
 using H.Avalonia.ViewModels.ComponentViews.LandManagement.Field;
 using H.Core.Enumerations;
 using H.Core.Factories;
+using H.Core.Factories.Crops;
+using H.Core.Mappers;
+using H.Core.Models;
+using H.Core.Services.Initialization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prism.Ioc;
@@ -32,8 +37,25 @@ public class CropDtoFactoryTest
     public void TestInitialize()
     {
         var mockContainerProvider = new Mock<IContainerProvider>();
+        var mockCropInitializationService = new Mock<ICropInitializationService>();
 
-        _factory = new CropFactory(mockContainerProvider.Object);
+        // Setup mappers to return a working IMapper for each required profile
+        mockContainerProvider.Setup(x => x.Resolve(typeof(IMapper), nameof(CropViewItemToCropDtoMapper))).Returns(new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile<CropViewItemToCropDtoMapper>();
+        }).CreateMapper());
+
+        mockContainerProvider.Setup(x => x.Resolve(typeof(IMapper), nameof(CropDtoToCropDtoMapper))).Returns(new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile<CropDtoToCropDtoMapper>();
+        }).CreateMapper());
+
+        mockContainerProvider.Setup(x => x.Resolve(typeof(IMapper), nameof(CropDtoToCropViewItemMapper))).Returns(new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile<CropDtoToCropViewItemMapper>();
+        }).CreateMapper());
+
+        _factory = new CropFactory(mockCropInitializationService.Object, mockContainerProvider.Object);
     }
 
     [TestCleanup]
@@ -43,11 +65,15 @@ public class CropDtoFactoryTest
 
     #endregion
 
+    #region Tests
+
     [TestMethod]
     public void CreateReturnsNonNull()
     {
-        var result = _factory.CreateCropDto();
+        var result = _factory.CreateDto(new Farm());
 
         Assert.IsNotNull(result);
-    }
+    } 
+
+    #endregion
 }

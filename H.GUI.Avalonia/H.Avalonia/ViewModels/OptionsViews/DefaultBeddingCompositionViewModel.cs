@@ -4,6 +4,7 @@ using H.Avalonia.ViewModels.OptionsViews.DataTransferObjects;
 using H.Core.Calculators.UnitsOfMeasurement;
 using H.Core.Models;
 using H.Core.Services.StorageService;
+using Microsoft.Extensions.Logging;
 using Prism.Events;
 using Prism.Regions;
 
@@ -27,7 +28,8 @@ namespace H.Avalonia.ViewModels.OptionsViews
             IRegionManager regionManager,
             IEventAggregator eventAggregator,
             IStorageService storageService, 
-            IUnitsOfMeasurementCalculator unitsCalculator) : base(regionManager, eventAggregator, storageService)
+            IUnitsOfMeasurementCalculator unitsCalculator,
+            ILogger logger) : base(regionManager, eventAggregator, storageService, logger)
         {
             _unitsCalculator = unitsCalculator;
             _unitsCalculator.PropertyChanged -= UnitsOfMeasurementChangeListener;

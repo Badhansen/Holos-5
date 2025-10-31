@@ -13,7 +13,7 @@ namespace H.Core.Providers.Feed
 {
     /// <summary>
     /// </summary>
-    public class FeedIngredient : ModelBase
+    public class FeedIngredient : ModelBase, IFeedIngredient
     {
         #region Fields
 

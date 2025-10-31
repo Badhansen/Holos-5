@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.Design;
-using H.Core.Enumerations;
+﻿using H.Core.Enumerations;
 using H.Core.Providers.Feed;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel.Design;
+using CsvHelper;
+using static H.Core.Providers.Feed.IDiet;
 
 namespace H.Core.Services.DietService;
 
@@ -9,10 +11,10 @@ public class DefaultDietService : IDietService
 {
     #region Fields
 
-    private IDietProvider _dietProvider;
+    private readonly IDietProvider _dietProvider;
     private IFeedIngredientProvider _feedIngredientProvider;
     private ILogger _logger;
-    private IDietFactory _dietFactory;
+    private readonly IDietFactory _dietFactory;
 
     #endregion
 
@@ -111,10 +113,10 @@ public class DefaultDietService : IDietService
         return new List<AnimalType>();
     }
 
-    public IReadOnlyList<IDiet> GetDiets()
+    public IReadOnlyList<IDietDto> GetDiets()
     {
         var validDietTypes = _dietFactory.GetValidDietKeys();
-        var result = new List<IDiet>();
+        var result = new List<IDietDto>();
 
         foreach (var validDietType in validDietTypes)
         {
@@ -132,14 +134,12 @@ public class DefaultDietService : IDietService
     /// <summary>
     /// Some animal groups will not have a diet (poultry, other livestock, suckling pigs, etc.). In these cases, a non-null diet must still be set.
     /// </summary>
-    public IDiet GetNoDiet()
+    public IDietDto GetNoDiet()
     {
-        var diet = _dietProvider.GetNoDiet();
-
-        throw new NotImplementedException();
+        return _dietFactory.Create(DietType.None, AnimalType.NotSelected);
     }
 
-    public IDiet GetDiet(AnimalType animalType, DietType dietType)
+    public IDietDto GetDiet(AnimalType animalType, DietType dietType)
     {
         return _dietFactory.Create(dietType, animalType);
     }

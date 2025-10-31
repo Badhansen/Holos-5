@@ -1,0 +1,138 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="700"
+             xmlns:properties="clr-namespace:H.Core.Properties;assembly=H.Core"
+             xmlns:vm="clr-namespace:H.Avalonia.ViewModels.SupportingViews"
+             xmlns:enums="clr-namespace:H.Core.Enumerations;assembly=H.Core"
+             x:Class="H.Avalonia.Views.SupportingViews.FeedIngredientsView">
+
+    <Design.DataContext>
+        <vm:FeedIngredientsViewModelDesign />
+    </Design.DataContext>
+
+    <StackPanel Margin="20">
+        
+        <!-- Header -->
+        <TextBlock Text="Feed Ingredients" 
+                   FontSize="24" 
+                   FontWeight="Bold" 
+                   Margin="0,0,0,20"
+                   HorizontalAlignment="Center" />
+
+        <!-- Controls Panel -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+            
+            <!-- Animal Type Selection -->
+            <StackPanel Orientation="Vertical" Margin="0,0,20,0">
+                <TextBlock Text="{x:Static properties:Resources.LabelAnimalType}" 
+                           FontWeight="SemiBold" 
+                           Margin="0,0,0,5" />
+                <ComboBox Width="200" 
+                          SelectedItem="{Binding SelectedAnimalType}"
+                          ItemsSource="{Binding AvailableAnimalTypes}" />
+            </StackPanel>
+            
+            <!-- Search Bar -->
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Search Ingredients" 
+                           FontWeight="SemiBold" 
+                           Margin="0,0,0,5" />
+                <Grid Width="300" VerticalAlignment="Center">
+                    <TextBox Text="{Binding SearchText}" 
+                             Watermark="Search by ingredient name or IFN..." 
+                             VerticalContentAlignment="Center" 
+                             VerticalAlignment="Center" 
+                             Foreground="#696969" 
+                             BorderBrush="#EDEDED" 
+                             BorderThickness="2" 
+                             FontWeight="SemiBold" 
+                             Padding="40,10,0,10" />
+                    <Image Source="avares://H.Avalonia/Assets/Images/Icons/search-icon.png" 
+                           Width="20" 
+                           Height="20" 
+                           VerticalAlignment="Center" 
+                           HorizontalAlignment="Left" 
+                           Margin="10,0"/>
+                </Grid>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Feed Ingredients Data Grid -->
+        <DataGrid SelectedItem="{Binding SelectedIngredient}" 
+                  ItemsSource="{Binding Ingredients}"  
+                  AutoGenerateColumns="False" 
+                  Margin="0,20,0,0" 
+                  Padding="20" 
+                  GridLinesVisibility="All" 
+                  IsReadOnly="True" 
+                  Height="500" 
+                  BorderThickness="2"  
+                  BorderBrush="#EDEDED" 
+                  CanUserResizeColumns="True"
+                  CornerRadius="10" 
+                  Background="#f5f5f5">
+            
+            <DataGrid.Styles>
+                <Style Selector="DataGridColumnHeader">
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="FontSize" Value="12" />
+                </Style>
+            </DataGrid.Styles>
+
+            <DataGrid.Columns>
+                
+                <!-- Ingredient Type -->
+                <DataGridTextColumn Header="Ingredient Type" 
+                                    Binding="{Binding IngredientTypeString}" 
+                                    Width="200"/>
+                
+                <!-- IFN -->
+                <DataGridTextColumn Header="IFN" 
+                                    Binding="{Binding IFN}" 
+                                    Width="Auto"/>
+                
+                <!-- Dry Matter -->
+                <DataGridTextColumn Header="{x:Static properties:Resources.LabelDryMatter}" 
+                                    Binding="{Binding DryMatter, StringFormat='{}{0:F1}'}" 
+                                    Width="SizeToHeader" />
+                
+                <!-- Crude Protein -->
+                <DataGridTextColumn Header="{x:Static properties:Resources.LabelCrudeProtein}" 
+                                    Binding="{Binding CrudeProtein, StringFormat='{}{0:F1}'}" 
+                                    Width="SizeToHeader" />
+                
+                <!-- Total Digestible Nutrient -->
+                <DataGridTextColumn Header="TDN %" 
+                                    Binding="{Binding TotalDigestibleNutrient, StringFormat='{}{0:F1}'}" 
+                                    Width="SizeToHeader" />
+                
+                <!-- Fat -->
+                <DataGridTextColumn Header="Fat %" 
+                                    Binding="{Binding Fat, StringFormat='{}{0:F1}'}" 
+                                    Width="SizeToHeader" />
+                
+                <!-- Crude Fiber -->
+                <DataGridTextColumn Header="Crude Fiber %" 
+                                    Binding="{Binding CrudeFiber, StringFormat='{}{0:F1}'}" 
+                                    Width="SizeToHeader" />
+                
+                <!-- Forage -->
+                <DataGridTextColumn Header="{x:Static properties:Resources.LabelForage}" 
+                                    Binding="{Binding Forage, StringFormat='{}{0:F1}'}" 
+                                    Width="SizeToHeader" />
+                
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Status Bar -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+            <TextBlock Text="Total Ingredients: " FontWeight="SemiBold" />
+            <TextBlock Text="{Binding Ingredients.Count}" FontWeight="Bold" />
+            <TextBlock Text=" for " FontWeight="SemiBold" Margin="10,0,0,0" />
+            <TextBlock Text="{Binding SelectedAnimalType}" FontWeight="Bold" />
+        </StackPanel>
+
+    </StackPanel>
+</UserControl>

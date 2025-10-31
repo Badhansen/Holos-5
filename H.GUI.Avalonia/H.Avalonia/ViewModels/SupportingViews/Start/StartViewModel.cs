@@ -12,6 +12,7 @@ using Avalonia.Threading;
 using H.Avalonia.Views.FarmCreationViews;
 using H.Core.Services.StorageService;
 using H.Core.Providers.Soil;
+using Microsoft.Extensions.Logging;
 
 namespace H.Avalonia.ViewModels.SupportingViews.Start
 {
@@ -35,7 +36,7 @@ namespace H.Avalonia.ViewModels.SupportingViews.Start
 
         }
  
-        public StartViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IStorageService storageService, GeographicDataProvider geographicDataProvider, SmallAreaYieldProvider smallAreaYieldProvider) : base(regionManager, eventAggregator, storageService) 
+        public StartViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IStorageService storageService, GeographicDataProvider geographicDataProvider, SmallAreaYieldProvider smallAreaYieldProvider, ILogger logger) : base(regionManager, eventAggregator, storageService, logger) 
         {
             if (geographicDataProvider != null)
             {

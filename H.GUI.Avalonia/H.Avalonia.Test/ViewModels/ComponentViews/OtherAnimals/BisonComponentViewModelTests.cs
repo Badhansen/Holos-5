@@ -2,7 +2,9 @@
 using H.Core;
 using H.Core.Enumerations;
 using H.Core.Models;
+using H.Core.Services.Animals;
 using H.Core.Services.StorageService;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace H.Avalonia.Test.ViewModels.ComponentViews.OtherAnimals
@@ -10,12 +12,18 @@ namespace H.Avalonia.Test.ViewModels.ComponentViews.OtherAnimals
     [TestClass]
     public class BisonComponentViewModelTests
     {
+        #region Fields
+
         private BisonComponentViewModel _viewModel;
         private Mock<IStorageService> _mockStorageService;
         private IStorageService _storageServiceMock;
         private Mock<IStorage> _mockStorage;
         private IStorage _storageMock;
         private ApplicationData _applicationData;
+
+        #endregion
+
+        #region Initialization
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
@@ -37,14 +45,21 @@ namespace H.Avalonia.Test.ViewModels.ComponentViews.OtherAnimals
             _applicationData = new ApplicationData();
             _mockStorage.Setup(x => x.ApplicationData).Returns(_applicationData);
             _mockStorageService.Setup(x => x.Storage).Returns(_storageMock);
+            var mockAnimalComponentService = new Mock<IAnimalComponentService>();
+            var mockLogger = new Mock<ILogger>();
+            var mockManagementPeriodService = new Mock<IManagementPeriodService>();
 
-            _viewModel = new BisonComponentViewModel(_storageServiceMock);
+            _viewModel = new BisonComponentViewModel(mockLogger.Object, mockAnimalComponentService.Object, _storageServiceMock, mockManagementPeriodService.Object);
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
         }
+
+        #endregion
+
+        #region Tests
 
         [TestMethod]
         public void TestConstructorSettingViewName()
@@ -58,6 +73,8 @@ namespace H.Avalonia.Test.ViewModels.ComponentViews.OtherAnimals
         {
             AnimalType expectedAnimalType = AnimalType.Bison;
             Assert.AreEqual(expectedAnimalType, _viewModel.OtherAnimalType);
-        }
+        } 
+
+        #endregion
     }
 }

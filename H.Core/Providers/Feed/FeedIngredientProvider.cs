@@ -7,27 +7,63 @@ using H.Content;
 using H.Core.Converters;
 using H.Infrastructure;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Principal;
 using AutoMapper;
 using H.Core.Enumerations;
+using H.Core.Mappers;
+using H.Core.Models;
+using H.Infrastructure.Services;
+using Microsoft.Extensions.Logging;
+using Prism.Ioc;
 
 #endregion
 
-namespace H.Core.Providers.Feed 
+namespace H.Core.Providers.Feed
 {
-    
     /// <summary>
+    /// Provides feed ingredient data and diet recipes for various animal types and diet types.
+    /// This class loads, manages, and caches feed ingredient information from data sources,
+    /// and supplies ingredient breakdowns for specific animal and diet combinations.
+    /// It supports efficient retrieval of feed ingredient lists, leveraging caching to improve performance,
+    /// and is used as a core service for ration formulation and feed analysis in livestock management applications.
     /// </summary>
-    public class FeedIngredientProvider : IFeedIngredientProvider 
+    public class FeedIngredientProvider : IFeedIngredientProvider
     {
-        
+        #region Private Classes
+
+        /// <summary>
+        /// Represents a single ingredient and its percentage in a diet formulation.
+        /// Used to describe the breakdown of a diet recipe by ingredient type and proportion.
+        /// </summary>
+        internal class IngredientBreakdown(IngredientType ingredientType, double percentageInDiet)
+        {
+            public IngredientType IngredientType { get; set; } = ingredientType;
+            public double PercentageInDiet { get; set; } = percentageInDiet;
+        }
+
+        /// <summary>
+        /// Represents a list of ingredient breakdowns for a specific animal and diet type combination.
+        /// Used to define a complete diet recipe for a given animal and diet.
+        /// </summary>
+        internal class IngredientList(DietType dietType, AnimalType animalType)
+        {
+            public DietType DietType { get; set; } = dietType;
+            public AnimalType AnimalType { get; set; } = animalType;
+            public List<IngredientBreakdown> Ingredients { get; set; } = new();
+        }
+
+        #endregion
+
         #region Fields
 
-        private readonly IList<FeedIngredient> _beefFeedIngredients;
-        private readonly IList<FeedIngredient> _dairyIngredients;
-        private readonly IList<FeedIngredient> _swineFeedIngredients;
-        
         private readonly IMapper _feedIngredientMapper;
+        private readonly ILogger _logger;
+        private readonly ICacheService _cacheService;
 
+        private readonly Dictionary<ComponentCategory, IReadOnlyList<IFeedIngredient>> _ingredientsByAnimalCategory;
+        private readonly Dictionary<Tuple<ComponentCategory, IngredientType>, IFeedIngredient> _ingredientDictionary;
+        private readonly IReadOnlyCollection<IngredientList> _ingredientLists;
 
         #endregion
 
@@ -35,16 +71,40 @@ namespace H.Core.Providers.Feed
 
         public FeedIngredientProvider()
         {
-            _beefFeedIngredients = this.ReadBeefFile().ToList();
-            _dairyIngredients = this.ReadDairyFile().ToList();
-            _swineFeedIngredients = this.ReadSwineFile().ToList();
+            _ingredientsByAnimalCategory = new Dictionary<ComponentCategory, IReadOnlyList<IFeedIngredient>>();
+            _ingredientDictionary = new Dictionary<Tuple<ComponentCategory, IngredientType>, IFeedIngredient>();
+            _ingredientLists = this.CreateIngredientLists();
 
-            var feedIngredientMapper = new MapperConfiguration(x =>
+            this.BuildDictionary();
+            this.CreateIngredientLists();
+
+            _feedIngredientMapper = new Mapper(new MapperConfiguration(expression =>
             {
-                x.CreateMap<FeedIngredient, FeedIngredient>();
-            });
+                expression.CreateMap<FeedIngredient, FeedIngredient>();
+            }));
+        }
 
-            _feedIngredientMapper = feedIngredientMapper.CreateMapper();
+        public FeedIngredientProvider(ILogger logger, IContainerProvider containerProvider, ICacheService cacheService) : this()
+        {
+            if (cacheService != null)
+            {
+                _cacheService = cacheService;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(cacheService));
+            }
+
+            if (logger != null)
+            {
+                _logger = logger;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
+
+            _feedIngredientMapper = containerProvider.Resolve<IMapper>(nameof(FeedIngredientToFeedIngredientMapper));
         }
 
         #endregion
@@ -56,35 +116,520 @@ namespace H.Core.Providers.Feed
 
         #region Public Methods
 
-        public FeedIngredient CopyIngredient(FeedIngredient ingredient, double defaultPercentageInDiet)
+        public IReadOnlyCollection<IFeedIngredient> GetIngredientsForDiet(AnimalType animalType, DietType dietType)
         {
-            var copiedIngredient = new FeedIngredient();
+            // Build a unique cache key for this animal and diet type combination
+            var cacheKey = $"{nameof(FeedIngredientProvider)}_{nameof(GetIngredientsForDiet)}_" +
+                            $"{animalType}_{dietType}";
 
-            _feedIngredientMapper.Map(ingredient, copiedIngredient);
+            // Try to retrieve the result from cache
+            IReadOnlyCollection<IFeedIngredient> cachedResult = null;
+            if (_cacheService != null)
+            {
+                cachedResult = _cacheService.Get<IReadOnlyCollection<IFeedIngredient>>(cacheKey);
+                if (cachedResult != null)
+                {
+                    // Return cached result if available
+                    return cachedResult;
+                }
+            }
 
-            copiedIngredient.PercentageInDiet = defaultPercentageInDiet;
+            // Find the recipe for the given animal and diet type
+            var result = _ingredientLists.SingleOrDefault(x => x.DietType == dietType && x.AnimalType == animalType);
+            IReadOnlyCollection<IFeedIngredient> collection;
+            if (result != null)
+            {
+                var list = new List<IFeedIngredient>();
+                // For each ingredient in the recipe, get the ingredient and set its percentage
+                foreach (var ingredientBreakdown in result.Ingredients)
+                {
+                    var category = animalType.GetComponentCategoryFromAnimalType();
+                    list.Add(this.GetIngredient(ingredientBreakdown.IngredientType, ingredientBreakdown.PercentageInDiet, category));
+                }
+                collection = list;
+            }
+            else
+            {
+                // Log and return an empty list if no recipe is found
+                _logger.LogError($"No ingredients for {animalType} and {dietType}");
+                collection = new List<IFeedIngredient>();
+            }
 
-            return copiedIngredient;
+            // Store the result in cache for future requests
+            _cacheService?.Set<IReadOnlyCollection<IFeedIngredient>>(key: cacheKey, value: collection, options: null);
+
+            return collection;
         }
 
-        public IList<FeedIngredient> GetBeefFeedIngredients()
+        public FeedIngredient CopyIngredient(IFeedIngredient ingredient, double defaultPercentageInDiet)
         {
-            return _beefFeedIngredients;
+            if (ingredient != null)
+            {
+                var copiedIngredient = new FeedIngredient();
+
+                _feedIngredientMapper.Map(ingredient, copiedIngredient);
+
+                copiedIngredient.PercentageInDiet = defaultPercentageInDiet;
+
+                return copiedIngredient;
+            }
+            else
+            {
+                _logger.LogError("Ingredient is null, cannot perform copy");
+
+                return null;
+            }
         }
 
-        public IList<FeedIngredient> GetDairyFeedIngredients()
+        /// <summary>
+        /// Gets the list of beef feed ingredients available for beef production.
+        /// </summary>
+        public IList<IFeedIngredient> GetBeefFeedIngredients()
         {
-            return _dairyIngredients;
+            return _ingredientsByAnimalCategory[ComponentCategory.BeefProduction] as IList<IFeedIngredient>;
         }
 
-        public IList<FeedIngredient> GetSwineFeedIngredients()
+        /// <summary>
+        /// Gets the list of dairy feed ingredients available for dairy production.
+        /// </summary>
+        public IList<IFeedIngredient> GetDairyFeedIngredients()
         {
-            return _swineFeedIngredients;
+            return _ingredientsByAnimalCategory[ComponentCategory.Dairy] as IList<IFeedIngredient>;
         }
+
+        /// <summary>
+        /// Gets the list of swine feed ingredients available for swine production.
+        /// </summary>
+        public IList<IFeedIngredient> GetSwineFeedIngredients()
+        {
+            return _ingredientsByAnimalCategory[ComponentCategory.Swine] as IList<IFeedIngredient>;
+        }
+
+        /// <summary>
+        /// Gets all feed ingredients available for a given animal type.
+        /// Maps the animal type to its corresponding component category and returns the appropriate ingredients.
+        /// </summary>
+        /// <param name="animalType">The animal type to get ingredients for</param>
+        /// <returns>A read-only collection of feed ingredients for the specified animal type</returns>
+        public IReadOnlyCollection<IFeedIngredient> GetAllIngredientsForAnimalType(AnimalType animalType)
+        {
+            var componentCategory = animalType.GetComponentCategoryFromAnimalType();
+            
+            if (_ingredientsByAnimalCategory.TryGetValue(componentCategory, out var ingredients))
+            {
+                return ingredients;
+            }
+            
+            _logger?.LogWarning($"No ingredients found for animal type {animalType} (component category: {componentCategory})");
+            return new List<IFeedIngredient>();
+        }
+
         #endregion
 
-        #region Private Methods        
+        #region Private Methods      
 
+        /// <summary>
+        /// Retrieves a feed ingredient for the specified component category and ingredient type.
+        /// Looks up the ingredient in the internal dictionary and returns it if found; otherwise, logs an error and returns null.
+        /// </summary>
+        /// <param name="componentCategory">The component category (e.g., BeefProduction, Dairy, Swine).</param>
+        /// <param name="ingredientType">The type of ingredient to retrieve.</param>
+        /// <returns>The <see cref="FeedIngredient"/> if found; otherwise, null.</returns>
+        private FeedIngredient Get(ComponentCategory componentCategory, IngredientType ingredientType)
+        {
+            var tuple = new Tuple<ComponentCategory, IngredientType>(componentCategory, ingredientType);
+            IFeedIngredient ingredient;
+            bool exists = _ingredientDictionary.TryGetValue(tuple, out ingredient);
+            if (exists)
+            {
+                return (FeedIngredient)ingredient;
+            }
+            else
+            {
+                _logger.LogError($"The ingredient type '{ingredientType}' does not exist in the category '{componentCategory}'.");
+
+                return null;
+            }
+        }
+
+        private IFeedIngredient GetIngredient(IngredientType ingredientType, double percentageInDiet, ComponentCategory componentCategory)
+        {
+            var ingredient = this.Get(componentCategory, ingredientType);
+            var copy = this.CopyIngredient(ingredient, percentageInDiet);
+
+            return copy;
+        }
+
+        /// <summary>
+        /// Creates and returns a collection of predefined ingredient lists for various animal and diet type combinations.
+        /// Each ingredient list represents a diet recipe, specifying the ingredients and their percentages for a specific animal and diet.
+        /// </summary>
+        /// <returns>A read-only collection of <see cref="IngredientList"/> objects representing diet recipes.</returns>
+        private IReadOnlyCollection<IngredientList> CreateIngredientLists()
+        {
+            return new List<IngredientList>()
+            {
+                #region Beef cow
+
+                new(DietType.LowEnergyAndProtein, AnimalType.BeefCow)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.NativePrairieHay, 100)
+                    ]
+                },
+
+                new(DietType.MediumEnergyAndProtein, AnimalType.BeefCow)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.AlfalfaHay, 32),
+                        new IngredientBreakdown(IngredientType.MeadowHay, 65),
+                        new IngredientBreakdown(IngredientType.BarleyGrain, 3),
+                    ]
+                },
+
+                new(DietType.HighEnergyAndProtein, AnimalType.BeefCow)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.OrchardgrassHay, 60),
+                        new IngredientBreakdown(IngredientType.AlfalfaHay, 20),
+                        new IngredientBreakdown(IngredientType.BarleyGrain, 20),
+                    ]
+                },
+
+                #endregion
+
+                #region Beef finisher
+
+                new(DietType.BarleyGrainBased, AnimalType.BeefFinisher)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.BarleySilage, 10),
+                        new IngredientBreakdown(IngredientType.BarleyGrain, 90),
+                    ]
+                },
+
+                new(DietType.CornGrainBased, AnimalType.BeefFinisher)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.BarleySilage, 10),
+                        new IngredientBreakdown(IngredientType.CornGrain, 88.7),
+                        new IngredientBreakdown(IngredientType.Urea, 1.3),
+                    ]
+                },
+
+                #endregion
+
+                #region Beef backgrounding
+
+                new(DietType.SlowGrowth, AnimalType.BeefBackgrounder)
+                {
+                    Ingredients = 
+                    [
+                        new IngredientBreakdown(IngredientType.BarleySilage, 65),
+                        new IngredientBreakdown(IngredientType.CornGrain, 35),
+                    ]
+                },
+
+                new(DietType.MediumGrowth, AnimalType.BeefBackgrounder)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.BarleySilage, 65),
+                        new IngredientBreakdown(IngredientType.BarleyGrain, 35),
+                    ]
+                },
+
+                #endregion
+
+                #region Dairy lactating cow
+
+                new(DietType.LegumeForageBased, AnimalType.DairyLactatingCow)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.LegumesForageHayMature, 22),
+                        new IngredientBreakdown(IngredientType.LegumesForageSilageAllSamples, 22),
+                        new IngredientBreakdown(IngredientType.BarleyGrainRolled, 45),
+                        new IngredientBreakdown(IngredientType.CanolaMealMechExtracted, 2),
+                        new IngredientBreakdown(IngredientType.SoybeanHulls, 5),
+                        new IngredientBreakdown(IngredientType.MolassesBeetSugar, 1),
+                        new IngredientBreakdown(IngredientType.CornYellowGlutenFeedDried, 3),
+                    ]
+                },
+
+                new(DietType.BarleySilageBased, AnimalType.DairyLactatingCow)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.BarleySilageHeaded, 49),
+                        new IngredientBreakdown(IngredientType.LegumesForageHayMidMaturity, 5),
+                        new IngredientBreakdown(IngredientType.BarleyGrainRolled, 17),
+                        new IngredientBreakdown(IngredientType.CornYellowGrainRolledHighMoisture, 13),
+                        new IngredientBreakdown(IngredientType.CanolaMealMechExtracted, 5),
+                        new IngredientBreakdown(IngredientType.SoybeanMealExpellers, 4),
+                        new IngredientBreakdown(IngredientType.BeetSugarPulpDried, 2),
+                        new IngredientBreakdown(IngredientType.MolassesSugarCane, 1),
+                    ]
+                },
+
+                new(DietType.CornSilageBased, AnimalType.DairyLactatingCow)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.CornYellowSilageNormal, 55),
+                        new IngredientBreakdown(IngredientType.GrassesCoolHayMidMaturity, 6),
+                        new IngredientBreakdown(IngredientType.CornYellowGrainGraundDry, 11),
+                        new IngredientBreakdown(IngredientType.SoybeanMealSolvent48, 12),
+                        new IngredientBreakdown(IngredientType.SoybeanHulls, 5),
+                        new IngredientBreakdown(IngredientType.CornYellowGlutenFeedDried, 11),
+                    ]
+                },
+
+                #endregion
+
+                #region Dairy dry cow
+
+                new(DietType.CloseUp, AnimalType.DairyDryCow)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.CornYellowSilageNormal, 48),
+                        new IngredientBreakdown(IngredientType.GrassLegumeMixturesPredomLegumesSilageMidMaturity, 23),
+                        new IngredientBreakdown(IngredientType.CornYellowGrainCrackedDry, 12),
+                        new IngredientBreakdown(IngredientType.CanolaMealMechExtracted, 9),
+                        new IngredientBreakdown(IngredientType.CornYellowGlutenMealDried, 8),
+                    ]
+                },
+
+                new(DietType.FarOff, AnimalType.DairyDryCow)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.GrassLegumeMixturesPredomLegumesHayMidMaturity, 57),
+                        new IngredientBreakdown(IngredientType.BarleyGrainRolled, 38),
+                        new IngredientBreakdown(IngredientType.SoybeanMealExpellers, 5),
+                    ]
+                },
+
+                #endregion
+
+                #region Dairy heifer
+
+                new(DietType.HighFiber, AnimalType.DairyHeifers)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.GrassesCoolHayMature, 50),
+                        new IngredientBreakdown(IngredientType.BarleyGrainRolled, 45),
+                        new IngredientBreakdown(IngredientType.SoybeanMealExpellers, 5),
+                    ]
+                },
+
+                new(DietType.LowFiber, AnimalType.DairyHeifers)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.CornYellowSilageNormal, 50),
+                        new IngredientBreakdown(IngredientType.BarleyGrainRolled, 42),
+                        new IngredientBreakdown(IngredientType.CanolaMealMechExtracted, 8),
+                    ]
+                },
+
+                #endregion
+
+                #region Swine
+
+                new(DietType.Gestation, AnimalType.Swine)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.WheatBran, 14),
+                        new IngredientBreakdown(IngredientType.WheatShorts, 3),
+                        new IngredientBreakdown(IngredientType.Barley, 62.2),
+                        new IngredientBreakdown(IngredientType.SoybeanMealDehulledExpelled, 4),
+                        new IngredientBreakdown(IngredientType.CanolaMealExpelled, 3),
+                        new IngredientBreakdown(IngredientType.FieldPeas, 6),
+                        new IngredientBreakdown(IngredientType.SugarBeetPulp, 5.6),
+                        new IngredientBreakdown(IngredientType.CanolaFullFat, 0.4),
+                    ]
+                },
+
+                new(DietType.Lactation, AnimalType.Swine)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.WheatBran, 41),
+                        new IngredientBreakdown(IngredientType.Barley, 21.8),
+                        new IngredientBreakdown(IngredientType.CornDistillersDriedGrainsSolublesGreaterThanSixAndLessThanNinePercentOil, 9),
+                        new IngredientBreakdown(IngredientType.SoybeanMealDehulledExpelled, 9),
+                        new IngredientBreakdown(IngredientType.CanolaMealExpelled, 5),
+                        new IngredientBreakdown(IngredientType.FieldPeas, 10),
+                        new IngredientBreakdown(IngredientType.CanolaFullFat, 1.8),
+                    ]
+                },
+
+                new(DietType.NurseryWeanersStarter1, AnimalType.Swine)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.WheatBran, 39),
+                        new IngredientBreakdown(IngredientType.CornDistillersDriedGrainsSolublesGreaterThanSixAndLessThanNinePercentOil, 11.38),
+                        new IngredientBreakdown(IngredientType.SoybeanMealDehulledExpelled, 20),
+                        new IngredientBreakdown(IngredientType.FieldPeas, 11),
+                        new IngredientBreakdown(IngredientType.CanolaFullFat, 1.2),
+                        new IngredientBreakdown(IngredientType.WheyPermeateLactose80, 10),
+                        new IngredientBreakdown(IngredientType.FishMealCombined, 5),
+                    ]
+                },
+
+                new(DietType.NurseryWeanersStarter2, AnimalType.Swine)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.WheatBran, 33.76),
+                        new IngredientBreakdown(IngredientType.Barley, 20),
+                        new IngredientBreakdown(IngredientType.CornDistillersDriedGrainsSolublesGreaterThanSixAndLessThanNinePercentOil, 10),
+                        new IngredientBreakdown(IngredientType.SoybeanMealDehulledExpelled, 14),
+                        new IngredientBreakdown(IngredientType.CanolaMealExpelled, 7),
+                        new IngredientBreakdown(IngredientType.FieldPeas, 10),
+                        new IngredientBreakdown(IngredientType.CanolaFullFat, 2.5),
+                    ]
+                },
+
+                new(DietType.GrowerFinisherDiet1, AnimalType.Swine)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.WheatBran, 32.53),
+                        new IngredientBreakdown(IngredientType.Barley, 24),
+                        new IngredientBreakdown(IngredientType.CornDistillersDriedGrainsSolublesGreaterThanSixAndLessThanNinePercentOil, 12),
+                        new IngredientBreakdown(IngredientType.SoybeanMealDehulledExpelled, 10),
+                        new IngredientBreakdown(IngredientType.CanolaMealExpelled, 6),
+                        new IngredientBreakdown(IngredientType.FieldPeas, 12),
+                        new IngredientBreakdown(IngredientType.CanolaFullFat, 1.2),
+                    ]
+                },
+
+                new(DietType.GrowerFinisherDiet2, AnimalType.Swine)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.WheatBran, 32.2),
+                        new IngredientBreakdown(IngredientType.Barley, 26.79),
+                        new IngredientBreakdown(IngredientType.CornDistillersDriedGrainsSolublesGreaterThanSixAndLessThanNinePercentOil, 12),
+                        new IngredientBreakdown(IngredientType.SoybeanMealDehulledExpelled, 8),
+                        new IngredientBreakdown(IngredientType.CanolaMealExpelled, 8),
+                        new IngredientBreakdown(IngredientType.FieldPeas, 10),
+                        new IngredientBreakdown(IngredientType.CanolaFullFat, 1.1),
+                    ]
+                },
+
+                new(DietType.GrowerFinisherDiet3, AnimalType.Swine)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.WheatBran, 25.2),
+                        new IngredientBreakdown(IngredientType.WheatShorts, 6.3),
+                        new IngredientBreakdown(IngredientType.Barley, 28),
+                        new IngredientBreakdown(IngredientType.CornDistillersDriedGrainsSolublesGreaterThanSixAndLessThanNinePercentOil, 12),
+                        new IngredientBreakdown(IngredientType.SoybeanMealDehulledExpelled, 8),
+                        new IngredientBreakdown(IngredientType.CanolaMealExpelled, 8),
+                        new IngredientBreakdown(IngredientType.FieldPeas, 10),
+                        new IngredientBreakdown(IngredientType.CanolaFullFat, 0.8),
+                    ]
+                },
+
+                new(DietType.GrowerFinisherDiet4, AnimalType.Swine)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.WheatBran, 19.1),
+                        new IngredientBreakdown(IngredientType.WheatShorts, 11.8),
+                        new IngredientBreakdown(IngredientType.Barley, 30),
+                        new IngredientBreakdown(IngredientType.CornDistillersDriedGrainsSolublesGreaterThanSixAndLessThanNinePercentOil, 15),
+                        new IngredientBreakdown(IngredientType.SoybeanMealDehulledExpelled, 6),
+                        new IngredientBreakdown(IngredientType.CanolaMealExpelled, 8),
+                        new IngredientBreakdown(IngredientType.FieldPeas, 8),
+                        new IngredientBreakdown(IngredientType.CanolaFullFat, 0.8),
+                    ]
+                },
+
+                new(DietType.GiltDeveloperDiet, AnimalType.Swine)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.WheatBran, 35),
+                        new IngredientBreakdown(IngredientType.WheatShorts, 10.1),
+                        new IngredientBreakdown(IngredientType.Barley, 20),
+                        new IngredientBreakdown(IngredientType.CornDistillersDriedGrainsSolublesGreaterThanSixAndLessThanNinePercentOil, 12.1),
+                        new IngredientBreakdown(IngredientType.CanolaMealExpelled, 15),
+                        new IngredientBreakdown(IngredientType.FieldPeas, 5),
+                        new IngredientBreakdown(IngredientType.CanolaFullFat, 0.5),
+                    ]
+                },
+
+                new(DietType.Boars, AnimalType.Swine)
+                {
+                    Ingredients =
+                    [
+                        new IngredientBreakdown(IngredientType.WheatBran, 38),
+                        new IngredientBreakdown(IngredientType.WheatShorts, 2),
+                        new IngredientBreakdown(IngredientType.Barley, 20),
+                        new IngredientBreakdown(IngredientType.CornDistillersDriedGrainsSolublesGreaterThanSixAndLessThanNinePercentOil, 10.6),
+                        new IngredientBreakdown(IngredientType.SoybeanMealDehulledExpelled, 7.1),
+                        new IngredientBreakdown(IngredientType.CanolaMealExpelled, 15),
+                        new IngredientBreakdown(IngredientType.FieldPeas, 5),
+                        new IngredientBreakdown(IngredientType.CanolaFullFat, 0.5),
+                    ]
+                },
+
+                #endregion
+            };
+        }
+
+        /// <summary>
+        /// Populates the internal dictionaries that map component categories and ingredient types to feed ingredients.
+        /// Loads feed ingredient data for beef, dairy, and swine from their respective sources,
+        /// and organizes them for efficient lookup by category and ingredient type.
+        /// </summary>
+        private void BuildDictionary()
+        {
+            var beeFeedIngredients = this.ReadBeefFile().ToList();
+            _ingredientsByAnimalCategory.Add(ComponentCategory.BeefProduction, new List<IFeedIngredient>(beeFeedIngredients));
+            foreach (var beeFeedIngredient in beeFeedIngredients)
+            {
+                var tuple = new Tuple<ComponentCategory, IngredientType>(ComponentCategory.BeefProduction, beeFeedIngredient.IngredientType);
+                _ingredientDictionary.Add(tuple, beeFeedIngredient);
+            }
+
+            var dairyIngredients = this.ReadDairyFile().ToList();
+            _ingredientsByAnimalCategory.Add(ComponentCategory.Dairy, new List<IFeedIngredient>(dairyIngredients));
+            foreach (var dairyIngredient in dairyIngredients)
+            {
+                var tuple = new Tuple<ComponentCategory, IngredientType>(ComponentCategory.Dairy, dairyIngredient.IngredientType);
+                _ingredientDictionary.Add(tuple, dairyIngredient);
+            }
+
+            var swineFeedIngredients = this.ReadSwineFile().ToList();
+            _ingredientsByAnimalCategory.Add(ComponentCategory.Swine, new List<IFeedIngredient>(swineFeedIngredients));
+            foreach (var swineFeedIngredient in swineFeedIngredients)
+            {
+                var tuple = new Tuple<ComponentCategory, IngredientType>(ComponentCategory.Swine, swineFeedIngredient.IngredientType);
+                _ingredientDictionary.Add(tuple, swineFeedIngredient);
+            }
+        }
+
+        /// <summary>
+        /// Reads swine feed ingredient data from a CSV resource file and parses each line into a <see cref="FeedIngredient"/> object.
+        /// Converts string values to their appropriate types and populates all relevant properties for each ingredient.
+        /// Adds a constant Urea ingredient at the end of the list.
+        /// </summary>
+        /// <returns>A collection of <see cref="FeedIngredient"/> objects representing swine feed ingredients.</returns>
         private IEnumerable<FeedIngredient> ReadSwineFile()
         {
             var cultureInfo = InfrastructureConstants.EnglishCultureInfo;
@@ -260,6 +805,12 @@ namespace H.Core.Providers.Feed
             return result;
         }
 
+        /// <summary>
+        /// Reads beef feed ingredient data from a CSV resource file and parses each line into a <see cref="FeedIngredient"/> object.
+        /// Converts string values to their appropriate types and populates all relevant properties for each ingredient.
+        /// Adds a constant Urea ingredient at the end of the list.
+        /// </summary>
+        /// <returns>A collection of <see cref="FeedIngredient"/> objects representing beef feed ingredients.</returns>
         private IEnumerable<FeedIngredient> ReadBeefFile()
         {
             var cultureInfo = InfrastructureConstants.EnglishCultureInfo;
@@ -357,6 +908,12 @@ namespace H.Core.Providers.Feed
             return result;
         }
 
+        /// <summary>
+        /// Reads dairy feed ingredient data from a CSV resource file and parses each line into a <see cref="FeedIngredient"/> object.
+        /// Converts string values to their appropriate types and populates all relevant properties for each ingredient.
+        /// Skips lines without a line number and uses converters for ingredient and dairy feed class types.
+        /// </summary>
+        /// <returns>A collection of <see cref="FeedIngredient"/> objects representing dairy feed ingredients.</returns>
         private IEnumerable<FeedIngredient> ReadDairyFile()
         {
             var cultureInfo = InfrastructureConstants.EnglishCultureInfo;
@@ -402,15 +959,6 @@ namespace H.Core.Providers.Feed
 
                 result.Add(feedData);
             }
-
-            // Need to add Urea.
-            result.Add(new FeedIngredient()
-            {
-                // This value is constant.
-                IngredientType = IngredientType.Urea,
-                IngredientTypeString = IngredientType.Urea.GetDescription(),
-                CrudeProtein = 291,
-            });
 
             return result;
         }

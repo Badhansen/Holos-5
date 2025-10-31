@@ -70,8 +70,9 @@
                 Classes="component-border"
                 Height="100">
 			<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
-                        Margin="20,0">
+                        Margin="20,0" Orientation="Horizontal" Spacing="10">
 				<Button Content="{x:Static properties:Resources.LabelEditComponents}" Command="{Binding Path=OnEditComponentsExecute}"></Button>
+				<Button Content="Remove Component" Command="{Binding Path=RemoveComponent}"></Button>
             </StackPanel>
         </Border>
 	</Grid>

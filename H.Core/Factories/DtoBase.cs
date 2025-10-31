@@ -12,17 +12,12 @@ public abstract class DtoBase : ErrorValidationBase, IDto
 {
     #region Fields
 
-    protected string _name;
 
     #endregion
 
     #region Properties
 
-    public string Name
-    {
-        get => _name;
-        set => SetProperty(ref _name, value);
-    } 
+
 
     #endregion
 }

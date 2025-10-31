@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:field="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Field"
+             mc:Ignorable="d" d:DesignWidth="800"
+             x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Field.FieldComponentStep1View">
+
+	<Design.DataContext>
+		<field:FieldComponentViewModelDesign/>
+	</Design.DataContext>
+
+	<StackPanel>
+        <StackPanel>
+			<TextBlock Name="HeaderTextBlock" 
+					   Classes="step-number">Step #1</TextBlock>
+
+            <TextBlock Name="SubHeaderTextBlock"
+                       Classes="step-number-description">Enter basic information for this field</TextBlock>
+        </StackPanel>
+
+		<Grid HorizontalAlignment="Left">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition MinWidth="120"/>
+				<ColumnDefinition MinWidth="120"/>
+				<ColumnDefinition MinWidth="100"/>
+			</Grid.ColumnDefinitions>
+
+			<Label Grid.Column="0" Classes="input-label" Content="Field size:"/>
+			<NumericUpDown Grid.Column="1" Minimum="0" Value="{Binding Path=SelectedFieldSystemComponentDto.FieldArea}"></NumericUpDown>
+			<Label Grid.Column="2" Classes="unit-label" Content="{Binding Path=StorageService.Storage.ApplicationData.DisplayUnitStrings.HectaresString}" VerticalContentAlignment="Center"/>
+		</Grid>
+	</StackPanel>
+</UserControl>

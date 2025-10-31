@@ -5,6 +5,7 @@ using H.Core.Enumerations;
 using H.Core.Models;
 using H.Core.Providers.Animals;
 using H.Core.Services.StorageService;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Prism.Events;
 using Prism.Regions;
@@ -26,6 +27,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews
         private Mock<IStorage> _mockStorage;
         private IStorage _storageMock;
         private ApplicationData _applicationData;
+        private Mock<ILogger> _mockLogger;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
@@ -51,6 +53,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews
             _mockStorage = new Mock<IStorage>();
             _storageMock = _mockStorage.Object;
             _applicationData = new ApplicationData();
+            _mockLogger = new Mock<ILogger>();
         }
 
         [TestCleanup]
@@ -74,7 +77,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews
             _mockStorageService.Setup(x => x.GetActiveFarm()).Returns(testFarm);
             _mockUnitsCalculator.Setup(x => x.IsMetric).Returns(true);
 
-            _viewModel = new DefaultBeddingCompositionViewModel(_regionManagerMock, _eventAggregatorMock, _storageServiceMock, _unitsCalculatorMock);
+            _viewModel = new DefaultBeddingCompositionViewModel(_regionManagerMock, _eventAggregatorMock, _storageServiceMock, _unitsCalculatorMock, _mockLogger.Object);
 
             Assert.AreEqual(1, _viewModel.BeddingCompositionDTOs.Count);
             Assert.AreEqual(testDataClassInstance.TotalNitrogenKilogramsDryMatter, _viewModel.BeddingCompositionDTOs[0].TotalNitrogenKilogramsDryMatter);
@@ -96,7 +99,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews
             _mockStorageService.Setup(x => x.Storage).Returns(_storageMock);
             _mockStorageService.Setup(x => x.GetActiveFarm()).Returns(testFarm);
 
-            _viewModel = new DefaultBeddingCompositionViewModel(_regionManagerMock, _eventAggregatorMock, _storageServiceMock, _unitsCalculatorMock);
+            _viewModel = new DefaultBeddingCompositionViewModel(_regionManagerMock, _eventAggregatorMock, _storageServiceMock, _unitsCalculatorMock, _mockLogger.Object);
 
             _viewModel.OnNavigatedTo(null); // implicitly calling private method SetStrings()
 
@@ -118,7 +121,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews
             _mockStorageService.Setup(x => x.Storage).Returns(_storageMock);
             _mockStorageService.Setup(x => x.GetActiveFarm()).Returns(testFarm);
 
-            _viewModel = new DefaultBeddingCompositionViewModel(_regionManagerMock, _eventAggregatorMock, _storageServiceMock, _unitsCalculatorMock);
+            _viewModel = new DefaultBeddingCompositionViewModel(_regionManagerMock, _eventAggregatorMock, _storageServiceMock, _unitsCalculatorMock, _mockLogger.Object);
 
             _viewModel.OnNavigatedTo(null); // implicitly calling private method SetStrings()
 
@@ -128,9 +131,9 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews
         }
 
         [TestMethod]
-        public void TestConstructuroThrowsExceptionOnNullConstructorParameter()
+        public void TestConstructorThrowsExceptionOnNullConstructorParameter()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new DefaultBeddingCompositionViewModel(null, null, null, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new DefaultBeddingCompositionViewModel(null, null, null, null, null));
         }
     }
 }

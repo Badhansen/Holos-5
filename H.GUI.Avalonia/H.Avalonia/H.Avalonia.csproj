@@ -25,14 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AvaloniaResource Remove="Assets\Images\Icons\HolosIEIcon.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Assets\Images\Icons\HolosIEIcon.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectCapability Include="Avalonia" />
     <TrimmerRootAssembly Include="Avalonia.Themes.Fluent" />
   </ItemGroup>
@@ -85,6 +77,12 @@
     <Compile Update="Views\ClimateDataView.axaml.cs">
       <DependentUpon>ClimateDataView.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\ComponentViews\LandManagement\Field\SelectedCropGeneralTabView.axaml.cs">
+      <DependentUpon>SelectedCropGeneralTabView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ComponentViews\LandManagement\Field\SelectedCropTabView.axaml.cs">
+      <DependentUpon>SelectedCropTabView.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\ComponentViews\MyComponentsView.axaml.cs">
       <DependentUpon>MyComponentsView.axaml</DependentUpon>
     </Compile>
@@ -126,6 +124,9 @@
     <Compile Update="Views\SupportingViews\MeasurementProvince\MeasurementProvinceView.axaml.cs">
       <DependentUpon>MeasurementProvinceView.axaml</DependentUpon>
     </Compile>
+	  <Compile Update="Views\SupportingViews\DietFormulatorView.axaml.cs">
+		  <DependentUpon>DietFormulatorView.axaml</DependentUpon>
+	  </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -145,5 +146,10 @@
     <None Update="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\DTO\FarmDTO\" />
+    <Folder Include="ViewModels\ComponentViews\AnimalCommon\" />
   </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using H.Core.CustomAttributes;
 using H.Core.Enumerations;
+using H.Core.Factories.Crops;
 using H.Core.Models.LandManagement.Fields;
 
 namespace H.Core.Factories;

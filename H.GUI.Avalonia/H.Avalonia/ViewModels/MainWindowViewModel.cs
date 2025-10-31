@@ -15,13 +15,13 @@ namespace H.Avalonia.ViewModels
     {
         #region Fields
 
-        private readonly IWindowNotificationManagerService _notificationManagerService;
+        private readonly INotificationManagerService _notificationManagerService;
 
         #endregion
 
         #region Properties
 
-        public IWindowNotificationManagerService NotificationManagerService
+        public INotificationManagerService NotificationManagerService
         {
             get => _notificationManagerService;
         }
@@ -30,7 +30,7 @@ namespace H.Avalonia.ViewModels
 
         #region Constructor
 
-        public MainWindowViewModel(IWindowNotificationManagerService notificationManagerService) : base()
+        public MainWindowViewModel(INotificationManagerService notificationManagerService) : base()
         {
             if (notificationManagerService != null)
             {

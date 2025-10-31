@@ -12,7 +12,7 @@ using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace H.Avalonia.Services
 {
-    public class WindowNotificationManagerService : IWindowNotificationManagerService
+    public class NotificationManagerService : INotificationManagerService
     {
         #region Fields
 
@@ -52,7 +52,7 @@ namespace H.Avalonia.Services
 
         #region Constructors
 
-        public WindowNotificationManagerService(ILogger logger)
+        public NotificationManagerService(ILogger logger)
         {
             if (logger != null)
             {
@@ -89,7 +89,7 @@ namespace H.Avalonia.Services
             }
             else
             {
-                _logger.LogWarning("{Service} attempted reinitialization.", nameof(WindowNotificationManagerService));
+                _logger.LogWarning("{Service} attempted reinitialization.", nameof(NotificationManagerService));
             }
         }
 
@@ -97,7 +97,7 @@ namespace H.Avalonia.Services
         {
             if (!_isInitialized)
             {
-                _logger.LogWarning("Toast message sent to {Service} before initialization completed.", nameof(WindowNotificationManagerService));
+                _logger.LogWarning("Toast message sent to {Service} before initialization completed.", nameof(NotificationManagerService));
                 return;
             }
 

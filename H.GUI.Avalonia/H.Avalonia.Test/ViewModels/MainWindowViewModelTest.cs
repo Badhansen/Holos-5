@@ -15,8 +15,8 @@ namespace H.Avalonia.Test.ViewModels
     public class MainWindowViewModelTest
     {
         private MainWindowViewModel _viewModel;
-        private Mock<IWindowNotificationManagerService> _mockNotificationManager;
-        private IWindowNotificationManagerService _notificationManagerMock;
+        private Mock<INotificationManagerService> _mockNotificationManager;
+        private INotificationManagerService _notificationManagerMock;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
@@ -31,7 +31,7 @@ namespace H.Avalonia.Test.ViewModels
         [TestInitialize]
         public void TestInitialize()
         {
-            _mockNotificationManager = new Mock<IWindowNotificationManagerService>();
+            _mockNotificationManager = new Mock<INotificationManagerService>();
             _notificationManagerMock = _mockNotificationManager.Object;
         }
 

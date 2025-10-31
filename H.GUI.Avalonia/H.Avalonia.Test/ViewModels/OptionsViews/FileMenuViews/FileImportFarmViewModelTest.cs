@@ -15,7 +15,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews.FileMenuViews
         private FileImportFarmViewModel _viewModel = null!;
         private Mock<IRegionManager> _mockRegionManager = null!;
         private Mock<IStorageService> _mockStorageService = null!;
-        private Mock<IWindowNotificationManagerService> _mockNotificationService = null!;
+        private Mock<INotificationManagerService> _mockNotificationService = null!;
 
         #endregion
 
@@ -36,7 +36,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews.FileMenuViews
         {
             _mockRegionManager = new Mock<IRegionManager>();
             _mockStorageService = new Mock<IStorageService>();
-            _mockNotificationService = new Mock<IWindowNotificationManagerService>();
+            _mockNotificationService = new Mock<INotificationManagerService>();
 
             _viewModel = new FileImportFarmViewModel(_mockRegionManager.Object, _mockStorageService.Object, _mockNotificationService.Object);
         }

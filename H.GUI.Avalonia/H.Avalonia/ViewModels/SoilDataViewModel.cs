@@ -149,7 +149,7 @@ namespace H.Avalonia.ViewModels
             ICountrySettings countrySettings,
             IStorageService storageService,
             Storage storage,
-            IWindowNotificationManagerService notificationManager) : base(regionManager, storageService, notificationManager)
+            INotificationManagerService notificationManager) : base(regionManager, storageService, notificationManager)
         {
             if (countrySettings != null)
             {

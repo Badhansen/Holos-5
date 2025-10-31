@@ -38,7 +38,7 @@ namespace H.Avalonia.ViewModels.Results
 
         public ClimateResultsViewModel() { }
 
-        public ClimateResultsViewModel(IRegionManager regionManager, IWindowNotificationManagerService notificationManager, ExportHelpers exportHelpers) : base(regionManager, notificationManager)
+        public ClimateResultsViewModel(IRegionManager regionManager, INotificationManagerService notificationManager, ExportHelpers exportHelpers) : base(regionManager, notificationManager)
         {
             _regionManager = regionManager;
             _exportHelpers = exportHelpers;

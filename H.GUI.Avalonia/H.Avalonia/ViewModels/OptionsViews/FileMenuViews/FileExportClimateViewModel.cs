@@ -32,7 +32,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
         /// </summary>
         /// <param name="regionManager">Service for managing UI regions in the application</param>
         /// <param name="storageService">Service for handling file storage operations</param>
-        public FileExportClimateViewModel(IRegionManager regionManager, IStorageService storageService, IWindowNotificationManagerService notificationManager) : base(regionManager, storageService, notificationManager)
+        public FileExportClimateViewModel(IRegionManager regionManager, IStorageService storageService, INotificationManagerService notificationManager) : base(regionManager, storageService, notificationManager)
         {
             // Initialize the climate export command that will be bound to UI elements
             this.ExportClimate = new DelegateCommand<object>(OnExport);

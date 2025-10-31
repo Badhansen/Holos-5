@@ -56,7 +56,7 @@ namespace H.Avalonia.ViewModels
             }
         }
 
-        protected ViewModelBase(IStorageService storageService, IWindowNotificationManagerService notificationManager) : this(storageService)
+        protected ViewModelBase(IStorageService storageService, INotificationManagerService notificationManager) : this(storageService)
         {
             if (notificationManager != null)
             {
@@ -146,7 +146,7 @@ namespace H.Avalonia.ViewModels
             }
         }
 
-        protected ViewModelBase(IRegionManager regionManager, IStorageService storageService, IWindowNotificationManagerService notificationManager) : this(regionManager, storageService)
+        protected ViewModelBase(IRegionManager regionManager, IStorageService storageService, INotificationManagerService notificationManager) : this(regionManager, storageService)
         {
             if (notificationManager != null)
             {
@@ -194,7 +194,7 @@ namespace H.Avalonia.ViewModels
 
         protected ViewModelBase(IRegionManager regionManager,
             IEventAggregator eventAggregator,
-            IStorageService storageService, IWindowNotificationManagerService notificationManager) : this(regionManager, storageService)
+            IStorageService storageService, INotificationManagerService notificationManager) : this(regionManager, storageService)
         {
             if(eventAggregator != null)
             {
@@ -227,7 +227,7 @@ namespace H.Avalonia.ViewModels
             }
         }
 
-        protected ViewModelBase(IRegionManager regionManager, IWindowNotificationManagerService notificationManager) : this(regionManager)
+        protected ViewModelBase(IRegionManager regionManager, INotificationManagerService notificationManager) : this(regionManager)
         {
             if (notificationManager != null)
             {
@@ -252,7 +252,7 @@ namespace H.Avalonia.ViewModels
         /// <summary>
         /// The notification manager that handles displaying notifications on the page.
         /// </summary>
-        public IWindowNotificationManagerService NotificationManager { get; set; }
+        public INotificationManagerService NotificationManager { get; set; }
 
         protected IRegionManager RegionManager
         {

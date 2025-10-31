@@ -14,7 +14,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews.FileMenuViews
     {
         private Mock<IRegionManager> _mockRegionManager;
         private Mock<IStorageService> _mockStorageService;
-        private Mock<IWindowNotificationManagerService> _mockNotificationService;
+        private Mock<INotificationManagerService> _mockNotificationService;
         private Mock<IStorageFile> _mockStorageFile;
         private FileExportClimateViewModel _viewModel;
         private Farm _testFarm;
@@ -25,7 +25,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews.FileMenuViews
             // Initialize mocks
             _mockRegionManager = new Mock<IRegionManager>();
             _mockStorageService = new Mock<IStorageService>();
-            _mockNotificationService = new Mock<IWindowNotificationManagerService>();
+            _mockNotificationService = new Mock<INotificationManagerService>();
             _mockStorageFile = new Mock<IStorageFile>();
 
             // Setup mock storage file

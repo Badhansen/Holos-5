@@ -21,9 +21,9 @@ using Avalonia.Markup.Xaml;
 namespace H.Avalonia.Test.Services
 {
     [TestClass]
-    public class WindowNotificationManagerServiceTest
+    public class NotificationManagerServiceTest
     {
-        private WindowNotificationManagerService _service;
+        private NotificationManagerService _service;
         private Mock<ILogger> _mockLogger;
         private ILogger _loggerMock;
         private Window _window;
@@ -51,27 +51,27 @@ namespace H.Avalonia.Test.Services
         [TestMethod]
         public void TestConstructorInitialization()
         {
-            _service = new WindowNotificationManagerService(_loggerMock);
+            _service = new NotificationManagerService(_loggerMock);
             Assert.IsNotNull(_service);
         }
 
         [TestMethod]
         public void TestConstructorThrowsExceptionOnNullParameter()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new WindowNotificationManagerService(null));
+            Assert.ThrowsException<ArgumentNullException>(() => new NotificationManagerService(null));
         }
 
         [TestMethod]
         public void TestInitializeMethodForNullWindow()
         {
-            _service = new WindowNotificationManagerService(_loggerMock);
+            _service = new NotificationManagerService(_loggerMock);
             Assert.ThrowsException<ArgumentNullException>(() => _service.Initialize(null));
         }
 
         [TestMethod]
         public void TestInitializationValidWindow()
         {
-            _service = new WindowNotificationManagerService(_loggerMock);
+            _service = new NotificationManagerService(_loggerMock);
             _service.Initialize(_window);
             Assert.IsTrue(_service.IsInitialized);
             _mockLogger.Verify(
@@ -87,7 +87,7 @@ namespace H.Avalonia.Test.Services
         [TestMethod]
         public void TestReinitializationWindow()
         {
-            _service = new WindowNotificationManagerService(_loggerMock);
+            _service = new NotificationManagerService(_loggerMock);
             _service.Initialize(_window);
             _service.Initialize(_window);
             _mockLogger.Verify(
@@ -103,7 +103,7 @@ namespace H.Avalonia.Test.Services
         [TestMethod]
         public void TestShowOneToast()
         {
-            _service = new WindowNotificationManagerService(_loggerMock);
+            _service = new NotificationManagerService(_loggerMock);
             _service.Initialize(_window);
             _service.ShowToast("Test Title", "Test Message");
             Assert.AreEqual(1, _service.ActiveNotifications.Count);
@@ -112,7 +112,7 @@ namespace H.Avalonia.Test.Services
         [TestMethod]
         public void TestShowMoreToasts()
         {
-            _service = new WindowNotificationManagerService(_loggerMock);
+            _service = new NotificationManagerService(_loggerMock);
             _service.Initialize(_window);
             _service.ShowToast("Test Title1", "Test Message1");
             _service.ShowToast("Test Title2", "Test Message2");
@@ -128,7 +128,7 @@ namespace H.Avalonia.Test.Services
         [Ignore]
         public void TestMessageTimer()
         {
-            _service = new WindowNotificationManagerService(_loggerMock);
+            _service = new NotificationManagerService(_loggerMock);
             _service.Initialize(_window);
             _service.ShowToast("Test Title1", "Test Message1", NotificationType.Success);
             _service.ShowToast("Test Title2", "Test Message2", NotificationType.Error);

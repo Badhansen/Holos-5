@@ -40,7 +40,7 @@ namespace H.Avalonia.ViewModels.Results
         {
         }
 
-        public SoilResultsViewModel(IRegionManager regionManager, IWindowNotificationManagerService notificationManager ,ExportHelpers exportHelpers, KmlHelpers kmlHelpers, GeographicDataProvider geographicDataProvider, Storage storage) : base(regionManager, notificationManager)
+        public SoilResultsViewModel(IRegionManager regionManager, INotificationManagerService notificationManager ,ExportHelpers exportHelpers, KmlHelpers kmlHelpers, GeographicDataProvider geographicDataProvider, Storage storage) : base(regionManager, notificationManager)
         {
             this.StoragePlaceholder = storage;
 

@@ -30,7 +30,7 @@ namespace H.Avalonia.ViewModels
         private readonly IDialogService _dialogService;
         private readonly ImportHelpers _importHelper;
         private readonly ClimateViewItemMap _climateViewItemMap;
-        private IWindowNotificationManagerService _notificationManager;
+        private INotificationManagerService _notificationManager;
 
         /// <summary>
         /// Allows navigation from the current view to the <see cref="SoilResultsView"/>.
@@ -88,7 +88,7 @@ namespace H.Avalonia.ViewModels
             ImportHelpers importHelper,
             IDialogService dialogService,
             Storage storage,
-            IWindowNotificationManagerService notificationManager) : base(regionManager, notificationManager)
+            INotificationManagerService notificationManager) : base(regionManager, notificationManager)
         {
             _regionManager = regionManager;
             _importHelper = importHelper;
@@ -266,11 +266,11 @@ namespace H.Avalonia.ViewModels
             }
             catch (HeaderValidationException e)
             {
-                NotificationManager.ShowToast(H.Core.Properties.Resources.InvalidHeader, e.Message, NotificationType.Error);
+                NotificationManager.ShowToast(H.Core.Properties.Resources.InvalidHeaderTitle, e.Message, NotificationType.Error);
             }
             catch (TypeConverterException e)
             {
-                NotificationManager.ShowToast(H.Core.Properties.Resources.InvalidCSVContent, e.Message, NotificationType.Error);
+                NotificationManager.ShowToast(H.Core.Properties.Resources.InvalidCSVContentTitle, e.Message, NotificationType.Error);
             }
             catch (IOException e)
             {

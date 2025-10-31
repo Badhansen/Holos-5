@@ -50,7 +50,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
         /// </summary>
         /// <param name="regionManager">Service for managing UI regions in the application</param>
         /// <param name="storageService">Service for handling file storage operations</param>
-        public FileExportFarmViewModel(IRegionManager regionManager, IStorageService storageService, IWindowNotificationManagerService notificationManager) : base(regionManager, storageService, notificationManager)
+        public FileExportFarmViewModel(IRegionManager regionManager, IStorageService storageService, INotificationManagerService notificationManager) : base(regionManager, storageService, notificationManager)
         {
             // Initialize the export command that will be bound to UI elements
             ExportFarms = new DelegateCommand<IStorageFile>(OnExport);

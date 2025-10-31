@@ -13,14 +13,14 @@ namespace H.Avalonia.Services
 
         private readonly ILogger _logger;
         private readonly IEventAggregator _eventAggregator;
-        private readonly IWindowNotificationManagerService _notificationManager;
+        private readonly INotificationManagerService _notificationManager;
 
         #endregion
 
 
         #region Constructors
 
-        public ErrorHandlerService(ILogger logger, IEventAggregator eventAggregator, IWindowNotificationManagerService windowNotificationManagerService)
+        public ErrorHandlerService(ILogger logger, IEventAggregator eventAggregator, INotificationManagerService notificationManagerService)
         {
             if (logger != null)
             {
@@ -40,13 +40,13 @@ namespace H.Avalonia.Services
                 throw new ArgumentNullException(nameof(eventAggregator));
             }
 
-            if (windowNotificationManagerService != null)
+            if (notificationManagerService != null)
             {
-                _notificationManager = windowNotificationManagerService;
+                _notificationManager = notificationManagerService;
             }
             else
             {
-                throw new ArgumentNullException(nameof(windowNotificationManagerService));
+                throw new ArgumentNullException(nameof(notificationManagerService));
             }
         }
 

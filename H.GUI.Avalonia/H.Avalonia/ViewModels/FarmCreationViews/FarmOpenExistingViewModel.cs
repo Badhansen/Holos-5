@@ -34,7 +34,7 @@ namespace H.Avalonia.ViewModels.FarmCreationViews
             Farms = new ObservableCollection<Farm>();
         }
 
-        public FarmOpenExistingViewmodel(IRegionManager regionManager, IStorageService storageService, IWindowNotificationManagerService notificationManager) : base(regionManager, storageService, notificationManager)
+        public FarmOpenExistingViewmodel(IRegionManager regionManager, IStorageService storageService, INotificationManagerService notificationManager) : base(regionManager, storageService, notificationManager)
         {
             _regionManager = regionManager ?? throw new System.ArgumentNullException(nameof(regionManager));
             NavigateToPreviousPage = new DelegateCommand(OnNavigateToPreviousPage);

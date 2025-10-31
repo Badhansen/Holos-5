@@ -15,9 +15,6 @@ namespace H.Avalonia
 
         private void OnOpened(object? sender, EventArgs e)
         {
-            if (ViewModel.NotificationManagerService.IsInitialized)
-                return;
-
             if (ViewModel != null)
                 ViewModel.NotificationManagerService.Initialize(this);
         }

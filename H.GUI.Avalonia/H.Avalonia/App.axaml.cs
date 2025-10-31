@@ -237,7 +237,7 @@ namespace H.Avalonia
             containerRegistry.RegisterSingleton<IAnimalComponentService, AnimalComponentService>();
             containerRegistry.RegisterSingleton<IManagementPeriodService, ManagementPeriodService>();
             containerRegistry.RegisterSingleton<IErrorHandlerService, ErrorHandlerService>();
-            containerRegistry.RegisterSingleton<IWindowNotificationManagerService, WindowNotificationManagerService>();
+            containerRegistry.RegisterSingleton<INotificationManagerService, NotificationManagerService>();
 
             // Unit conversion
             containerRegistry.RegisterSingleton<IUnitsOfMeasurementCalculator, UnitsOfMeasurementCalculator>();

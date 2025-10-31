@@ -8,7 +8,7 @@ namespace H.Avalonia.Services
     /// <summary>
     /// Manages and displays notifications within an avalonia window it is initialized in.
     /// </summary>
-    public interface IWindowNotificationManagerService
+    public interface INotificationManagerService
     {
         /// <summary>
         /// Check if the notification manager has been initialized with a target window.

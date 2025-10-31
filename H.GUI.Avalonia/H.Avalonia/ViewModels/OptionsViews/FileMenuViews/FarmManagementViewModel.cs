@@ -25,7 +25,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
 
         #region Constructors
 
-        public FarmManagementViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IStorageService storageService, IWindowNotificationManagerService notificationManager) : base(regionManager, eventAggregator, storageService, notificationManager)
+        public FarmManagementViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IStorageService storageService, INotificationManagerService notificationManager) : base(regionManager, eventAggregator, storageService, notificationManager)
         {
             RemoveFarm = new DelegateCommand(OnRemoveFarmExecute, OnRemoveFarmCanExecute);
             Farms = new ObservableCollection<Farm>();

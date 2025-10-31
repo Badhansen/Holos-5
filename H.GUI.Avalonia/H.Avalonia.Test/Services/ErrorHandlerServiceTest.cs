@@ -23,8 +23,8 @@ namespace H.Avalonia.Test.Services
         private ILogger _loggerMock;
         private Mock<IEventAggregator> _mockEventAggregator;
         private IEventAggregator _eventAggregatorMock;
-        private Mock<IWindowNotificationManagerService> _mockNotificationManager;
-        private IWindowNotificationManagerService _notificationManagerMock;
+        private Mock<INotificationManagerService> _mockNotificationManager;
+        private INotificationManagerService _notificationManagerMock;
         private Mock<PubSubEvent<ValidationErrorOccurredEvent>> _mockEvent;
 
         [ClassInitialize]
@@ -44,7 +44,7 @@ namespace H.Avalonia.Test.Services
             _loggerMock = _mockLogger.Object;
             _mockEventAggregator = new Mock<IEventAggregator>();
             _eventAggregatorMock = _mockEventAggregator.Object;
-            _mockNotificationManager = new Mock<IWindowNotificationManagerService>();
+            _mockNotificationManager = new Mock<INotificationManagerService>();
             _notificationManagerMock = _mockNotificationManager.Object;
 
             var mockEvent = new Mock<PubSubEvent<ValidationErrorOccurredEvent>>();

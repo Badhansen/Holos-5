@@ -39,7 +39,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
         /// </summary>
         /// <param name="regionManager">Manager for handling navigation regions</param>
         /// <param name="storageService">Service for farm data storage operations</param>
-        public FileImportFarmViewModel(IRegionManager regionManager, IStorageService storageService, IWindowNotificationManagerService notificationManager) : base(regionManager, storageService, notificationManager)
+        public FileImportFarmViewModel(IRegionManager regionManager, IStorageService storageService, INotificationManagerService notificationManager) : base(regionManager, storageService, notificationManager)
         {
             ImportFarms = new DelegateCommand(OnImport);
             this.Farms = new ObservableCollection<H.Core.Models.Farm>();

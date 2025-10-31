@@ -14,7 +14,7 @@ namespace H.Avalonia.ViewModels.Results
         {
         }
 
-        protected ResultsViewModelBase(IRegionManager regionManager, IWindowNotificationManagerService notificationManager) : base(regionManager, notificationManager)
+        protected ResultsViewModelBase(IRegionManager regionManager, INotificationManagerService notificationManager) : base(regionManager, notificationManager)
         {
         }
 

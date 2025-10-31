@@ -1,4 +1,5 @@
-﻿using H.Avalonia.ViewModels.OptionsViews.FileMenuViews;
+﻿using H.Avalonia.Services;
+using H.Avalonia.ViewModels.OptionsViews.FileMenuViews;
 using H.Core.Models;
 using H.Core.Services.StorageService;
 using Moq;
@@ -14,6 +15,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews.FileMenuViews
         private FileImportFarmViewModel _viewModel = null!;
         private Mock<IRegionManager> _mockRegionManager = null!;
         private Mock<IStorageService> _mockStorageService = null!;
+        private Mock<IWindowNotificationManagerService> _mockNotificationService = null!;
 
         #endregion
 
@@ -34,8 +36,9 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews.FileMenuViews
         {
             _mockRegionManager = new Mock<IRegionManager>();
             _mockStorageService = new Mock<IStorageService>();
+            _mockNotificationService = new Mock<IWindowNotificationManagerService>();
 
-            _viewModel = new FileImportFarmViewModel(_mockRegionManager.Object, _mockStorageService.Object);
+            _viewModel = new FileImportFarmViewModel(_mockRegionManager.Object, _mockStorageService.Object, _mockNotificationService.Object);
         }
 
         #endregion

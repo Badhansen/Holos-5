@@ -81,7 +81,7 @@ namespace H.Avalonia.Test.Services
 
             _mockLogger.Verify(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.AtMostOnce);
 
-            _mockNotificationManager.Verify(x => x.ShowToast("Test Title", "Test Message", NotificationType.Information, null), Times.AtMostOnce);
+            _mockNotificationManager.Verify(x => x.ShowToast("Test Title", "Test Message", NotificationType.Information), Times.AtMostOnce);
         }
     }
 }

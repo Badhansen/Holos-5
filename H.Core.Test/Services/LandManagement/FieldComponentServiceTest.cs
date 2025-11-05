@@ -474,5 +474,79 @@ public class FieldComponentServiceTest
 
     #endregion
 
+    #region Additional Tests
+
+    [TestMethod]
+    public void AddCropDtoToSystem_UsesFactoryReturnValue_InstanceAdded()
+    {
+        // Arrange: factory returns a specific instance which should be added to collection
+        var fieldComponent = new FieldSystemComponent() { CropViewItems = new ObservableCollection<CropViewItem>() };
+        var cropDto = new CropDto();
+        var returnedViewItem = new CropViewItem() { Name = "FactoryCreated" };
+
+        _mockCropFactory.Setup(x => x.CreateCropViewItem(It.IsAny<ICropDto>())).Returns(returnedViewItem);
+
+        // Act
+        _fieldComponentService.AddCropDtoToSystem(fieldComponent, cropDto);
+
+        // Assert: collection contains the same instance that factory returned
+        Assert.AreEqual(1, fieldComponent.CropViewItems.Count);
+        Assert.AreSame(returnedViewItem, fieldComponent.CropViewItems[0]);
+        Assert.AreEqual("FactoryCreated", fieldComponent.CropViewItems[0].Name);
+    }
+
+    [TestMethod]
+    public void AddCropDtoToSystem_PassesDtoToFactory()
+    {
+        // Arrange: capture the dto passed to factory and verify it matches the supplied dto
+        var fieldComponent = new FieldSystemComponent() { CropViewItems = new ObservableCollection<CropViewItem>() };
+        var cropDto = new CropDto() { Name = "DtoName" };
+        _mockCropFactory.Setup(x => x.CreateCropViewItem(It.IsAny<ICropDto>())).Returns(new CropViewItem());
+
+        // Act
+        _fieldComponentService.AddCropDtoToSystem(fieldComponent, cropDto);
+
+        // Assert: factory was invoked with the same dto instance
+        _mockCropFactory.Verify(x => x.CreateCropViewItem(It.Is<ICropDto>(d => d == cropDto)), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddCropDtoToSystem_WithNullDto_DoesNotCallFactoryAndDoesNotAdd()
+    {
+        // Arrange: factory should not be called when dto is null
+        var fieldComponent = new FieldSystemComponent() { CropViewItems = new ObservableCollection<CropViewItem>() };
+        ICropDto cropDto = null;
+
+        // Setup factory to fail the test if called (optional) and also verify later
+        _mockCropFactory.Setup(x => x.CreateCropViewItem(It.IsAny<ICropDto>())).Throws(new Exception("Factory should not be called when dto is null"));
+
+        var initialCount = fieldComponent.CropViewItems.Count;
+
+        // Act
+        _fieldComponentService.AddCropDtoToSystem(fieldComponent, cropDto);
+
+        // Assert: factory was not called and collection remains unchanged
+        Assert.AreEqual(initialCount, fieldComponent.CropViewItems.Count);
+        _mockCropFactory.Verify(x => x.CreateCropViewItem(It.IsAny<ICropDto>()), Times.Never);
+    }
+
+    [TestMethod]
+    public void AddCropDtoToSystem_WithNullFieldComponent_DoesNotCallFactoryAndDoesNotThrow()
+    {
+        // Arrange: crop DTO provided, but field component is null
+        ICropDto cropDto = new CropDto() { Name = "DtoForNullField" };
+
+        // Setup factory to throw if invoked to ensure it is not called
+        _mockCropFactory.Setup(x => x.CreateCropViewItem(It.IsAny<ICropDto>())).Throws(new Exception("Factory should not be called when field component is null"));
+
+        // Act & Assert: calling with null fieldComponent should not throw
+        _fieldComponentService.AddCropDtoToSystem(null, cropDto);
+
+        // Verify factory was never called
+        _mockCropFactory.Verify(x => x.CreateCropViewItem(It.IsAny<ICropDto>()), Times.Never);
+    }
+
+    #endregion
+
     #endregion
 }

@@ -253,9 +253,15 @@ public class FieldComponentService : ComponentServiceBase, IFieldComponentServic
     /// <param name="cropDto">DTO used to create the new view item.</param>
     public void AddCropDtoToSystem(FieldSystemComponent fieldSystemComponent, ICropDto cropDto)
     {
-        var cropViewItem = _cropFactory.CreateCropViewItem(cropDto);
+        if (fieldSystemComponent != null)
+        {
+            if (cropDto != null)
+            {
+                var cropViewItem = _cropFactory.CreateCropViewItem(cropDto);
 
-        fieldSystemComponent.CropViewItems.Add(cropViewItem);
+                fieldSystemComponent.CropViewItems.Add(cropViewItem);
+            }
+        }
     }
 
     /// <summary>

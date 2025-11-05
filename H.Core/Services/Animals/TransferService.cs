@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using H.Core.Calculators.UnitsOfMeasurement;
 using H.Core.Converters;
 using H.Core.Factories;
@@ -35,10 +35,23 @@ namespace H.Core.Services.Animals
         /// Initializes a new instance of the <see cref="TransferService{TModelBase, TDto}"/> class.
         /// Configures mapping and unit conversion between model and DTO types.
         /// </summary>
-        /// <param name="unitsOfMeasurementCalculator">Calculator for handling unit conversions.</param>
-        /// <param name="dtoFactory">Factory for creating DTO instances.</param>
-        /// <param name="dtoToModelMapper"></param>
-        /// <param name="modelToDtoMapper"></param>
+        /// <param name="unitsOfMeasurementCalculator">
+        /// Service used to determine the current measurement system (metric or imperial) and to convert numeric values
+        /// between systems during transfer operations.
+        /// </param>
+        /// <param name="dtoFactory">
+        /// Factory used to create new DTO instances and DTO copies (for safe mapping without mutating bound instances).
+        /// </param>
+        /// <param name="dtoToModelMapper">
+        /// AutoMapper instance that maps from TDto to TModelBase (DTO → Domain).
+        /// Must be configured for the type pair (TDto, TModelBase).
+        /// Used in <see cref="TransferDtoToDomainObject(TDto, TModelBase)"/>.
+        /// </param>
+        /// <param name="modelToDtoMapper">
+        /// AutoMapper instance that maps from TModelBase to TDto (Domain → DTO).
+        /// Must be configured for the type pair (TModelBase, TDto).
+        /// Used in <see cref="TransferDomainObjectToDto(TModelBase)"/>.
+        /// </param>
         /// <exception cref="ArgumentNullException">Thrown if required dependencies are null.</exception>
         public TransferService(IUnitsOfMeasurementCalculator unitsOfMeasurementCalculator, IFactory<TDto> dtoFactory, IMapper dtoToModelMapper, IMapper modelToDtoMapper)
         {

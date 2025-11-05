@@ -326,7 +326,7 @@ namespace H.Core.Services.Animals
         }
 
         /// <summary>
-        /// When a user adds a manure application, the choices available for the handling system will vary depending in the animal type (beef, dairy, etc.)
+        /// When a user adds a manure application, the choices available for the handling system will vary depending on the animal type (beef, dairy, etc.)
         /// </summary>
         public void SetValidManureStateTypes(ManureItemBase manureItemBase, Farm farm)
         {

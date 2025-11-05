@@ -1,0 +1,9 @@
+flowchart LR
+    VM["FieldComponentViewModel"];
+    FCS["IFieldComponentService"];
+    SS["IStorageService"];
+    PERSIST["Storage persistence - ex: IStorage.Save"];
+
+    VM -->|update model| FCS;
+    FCS -->|may trigger| SS;
+    SS --> PERSIST;

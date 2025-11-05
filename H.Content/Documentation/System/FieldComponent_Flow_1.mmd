@@ -1,0 +1,23 @@
+﻿---
+config:
+  flowchart:
+    htmlLabels: false
+---
+
+flowchart LR
+    U["User"];
+    V["FieldComponentView"];
+    VM["FieldComponentViewModel"];
+    CIS["IComponentInitializationService"];
+    SS["IStorageService"];
+    FARM["Farm - domain"];
+    FCS["IFieldComponentService"];
+    FSC["FieldSystemComponent - domain"];
+
+    U --> V;
+    V --> VM;
+    VM -->|Initialize call| CIS;
+    CIS -->|Get active farm| SS;
+    SS --> FARM;
+    CIS -->|Initialize field component with farm and component| FCS;
+    FCS --> FSC;

@@ -164,7 +164,7 @@ public class FieldComponentViewModel : ViewModelBase
         {
             base.InitializeViewModel(fieldSystemComponent);
 
-            this.PropertyChanged += OnPropertyChanged;
+            this.PropertyChanged += ViewModelOnPropertyChanged;
 
             // Hold a reference to the selected field system object
             _selectedFieldSystemComponent = fieldSystemComponent;
@@ -241,7 +241,7 @@ public class FieldComponentViewModel : ViewModelBase
 
     /// <summary>
     /// Some property on the <see cref="SelectedFieldSystemComponentDto"/> has changed. Check if we need to validate any user
-    /// input before assigning the value on to the associated <see cref="FieldSystemComponent"/>
+    /// input before assigning the value on to the associated <see cref="FieldSystemComponent"/> domain object.
     /// </summary>
     private void FieldSystemComponentDtoOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -309,7 +309,7 @@ public class FieldComponentViewModel : ViewModelBase
         }
     }
 
-    private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private void ViewModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName.Equals(nameof(SelectedCropDto)))
         {
@@ -331,7 +331,7 @@ public class FieldComponentViewModel : ViewModelBase
     /// </summary>
     private void AddCropDto()
     {
-        CropDto dto = _cropFactory.CreateDto(base.ActiveFarm);
+        var dto = _cropFactory.CreateDto(base.ActiveFarm);
 
         _fieldComponentService.InitializeCropDto(this.SelectedFieldSystemComponentDto, dto);
 

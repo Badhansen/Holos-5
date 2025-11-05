@@ -1,0 +1,17 @@
+flowchart LR
+    FSC["FieldSystemComponent - domain"];
+    TRANS["ITransferService&lt;FieldSystemComponent, FieldSystemComponentDto&gt;"];
+    MAP1["IMapper FieldComponentToDtoMapper - model to dto"];
+    UOM["IUnitsOfMeasurementCalculator"];
+    DTOF["IFactory&lt;FieldSystemComponentDto&gt;"];
+    DTO["FieldSystemComponentDto - dto"];
+    VM["FieldComponentViewModel"];
+    V["FieldComponentView - Avalonia View"];
+
+    FSC -->|Transfer to dto| TRANS;
+    TRANS --> MAP1;
+    TRANS --> UOM;
+    TRANS --> DTOF;
+    TRANS --> DTO;
+    DTO -->|exposed by view model| VM;
+    VM -->|data binding| V;

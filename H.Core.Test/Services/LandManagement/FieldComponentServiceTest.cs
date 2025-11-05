@@ -389,5 +389,90 @@ public class FieldComponentServiceTest
 
     #endregion
 
+    #region RemoveCropFromSystem Tests
+
+    [TestMethod]
+    public void RemoveCropFromSystem_WithMatchingGuid_RemovesItem()
+    {
+        // Arrange: field contains multiple crop view items including one that matches the DTO GUID
+        var matchingGuid = Guid.NewGuid();
+        var fieldComponent = new FieldSystemComponent()
+        {
+            CropViewItems = new ObservableCollection<CropViewItem>
+            {
+                new CropViewItem() { Guid = Guid.NewGuid() },
+                new CropViewItem() { Guid = matchingGuid },
+                new CropViewItem() { Guid = Guid.NewGuid() }
+            }
+        };
+        var cropDto = new CropDto() { Guid = matchingGuid };
+
+        // Act: remove the crop identified by DTO
+        _fieldComponentService.RemoveCropFromSystem(fieldComponent, cropDto);
+
+        // Assert: the item with the matching GUID has been removed
+        Assert.IsFalse(fieldComponent.CropViewItems.Any(x => x.Guid == matchingGuid));
+        Assert.AreEqual(2, fieldComponent.CropViewItems.Count);
+    }
+
+    [TestMethod]
+    public void RemoveCropFromSystem_WithNoMatchingGuid_DoesNothing()
+    {
+        // Arrange: field contains items but none match the DTO GUID
+        var fieldComponent = new FieldSystemComponent()
+        {
+            CropViewItems = new ObservableCollection<CropViewItem>
+            {
+                new CropViewItem() { Guid = Guid.NewGuid() },
+                new CropViewItem() { Guid = Guid.NewGuid() }
+            }
+        };
+        var cropDto = new CropDto() { Guid = Guid.NewGuid() };
+        var initialCount = fieldComponent.CropViewItems.Count;
+
+        // Act: attempt removal when no matching GUID exists
+        _fieldComponentService.RemoveCropFromSystem(fieldComponent, cropDto);
+
+        // Assert: collection remains unchanged
+        Assert.AreEqual(initialCount, fieldComponent.CropViewItems.Count);
+    }
+
+    [TestMethod]
+    public void RemoveCropFromSystem_WithNullDto_DoesNothing()
+    {
+        // Arrange: prepare a field with items
+        var fieldComponent = new FieldSystemComponent()
+        {
+            CropViewItems = new ObservableCollection<CropViewItem>
+            {
+                new CropViewItem() { Guid = Guid.NewGuid() }
+            }
+        };
+        ICropDto cropDto = null;
+        var initialCount = fieldComponent.CropViewItems.Count;
+
+        // Act: calling with null DTO should not throw and should not modify the collection
+        _fieldComponentService.RemoveCropFromSystem(fieldComponent, cropDto);
+
+        // Assert
+        Assert.AreEqual(initialCount, fieldComponent.CropViewItems.Count);
+    }
+
+    [TestMethod]
+    public void RemoveCropFromSystem_WithEmptyCollection_DoesNothing()
+    {
+        // Arrange: empty CropViewItems collection
+        var fieldComponent = new FieldSystemComponent() { CropViewItems = new ObservableCollection<CropViewItem>() };
+        var cropDto = new CropDto() { Guid = Guid.NewGuid() };
+
+        // Act: attempt removal from empty collection
+        _fieldComponentService.RemoveCropFromSystem(fieldComponent, cropDto);
+
+        // Assert: still empty and no exceptions
+        Assert.IsFalse(fieldComponent.CropViewItems.Any());
+    }
+
+    #endregion
+
     #endregion
 }

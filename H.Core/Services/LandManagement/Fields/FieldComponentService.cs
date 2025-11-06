@@ -236,12 +236,18 @@ public class FieldComponentService : ComponentServiceBase, IFieldComponentServic
     /// <param name="fieldComponentDto">Source DTO containing edited crop values.</param>
     public void ConvertCropDtoCollectionToCropViewItemCollection(FieldSystemComponent fieldSystemComponent, IFieldComponentDto fieldComponentDto)
     {
-        foreach (var cropDto in fieldComponentDto.CropDtos)
+        if (fieldSystemComponent != null)
         {
-            var viewItem = fieldSystemComponent.CropViewItems.SingleOrDefault(viewItem => viewItem.Guid.Equals(cropDto.Guid));
-            if (viewItem != null)
+            if (fieldSystemComponent != null)
             {
-                this.TransferCropDtoToSystem(cropDto, viewItem);
+                foreach (var cropDto in fieldComponentDto.CropDtos)
+                {
+                    var viewItem = fieldSystemComponent.CropViewItems.SingleOrDefault(viewItem => viewItem.Guid.Equals(cropDto.Guid));
+                    if (viewItem != null)
+                    {
+                        this.TransferCropDtoToSystem(cropDto, viewItem);
+                    }
+                }
             }
         }
     }

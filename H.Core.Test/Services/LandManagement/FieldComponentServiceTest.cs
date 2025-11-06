@@ -546,6 +546,52 @@ public class FieldComponentServiceTest
         _mockCropFactory.Verify(x => x.CreateCropViewItem(It.IsAny<ICropDto>()), Times.Never);
     }
 
+    [TestMethod]
+    public void ConvertCropDtoCollectionToCropViewItemCollection_WithMultipleDtos_UpdatesMatchingViewItems()
+    {
+        // Arrange:
+        // - Create three CropViewItems on the field component; two of them will match incoming DTO GUIDs
+        // - Create two DTOs corresponding to two of the view items
+        // - Mock the transfer service to copy the AmountOfIrrigation value from DTO to the view item
+        var guid1 = Guid.NewGuid();
+        var guid2 = Guid.NewGuid();
+        var guid3 = Guid.NewGuid();
+
+        var view1 = new CropViewItem() { Guid = guid1, AmountOfIrrigation =0 };
+        var view2 = new CropViewItem() { Guid = guid2, AmountOfIrrigation =0 };
+        var view3 = new CropViewItem() { Guid = guid3, AmountOfIrrigation =0 };
+
+        var fieldComponent = new FieldSystemComponent() { CropViewItems = new ObservableCollection<CropViewItem> { view1, view2, view3 } };
+
+        var dto1 = new CropDto() { Guid = guid1, AmountOfIrrigation =11 };
+        var dto2 = new CropDto() { Guid = guid2, AmountOfIrrigation =22 };
+
+        var fieldComponentDto = new FieldSystemComponentDto() { CropDtos = new ObservableCollection<ICropDto> { dto1, dto2 } };
+
+        // Mock: simulate the transfer service mapping DTO -> view item
+        _mockCropTransferService
+            .Setup(x => x.TransferDtoToDomainObject(It.IsAny<CropDto>(), It.IsAny<CropViewItem>()))
+            .Returns((CropDto d, CropViewItem v) =>
+            {
+                v.AmountOfIrrigation = d.AmountOfIrrigation;
+                return v;
+            });
+
+        // Act:
+        // Call the method under test which should iterate the DTO collection and update matching view items
+        _fieldComponentService.ConvertCropDtoCollectionToCropViewItemCollection(fieldComponent, fieldComponentDto);
+
+        // Assert:
+        // - view1 and view2 are updated with values from their corresponding DTOs
+        // - view3 remains unchanged because there was no matching DTO
+        Assert.AreEqual(11, view1.AmountOfIrrigation);
+        Assert.AreEqual(22, view2.AmountOfIrrigation);
+        Assert.AreEqual(0, view3.AmountOfIrrigation);
+
+        // Verify transfer service invoked exactly twice (once per matching DTO)
+        _mockCropTransferService.Verify(x => x.TransferDtoToDomainObject(It.IsAny<CropDto>(), It.IsAny<CropViewItem>()), Times.Exactly(2));
+    }
+
     #endregion
 
     #endregion

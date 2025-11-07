@@ -153,7 +153,7 @@ namespace H.Avalonia.ViewModels.Results
             }
             catch (IOException e)
             {
-                NotificationManager.ShowToast("File being used.", e.Message, type: NotificationType.Error);
+                NotificationManager.ShowToast(H.Core.Properties.Resources.FileInUse, e.Message, type: NotificationType.Error);
             }
         }
 

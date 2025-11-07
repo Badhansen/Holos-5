@@ -6291,12 +6291,6 @@ Please note: emissions related to the deposition or application of livestock man
   <data name="ErrorNoDataForExport" xml:space="preserve">
     <value>No data for export.</value>
   </data>
-  <data name="N2OPercentageLessThan100" xml:space="preserve">
-    <value>N2O percentage total equals less than 100%.</value>
-  </data>
-  <data name="N2OPercentageGreaterThan100" xml:space="preserve">
-    <value>N2O percentage total equals more than 100%.</value>
-  </data>
   <data name="SumOfMonthlyN2OInputsPercent" xml:space="preserve">
     <value>Monthly N2O inputs currently add up to {0}%.</value>
   </data>
@@ -6384,9 +6378,6 @@ Please note: emissions related to the deposition or application of livestock man
   <data name="TabHeaderFertilizer" xml:space="preserve">
     <value>Fertilizer</value>
   </data>
-  <data name="NavigationLocked" xml:space="preserve">
-    <value>Navigation locked.</value>
-  </data>
   <data name="InvalidHeaderTitle" xml:space="preserve">
     <value>Invalid Header</value>
   </data>
@@ -6416,5 +6407,15 @@ Please note: emissions related to the deposition or application of livestock man
   </data>
   <data name="CantFindAddress" xml:space="preserve">
     <value>Cannot find address</value>
+  </data>
+  <data name="CurrentMonthlyN2OValuesEqual" xml:space="preserve">
+    <value>Current total % for all months: {0}%</value>
+    <comment>Monthly N2O values currently add to {0}%.</comment>
+  </data>
+  <data name="CorrectN2OValuesBeforeNavigation" xml:space="preserve">
+    <value>Please correct N2O values so the total of all months equals 100% before leaving this screen.</value>
+  </data>
+  <data name="VerifyBeforeProceed" xml:space="preserve">
+    <value>Verify this before proceeding...</value>
   </data>
 </root>

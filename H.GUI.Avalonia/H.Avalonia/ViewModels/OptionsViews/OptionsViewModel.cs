@@ -18,7 +18,6 @@ namespace H.Avalonia.ViewModels.OptionsViews
         #region Fields
 
         private object _selectedItem;
-        private bool _allowNavigation;
 
         #endregion
 
@@ -30,7 +29,7 @@ namespace H.Avalonia.ViewModels.OptionsViews
         }
         public OptionsViewModel(IRegionManager regionManager, IEventAggregator eventAggregator) : base(regionManager, eventAggregator)
         {
-            _allowNavigation = true;
+            AllowNavigation = true;
         }
 
         #endregion
@@ -41,12 +40,6 @@ namespace H.Avalonia.ViewModels.OptionsViews
         {
             get => _selectedItem;
             set => SetProperty(ref _selectedItem, value);
-        }
-
-        public bool AllowNavigation
-        {
-            get => _allowNavigation;
-            set => SetProperty(ref _allowNavigation, value);
         }
 
         #endregion

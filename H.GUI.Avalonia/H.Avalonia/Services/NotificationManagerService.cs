@@ -8,6 +8,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Threading.Tasks;
+using Mapsui.Extensions;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace H.Avalonia.Services
@@ -19,6 +20,8 @@ namespace H.Avalonia.Services
         private WindowNotificationManager _notificationManager;
         private readonly ILogger _logger;
         private bool _isInitialized = false;
+        // ConcurrentBag used over list as it avoids potential issues introduced by async timer for notification expirations
+        // Bag used over queue as some notifications have greater lifespan
         private readonly ConcurrentBag<Notification> _activeNotifications = new();
         private TimeSpan _successTimeSpan = TimeSpan.FromSeconds(5);
         private TimeSpan _informationTimeSpan = TimeSpan.FromSeconds(5);

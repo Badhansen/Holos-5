@@ -33,6 +33,7 @@ namespace H.Avalonia.ViewModels
         private IRegionManager _regionManager;
         private IStorageService _storageService;
         private string _viewName;
+        private bool _allowNavigation;
         protected ILogger Logger;
 
         #endregion
@@ -292,6 +293,12 @@ namespace H.Avalonia.ViewModels
                     ValidateViewName();
                 }
             }
+        }
+
+        public bool AllowNavigation
+        {
+            get => _allowNavigation;
+            set => SetProperty(ref _allowNavigation, value);
         }
 
         #endregion

@@ -952,6 +952,15 @@ namespace H.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please correct N2O values so the total of all months equals 100% before leaving this screen..
+        /// </summary>
+        public static string CorrectN2OValuesBeforeNavigation {
+            get {
+                return ResourceManager.GetString("CorrectN2OValuesBeforeNavigation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cover crop.
         /// </summary>
         public static string CoverCropGrowingType {
@@ -1038,6 +1047,15 @@ namespace H.Core.Properties {
         public static string CubicYardsMethanePerPoundVolatileSolids {
             get {
                 return ResourceManager.GetString("CubicYardsMethanePerPoundVolatileSolids", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current total % for all months: {0}%.
+        /// </summary>
+        public static string CurrentMonthlyN2OValuesEqual {
+            get {
+                return ResourceManager.GetString("CurrentMonthlyN2OValuesEqual", resourceCulture);
             }
         }
         
@@ -14564,38 +14582,11 @@ namespace H.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to N2O percentage total equals more than 100%..
-        /// </summary>
-        public static string N2OPercentageGreaterThan100 {
-            get {
-                return ResourceManager.GetString("N2OPercentageGreaterThan100", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to N2O percentage total equals less than 100%..
-        /// </summary>
-        public static string N2OPercentageLessThan100 {
-            get {
-                return ResourceManager.GetString("N2OPercentageLessThan100", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Native Pasture.
         /// </summary>
         public static string NativePasture {
             get {
                 return ResourceManager.GetString("NativePasture", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Navigation locked..
-        /// </summary>
-        public static string NavigationLocked {
-            get {
-                return ResourceManager.GetString("NavigationLocked", resourceCulture);
             }
         }
         
@@ -18640,6 +18631,15 @@ namespace H.Core.Properties {
         public static string UntilledLand {
             get {
                 return ResourceManager.GetString("UntilledLand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verify this before proceeding....
+        /// </summary>
+        public static string VerifyBeforeProceed {
+            get {
+                return ResourceManager.GetString("VerifyBeforeProceed", resourceCulture);
             }
         }
         

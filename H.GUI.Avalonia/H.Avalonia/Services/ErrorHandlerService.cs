@@ -65,7 +65,7 @@ namespace H.Avalonia.Services
 
         public void HandleNonInterruptingError(string errorTitle, string errorMessage)
         {
-            _logger.LogWarning("Error: {ErrorMessage}", errorMessage);
+            _logger.LogError("Error: {ErrorMessage}", errorMessage);
 
             ShowToastMessage(errorTitle, errorMessage, NotificationType.Error);
         }

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Reflection.Metadata;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
+using Avalonia.Media;
 using H.Core.Events;
 using H.Avalonia.ViewModels.OptionsViews.DataTransferObjects;
 using H.Core.Enumerations;
@@ -22,8 +23,11 @@ namespace H.Avalonia.ViewModels.OptionsViews
 
         private SoilN2OBreakdownSettingsDTO _data;
         private readonly IErrorHandlerService _errorHandlerService;
-        private double _total;
+
         private bool _entriesAreValid;
+        private double _totalUserEnteredPercentageOfAllMonths;
+        private string _totalEnteredPercentageForAllMonthsMessage;
+        private Brush _totalsMessageColour;
 
         #endregion
 
@@ -51,10 +55,22 @@ namespace H.Avalonia.ViewModels.OptionsViews
             set => SetProperty(ref _data, value);
         }
 
-        public double Total
+        public double TotalUserEnteredPercentageOfAllMonths
         {
-            get => _total;
-            set => SetProperty(ref _total, value);
+            get => _totalUserEnteredPercentageOfAllMonths;
+            set => SetProperty(ref _totalUserEnteredPercentageOfAllMonths, value);
+        }
+
+        public string TotalEnteredPercentForAllMonthsMessage
+        {
+            get => _totalEnteredPercentageForAllMonthsMessage;
+            set => SetProperty(ref _totalEnteredPercentageForAllMonthsMessage, value);
+        }
+
+        public Brush TotalsMessageColour
+        {
+            get => _totalsMessageColour;
+            set => SetProperty(ref _totalsMessageColour, value);
         }
 
         #endregion
@@ -86,24 +102,28 @@ namespace H.Avalonia.ViewModels.OptionsViews
 
         private void CalculateTotal()
         {
-            double previousTotal = Total;
-            Total = 0;
+            double previousTotal = TotalUserEnteredPercentageOfAllMonths;
+            TotalUserEnteredPercentageOfAllMonths = 0;
             foreach (Months month in Enum.GetValues(typeof(Months)))
             {
-                Total += this.Data.MonthlyValues.GetValueByMonth(month);
+                TotalUserEnteredPercentageOfAllMonths += this.Data.MonthlyValues.GetValueByMonth(month);
+                TotalEnteredPercentForAllMonthsMessage = String.Format(H.Core.Properties.Resources.CurrentMonthlyN2OValuesEqual, TotalUserEnteredPercentageOfAllMonths);
             }
-            if (Total == 100)
+            // If total of monthly N2O inputs equals 100%, publish validation pass event to release navigation lock
+            if (TotalUserEnteredPercentageOfAllMonths == 100)
             {
-                EventAggregator.GetEvent<ValidationPassOccurredEvent>().Publish(new ErrorInformation(string.Format(H.Core.Properties.Resources.SumOfMonthlyN2OInputsPercent, Total)));
+                EventAggregator.GetEvent<ValidationPassOccurredEvent>().Publish(new ErrorInformation(string.Format(H.Core.Properties.Resources.SumOfMonthlyN2OInputsPercent, TotalUserEnteredPercentageOfAllMonths)));
                 _entriesAreValid = true;
+                TotalsMessageColour = new SolidColorBrush(Color.FromRgb(0, 200, 24));
                 return;
             }
-            // To avoid multiple warnings sent to ErrorHandlerService when user adjusts values above or below 100% threshold
+            // To avoid multiple warnings sent to ErrorHandlerService when user adjusts values multiple times above or below 100% threshold
+            // E.g., If user adjusts from 101% to 102% a second warning should not be sent
             if (previousTotal == 100)
             {
-                string warningString = Total < 100 ? H.Core.Properties.Resources.N2OPercentageLessThan100 : H.Core.Properties.Resources.N2OPercentageGreaterThan100;
-                _errorHandlerService.HandleValidationWarning(H.Core.Properties.Resources.NavigationLocked, warningString);
+                _errorHandlerService.HandleValidationWarning(H.Core.Properties.Resources.VerifyBeforeProceed, H.Core.Properties.Resources.CorrectN2OValuesBeforeNavigation);
             }
+            TotalsMessageColour = new SolidColorBrush(Color.FromRgb(220, 40, 40));
             _entriesAreValid = false;
         }
 

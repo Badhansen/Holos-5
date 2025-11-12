@@ -1,0 +1,15 @@
+flowchart LR
+    U["User"];
+    DTO["FieldSystemComponentDto - dto"];
+    VM["FieldComponentViewModel"];
+    TRANS["ITransferService&lt;FieldSystemComponent, FieldSystemComponentDto&gt;"];
+    MAP2["IMapper FieldDtoToFieldComponentMapper - dto to model"];
+    UOM["IUnitsOfMeasurementCalculator"];
+    FSC["FieldSystemComponent - domain"];
+
+    U -->|edits via binding| DTO;
+    VM -->|apply or save| TRANS;
+    DTO -->|transfer to domain object| TRANS;
+    TRANS --> MAP2;
+    TRANS --> UOM;
+    TRANS --> FSC;

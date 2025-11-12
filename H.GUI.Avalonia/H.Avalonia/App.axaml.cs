@@ -351,7 +351,6 @@ namespace H.Avalonia
                 var modelToDtoMapper = base.Container.Resolve<IMapper>(nameof(CropViewItemToCropDtoMapper));
 
                 // If TransferService supports injecting IMapper, pass it here.
-                // If not, you may need to refactor TransferService to accept IMapper via constructor.
                 return new TransferService<CropViewItem, CropDto>(
                     unitsOfMeasurementCalculator: unitsCalculator,
                     dtoFactory: cropDtoFactory,
@@ -369,7 +368,6 @@ namespace H.Avalonia
                 var modelToDtoMapper = base.Container.Resolve<IMapper>(nameof(FieldComponentToDtoMapper));
 
                 // If TransferService supports injecting IMapper, pass it here.
-                // If not, you may need to refactor TransferService to accept IMapper via constructor.
                 return new TransferService<FieldSystemComponent, FieldSystemComponentDto>(
                     unitsOfMeasurementCalculator: unitsCalculator,
                     dtoFactory: cropDtoFactory,
@@ -388,7 +386,6 @@ namespace H.Avalonia
                 var modelToDtoMapper = base.Container.Resolve<IMapper>(nameof(AnimalComponentBaseToAnimalComponentDtoMapper));
 
                 // If TransferService supports injecting IMapper, pass it here.
-                // If not, you may need to refactor TransferService to accept IMapper via constructor.
                 return new TransferService<AnimalComponentBase, AnimalComponentDto>(
                     unitsOfMeasurementCalculator: unitsCalculator,
                     dtoFactory: animalDtoFactory,

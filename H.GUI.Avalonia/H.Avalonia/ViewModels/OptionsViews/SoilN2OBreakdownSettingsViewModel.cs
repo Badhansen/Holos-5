@@ -10,6 +10,7 @@ using H.Core.Enumerations;
 using H.Core.Models;
 using H.Core.Providers.Animals;
 using H.Avalonia.Services;
+using H.Avalonia.ViewModels.Styles;
 using H.Core.Services.StorageService;
 using H.Infrastructure;
 using Prism.Events;
@@ -27,7 +28,6 @@ namespace H.Avalonia.ViewModels.OptionsViews
         private bool _entriesAreValid;
         private double _totalUserEnteredPercentageOfAllMonths;
         private string _totalEnteredPercentageForAllMonthsMessage;
-        private Brush _totalsMessageColour;
 
         #endregion
 
@@ -67,10 +67,10 @@ namespace H.Avalonia.ViewModels.OptionsViews
             set => SetProperty(ref _totalEnteredPercentageForAllMonthsMessage, value);
         }
 
-        public Brush TotalsMessageColour
+        public bool AreEntriesValid
         {
-            get => _totalsMessageColour;
-            set => SetProperty(ref _totalsMessageColour, value);
+            get => _entriesAreValid;
+            set => SetProperty(ref _entriesAreValid, value);
         }
 
         #endregion
@@ -113,8 +113,7 @@ namespace H.Avalonia.ViewModels.OptionsViews
             if (TotalUserEnteredPercentageOfAllMonths == 100)
             {
                 EventAggregator.GetEvent<ValidationPassOccurredEvent>().Publish(new ErrorInformation(string.Format(H.Core.Properties.Resources.SumOfMonthlyN2OInputsPercent, TotalUserEnteredPercentageOfAllMonths)));
-                _entriesAreValid = true;
-                TotalsMessageColour = new SolidColorBrush(Color.FromRgb(0, 200, 24));
+                AreEntriesValid = true;
                 return;
             }
             // To avoid multiple warnings sent to ErrorHandlerService when user adjusts values multiple times above or below 100% threshold
@@ -123,8 +122,8 @@ namespace H.Avalonia.ViewModels.OptionsViews
             {
                 _errorHandlerService.HandleValidationWarning(H.Core.Properties.Resources.VerifyBeforeProceed, H.Core.Properties.Resources.CorrectN2OValuesBeforeNavigation);
             }
-            TotalsMessageColour = new SolidColorBrush(Color.FromRgb(220, 40, 40));
-            _entriesAreValid = false;
+
+            AreEntriesValid = false;
         }
 
         #endregion

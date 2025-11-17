@@ -148,9 +148,9 @@ namespace H.Avalonia.Views
         }
 
         /// <summary>
-        /// 
+        /// Sets the map coordinates and zoom level based on the selected province.
         /// </summary>
-        /// <param name="selectedProvince"></param>
+        /// <param name="selectedProvince">The province to center map on</param>
         private void setCoordinatesOnProvinceSelected(Province selectedProvince)
         {
             switch (selectedProvince)

@@ -43,6 +43,17 @@ namespace H.Avalonia.Views
         /// </summary>
         private RasterizingTileLayer? _polygonLayer;
 
+        private MPoint _coordinateBritishColumbia = new MPoint(-13928197, 7300000);
+        private MPoint _coordinateAlberta = new MPoint(-12731248, 7300000); //7033804
+        private MPoint _coordinateSaskatchewan = new MPoint(-11800000, 7300000);
+        private MPoint _coordinateManitoba = new MPoint(-10900000, 7300000);
+        private MPoint _coordinateOntario = new MPoint(-9510000, 6400000);
+        private MPoint _coordinateQuebec = new MPoint(-7900000, 6300000);
+        private MPoint _coordinateNewBrunswick = new MPoint(-7400000, 5850000);
+        private MPoint _coordinatePrinceEdwardIsland = new MPoint(-7020000, 5830000);
+        private MPoint _coordinateNovaScotia = new MPoint(-7030000, 5650000);
+        private MPoint _coordinateNewfoundland = new MPoint(-6220792, 6250000);
+
         #endregion
 
         #region Properties
@@ -121,6 +132,7 @@ namespace H.Avalonia.Views
                             {
                                 _polygonLayer = new RasterizingTileLayer(CreateLayer(_viewModel.SelectedProvince), minTiles: 400, maxTiles: 800, renderFormat: RenderFormat.WebP);
                                 SoilTabMap.Map.Layers.Add(_polygonLayer);
+                                setCoordinatesOnProvinceSelected(_viewModel.SelectedProvince);
                             }
                         }
                         else
@@ -132,6 +144,67 @@ namespace H.Avalonia.Views
                         }
                         break;
                     }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="selectedProvince"></param>
+        private void setCoordinatesOnProvinceSelected(Province selectedProvince)
+        {
+            switch (selectedProvince)
+            {
+                case (Province.BritishColumbia):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinateBritishColumbia, resolution: 3500);
+                    break;
+                }
+                case (Province.Alberta):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinateAlberta, resolution: 3500);
+                    break;
+                }
+                case (Province.Saskatchewan):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinateSaskatchewan, resolution: 3500);
+                    break;
+                }
+                case (Province.Manitoba):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinateManitoba, resolution: 3500);
+                    break;
+                }
+                case (Province.Ontario):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinateOntario, resolution: 3900);
+                    break;
+                }
+                case (Province.Quebec):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinateQuebec, resolution: 3000);
+                    break;
+                }
+                case (Province.NewBrunswick):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinateNewBrunswick, resolution: 1200);
+                    break;
+                }
+                case (Province.PrinceEdwardIsland):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinatePrinceEdwardIsland, resolution: 600);
+                    break;
+                }
+                case (Province.NovaScotia):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinateNovaScotia, resolution: 1100);
+                    break;
+                }
+                case (Province.Newfoundland):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinateNewfoundland, resolution: 1400);
+                    break;
+                }
             }
         }
 

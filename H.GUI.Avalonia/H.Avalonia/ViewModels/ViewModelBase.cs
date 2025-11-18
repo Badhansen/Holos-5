@@ -111,6 +111,18 @@ namespace H.Avalonia.ViewModels
             }
         }
 
+        protected ViewModelBase(IRegionManager regionManager, IStorageService storageService, ILogger logger) : this(regionManager, storageService)
+        {
+            if (logger != null)
+            {
+                this.Logger = logger;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
+        }
+
         protected ViewModelBase(IRegionManager regionManager,
             IEventAggregator eventAggregator,
             IStorageService storageService, ILogger logger) : this(regionManager, storageService)

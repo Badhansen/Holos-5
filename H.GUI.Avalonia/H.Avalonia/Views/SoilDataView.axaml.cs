@@ -47,7 +47,7 @@ namespace H.Avalonia.Views
         /// Central coordinate points for all provinces used for map navigation when a province is selected.
         /// </summary>
         private MPoint _coordinateBritishColumbia = new MPoint(-13928197, 7300000);
-        private MPoint _coordinateAlberta = new MPoint(-12731248, 7300000); //7033804
+        private MPoint _coordinateAlberta = new MPoint(-12731248, 7300000);
         private MPoint _coordinateSaskatchewan = new MPoint(-11800000, 7300000);
         private MPoint _coordinateManitoba = new MPoint(-10900000, 7300000);
         private MPoint _coordinateOntario = new MPoint(-9510000, 6400000);
@@ -55,7 +55,7 @@ namespace H.Avalonia.Views
         private MPoint _coordinateNewBrunswick = new MPoint(-7400000, 5850000);
         private MPoint _coordinatePrinceEdwardIsland = new MPoint(-7020000, 5830000);
         private MPoint _coordinateNovaScotia = new MPoint(-7030000, 5650000);
-        private MPoint _coordinateNewfoundland = new MPoint(-6220792, 6250000);
+        private MPoint _coordinateNewfoundland = new MPoint(-6250000, 6250000);
 
         #endregion
 

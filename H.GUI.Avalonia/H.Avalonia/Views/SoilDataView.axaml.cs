@@ -43,6 +43,9 @@ namespace H.Avalonia.Views
         /// </summary>
         private RasterizingTileLayer? _polygonLayer;
 
+        /// <summary>
+        /// Central coordinate points for all provinces used for map navigation when a province is selected.
+        /// </summary>
         private MPoint _coordinateBritishColumbia = new MPoint(-13928197, 7300000);
         private MPoint _coordinateAlberta = new MPoint(-12731248, 7300000); //7033804
         private MPoint _coordinateSaskatchewan = new MPoint(-11800000, 7300000);

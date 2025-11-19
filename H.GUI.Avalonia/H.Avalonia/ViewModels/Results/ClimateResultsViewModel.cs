@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using H.Avalonia.Services;
 
 namespace H.Avalonia.ViewModels.Results
 {
@@ -26,7 +27,6 @@ namespace H.Avalonia.ViewModels.Results
         private readonly ExportHelpers _exportHelpers;
         private readonly ClimateResultsViewItemMap _climateResultsViewItemMap;
         private CancellationTokenSource _cancellationTokenSource;
-        private const int DefaultErrorNotificationTime = 10;
 
         
         
@@ -38,7 +38,7 @@ namespace H.Avalonia.ViewModels.Results
 
         public ClimateResultsViewModel() { }
 
-        public ClimateResultsViewModel(IRegionManager regionManager, ExportHelpers exportHelpers) : base(regionManager)
+        public ClimateResultsViewModel(IRegionManager regionManager, INotificationManagerService notificationManager, ExportHelpers exportHelpers) : base(regionManager, notificationManager)
         {
             _regionManager = regionManager;
             _exportHelpers = exportHelpers;
@@ -153,11 +153,7 @@ namespace H.Avalonia.ViewModels.Results
             }
             catch (IOException e)
             {
-                NotificationManager?.Show(new Notification("File being used.",
-                    e.Message,
-                    type: NotificationType.Error,
-                    expiration: TimeSpan.FromSeconds(DefaultErrorNotificationTime))
-                );
+                NotificationManager.ShowToast(H.Core.Properties.Resources.FileInUse, e.Message, type: NotificationType.Error);
             }
         }
 

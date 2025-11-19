@@ -1,12 +1,20 @@
-﻿using H.Core.Models;
+﻿using System;
 using System.ComponentModel;
-using H.Core.Services.StorageService;
-using Prism.Regions;
-using H.Avalonia.ViewModels.OptionsViews.DataTransferObjects;
-using Prism.Events;
+using System.Reflection.Metadata;
+using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
+using Avalonia.Media;
+using H.Core.Events;
+using H.Avalonia.ViewModels.OptionsViews.DataTransferObjects;
 using H.Core.Enumerations;
-using System;
+using H.Core.Models;
+using H.Core.Providers.Animals;
+using H.Avalonia.Services;
+using H.Avalonia.ViewModels.Styles;
+using H.Core.Services.StorageService;
+using H.Infrastructure;
+using Prism.Events;
+using Prism.Regions;
 
 namespace H.Avalonia.ViewModels.OptionsViews
 {
@@ -15,22 +23,56 @@ namespace H.Avalonia.ViewModels.OptionsViews
         #region Fields
 
         private SoilN2OBreakdownSettingsDTO _data;
+        private readonly IErrorHandlerService _errorHandlerService;
+
+        private bool _entriesAreValid;
+        private double _totalUserEnteredPercentageOfAllMonths;
+        private string _totalEnteredPercentageForAllMonthsMessage;
 
         #endregion
 
         #region Constructors
-        public SoilN2OBreakdownSettingsViewModel(IStorageService storageService) : base(storageService)
+
+        public SoilN2OBreakdownSettingsViewModel(IStorageService storageService, IEventAggregator eventAggregator, IErrorHandlerService errorHandlerService) : base(storageService, eventAggregator)
         {
-            
+            if (errorHandlerService != null)
+            {
+                _errorHandlerService = errorHandlerService;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(errorHandlerService));
+            }
         }
+
         #endregion
 
         #region Properties
+
         public SoilN2OBreakdownSettingsDTO Data
         {
             get => _data;
             set => SetProperty(ref _data, value);
-        } 
+        }
+
+        public double TotalUserEnteredPercentageOfAllMonths
+        {
+            get => _totalUserEnteredPercentageOfAllMonths;
+            set => SetProperty(ref _totalUserEnteredPercentageOfAllMonths, value);
+        }
+
+        public string TotalEnteredPercentForAllMonthsMessage
+        {
+            get => _totalEnteredPercentageForAllMonthsMessage;
+            set => SetProperty(ref _totalEnteredPercentageForAllMonthsMessage, value);
+        }
+
+        public bool AreEntriesValid
+        {
+            get => _entriesAreValid;
+            set => SetProperty(ref _entriesAreValid, value);
+        }
+
         #endregion
 
         #region Public Methods
@@ -40,43 +82,57 @@ namespace H.Avalonia.ViewModels.OptionsViews
             if (!IsInitialized)
             {
                 Data = new SoilN2OBreakdownSettingsDTO(StorageService);
-                Data.PropertyChanged += ValidateTotalLessThan100;
                 IsInitialized = true;
             }
+            CalculateTotal();
+            Data.PropertyChanged += ValidateTotalEquals100;
+        }
+
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            if (_entriesAreValid)
+            {
+                Data.PropertyChanged -= ValidateTotalEquals100;
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void CalculateTotal()
+        {
+            double previousTotal = TotalUserEnteredPercentageOfAllMonths;
+            TotalUserEnteredPercentageOfAllMonths = 0;
+            foreach (Months month in Enum.GetValues(typeof(Months)))
+            {
+                TotalUserEnteredPercentageOfAllMonths += this.Data.MonthlyValues.GetValueByMonth(month);
+                TotalEnteredPercentForAllMonthsMessage = String.Format(H.Core.Properties.Resources.CurrentMonthlyN2OValuesEqual, TotalUserEnteredPercentageOfAllMonths);
+            }
+            // If total of monthly N2O inputs equals 100%, publish validation pass event to release navigation lock
+            if (TotalUserEnteredPercentageOfAllMonths == 100)
+            {
+                EventAggregator.GetEvent<ValidationPassOccurredEvent>().Publish(new ErrorInformation(string.Format(H.Core.Properties.Resources.SumOfMonthlyN2OInputsPercent, TotalUserEnteredPercentageOfAllMonths)));
+                AreEntriesValid = true;
+                return;
+            }
+            // To avoid multiple warnings sent to ErrorHandlerService when user adjusts values multiple times above or below 100% threshold
+            // E.g., If user adjusts from 101% to 102% a second warning should not be sent
+            if (previousTotal == 100)
+            {
+                _errorHandlerService.HandleValidationWarning(H.Core.Properties.Resources.VerifyBeforeProceed, H.Core.Properties.Resources.CorrectN2OValuesBeforeNavigation);
+            }
+
+            AreEntriesValid = false;
         }
 
         #endregion
 
         #region Event Handlers
 
-        private void ValidateTotalLessThan100(object sender, PropertyChangedEventArgs e)
+        private void ValidateTotalEquals100(object sender, PropertyChangedEventArgs e)
         {
-            double total = 0;
-            string errorTitle = "";
-
-            foreach (Months month in Enum.GetValues(typeof(Months)))
-            {
-                total += this.Data.MonthlyValues.GetValueByMonth(month);
-            }
-
-            if (total == 100.00)
-            {
-                return;
-            }
-            else if (total < 100)
-            {
-                errorTitle = H.Core.Properties.Resources.N2OPercentageLessThan100;
-
-            }
-            else if (total > 100)
-            {
-                errorTitle = H.Core.Properties.Resources.N2OPercentageGreaterThan100;
-            }
-            NotificationManager?.Show(new Notification(
-                title: errorTitle,
-                message: string.Format(H.Core.Properties.Resources.SumOfMonthlyN2OInputsPercent, total),
-                type: NotificationType.Warning,
-                expiration: TimeSpan.FromSeconds(10)));
+            CalculateTotal();
         }
 
         #endregion

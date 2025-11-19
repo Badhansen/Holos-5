@@ -33,7 +33,6 @@ namespace H.Avalonia.Views
         {
             base.OnAttachedToVisualTree(e);
 
-            ViewModel.NotificationManager = new WindowNotificationManager(GetTopLevel());
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using Avalonia.Platform.Storage;
+using H.Avalonia.Services;
 using H.Avalonia.ViewModels.OptionsViews.FileMenuViews;
 using H.Core.Models;
 using H.Core.Services.StorageService;
@@ -13,6 +14,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews.FileMenuViews
     {
         private Mock<IRegionManager> _mockRegionManager;
         private Mock<IStorageService> _mockStorageService;
+        private Mock<INotificationManagerService> _mockNotificationService;
         private Mock<IStorageFile> _mockStorageFile;
         private FileExportClimateViewModel _viewModel;
         private Farm _testFarm;
@@ -23,6 +25,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews.FileMenuViews
             // Initialize mocks
             _mockRegionManager = new Mock<IRegionManager>();
             _mockStorageService = new Mock<IStorageService>();
+            _mockNotificationService = new Mock<INotificationManagerService>();
             _mockStorageFile = new Mock<IStorageFile>();
 
             // Setup mock storage file
@@ -38,7 +41,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews.FileMenuViews
             };
 
             // Create view model instance
-            _viewModel = new FileExportClimateViewModel(_mockRegionManager.Object, _mockStorageService.Object);
+            _viewModel = new FileExportClimateViewModel(_mockRegionManager.Object, _mockStorageService.Object, _mockNotificationService.Object);
         }
 
         [TestCleanup]
@@ -55,7 +58,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews.FileMenuViews
         public void Constructor_WithValidParameters_InitializesCorrectly()
         {
             // Arrange & Act
-            var viewModel = new FileExportClimateViewModel(_mockRegionManager.Object, _mockStorageService.Object);
+            var viewModel = new FileExportClimateViewModel(_mockRegionManager.Object, _mockStorageService.Object, _mockNotificationService.Object);
 
             // Assert
             Assert.IsNotNull(viewModel);
@@ -67,7 +70,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews.FileMenuViews
         {
             // Arrange, Act & Assert
             Assert.ThrowsException<ArgumentNullException>(() => 
-                new FileExportClimateViewModel(null, _mockStorageService.Object));
+                new FileExportClimateViewModel(null, _mockStorageService.Object, _mockNotificationService.Object));
         }
 
         [TestMethod]
@@ -75,7 +78,15 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews.FileMenuViews
         {
             // Arrange, Act & Assert
             Assert.ThrowsException<ArgumentNullException>(() => 
-                new FileExportClimateViewModel(_mockRegionManager.Object, null));
+                new FileExportClimateViewModel(_mockRegionManager.Object, null, _mockNotificationService.Object));
+        }
+
+        [TestMethod]
+        public void Constructor_WithNullNotificationService_ThrowsArgumentNullException()
+        {
+            // Arrange, Act & Assert
+            Assert.ThrowsException<ArgumentNullException>(() =>
+                new FileExportClimateViewModel(null, null, _mockNotificationService.Object));
         }
 
         [TestMethod]

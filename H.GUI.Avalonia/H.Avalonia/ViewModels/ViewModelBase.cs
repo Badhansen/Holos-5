@@ -14,7 +14,9 @@ using System.Collections;
 using Avalonia;
 using Avalonia.Threading;
 using System;
+using System.Configuration;
 using System.Threading.Tasks;
+using H.Avalonia.Services;
 using H.Core.Helpers;
 using Microsoft.Extensions.Logging;
 
@@ -31,6 +33,7 @@ namespace H.Avalonia.ViewModels
         private IRegionManager _regionManager;
         private IStorageService _storageService;
         private string _viewName;
+        private bool _allowNavigation;
         protected ILogger Logger;
 
         #endregion
@@ -51,6 +54,18 @@ namespace H.Avalonia.ViewModels
             else
             {
                 throw new ArgumentNullException(nameof(storageService));
+            }
+        }
+
+        protected ViewModelBase(IStorageService storageService, INotificationManagerService notificationManager) : this(storageService)
+        {
+            if (notificationManager != null)
+            {
+                this.NotificationManager = notificationManager;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(notificationManager));
             }
         }
 
@@ -75,6 +90,27 @@ namespace H.Avalonia.ViewModels
             else
             {
                 throw new ArgumentNullException(nameof(eventAggregator));
+            }
+        }
+
+        protected ViewModelBase(IStorageService storageService, IEventAggregator eventAggregator)
+        {
+            if(eventAggregator != null)
+            {
+                this.EventAggregator = eventAggregator;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(eventAggregator));
+            }
+            if (storageService != null)
+            {
+                this.StorageService = storageService;
+                this.StorageService.Storage.ApplicationData.GlobalSettings.PropertyChanged += GlobalSettingsPropertyChanged;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(storageService));
             }
         }
 
@@ -123,7 +159,32 @@ namespace H.Avalonia.ViewModels
             }
         }
 
-        protected ViewModelBase(IRegionManager regionManager,
+        protected ViewModelBase(IRegionManager regionManager, IStorageService storageService, INotificationManagerService notificationManager) : this(regionManager, storageService)
+        {
+            if (notificationManager != null)
+            {
+                this.NotificationManager = notificationManager;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(notificationManager));
+            }
+        }
+
+        protected ViewModelBase(IRegionManager regionManager, IStorageService storageService, INotificationManagerService notificationManager , ILogger logger) : this(regionManager, storageService, notificationManager)
+        {
+            if (logger != null)
+            {
+                this.Logger = logger;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
+        }
+
+        protected ViewModelBase(
+            IRegionManager regionManager,
             IEventAggregator eventAggregator,
             IStorageService storageService, ILogger logger) : this(regionManager, storageService)
         {
@@ -146,6 +207,20 @@ namespace H.Avalonia.ViewModels
                 throw new ArgumentNullException(nameof(storageService));
             }
 
+            if (eventAggregator != null)
+            {
+                this.EventAggregator = eventAggregator;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(eventAggregator));
+            }
+        }
+
+        protected ViewModelBase(IRegionManager regionManager,
+            IEventAggregator eventAggregator,
+            IStorageService storageService, INotificationManagerService notificationManager) : this(regionManager, storageService)
+        {
             if(eventAggregator != null)
             {
                 this.EventAggregator = eventAggregator;
@@ -153,6 +228,15 @@ namespace H.Avalonia.ViewModels
             else
             {
                 throw new ArgumentNullException(nameof(eventAggregator));
+            }
+
+            if (notificationManager != null)
+            {
+                this.NotificationManager = notificationManager;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(notificationManager));
             }
         }
 
@@ -165,6 +249,18 @@ namespace H.Avalonia.ViewModels
             else
             {
                 throw new ArgumentNullException(nameof(regionManager));
+            }
+        }
+
+        protected ViewModelBase(IRegionManager regionManager, INotificationManagerService notificationManager) : this(regionManager)
+        {
+            if (notificationManager != null)
+            {
+                this.NotificationManager = notificationManager;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(notificationManager));
             }
         }
 
@@ -181,7 +277,7 @@ namespace H.Avalonia.ViewModels
         /// <summary>
         /// The notification manager that handles displaying notifications on the page.
         /// </summary>
-        public WindowNotificationManager NotificationManager { get; set; }
+        public INotificationManagerService NotificationManager { get; set; }
 
         protected IRegionManager RegionManager
         {
@@ -221,6 +317,12 @@ namespace H.Avalonia.ViewModels
                     ValidateViewName();
                 }
             }
+        }
+
+        public bool AllowNavigation
+        {
+            get => _allowNavigation;
+            set => SetProperty(ref _allowNavigation, value);
         }
 
         #endregion
@@ -285,14 +387,6 @@ namespace H.Avalonia.ViewModels
             {
                 AddError(nameof(ViewName), H.Core.Properties.Resources.ErrorNameCannotBeEmpty);
                 return;
-            }
-        }
-
-        private void SetActiveFarm(IStorageService storageService)
-        {
-            if (storageService != null)
-            {
-                //this.ActiveFarm = storageService.GetActiveFarm();
             }
         }
 

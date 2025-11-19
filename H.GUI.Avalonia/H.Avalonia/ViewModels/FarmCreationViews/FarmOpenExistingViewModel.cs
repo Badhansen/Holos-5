@@ -1,12 +1,13 @@
-﻿using System.Collections.ObjectModel;
-using System.Linq;
-using DynamicData;
+﻿using DynamicData;
+using H.Avalonia.Services;
 using H.Avalonia.Views.ComponentViews;
 using H.Avalonia.Views.FarmCreationViews;
 using H.Core.Models;
 using H.Core.Services.StorageService;
 using Prism.Commands;
 using Prism.Regions;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace H.Avalonia.ViewModels.FarmCreationViews
 {
@@ -32,6 +33,15 @@ namespace H.Avalonia.ViewModels.FarmCreationViews
             NavigateToNextPage = new DelegateCommand(OnOpenFarmExecute, NextCanExecute);
             Farms = new ObservableCollection<Farm>();
         }
+
+        public FarmOpenExistingViewmodel(IRegionManager regionManager, IStorageService storageService, INotificationManagerService notificationManager) : base(regionManager, storageService, notificationManager)
+        {
+            _regionManager = regionManager ?? throw new System.ArgumentNullException(nameof(regionManager));
+            NavigateToPreviousPage = new DelegateCommand(OnNavigateToPreviousPage);
+            NavigateToNextPage = new DelegateCommand(OnOpenFarmExecute, NextCanExecute);
+            Farms = new ObservableCollection<Farm>();
+        }
+
         #endregion
 
         #region Properties

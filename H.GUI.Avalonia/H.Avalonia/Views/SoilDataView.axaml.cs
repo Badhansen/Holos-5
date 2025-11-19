@@ -99,7 +99,6 @@ namespace H.Avalonia.Views
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
         {
             base.OnAttachedToVisualTree(e);
-            _viewModel.NotificationManager = new WindowNotificationManager(GetTopLevel());
             _viewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
 

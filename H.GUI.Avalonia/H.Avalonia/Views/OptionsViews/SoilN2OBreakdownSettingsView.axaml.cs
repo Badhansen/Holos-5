@@ -12,27 +12,4 @@ public partial class OptionSoilN2OBreakdownView : UserControl
     {
         InitializeComponent();
     }
-
-    /// <summary>
-    /// Get the viewmodel associated with the view.
-    /// </summary>
-    private SoilN2OBreakdownSettingsViewModel? ViewModel => DataContext as SoilN2OBreakdownSettingsViewModel;
-
-    /// <summary>
-    /// Get the toplevel window of the current window.
-    /// </summary>
-    /// <returns></returns>
-    /// <exception cref="NullReferenceException"></exception>
-    TopLevel GetTopLevel() => TopLevel.GetTopLevel(this) ?? throw new NullReferenceException("Invalid Owner");
-
-    /// <summary>
-    /// Is used to attach the windows manager for displaying notifications.
-    /// </summary>
-    /// <param name="e"></param>
-    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        base.OnAttachedToVisualTree(e);
-
-        ViewModel.NotificationManager = new WindowNotificationManager(GetTopLevel());
-    }
 }

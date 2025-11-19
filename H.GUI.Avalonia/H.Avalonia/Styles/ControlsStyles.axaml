@@ -107,6 +107,18 @@
         <Setter Property="VerticalAlignment" Value="Center" />
 	</Style>
 
+	<Style Selector="TextBlock.inline-text-block-error">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="Red"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style Selector="TextBlock.inline-text-block-succeed">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="Green"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
 	<!--TextBlock Styles - Disclaimer text-->
 	<Style Selector="TextBlock.disclaimer">
 		<Setter Property="FontStyle" Value="Italic"/>

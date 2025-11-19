@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Controls.Notifications;
 using Avalonia.Platform.Storage;
+using H.Avalonia.Services;
 using H.Core.Services.StorageService;
 using H.Infrastructure;
 using Newtonsoft.Json;
@@ -38,7 +39,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
         /// </summary>
         /// <param name="regionManager">Manager for handling navigation regions</param>
         /// <param name="storageService">Service for farm data storage operations</param>
-        public FileImportFarmViewModel(IRegionManager regionManager, IStorageService storageService) : base(regionManager, storageService)
+        public FileImportFarmViewModel(IRegionManager regionManager, IStorageService storageService, INotificationManagerService notificationManager) : base(regionManager, storageService, notificationManager)
         {
             ImportFarms = new DelegateCommand(OnImport);
             this.Farms = new ObservableCollection<H.Core.Models.Farm>();
@@ -128,23 +129,13 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
                         this.StorageService.AddFarm(farm);
                     }
                 }
-
-                NotificationManager?.Show(new Notification(H.Core.Properties.Resources.LabelSuccess,
-                    H.Core.Properties.Resources.LabelFarmImportSuccess,
-                    type: NotificationType.Success,
-                    expiration: TimeSpan.FromSeconds(10))
-                );
+                NotificationManager.ShowToast(H.Core.Properties.Resources.LabelSuccess, H.Core.Properties.Resources.LabelFarmImportSuccess, NotificationType.Success);
                 IsFarmImported = true;
             }
             catch (Exception ex)
             {
                 Trace.TraceError($"Error importing farms: {ex.Message}");
-                NotificationManager?.Show(new Notification(H.Core.Properties.Resources.ErrorError,
-                    ex.Message,
-                    type: NotificationType.Error,
-                    expiration: TimeSpan.FromSeconds(10))
-                );
-
+                NotificationManager.ShowToast(H.Core.Properties.Resources.ErrorError, ex.Message, NotificationType.Error);
             }
         }
 

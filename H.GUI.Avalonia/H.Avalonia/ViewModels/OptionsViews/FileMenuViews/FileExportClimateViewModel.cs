@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Platform.Storage;
-using H.Core.Providers.Climate;
+using H.Avalonia.Services;
 using H.Core.Providers;
+using H.Core.Providers.Climate;
 using H.Core.Services.StorageService;
 using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Regions;
 using Prism.Services.Dialogs;
+using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using static H.Avalonia.Views.OptionsViews.FileMenuViews.FileExportClimateView;
 
 namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
@@ -35,7 +32,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
         /// </summary>
         /// <param name="regionManager">Service for managing UI regions in the application</param>
         /// <param name="storageService">Service for handling file storage operations</param>
-        public FileExportClimateViewModel(IRegionManager regionManager, IStorageService storageService) : base(regionManager, storageService)
+        public FileExportClimateViewModel(IRegionManager regionManager, IStorageService storageService, INotificationManagerService notificationManager) : base(regionManager, storageService, notificationManager)
         {
             // Initialize the climate export command that will be bound to UI elements
             this.ExportClimate = new DelegateCommand<object>(OnExport);
@@ -84,11 +81,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
                 });
 
                 // Show success notification to the user with the exported file name
-                NotificationManager?.Show(new Notification(H.Core.Properties.Resources.LabelSuccess,
-                    "Climate data has been successfully exported for"+" "+$"{file.Name}",
-                    type: NotificationType.Success,
-                    expiration: TimeSpan.FromSeconds(10))
-                );
+                NotificationManager.ShowToast(H.Core.Properties.Resources.LabelSuccess, String.Format(H.Core.Properties.Resources.ExportClimateDataSuccess, file.Name), NotificationType.Success);
             }
             catch (Exception ex)
             {
@@ -96,11 +89,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
                 Debug.WriteLine($"Error exporting farms: {ex.Message}");
                 
                 // Show error notification to the user with the exception message
-                NotificationManager?.Show(new Notification(H.Core.Properties.Resources.ErrorError,
-                    ex.Message,
-                    type: NotificationType.Error,
-                    expiration: TimeSpan.FromSeconds(10))
-                );
+                NotificationManager.ShowToast(H.Core.Properties.Resources.ErrorError, ex.Message, NotificationType.Error);
             }
         }
 
@@ -125,11 +114,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
             else
             {
                 // Show error notification for invalid or missing export data
-                NotificationManager?.Show(new Notification(H.Core.Properties.Resources.ErrorError,
-                   H.Core.Properties.Resources.ErrorNoDataForExport,
-                   type: NotificationType.Error,
-                   expiration: TimeSpan.FromSeconds(10))
-                );
+                NotificationManager.ShowToast(H.Core.Properties.Resources.ErrorError, H.Core.Properties.Resources.ErrorNoDataForExport, NotificationType.Error);
             }
         }
         #endregion

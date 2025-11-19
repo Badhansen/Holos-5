@@ -1,39 +1,77 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using H.Avalonia.Events;
 using H.Avalonia.Views.ComponentViews;
 using H.Avalonia.Views.FarmCreationViews;
+using H.Core.Events;
 using H.Avalonia.Views.SupportingViews;
 using H.Core.Models;
-using H.Core.Services.StorageService;
 using Prism.Events;
 using Prism.Regions;
+using System.Linq;
+
 
 namespace H.Avalonia.ViewModels.OptionsViews
 {
     public class OptionsViewModel : ViewModelBase
     {
+        #region Fields
+
         private object _selectedItem;
+
+        #endregion
+
+        #region Fields
+
         public OptionsViewModel()
         {
 
         }
-        public OptionsViewModel(IRegionManager regionManager) : base(regionManager)
+        public OptionsViewModel(IRegionManager regionManager, IEventAggregator eventAggregator) : base(regionManager, eventAggregator)
         {
-            this.PropertyChanged += OnSelectedOptionChanged;
+            AllowNavigation = true;
         }
+
+        #endregion
+
+        #region Properties
 
         public object SelectedItem
         {
             get => _selectedItem;
             set => SetProperty(ref _selectedItem, value);
         }
+
+        #endregion
+
+        #region Public Methods 
+
+        public override void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            this.PropertyChanged += OnSelectedOptionChanged;
+            EventAggregator.GetEvent<ValidationErrorOccurredEvent>().Subscribe(LockNavigation);
+            EventAggregator.GetEvent<ValidationPassOccurredEvent>().Subscribe(UnlockNavigation);
+        }
+
+        public void OnCancelExecute()
+        {
+            base.RegionManager.RequestNavigate(UiRegions.SidebarRegion, nameof(MyComponentsView));
+            var activeView = this.RegionManager.Regions[UiRegions.ContentRegion].ActiveViews.SingleOrDefault();
+            if (activeView != null )
+            {
+                this.PropertyChanged -= OnSelectedOptionChanged;
+                EventAggregator.GetEvent<ValidationErrorOccurredEvent>().Unsubscribe(LockNavigation);
+                EventAggregator.GetEvent<ValidationPassOccurredEvent>().Unsubscribe(UnlockNavigation);
+                this.RegionManager.Regions[UiRegions.ContentRegion].Deactivate(activeView);
+                this.RegionManager.Regions[UiRegions.ContentRegion].Remove(activeView);
+                SelectedItem = null; // need to set this to null because the option in the combo box stays selected otherwise
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
         private void OnSelectedOptionChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (SelectedItem is ListBoxItem item && item.Content != null)
@@ -48,36 +86,28 @@ namespace H.Avalonia.ViewModels.OptionsViews
                     case "Open Farm":
                         base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(Views.FarmCreationViews.FileOpenFarmView));
                         break;
-
                     case "Close Farm":
                         this.ClearActiveView();
                         base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(FarmOptionsView));
                         break;
-
                     case "Farms":
                         base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(Views.OptionsViews.FileMenuViews.FarmManagementView));
                         break;
-
                     case "Save Options":
                         base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(Views.OptionsViews.FileMenuViews.FileSaveOptionsView));
                         break;
-
                     case "Export Farm(s)":
                         base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(Views.OptionsViews.FileMenuViews.FileExportFarmView));
                         break;
-
                     case "Import Farm":
                         base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(Views.OptionsViews.FileMenuViews.FileImportFarmView));
                         break;
-
                     case "Export Climate":
                         base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(Views.OptionsViews.FileMenuViews.FileExportClimateView));
                         break;
-
                     case "Export Manure":
                         base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(Views.OptionsViews.FileMenuViews.FileExportManureView));
                         break;
-
                     // Settings Menu
                     case "Diets":
                         base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(DietFormulatorView));
@@ -112,26 +142,13 @@ namespace H.Avalonia.ViewModels.OptionsViews
                     case "Default Manure Composition":
                         base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(Views.OptionsViews.DefaultManureCompositionView));
                         break;
-
                     case "User Settings":
                         base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(Views.OptionsViews.OptionUserSettingsView));
                         break;
                 }
             }
         }
-        public void OnCancelExecute()
-        {
-            base.RegionManager.RequestNavigate(UiRegions.SidebarRegion, nameof(MyComponentsView));
-            var activeView = this.RegionManager.Regions[UiRegions.ContentRegion].ActiveViews.SingleOrDefault();
-            if (activeView != null)
-            {
-                this.RegionManager.Regions[UiRegions.ContentRegion].Deactivate(activeView);
-                this.RegionManager.Regions[UiRegions.ContentRegion].Remove(activeView);
-                SelectedItem = null; // need to set this to null because the option in the combo box stays selected otherwise
-            }
-        }
 
-        #region Private Methods
         private void ClearActiveView()
         {
             // Clear content region
@@ -149,6 +166,20 @@ namespace H.Avalonia.ViewModels.OptionsViews
                 this.RegionManager.Regions[UiRegions.SidebarRegion].Deactivate(sidebarView);
                 this.RegionManager.Regions[UiRegions.SidebarRegion].Remove(sidebarView);
             }
+        }
+
+        #endregion
+
+        #region Event Listeners
+
+        private void LockNavigation(ErrorInformation errorInformation)
+        {
+            AllowNavigation = false;
+        }
+
+        private void UnlockNavigation(ErrorInformation errorInformation)
+        {
+            AllowNavigation = true;
         }
 
         #endregion

@@ -31,6 +31,7 @@ using H.Avalonia.Views.ComponentViews.LandManagement.Field;
 using H.Avalonia.Views.FarmCreationViews;
 using H.Avalonia.Views.ResultViews;
 using H.Avalonia.Views.SupportingViews;
+using H.Avalonia.Services;
 using H.Avalonia.Views.SupportingViews.CountrySelection;
 using H.Avalonia.Views.SupportingViews.Disclaimer;
 using H.Avalonia.Views.SupportingViews.MeasurementProvince;
@@ -66,6 +67,8 @@ using System;
 using System.Text.RegularExpressions;
 using System.Threading;
 using H.Core.Factories.Crops;
+using System.Threading.Tasks;
+using Avalonia.Controls;
 using ClimateResultsView = H.Avalonia.Views.ResultViews.ClimateResultsView;
 using KmlHelpers = H.Avalonia.Infrastructure.KmlHelpers;
 using SoilResultsView = H.Avalonia.Views.ResultViews.SoilResultsView;
@@ -85,7 +88,8 @@ namespace H.Avalonia
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = new MainWindow();
+                // Resolve through Prism so ViewModelLocator can run
+                desktop.MainWindow = (Window)CreateShell();
                 desktop.Exit += OnExit;
             }
 
@@ -150,6 +154,7 @@ namespace H.Avalonia
 
 
             // New development work
+            containerRegistry.RegisterForNavigation<MainWindow, MainWindowViewModel>();
             containerRegistry.RegisterForNavigation<Views.OptionsViews.OptionEvapotranspirationView, EvapotranspirationSettingsViewModel>();
             containerRegistry.RegisterForNavigation<Views.OptionsViews.OptionTemperatureView, TemperatureSettingsViewModel>();
             containerRegistry.RegisterForNavigation<Views.OptionsViews.OptionBarnTemperatureView, BarnTemperatureSettingsViewModel>();
@@ -231,6 +236,8 @@ namespace H.Avalonia
             containerRegistry.RegisterSingleton<ICropInitializationService, CropInitializationService>();
             containerRegistry.RegisterSingleton<IAnimalComponentService, AnimalComponentService>();
             containerRegistry.RegisterSingleton<IManagementPeriodService, ManagementPeriodService>();
+            containerRegistry.RegisterSingleton<IErrorHandlerService, ErrorHandlerService>();
+            containerRegistry.RegisterSingleton<INotificationManagerService, NotificationManagerService>();
 
             // Unit conversion
             containerRegistry.RegisterSingleton<IUnitsOfMeasurementCalculator, UnitsOfMeasurementCalculator>();

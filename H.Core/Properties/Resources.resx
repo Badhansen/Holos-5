@@ -6291,12 +6291,6 @@ Please note: emissions related to the deposition or application of livestock man
   <data name="ErrorNoDataForExport" xml:space="preserve">
     <value>No data for export.</value>
   </data>
-  <data name="N2OPercentageLessThan100" xml:space="preserve">
-    <value>N2O percentage total equals less than 100%.</value>
-  </data>
-  <data name="N2OPercentageGreaterThan100" xml:space="preserve">
-    <value>N2O percentage total equals more than 100%.</value>
-  </data>
   <data name="SumOfMonthlyN2OInputsPercent" xml:space="preserve">
     <value>Monthly N2O inputs currently add up to {0}%.</value>
   </data>
@@ -6383,5 +6377,45 @@ Please note: emissions related to the deposition or application of livestock man
   </data>
   <data name="TabHeaderFertilizer" xml:space="preserve">
     <value>Fertilizer</value>
+  </data>
+  <data name="InvalidHeaderTitle" xml:space="preserve">
+    <value>Invalid Header</value>
+  </data>
+  <data name="InvalidCSVContentTitle" xml:space="preserve">
+    <value>Invalid CSV Content</value>
+  </data>
+  <data name="FileInUse" xml:space="preserve">
+    <value>File currently in use.</value>
+  </data>
+  <data name="CantDeleteCurrentFarmTitle" xml:space="preserve">
+    <value>Cannot Delete Current Farm</value>
+  </data>
+  <data name="CantDeleteCurrentFarmBody" xml:space="preserve">
+    <value>Holos is unable to delete the current farm when no other farms exist.</value>
+  </data>
+  <data name="ExportClimateDataSuccess" xml:space="preserve">
+    <value>Climate data has been successfully exported for {0}.</value>
+  </data>
+  <data name="AddressFieldEmpty" xml:space="preserve">
+    <value>Address field empty</value>
+  </data>
+  <data name="InvalidAddress" xml:space="preserve">
+    <value>Invalid Address</value>
+  </data>
+  <data name="IncorrectCoordinate" xml:space="preserve">
+    <value>Incorrect coordinate</value>
+  </data>
+  <data name="CantFindAddress" xml:space="preserve">
+    <value>Cannot find address</value>
+  </data>
+  <data name="CurrentMonthlyN2OValuesEqual" xml:space="preserve">
+    <value>Current total % for all months: {0}%</value>
+    <comment>Monthly N2O values currently add to {0}%.</comment>
+  </data>
+  <data name="CorrectN2OValuesBeforeNavigation" xml:space="preserve">
+    <value>Please correct N2O values so the total of all months equals 100% before leaving this screen.</value>
+  </data>
+  <data name="VerifyBeforeProceed" xml:space="preserve">
+    <value>Verify this before proceeding...</value>
   </data>
 </root>

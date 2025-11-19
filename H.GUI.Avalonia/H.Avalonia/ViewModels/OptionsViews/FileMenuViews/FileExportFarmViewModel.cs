@@ -19,6 +19,7 @@ using Prism.Regions;
 using H.Core.Services;
 using SharpKml.Engine;
 using Avalonia.Controls.Notifications;
+using H.Avalonia.Services;
 using H.Avalonia.ViewModels.FarmCreationViews;
 
 namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
@@ -49,7 +50,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
         /// </summary>
         /// <param name="regionManager">Service for managing UI regions in the application</param>
         /// <param name="storageService">Service for handling file storage operations</param>
-        public FileExportFarmViewModel(IRegionManager regionManager, IStorageService storageService) : base(regionManager, storageService)
+        public FileExportFarmViewModel(IRegionManager regionManager, IStorageService storageService, INotificationManagerService notificationManager) : base(regionManager, storageService, notificationManager)
         {
             // Initialize the export command that will be bound to UI elements
             ExportFarms = new DelegateCommand<IStorageFile>(OnExport);
@@ -88,11 +89,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
                 });
 
                 // Show success notification to the user
-                NotificationManager?.Show(new Notification(H.Core.Properties.Resources.LabelSuccess,
-                    H.Core.Properties.Resources.LabelFarmExportSuccess,
-                    type: NotificationType.Success,
-                    expiration: TimeSpan.FromSeconds(10))
-                );
+                NotificationManager.ShowToast(H.Core.Properties.Resources.LabelSuccess, H.Core.Properties.Resources.LabelFarmExportSuccess, NotificationType.Success);
             }
             catch (Exception ex)
             {
@@ -100,11 +97,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
                 Debug.WriteLine($"Error exporting farms: {ex.Message}");
                 
                 // Show error notification to the user with the exception message
-                NotificationManager?.Show(new Notification(H.Core.Properties.Resources.ErrorError,
-                    ex.Message,
-                    type: NotificationType.Error,
-                    expiration: TimeSpan.FromSeconds(10))
-                );
+                NotificationManager.ShowToast(H.Core.Properties.Resources.ErrorError, ex.Message, NotificationType.Error);
             }
         }
         
@@ -119,11 +112,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
             if(file == null)
             {
                 // Show error notification for missing file selection
-                NotificationManager?.Show(new Notification(H.Core.Properties.Resources.ErrorError,
-                    H.Core.Properties.Resources.ErrorNoFileSelected,
-                    type: NotificationType.Error,
-                    expiration: TimeSpan.FromSeconds(10))
-                );
+                NotificationManager.ShowToast(H.Core.Properties.Resources.ErrorError, H.Core.Properties.Resources.ErrorNoFileSelected, NotificationType.Error);
                 return;
             }
             

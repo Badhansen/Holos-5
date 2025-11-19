@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Avalonia.Platform.Storage;
+using H.Avalonia.Services;
 using H.Avalonia.ViewModels.OptionsViews.FileMenuViews;
 using H.Core.Models;
 using H.Core.Services.StorageService;
@@ -13,6 +14,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews.FileMenuViews
     {
         private Mock<IStorageService> _mockStorageService;
         private Mock<IRegionManager> _mockRegionManager;
+        private Mock<INotificationManagerService> _mockNotificationService;
         private Mock<IStorageFile> _mockFile;
         private Mock<Stream> _mockStream;
         private FileExportFarmViewModel _viewModel;
@@ -33,6 +35,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews.FileMenuViews
             // Initialize mocks
             _mockStorageService = new Mock<IStorageService>();
             _mockRegionManager = new Mock<IRegionManager>();
+            _mockNotificationService = new Mock<INotificationManagerService>();
             _mockFile = new Mock<IStorageFile>();
             _mockStream = new Mock<Stream>();
 
@@ -40,7 +43,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews.FileMenuViews
             _mockFile.Setup(f => f.OpenWriteAsync()).ReturnsAsync(_mockStream.Object);
             _mockStream.SetupGet(s => s.CanWrite).Returns(true);
 
-            _viewModel = new FileExportFarmViewModel(_mockRegionManager.Object, _mockStorageService.Object);
+            _viewModel = new FileExportFarmViewModel(_mockRegionManager.Object, _mockStorageService.Object, _mockNotificationService.Object);
         }
 
         [TestCleanup]

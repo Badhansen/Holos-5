@@ -229,23 +229,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.DataTransferObjects
             {
                 total += this.MonthlyValues.GetValueByMonth(month);
             }
-            if (total > 100.00)
-            {
-                NotificationManager?.Show(new Notification(H.Core.Properties.Resources.ErrorError,
-                    "Total values cannot be greater than 100%",
-                    type: NotificationType.Warning,
-                    expiration: TimeSpan.FromSeconds(10)));
-            }
-            else if(total < 100)
-            {
-                NotificationManager?.Show(new Notification(
-                    title: "N2O percentage total equals less than 100%.",
-                    message: "Holos is unable to delete the current farm when no other farms exist.",
-                    type: NotificationType.Warning,
-                    expiration: TimeSpan.FromSeconds(10))
-                    );
-            }
-            else
+            if (total == 100.00)
             {
                 RemoveError(e.PropertyName);
             }

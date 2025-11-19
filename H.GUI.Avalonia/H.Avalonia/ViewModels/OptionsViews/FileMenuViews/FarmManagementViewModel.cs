@@ -11,6 +11,7 @@ using H.Avalonia.Views.FarmCreationViews;
 using System.ComponentModel;
 using Avalonia.Controls.Notifications;
 using Microsoft.Extensions.Logging;
+using H.Avalonia.Services;
 
 namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
 {
@@ -23,6 +24,12 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
         #endregion
 
         #region Constructors
+
+        public FarmManagementViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IStorageService storageService, INotificationManagerService notificationManager) : base(regionManager, eventAggregator, storageService, notificationManager)
+        {
+            RemoveFarm = new DelegateCommand(OnRemoveFarmExecute, OnRemoveFarmCanExecute);
+            Farms = new ObservableCollection<Farm>();
+        }
 
         public FarmManagementViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IStorageService storageService, ILogger logger) : base(regionManager, eventAggregator, storageService, logger)
         {
@@ -106,12 +113,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
             }
             else
             {
-                NotificationManager?.Show(new Notification(
-                    title: "Cannot Delete Current Farm",
-                    message: "Holos is unable to delete the current farm when no other farms exist.",
-                    type: NotificationType.Warning,
-                    expiration: TimeSpan.FromSeconds(10))
-                    );
+                NotificationManager.ShowToast(H.Core.Properties.Resources.CantDeleteCurrentFarmTitle, H.Core.Properties.Resources.CantDeleteCurrentFarmBody, NotificationType.Warning);
             }
         }
 

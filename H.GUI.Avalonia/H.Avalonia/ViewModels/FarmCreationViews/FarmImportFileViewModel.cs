@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using H.Avalonia.Services;
 using H.Avalonia.ViewModels.OptionsViews.FileMenuViews;
 using H.Avalonia.Views.FarmCreationViews;
 using H.Core.Services.StorageService;
 using Prism.Commands;
 using Prism.Regions;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace H.Avalonia.ViewModels.FarmCreationViews
 {
@@ -18,7 +19,7 @@ namespace H.Avalonia.ViewModels.FarmCreationViews
         private readonly IRegionManager _regionManager;
         #endregion
 
-        public FarmImportFileViewModel(IRegionManager regionManager, IStorageService storageService) : base(regionManager, storageService)
+        public FarmImportFileViewModel(IRegionManager regionManager, IStorageService storageService, INotificationManagerService notificationManager) : base(regionManager, storageService, notificationManager)
         {
             _regionManager = regionManager ?? throw new System.ArgumentNullException(nameof(regionManager));
             NavigateToPreviousPage = new DelegateCommand(OnNavigateToPreviousPage);

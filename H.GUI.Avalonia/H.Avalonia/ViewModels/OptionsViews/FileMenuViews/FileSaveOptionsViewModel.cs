@@ -88,12 +88,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
         private async void OnSaveExecute()
         {
             await base.StorageService.Storage.SaveAsync();
-            NotificationManager?.Show(new Notification(
-                title: H.Core.Properties.Resources.ToastTitleSaveSuccess,
-                message: H.Core.Properties.Resources.ToastMessageSavedSuccessfully,
-                type: NotificationType.Success,
-                expiration: TimeSpan.FromSeconds(10))
-            );
+            NotificationManager.ShowToast(H.Core.Properties.Resources.ToastTitleSaveSuccess, H.Core.Properties.Resources.ToastMessageSavedSuccessfully, NotificationType.Success);
         }
 
         private bool CanExecuteSave()
@@ -115,12 +110,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
             _runValidationFlag = false;
             this.NewFarmName = string.Empty;
             _runValidationFlag = true;
-            NotificationManager?.Show(new Notification(
-                title: H.Core.Properties.Resources.ToastTitleSaveSuccess,
-                message: H.Core.Properties.Resources.ToastMessageSavedSuccessfully,
-                type: NotificationType.Success,
-                expiration: TimeSpan.FromSeconds(10))
-            );
+            NotificationManager.ShowToast(H.Core.Properties.Resources.ToastTitleSaveSuccess, H.Core.Properties.Resources.ToastMessageSavedSuccessfully, NotificationType.Success);
         }
 
         #endregion

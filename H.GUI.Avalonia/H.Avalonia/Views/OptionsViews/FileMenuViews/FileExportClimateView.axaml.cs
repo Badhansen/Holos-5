@@ -29,7 +29,6 @@ public partial class FileExportClimateView : UserControl
             var topLevel = TopLevel.GetTopLevel(this);
             if (topLevel != null)
             {
-                vm.NotificationManager = new WindowNotificationManager(topLevel);
                 vm.SelectedFarms = vm.SelectedFarms.OrderBy(obj => obj.Name).ToList();
                 foreach (H.Core.Models.Farm farm in vm.SelectedFarms)
                 {

@@ -29,7 +29,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using H.Core.Providers.Soil;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Extensions.Logging;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace H.Avalonia.Views
@@ -42,6 +44,22 @@ namespace H.Avalonia.Views
         /// A RasterizingTileLayer that goes on top of the map to display the polygons for a specific province.
         /// </summary>
         private RasterizingTileLayer? _polygonLayer;
+
+        /// <summary>
+        /// Central coordinate points for all provinces used for map navigation when a province is selected.
+        /// </summary>
+        private MPoint _coordinateBritishColumbia = new MPoint(-13928197, 7300000);
+        private MPoint _coordinateAlberta = new MPoint(-12731248, 7300000);
+        private MPoint _coordinateSaskatchewan = new MPoint(-11800000, 7300000);
+        private MPoint _coordinateManitoba = new MPoint(-10900000, 7300000);
+        private MPoint _coordinateOntario = new MPoint(-9510000, 6400000);
+        private MPoint _coordinateQuebec = new MPoint(-7900000, 6300000);
+        private MPoint _coordinateNewBrunswick = new MPoint(-7400000, 5850000);
+        private MPoint _coordinatePrinceEdwardIsland = new MPoint(-7020000, 5830000);
+        private MPoint _coordinateNovaScotia = new MPoint(-7030000, 5650000);
+        private MPoint _coordinateNewfoundland = new MPoint(-6250000, 6250000);
+
+        private ILogger _logger;
 
         #endregion
 
@@ -63,8 +81,9 @@ namespace H.Avalonia.Views
 
         #region Constructors
 
-        public SoilDataView()
+        public SoilDataView(ILogger logger)
         {
+            _logger = logger;
             InitializeComponent();
             InitializeMap();
         }
@@ -120,6 +139,7 @@ namespace H.Avalonia.Views
                             {
                                 _polygonLayer = new RasterizingTileLayer(CreateLayer(_viewModel.SelectedProvince), minTiles: 400, maxTiles: 800, renderFormat: RenderFormat.WebP);
                                 SoilTabMap.Map.Layers.Add(_polygonLayer);
+                                SetCoordinatesOnProvinceSelected(_viewModel.SelectedProvince);
                             }
                         }
                         else
@@ -134,6 +154,68 @@ namespace H.Avalonia.Views
             }
         }
 
+        /// <summary>
+        /// Sets the map coordinates and zoom level based on the selected province.
+        /// </summary>
+        /// <param name="selectedProvince">The province to center map on</param>
+        private void SetCoordinatesOnProvinceSelected(Province selectedProvince)
+        {
+            _logger.LogDebug("New province " + selectedProvince + " selected in " + nameof(SoilDataView));
+            switch (selectedProvince)
+            {
+                case (Province.BritishColumbia):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinateBritishColumbia, resolution: 3500);
+                    break;
+                }
+                case (Province.Alberta):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinateAlberta, resolution: 3500);
+                    break;
+                }
+                case (Province.Saskatchewan):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinateSaskatchewan, resolution: 3500);
+                    break;
+                }
+                case (Province.Manitoba):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinateManitoba, resolution: 3500);
+                    break;
+                }
+                case (Province.Ontario):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinateOntario, resolution: 3900);
+                    break;
+                }
+                case (Province.Quebec):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinateQuebec, resolution: 3000);
+                    break;
+                }
+                case (Province.NewBrunswick):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinateNewBrunswick, resolution: 1200);
+                    break;
+                }
+                case (Province.PrinceEdwardIsland):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinatePrinceEdwardIsland, resolution: 600);
+                    break;
+                }
+                case (Province.NovaScotia):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinateNovaScotia, resolution: 1100);
+                    break;
+                }
+                case (Province.Newfoundland):
+                {
+                    SoilTabMap.Map.Navigator.CenterOnAndZoomTo(_coordinateNewfoundland, resolution: 1400);
+                    break;
+                }
+            }
+        }
+
         #endregion
 
         /// <summary>
@@ -141,6 +223,7 @@ namespace H.Avalonia.Views
         /// </summary>
         private void InitializeMap()
         {
+            _logger.LogDebug("Attempting to initialize map in " + nameof(SoilDataView));
             SoilTabMap.Map.Layers.Add(OpenStreetMap.CreateTileLayer());
             SoilTabMap.Map.Navigator.Limiter = new ViewportLimiterKeepWithinExtent();
             //SoilMap.Map.Navigator.OverridePanBounds = panBounds;
@@ -153,6 +236,7 @@ namespace H.Avalonia.Views
                 BackColor = Color.White,
                 Opacity = 1,
             });
+            _logger.LogDebug("Map initialized successfully in " + nameof(SoilData));
         }
 
         /// <summary>
@@ -189,6 +273,7 @@ namespace H.Avalonia.Views
         /// <param name="e"></param>
         private void SoilMap_OnPointerPressed(object? sender, PointerPressedEventArgs e)
         {
+            _logger.LogDebug("New location selected in " + nameof(SoilDataView));
             // Get the properties of the pointer event so that we can determine the type of click.
             var properties = e.GetCurrentPoint(this).Properties;
             if (!properties.IsRightButtonPressed) return;
@@ -235,6 +320,7 @@ namespace H.Avalonia.Views
         /// <returns></returns>
         private ILayer CreateLayer(Province province)
         {
+            _logger.LogDebug("Drawing " + province + " polygons on top of " + nameof(SoilDataView) + " map.");
             var polygons = _viewModel.WktPolygonMap[province];
             return new Layer("Polygons")
             {

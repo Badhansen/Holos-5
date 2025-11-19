@@ -33,6 +33,7 @@ using H.Avalonia.Services;
 using H.Avalonia.Views.ResultViews;
 using H.Core.Services;
 using H.Core.Services.StorageService;
+using Microsoft.Extensions.Logging;
 using SoilResultsView = H.Avalonia.Views.ResultViews.SoilResultsView;
 
 namespace H.Avalonia.ViewModels
@@ -149,7 +150,8 @@ namespace H.Avalonia.ViewModels
             ICountrySettings countrySettings,
             IStorageService storageService,
             Storage storage,
-            INotificationManagerService notificationManager) : base(regionManager, storageService, notificationManager)
+            INotificationManagerService notificationManager,
+            ILogger logger) : base(regionManager, storageService, notificationManager, logger)
         {
             if (countrySettings != null)
             {
@@ -477,7 +479,7 @@ namespace H.Avalonia.ViewModels
         {
             if (string.IsNullOrEmpty(Address))
             {
-                Trace.TraceInformation($@"Cannot find location as an empty address was entered.");
+                Logger.LogDebug($@"Cannot find location as an empty address was entered.");
                 NotificationManager.ShowToast(H.Core.Properties.Resources.AddressFieldEmpty, Core.Properties.Resources.MessageEmptyAddress, NotificationType.Information);
                 return;
             }
@@ -490,7 +492,7 @@ namespace H.Avalonia.ViewModels
             }
             catch (ArgumentOutOfRangeException e)
             {
-                Trace.TraceInformation($@"{e.Message}. Exception thrown in {nameof(OnGetCoordinates)} by class {nameof(SoilDataViewModel)}");
+                Logger.LogError($@"{e.Message}. Exception thrown in {nameof(OnGetCoordinates)} by class {nameof(SoilDataViewModel)}");
                 NotificationManager.ShowToast(H.Core.Properties.Resources.InvalidAddress, Core.Properties.Resources.MessageIncorrectAddress, NotificationType.Error);
             }
         }
@@ -503,7 +505,7 @@ namespace H.Avalonia.ViewModels
             var address = await _mapHelpers.GetAddressFromLocationAsync(Latitude, Longitude);
             if (string.IsNullOrEmpty(address))
             {
-                Trace.TraceInformation($@"Cannot find the coordinate. Please enter correct latitude and longitude values");
+                Logger.LogDebug($@"Cannot find the coordinate. Please enter correct latitude and longitude values");
                 NotificationManager.ShowToast(H.Core.Properties.Resources.IncorrectCoordinate, Core.Properties.Resources.MessageInValidCoordinateEntered, NotificationType.Information);
                 return;
             }
@@ -535,7 +537,7 @@ namespace H.Avalonia.ViewModels
             var address = await _mapHelpers.GetAddressFromLocationAsync(Latitude, Longitude);
             if (string.IsNullOrEmpty(address))
             {
-                Trace.TraceInformation($@"Incorrect coordinate location cannot find matching address.");
+                Logger.LogDebug($@"Incorrect coordinate location cannot find matching address.");
                 NotificationManager.ShowToast(H.Core.Properties.Resources.CantFindAddress, Core.Properties.Resources.MessageIncorrectLocationSelected, NotificationType.Information);
                 return;
             }

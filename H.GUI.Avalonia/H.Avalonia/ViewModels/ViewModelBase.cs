@@ -147,6 +147,18 @@ namespace H.Avalonia.ViewModels
             }
         }
 
+        protected ViewModelBase(IRegionManager regionManager, IStorageService storageService, ILogger logger) : this(regionManager, storageService)
+        {
+            if (logger != null)
+            {
+                this.Logger = logger;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
+        }
+
         protected ViewModelBase(IRegionManager regionManager, IStorageService storageService, INotificationManagerService notificationManager) : this(regionManager, storageService)
         {
             if (notificationManager != null)
@@ -156,6 +168,18 @@ namespace H.Avalonia.ViewModels
             else
             {
                 throw new ArgumentNullException(nameof(notificationManager));
+            }
+        }
+
+        protected ViewModelBase(IRegionManager regionManager, IStorageService storageService, INotificationManagerService notificationManager , ILogger logger) : this(regionManager, storageService, notificationManager)
+        {
+            if (logger != null)
+            {
+                this.Logger = logger;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(logger));
             }
         }
 

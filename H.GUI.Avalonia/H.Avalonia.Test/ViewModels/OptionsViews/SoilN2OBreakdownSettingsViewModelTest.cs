@@ -102,7 +102,7 @@ namespace H.Avalonia.Test.ViewModels.OptionsViews
             _viewModel.Data.November = 8;
             _viewModel.Data.December = 8;
 
-            Assert.AreEqual(96, _viewModel.Total);
+            Assert.AreEqual(96, _viewModel.TotalUserEnteredPercentageOfAllMonths);
 
             double total = 0;
             foreach (Months month in Enum.GetValues(typeof(Months)))

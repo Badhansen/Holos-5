@@ -594,5 +594,183 @@ public class FieldComponentServiceTest
 
     #endregion
 
+    #region Tests for ResetAllYears
+    // ---------------------------------------------------
+
+    [TestMethod]
+    public void ResetAllYears_WithEmptyCollection_DoesNotThrow()
+    {
+        // Arrange: empty collection should be handled gracefully
+        var emptyCropDtos = new List<ICropDto>();
+
+        // Act & Assert: method should not throw and should be a no-op
+        _fieldComponentService.ResetAllYears(emptyCropDtos);
+        // No additional assertions needed - success is not throwing
+    }
+
+    [TestMethod]
+    public void ResetAllYears_WithSingleCrop_DoesNotChangeYear()
+    {
+        // Arrange: single crop should retain its current year (max year stays the same)
+        var cropDto = new CropDto { Year = 2020 };
+        var cropDtos = new List<ICropDto> { cropDto };
+
+        // Act
+        _fieldComponentService.ResetAllYears(cropDtos);
+
+        // Assert: year should remain unchanged since it's already the max
+        Assert.AreEqual(2020, cropDto.Year);
+    }
+
+    [TestMethod]
+    public void ResetAllYears_WithConsecutiveYears_DoesNotChangeYears()
+    {
+        // Arrange: crops with already consecutive years in descending order should remain unchanged
+        var cropDto1 = new CropDto { Year = 2022 };
+        var cropDto2 = new CropDto { Year = 2021 };
+        var cropDto3 = new CropDto { Year = 2020 };
+        var cropDtos = new List<ICropDto> { cropDto1, cropDto2, cropDto3 };
+
+        // Act
+        _fieldComponentService.ResetAllYears(cropDtos);
+
+        // Assert: years should remain the same since they're already consecutive
+        Assert.AreEqual(2022, cropDto1.Year);
+        Assert.AreEqual(2021, cropDto2.Year);
+        Assert.AreEqual(2020, cropDto3.Year);
+    }
+
+    [TestMethod]
+    public void ResetAllYears_WithNonConsecutiveYears_ResetsToConsecutiveYears()
+    {
+        // Arrange: crops with gaps in years should be renumbered to consecutive descending order
+        var cropDto1 = new CropDto { Year = 2025 }; // highest year
+        var cropDto2 = new CropDto { Year = 2020 }; // gap exists
+        var cropDto3 = new CropDto { Year = 2018 }; // more gaps
+        var cropDtos = new List<ICropDto> { cropDto1, cropDto2, cropDto3 };
+
+        // Act: method orders by descending year, then assigns consecutive years from max down
+        _fieldComponentService.ResetAllYears(cropDtos);
+
+        // Assert: years should now be consecutive descending from the original maximum
+        Assert.AreEqual(2025, cropDto1.Year); // max year stays the same
+        Assert.AreEqual(2024, cropDto2.Year); // second highest becomes max - 1
+        Assert.AreEqual(2023, cropDto3.Year); // third highest becomes max - 2
+    }
+
+    [TestMethod]
+    public void ResetAllYears_WithDuplicateYears_ResetsToConsecutiveYears()
+    {
+        // Arrange: crops with duplicate years should be separated into consecutive years
+        var cropDto1 = new CropDto { Year = 2020 };
+        var cropDto2 = new CropDto { Year = 2020 }; // duplicate year
+        var cropDto3 = new CropDto { Year = 2020 }; // duplicate year
+        var cropDtos = new List<ICropDto> { cropDto1, cropDto2, cropDto3 };
+
+        // Act: algorithm orders by year then assigns consecutive descending values
+        _fieldComponentService.ResetAllYears(cropDtos);
+
+        // Assert: verify the result produces consecutive years from the original max
+        var resultYears = cropDtos.Select(dto => dto.Year).OrderByDescending(y => y).ToList();
+        
+        // Check that we have the expected consecutive years (2020, 2019, 2018)
+        Assert.AreEqual(2020, resultYears[0]); // highest year should be original max
+        Assert.AreEqual(2019, resultYears[1]); // second should be max - 1
+        Assert.AreEqual(2018, resultYears[2]); // third should be max - 2
+        
+        // Verify all years are unique (no more duplicates)
+        Assert.AreEqual(3, resultYears.Distinct().Count());
+        
+        // Verify range is correct
+        Assert.AreEqual(2020, resultYears.Max());
+        Assert.AreEqual(2018, resultYears.Min());
+    }
+
+    [TestMethod]
+    public void ResetAllYears_WithRandomOrderYears_ResetsToConsecutiveDescendingOrder()
+    {
+        // Arrange: crops in random year order should be processed correctly
+        var cropDto1 = new CropDto { Year = 2021, CropType = CropType.Wheat };
+        var cropDto2 = new CropDto { Year = 2023, CropType = CropType.Barley }; // highest
+        var cropDto3 = new CropDto { Year = 2019, CropType = CropType.Oats }; // lowest
+        var cropDto4 = new CropDto { Year = 2022, CropType = CropType.Corn };
+        var cropDtos = new List<ICropDto> { cropDto1, cropDto2, cropDto3, cropDto4 };
+
+        // Act: method should order by descending year, then assign consecutive years
+        _fieldComponentService.ResetAllYears(cropDtos);
+
+        // Assert: verify years are assigned in descending order from original max
+        // Original order by descending year: 2023, 2022, 2021, 2019
+        // New consecutive years should be: 2023, 2022, 2021, 2020
+        Assert.AreEqual(2023, cropDto2.Year); // max year (2023) stays same
+        Assert.AreEqual(2022, cropDto4.Year); // originally second highest (2022) stays same
+        Assert.AreEqual(2021, cropDto1.Year); // originally third highest (2021) stays same
+        Assert.AreEqual(2020, cropDto3.Year); // originally lowest (2019) becomes 2020
+
+        // Verify other properties are preserved
+        Assert.AreEqual(CropType.Wheat, cropDto1.CropType);
+        Assert.AreEqual(CropType.Barley, cropDto2.CropType);
+        Assert.AreEqual(CropType.Oats, cropDto3.CropType);
+        Assert.AreEqual(CropType.Corn, cropDto4.CropType);
+    }
+
+    [TestMethod]
+    public void ResetAllYears_WithNegativeYears_HandlesCorrectly()
+    {
+        // Arrange: test with negative years to ensure algorithm handles edge cases
+        var cropDto1 = new CropDto { Year = -5 };
+        var cropDto2 = new CropDto { Year = 10 }; // highest
+        var cropDto3 = new CropDto { Year = 0 };
+        var cropDtos = new List<ICropDto> { cropDto1, cropDto2, cropDto3 };
+
+        // Act: algorithm should work with negative numbers
+        _fieldComponentService.ResetAllYears(cropDtos);
+
+        // Assert: consecutive years starting from max (10)
+        Assert.AreEqual(10, cropDto2.Year); // max year (10) stays same
+        Assert.AreEqual(9, cropDto3.Year);  // second highest (0) becomes 9
+        Assert.AreEqual(8, cropDto1.Year);  // lowest (-5) becomes 8
+    }
+
+    [TestMethod]
+    public void ResetAllYears_VerifiesConsecutiveAlgorithm()
+    {
+        // Arrange: set up a larger collection to verify the consecutive assignment algorithm
+        var cropDtos = new List<ICropDto>
+        {
+            new CropDto { Year = 2010 },
+            new CropDto { Year = 2025 }, // max
+            new CropDto { Year = 2015 },
+            new CropDto { Year = 2005 },
+            new CropDto { Year = 2020 }
+        };
+
+        var originalMaxYear = cropDtos.Max(dto => dto.Year); // Should be 2025
+
+        // Act
+        _fieldComponentService.ResetAllYears(cropDtos);
+
+        // Assert: verify the algorithm produces consecutive descending years
+        var actualYears = cropDtos.Select(dto => dto.Year).OrderByDescending(y => y).ToList();
+        
+        // Check that max year is preserved
+        Assert.AreEqual(originalMaxYear, actualYears[0]);
+        
+        // Check that all years are consecutive
+        for (int i = 0; i < actualYears.Count - 1; i++)
+        {
+            var expectedDifference = 1;
+            var actualDifference = actualYears[i] - actualYears[i + 1];
+            Assert.AreEqual(expectedDifference, actualDifference, 
+            $"Years should be consecutive: {actualYears[i]} and {actualYears[i + 1]}");
+        }
+        
+        // Verify the range: should be from originalMaxYear down to (originalMaxYear - count + 1)
+        var expectedMinYear = originalMaxYear - cropDtos.Count + 1;
+        Assert.AreEqual(expectedMinYear, actualYears.Last());
+    }
+
+    #endregion
+
     #endregion
 }

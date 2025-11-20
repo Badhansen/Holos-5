@@ -154,10 +154,11 @@ public class FieldComponentService : ComponentServiceBase, IFieldComponentServic
         {
             var maximumYear = cropDtos.Max(dto => dto.Year);
 
-            var orderedDtos = cropDtos.OrderByDescending(dto => dto.Year);
-            for (int i = 0; i < cropDtos.Count(); i++)
+            // Use ThenBy to ensure stable sorting when years are equal
+            var orderedDtos = cropDtos.OrderByDescending(dto => dto.Year).ThenBy(dto => dto.Guid).ToList();
+            for (int i = 0; i < orderedDtos.Count; i++)
             {
-                var dto = orderedDtos.ElementAt(i);
+                var dto = orderedDtos[i];
                 dto.Year = maximumYear - i;
             }
         }

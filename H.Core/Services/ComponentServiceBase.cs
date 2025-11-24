@@ -82,6 +82,13 @@ public abstract class ComponentServiceBase : IComponentService
     
     public string GetUniqueComponentName(Farm farm, ComponentBase component)
     {
+        // Handle null farm or null components collection - return base name with timestamp for uniqueness
+        if (farm?.Components == null)
+        {
+            var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss_fff");
+            return $"{component.ComponentNameDisplayString}_{timestamp}";
+        }
+
         var i = 2;
 
         // Don't add number to component name at first (i.e. just use "Cow-Calf" and not "Cow-Calf #1").

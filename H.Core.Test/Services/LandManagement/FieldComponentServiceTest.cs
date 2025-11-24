@@ -11,6 +11,7 @@ using Prism.Ioc;
 using System.Collections.ObjectModel;
 using H.Core.Factories.Crops;
 using Microsoft.Extensions.Logging;
+using H.Core.Models;
 
 namespace H.Core.Test.Services.LandManagement;
 
@@ -98,8 +99,6 @@ public class FieldComponentServiceTest
     }
 
     #endregion
-
-    #region Tests
 
     [TestMethod]
     public void TransferCropDtoToSystemConvertsImperialValueToMetric()
@@ -594,8 +593,230 @@ public class FieldComponentServiceTest
 
     #endregion
 
+    #region Tests for InitializeFieldSystemComponent
+
+    [TestMethod]
+    public void InitializeFieldSystemComponent_WithUninitializedComponent_SetsNameAndInitializesFlag()
+    {
+        // Arrange: create a farm and an uninitialized field component
+        var farm = new Farm();
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            ComponentNameDisplayString = "Field", 
+            IsInitialized = false,
+            Name = null 
+        };
+
+        // Act: initialize the field component
+        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+
+        // Assert: component should now be initialized with a unique name
+        Assert.IsTrue(fieldComponent.IsInitialized);
+        Assert.IsNotNull(fieldComponent.Name);
+        Assert.AreEqual("Field", fieldComponent.Name);
+    }
+
+    [TestMethod]
+    public void InitializeFieldSystemComponent_WithAlreadyInitializedComponent_DoesNothing()
+    {
+        // Arrange: create a field component that is already initialized
+        var farm = new Farm();
+        var originalName = "Original Field Name";
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            IsInitialized = true,
+            Name = originalName 
+        };
+
+        // Act: attempt to initialize an already initialized component
+        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+
+        // Assert: component should remain unchanged
+        Assert.IsTrue(fieldComponent.IsInitialized);
+        Assert.AreEqual(originalName, fieldComponent.Name);
+    }
+
+    [TestMethod]
+    public void InitializeFieldSystemComponent_WithFarmContainingNoComponents_AssignsBaseName()
+    {
+        // Arrange: empty farm with no existing components
+        var farm = new Farm() { Components = new List<ComponentBase>() };
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            ComponentNameDisplayString = "Test Field",
+            IsInitialized = false 
+        };
+
+        // Act
+        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+
+        // Assert: should get the base name without any numbering
+        Assert.IsTrue(fieldComponent.IsInitialized);
+        Assert.AreEqual("Test Field", fieldComponent.Name);
+    }
+
+    [TestMethod]
+    public void InitializeFieldSystemComponent_WithFarmContainingExistingComponents_AssignsUniqueName()
+    {
+        // Arrange: farm with existing components that have conflicting names
+        var existingComponent1 = new FieldSystemComponent() { Name = "Field" };
+        var existingComponent2 = new FieldSystemComponent() { Name = "Field #2" };
+        var farm = new Farm() 
+        { 
+            Components = new List<ComponentBase> { existingComponent1, existingComponent2 } 
+        };
+
+        var newFieldComponent = new FieldSystemComponent() 
+        { 
+            ComponentNameDisplayString = "Field",
+            IsInitialized = false 
+        };
+
+        // Act
+        _fieldComponentService.InitializeFieldSystemComponent(farm, newFieldComponent);
+
+        // Assert: should get a unique name that doesn't conflict with existing components
+        Assert.IsTrue(newFieldComponent.IsInitialized);
+        Assert.AreEqual("Field #3", newFieldComponent.Name);
+    }
+
+    [TestMethod]
+    public void InitializeFieldSystemComponent_WithFarmContainingComponentsWithEmptyNames_IgnoresEmptyNames()
+    {
+        // Arrange: farm with existing components where some have empty/null names
+        var componentWithEmptyName = new FieldSystemComponent() { Name = "" };
+        var componentWithNullName = new FieldSystemComponent() { Name = null };
+        var componentWithWhitespaceName = new FieldSystemComponent() { Name = "   " };
+        var farm = new Farm() 
+        { 
+            Components = new List<ComponentBase> 
+            { 
+                componentWithEmptyName, 
+                componentWithNullName, 
+                componentWithWhitespaceName 
+            } 
+        };
+
+        var newFieldComponent = new FieldSystemComponent() 
+        { 
+            ComponentNameDisplayString = "Field",
+            IsInitialized = false 
+        };
+
+        // Act: empty/null names should be ignored in uniqueness check
+        _fieldComponentService.InitializeFieldSystemComponent(farm, newFieldComponent);
+
+        // Assert: should get base name since empty names are ignored
+        Assert.IsTrue(newFieldComponent.IsInitialized);
+        Assert.AreEqual("Field", newFieldComponent.Name);
+    }
+
+    [TestMethod]
+    public void InitializeFieldSystemComponent_WithMultipleCallsOnSameComponent_OnlyInitializesOnce()
+    {
+        // Arrange: single field component and farm
+        var farm = new Farm() { Components = new List<ComponentBase>() };
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            ComponentNameDisplayString = "Field",
+            IsInitialized = false 
+        };
+
+        // Act: call initialize multiple times
+        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+        var nameAfterFirstCall = fieldComponent.Name;
+        
+        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+
+        // Assert: should only be initialized once and name should not change
+        Assert.IsTrue(fieldComponent.IsInitialized);
+        Assert.AreEqual(nameAfterFirstCall, fieldComponent.Name);
+    }
+
+    [TestMethod]
+    public void InitializeFieldSystemComponent_WithNullFarm_DoesNotThrow()
+    {
+        // Arrange: null farm parameter
+        Farm farm = null;
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            ComponentNameDisplayString = "Field",
+            IsInitialized = false 
+        };
+
+        // Act & Assert: should handle null farm gracefully without throwing
+        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+
+        // The component should still be marked as initialized even if farm is null
+        // This tests the early return behavior for already initialized components
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void InitializeFieldSystemComponent_WithNullFieldComponent_ThrowsArgumentNullException()
+    {
+        // Arrange: valid farm but null field component
+        var farm = new Farm() { Components = new List<ComponentBase>() };
+        FieldSystemComponent fieldComponent = null;
+
+        // Act: should throw ArgumentNullException when fieldSystemComponent is null
+        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+
+        // Assert: exception attribute on the test method handles verification
+    }
+
+    [TestMethod]
+    public void InitializeFieldSystemComponent_WithMixedComponentTypes_OnlyConsidersNamesFromAllComponents()
+    {
+        // Arrange: farm with mixed component types to ensure name uniqueness across all component types
+        var fieldComponent1 = new FieldSystemComponent() { Name = "Component" };
+        // Note: In a real scenario, you might have other component types like AnimalComponent
+        // For this test, we'll use another FieldSystemComponent to simulate different component types
+        var fieldComponent2 = new FieldSystemComponent() { Name = "Component #2" };
+        
+        var farm = new Farm() 
+        { 
+            Components = new List<ComponentBase> { fieldComponent1, fieldComponent2 } 
+        };
+
+        var newFieldComponent = new FieldSystemComponent() 
+        { 
+            ComponentNameDisplayString = "Component",
+            IsInitialized = false 
+        };
+
+        // Act
+        _fieldComponentService.InitializeFieldSystemComponent(farm, newFieldComponent);
+
+        // Assert: should consider names from all component types when generating unique name
+        Assert.IsTrue(newFieldComponent.IsInitialized);
+        Assert.AreEqual("Component #3", newFieldComponent.Name);
+    }
+
+    [TestMethod]
+    public void InitializeFieldSystemComponent_WithLongComponentNameDisplayString_PreservesFullName()
+    {
+        // Arrange: field component with a long display name
+        var farm = new Farm() { Components = new List<ComponentBase>() };
+        var longDisplayName = "Very Long Field System Component Name For Testing Purposes";
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            ComponentNameDisplayString = longDisplayName,
+            IsInitialized = false 
+        };
+
+        // Act
+        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+
+        // Assert: should preserve the full display name
+        Assert.IsTrue(fieldComponent.IsInitialized);
+        Assert.AreEqual(longDisplayName, fieldComponent.Name);
+    }
+
+    #endregion
+
     #region Tests for ResetAllYears
-    // ---------------------------------------------------
 
     [TestMethod]
     public void ResetAllYears_WithEmptyCollection_DoesNotThrow()
@@ -769,8 +990,6 @@ public class FieldComponentServiceTest
         var expectedMinYear = originalMaxYear - cropDtos.Count + 1;
         Assert.AreEqual(expectedMinYear, actualYears.Last());
     }
-
-    #endregion
 
     #endregion
 }

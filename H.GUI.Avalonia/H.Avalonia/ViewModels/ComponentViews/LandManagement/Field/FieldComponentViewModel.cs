@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -164,6 +164,9 @@ public class FieldComponentViewModel : ViewModelBase
         {
             base.InitializeViewModel(fieldSystemComponent);
 
+            // Clean up any existing subscriptions before setting up new ones
+            CleanupResources();
+
             this.PropertyChanged += ViewModelOnPropertyChanged;
 
             // Hold a reference to the selected field system object
@@ -178,18 +181,37 @@ public class FieldComponentViewModel : ViewModelBase
             // Assign the DTO to the property that is bound to the view
             this.SelectedFieldSystemComponentDto = fieldComponentDto;
 
-            // If there are any crops associated with the field, select the first one by default
-            if (this.SelectedFieldSystemComponentDto.CropDtos.Any())
+            // Try to restore previously saved UI state
+            var savedState = _fieldComponentService.GetUIState(_selectedFieldSystemComponent.Guid);
+            ICropDto selectedCrop = null;
+
+            // If there are any crops associated with the field, select based on saved state or default logic
+            if (this.SelectedFieldSystemComponentDto?.CropDtos?.Any() == true)
             {
-                // Check if we can restore last selected item
-                if (this.SelectedFieldSystemComponentDto.CropDtos.Contains(this.SelectedCropDto))
+                // First, try to restore the previously selected crop from saved state
+                if (savedState?.SelectedCropGuid.HasValue == true)
                 {
-                    this.SelectedCropDto = this.SelectedCropDto;
+                    selectedCrop = this.SelectedFieldSystemComponentDto.CropDtos
+                        .FirstOrDefault(dto => dto.Guid == savedState.SelectedCropGuid.Value);
+                    
+                    _logger?.LogDebug("Restored selected crop from saved state: {CropGuid}", savedState.SelectedCropGuid.Value);
                 }
-                else
+
+                // If no saved state or saved crop not found, use default logic
+                if (selectedCrop == null)
                 {
-                    this.SelectedCropDto = this.SelectedFieldSystemComponentDto.CropDtos.First();
+                    // Check if we can restore last selected item (legacy fallback)
+                    if (this.SelectedCropDto != null && this.SelectedFieldSystemComponentDto.CropDtos.Contains(this.SelectedCropDto))
+                    {
+                        selectedCrop = this.SelectedCropDto;
+                    }
+                    else
+                    {
+                        selectedCrop = this.SelectedFieldSystemComponentDto.CropDtos.First();
+                    }
                 }
+
+                this.SelectedCropDto = selectedCrop;
             }
             else
             {
@@ -198,7 +220,12 @@ public class FieldComponentViewModel : ViewModelBase
             }
 
             // Hold a reference to the selected crop view item
-            _selectedCropViewItem = _fieldComponentService.GetCropViewItemFromDto(this.SelectedCropDto, _selectedFieldSystemComponent);
+            if (this.SelectedCropDto != null)
+            {
+                _selectedCropViewItem = _fieldComponentService.GetCropViewItemFromDto(this.SelectedCropDto, _selectedFieldSystemComponent);
+            }
+
+            this.AddCropCommand.RaiseCanExecuteChanged();
         }
     }
 
@@ -228,7 +255,7 @@ public class FieldComponentViewModel : ViewModelBase
     /// </summary>
     private bool AddCropCanExecute(object arg)
     {
-        return true;
+        return !IsDisposed && _selectedFieldSystemComponent != null;
     }
 
     /// <summary>
@@ -236,7 +263,10 @@ public class FieldComponentViewModel : ViewModelBase
     /// </summary>
     private void OnAddCropExecute(object obj)
     {
-        this.AddCropDto();
+        if (!IsDisposed)
+        {
+            this.AddCropDto();
+        }
     }
 
     /// <summary>
@@ -245,6 +275,8 @@ public class FieldComponentViewModel : ViewModelBase
     /// </summary>
     private void FieldSystemComponentDtoOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (IsDisposed) return;
+
         if (sender is FieldSystemComponentDto fieldSystemComponentDto)
         {
             /*
@@ -254,8 +286,15 @@ public class FieldComponentViewModel : ViewModelBase
 
             if (!fieldSystemComponentDto.HasErrors)
             {
-                // A property on the DTO has been changed by the user, assign the new value to the system object after any unit conversion (if necessary)
-                _fieldComponentService.TransferFieldDtoToSystem(fieldSystemComponentDto, _selectedFieldSystemComponent);
+                try
+                {
+                    // A property on the DTO has been changed by the user, assign the new value to the system object after any unit conversion (if necessary)
+                    _fieldComponentService.TransferFieldDtoToSystem(fieldSystemComponentDto, _selectedFieldSystemComponent);
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex, "Failed to transfer field DTO to system");
+                }
             }
         }
     }
@@ -266,6 +305,8 @@ public class FieldComponentViewModel : ViewModelBase
     /// </summary>
     private void CropDtoOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (IsDisposed) return;
+
         if (sender is CropDto cropDto)
         {
             /*
@@ -275,10 +316,20 @@ public class FieldComponentViewModel : ViewModelBase
 
             if (!cropDto.HasErrors)
             {
-                var viewItem = _fieldComponentService.GetCropViewItemFromDto(cropDto, _selectedFieldSystemComponent);
+                try
+                {
+                    var viewItem = _fieldComponentService.GetCropViewItemFromDto(cropDto, _selectedFieldSystemComponent);
 
-                // Persist the changes to the system
-                _fieldComponentService.TransferCropDtoToSystem(cropDto, viewItem);
+                    if (viewItem != null)
+                    {
+                        // Persist the changes to the system
+                        _fieldComponentService.TransferCropDtoToSystem(cropDto, viewItem);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex, "Failed to transfer crop DTO to system");
+                }
             }
         }
     }
@@ -288,39 +339,58 @@ public class FieldComponentViewModel : ViewModelBase
     /// </summary>
     private bool RemoveCropCanExecute(object arg)
     {
-        return this.SelectedFieldSystemComponentDto != null && this.SelectedFieldSystemComponentDto.CropDtos.Any();
+        return !IsDisposed && this.SelectedFieldSystemComponentDto?.CropDtos?.Any() == true;
     }
 
     private void OnRemoveCropExecute(object obj)
     {
-        if (this.SelectedCropDto != null)
+        if (IsDisposed || this.SelectedCropDto == null) return;
+
+        try
         {
             // Keep a reference to the dto to remove before removing it from the collection
             var dtoToRemove = this.SelectedCropDto;
 
-            this.SelectedFieldSystemComponentDto.CropDtos.Remove(dtoToRemove);
+            this.SelectedFieldSystemComponentDto?.CropDtos?.Remove(dtoToRemove);
 
             // Ensure consecutive ordering (by year) of all crops now that one has been removed
-            _fieldComponentService.ResetAllYears(this.SelectedFieldSystemComponentDto.CropDtos);
+            if (this.SelectedFieldSystemComponentDto?.CropDtos != null)
+            {
+                _fieldComponentService.ResetAllYears(this.SelectedFieldSystemComponentDto.CropDtos);
+            }
 
-            this.RemoveCropCommand.RaiseCanExecuteChanged();
+            this.RemoveCropCommand?.RaiseCanExecuteChanged();
 
             _fieldComponentService.RemoveCropFromSystem(_selectedFieldSystemComponent, dtoToRemove);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Failed to remove crop");
         }
     }
 
     private void ViewModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (IsDisposed) return;
+
         if (e.PropertyName.Equals(nameof(SelectedCropDto)))
         {
-            RemoveCropCommand.RaiseCanExecuteChanged();
+            RemoveCropCommand?.RaiseCanExecuteChanged();
 
             if (this.SelectedCropDto != null)
             {
+                // Clean up previous event handler before adding new one
                 this.SelectedCropDto.PropertyChanged -= CropDtoOnPropertyChanged;
                 this.SelectedCropDto.PropertyChanged += CropDtoOnPropertyChanged;
 
-                _selectedCropViewItem = _fieldComponentService.GetCropViewItemFromDto(this.SelectedCropDto, _selectedFieldSystemComponent);
+                try
+                {
+                    _selectedCropViewItem = _fieldComponentService.GetCropViewItemFromDto(this.SelectedCropDto, _selectedFieldSystemComponent);
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex, "Failed to get crop view item from DTO");
+                }
             }
         }
     }
@@ -331,19 +401,95 @@ public class FieldComponentViewModel : ViewModelBase
     /// </summary>
     private void AddCropDto()
     {
-        var dto = _cropFactory.CreateDto(base.ActiveFarm);
+        if (IsDisposed || base.ActiveFarm == null || this.SelectedFieldSystemComponentDto == null) return;
 
-        _fieldComponentService.InitializeCropDto(this.SelectedFieldSystemComponentDto, dto);
+        try
+        {
+            var dto = _cropFactory.CreateDto(base.ActiveFarm);
 
-        // Use this as the new selected instance
-        this.SelectedCropDto = dto;
+            _fieldComponentService.InitializeCropDto(this.SelectedFieldSystemComponentDto, dto);
 
-        // If disabled before, enable this command now so that the user can remove a DTO
-        this.RemoveCropCommand.RaiseCanExecuteChanged();
+            // Use this as the new selected instance
+            this.SelectedCropDto = dto;
 
-        _fieldComponentService.AddCropDtoToSystem(_selectedFieldSystemComponent, dto);
+            // If disabled before, enable this command now so that the user can remove a DTO
+            this.RemoveCropCommand?.RaiseCanExecuteChanged();
 
-        _selectedCropViewItem = _fieldComponentService.GetCropViewItemFromDto(dto, _selectedFieldSystemComponent);
+            _fieldComponentService.AddCropDtoToSystem(_selectedFieldSystemComponent, dto);
+
+            _selectedCropViewItem = _fieldComponentService.GetCropViewItemFromDto(dto, _selectedFieldSystemComponent);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Failed to add crop DTO");
+        }
+    }
+
+    #endregion
+
+    #region Protected Methods
+
+    /// <summary>
+    /// Override CleanupResources to provide FieldComponentViewModel-specific cleanup logic
+    /// </summary>
+    protected override void CleanupResources()
+    {
+        // Save current UI state before cleanup
+        SaveCurrentUIState();
+
+        // Clean up FieldComponentViewModel-specific event handlers
+        this.PropertyChanged -= ViewModelOnPropertyChanged;
+
+        if (_selectedFieldSystemComponentDto is FieldSystemComponentDto fieldDto)
+        {
+            fieldDto.PropertyChanged -= FieldSystemComponentDtoOnPropertyChanged;
+        }
+
+        if (_selectedCropDto != null)
+        {
+            _selectedCropDto.PropertyChanged -= CropDtoOnPropertyChanged;
+        }
+
+        // Call base class cleanup
+        base.CleanupResources();
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    /// <summary>
+    /// Saves the current UI state to preserve across ViewModel disposal cycles
+    /// </summary>
+    private void SaveCurrentUIState()
+    {
+        if (_selectedFieldSystemComponent != null && _fieldComponentService != null)
+        {
+            try
+            {
+                var additionalState = new Dictionary<string, object>();
+                
+                // You can add other UI state here, such as:
+                // - Scroll positions
+                // - Expanded/collapsed sections
+                // - Tab selections
+                // - Filter states
+                // additionalState["ScrollPosition"] = someScrollPosition;
+                // additionalState["ExpandedSection"] = someExpandedState;
+
+                _fieldComponentService.SaveUIState(
+                    _selectedFieldSystemComponent.Guid,
+                    _selectedCropDto?.Guid,
+                    additionalState);
+
+                _logger?.LogDebug("Saved UI state for field component {ComponentName}", _selectedFieldSystemComponent.Name);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Failed to save UI state for field component");
+                // Don't rethrow - state saving shouldn't break disposal
+            }
+        }
     }
 
     #endregion

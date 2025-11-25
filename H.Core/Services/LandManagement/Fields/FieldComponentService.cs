@@ -18,6 +18,7 @@ namespace H.Core.Services.LandManagement.Fields;
 /// - Transfers data between domain models and DTOs using <see cref="ITransferService{TModelBase, TDto}"/>.
 /// - Applies unit conversions via configured transfer services.
 /// - Assists with UI-bound workflows such as year ordering and add/remove/update of crops.
+/// - Preserves UI state across ViewModel lifecycle events.
 /// </summary>
 public class FieldComponentService : ComponentServiceBase, IFieldComponentService
 {
@@ -28,6 +29,9 @@ public class FieldComponentService : ComponentServiceBase, IFieldComponentServic
 
     private readonly ITransferService<CropViewItem, CropDto> _cropTransferService;
     private readonly ITransferService<FieldSystemComponent, FieldSystemComponentDto> _fieldTransferService;
+
+    // State preservation for UI elements
+    private readonly Dictionary<Guid, FieldComponentUIState> _uiStateCache = new();
 
     #endregion
 
@@ -89,6 +93,74 @@ public class FieldComponentService : ComponentServiceBase, IFieldComponentServic
         else
         {
             throw new ArgumentNullException(nameof(fieldFactory));
+        }
+    }
+
+    #endregion
+
+    #region State Preservation Methods
+
+    /// <summary>
+    /// Saves the UI state for a field component to preserve across ViewModel disposal cycles
+    /// </summary>
+    /// <param name="fieldComponentGuid">The GUID of the field component</param>
+    /// <param name="selectedCropGuid">The GUID of the currently selected crop</param>
+    /// <param name="additionalState">Additional UI state to preserve</param>
+    public void SaveUIState(Guid fieldComponentGuid, Guid? selectedCropGuid, Dictionary<string, object> additionalState = null)
+    {
+        Logger?.LogDebug("Saving UI state for field component {FieldComponentGuid}", fieldComponentGuid);
+
+        var uiState = new FieldComponentUIState
+        {
+            FieldComponentGuid = fieldComponentGuid,
+            SelectedCropGuid = selectedCropGuid,
+            LastAccessed = DateTime.UtcNow,
+            AdditionalState = additionalState ?? new Dictionary<string, object>()
+        };
+
+        _uiStateCache[fieldComponentGuid] = uiState;
+    }
+
+    /// <summary>
+    /// Retrieves previously saved UI state for a field component
+    /// </summary>
+    /// <param name="fieldComponentGuid">The GUID of the field component</param>
+    /// <returns>The saved UI state, or null if not found</returns>
+    public FieldComponentUIState GetUIState(Guid fieldComponentGuid)
+    {
+        Logger?.LogDebug("Retrieving UI state for field component {FieldComponentGuid}", fieldComponentGuid);
+
+        if (_uiStateCache.TryGetValue(fieldComponentGuid, out var uiState))
+        {
+            uiState.LastAccessed = DateTime.UtcNow;
+            Logger?.LogDebug("Found cached UI state for field component {FieldComponentGuid}", fieldComponentGuid);
+            return uiState;
+        }
+
+        Logger?.LogDebug("No cached UI state found for field component {FieldComponentGuid}", fieldComponentGuid);
+        return null;
+    }
+
+    /// <summary>
+    /// Clears old UI state entries to prevent memory growth
+    /// </summary>
+    /// <param name="maxAge">Maximum age of state entries to keep (default: 1 hour)</param>
+    public void CleanupOldUIState(TimeSpan? maxAge = null)
+    {
+        var cutoff = DateTime.UtcNow - (maxAge ?? TimeSpan.FromHours(1));
+        var keysToRemove = _uiStateCache
+            .Where(kvp => kvp.Value.LastAccessed < cutoff)
+            .Select(kvp => kvp.Key)
+            .ToList();
+
+        foreach (var key in keysToRemove)
+        {
+            _uiStateCache.Remove(key);
+        }
+
+        if (keysToRemove.Any())
+        {
+            Logger?.LogDebug("Cleaned up {Count} old UI state entries", keysToRemove.Count);
         }
     }
 
@@ -163,12 +235,13 @@ public class FieldComponentService : ComponentServiceBase, IFieldComponentServic
     /// <param name="cropDtos">The collection of crops to normalize.</param>
     public void ResetAllYears(IEnumerable<ICropDto> cropDtos)
     {
-        if (cropDtos.Any())
+        var dtos = cropDtos.ToList();
+        if (dtos.Any())
         {
-            var maximumYear = cropDtos.Max(dto => dto.Year);
+            var maximumYear = dtos.Max(dto => dto.Year);
 
             // Use ThenBy to ensure stable sorting when years are equal
-            var orderedDtos = cropDtos.OrderByDescending(dto => dto.Year).ThenBy(dto => dto.Guid).ToList();
+            var orderedDtos = dtos.OrderByDescending(dto => dto.Year).ThenBy(dto => dto.Guid).ToList();
             for (int i = 0; i < orderedDtos.Count; i++)
             {
                 var dto = orderedDtos[i];

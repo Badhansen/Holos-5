@@ -22,7 +22,7 @@ using Microsoft.Extensions.Logging;
 
 namespace H.Avalonia.ViewModels
 {
-    public abstract class ViewModelBase : ErrorValidationBase, INavigationAware, INotifyDataErrorInfo
+    public abstract class ViewModelBase : ErrorValidationBase, INavigationAware, INotifyDataErrorInfo, IDisposable
     {
         #region Fields
 
@@ -35,6 +35,11 @@ namespace H.Avalonia.ViewModels
         private string _viewName;
         private bool _allowNavigation;
         protected ILogger Logger;
+
+        /// <summary>
+        /// Flag to track if the object has been disposed
+        /// </summary>
+        private bool _disposed = false;
 
         #endregion
 
@@ -299,7 +304,7 @@ namespace H.Avalonia.ViewModels
 
         public Farm ActiveFarm
         {
-            get => this.StorageService.GetActiveFarm();
+            get => this.StorageService?.GetActiveFarm();
             //set => SetProperty(ref _activeFarm, value);
         }
 
@@ -325,6 +330,11 @@ namespace H.Avalonia.ViewModels
             set => SetProperty(ref _allowNavigation, value);
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance has been disposed.
+        /// </summary>
+        protected bool IsDisposed => _disposed;
+
         #endregion
 
         #region Public Methods
@@ -335,16 +345,18 @@ namespace H.Avalonia.ViewModels
 
         public virtual void InitializeViewModel(ComponentBase component)
         {
-            Logger.LogDebug("initializing " + component);
+            Logger?.LogDebug("initializing " + component);
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            return true;
+            return !_disposed;
         }
 
         public virtual void OnNavigatedFrom(NavigationContext navigationContext)
         {
+            // Automatically cleanup resources when navigating away from this ViewModel
+            CleanupResources();
         }
 
         public virtual void OnNavigatedTo(NavigationContext navigationContext)
@@ -357,11 +369,13 @@ namespace H.Avalonia.ViewModels
         /// <returns><see langword="true"/> if this instance accepts the navigation request; otherwise, <see langword="false"/>.</returns>
         public virtual bool OnNavigatingTo(NavigationContext navigationContext)
         {
-            return true;
+            return !_disposed;
         }
 
         public void InvokeOnUiThread(Action action)
         {
+            if (_disposed) return;
+
             if (Dispatcher.UIThread.CheckAccess())
             {
                 action();
@@ -372,15 +386,61 @@ namespace H.Avalonia.ViewModels
             }
         }
 
+        /// <summary>
+        /// Dispose of resources
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion
+
+        #region Protected Methods
+
+        /// <summary>
+        /// Override this method in derived classes to provide specific cleanup logic
+        /// for event handlers and other resources that need to be disposed.
+        /// </summary>
+        protected virtual void CleanupResources()
+        {
+            // Base implementation cleans up common ViewModelBase event handlers
+            if (StorageService?.Storage?.ApplicationData?.GlobalSettings != null)
+            {
+                StorageService.Storage.ApplicationData.GlobalSettings.PropertyChanged -= GlobalSettingsPropertyChanged;
+            }
+        }
+
+        /// <summary>
+        /// Protected implementation of Dispose pattern
+        /// </summary>
+        /// <param name="disposing">True if disposing managed resources</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose managed resources
+                    CleanupResources();
+                }
+
+                _disposed = true;
+            }
+        }
+
         #endregion
 
         #region Private Methods
 
         /// <summary>
-        /// Ensures that a user cannot leave the <see cref="ViewName"/> empty when editing it in the UI. Uses INotifyDataErrorInfo implementation in <see cref="ViewModelBase"/>.
+        /// Ensures that a user cannot leave the <see cref="ViewName"/> empty when editing it in the UI. Uses INotifyDataErrorInfo implementation in <see cref="ViewModelBase"/>
         /// </summary>
         private void ValidateViewName()
         {
+            if (_disposed) return;
+
             RemoveError(nameof(ViewName));
 
             if (string.IsNullOrEmpty(ViewName))
@@ -396,15 +456,13 @@ namespace H.Avalonia.ViewModels
 
         private void GlobalSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
+            if (_disposed) return;
+
             if (e.PropertyName == nameof(GlobalSettings.ActiveFarm))
             {
                 this.IsInitialized = false;
             }
         }
-
-        #endregion
-
-        #region Protected Methods
 
         #endregion
     }

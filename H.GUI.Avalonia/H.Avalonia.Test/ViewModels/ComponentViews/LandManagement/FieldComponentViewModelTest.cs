@@ -44,12 +44,14 @@ public class FieldComponentViewModelTest
     [TestInitialize]
     public void TestInitialize()
     {
+        var testFarm = new Farm();
         var mockRegionManager = new Mock<IRegionManager>();
         var mockEventAggregator = new Mock<IEventAggregator>();
         var mockStorageService = new Mock<IStorageService>();
         var mockLogger = new Mock<ILogger>();
 
-        mockStorageService.Setup(x => x.Storage).Returns(new H.Core.Storage() { ApplicationData = new ApplicationData() });
+        mockStorageService.Setup(x => x.Storage).Returns(new H.Core.Storage() { ApplicationData = new ApplicationData() {GlobalSettings = new GlobalSettings() {ActiveFarm = testFarm}}});
+        mockStorageService.Setup(x => x.GetActiveFarm()).Returns(testFarm);
 
         _mockFieldComponentDtoFactory = new Mock<IFieldFactory>();
         _mockFieldComponentService = new Mock<IFieldComponentService>();
@@ -58,8 +60,7 @@ public class FieldComponentViewModelTest
         _mockFieldComponentDtoFactory.Setup(x => x.CreateDto(It.IsAny<Farm>())).Returns(new FieldSystemComponentDto());
         _mockFieldComponentService.Setup(x => x.TransferToFieldComponentDto(It.IsAny<FieldSystemComponent>())).Returns(new FieldSystemComponentDto());
 
-        _viewModel = new FieldComponentViewModel(mockRegionManager.Object, mockEventAggregator.Object,
-            mockStorageService.Object, _mockFieldComponentService.Object, mockLogger.Object, _mockCropFactory.Object);
+        _viewModel = new FieldComponentViewModel(mockRegionManager.Object, mockEventAggregator.Object, mockStorageService.Object, _mockFieldComponentService.Object, mockLogger.Object, _mockCropFactory.Object);
     }
 
     [TestCleanup]

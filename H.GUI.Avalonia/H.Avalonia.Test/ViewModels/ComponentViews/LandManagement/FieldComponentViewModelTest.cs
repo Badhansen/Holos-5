@@ -50,7 +50,11 @@ public class FieldComponentViewModelTest
         var mockStorageService = new Mock<IStorageService>();
         var mockLogger = new Mock<ILogger>();
 
-        mockStorageService.Setup(x => x.Storage).Returns(new H.Core.Storage() { ApplicationData = new ApplicationData() {GlobalSettings = new GlobalSettings() {ActiveFarm = testFarm}}});
+        mockStorageService.Setup(x => x.Storage).Returns(new H.Core.Storage() { 
+            ApplicationData = new ApplicationData() {
+                GlobalSettings = new GlobalSettings()
+            }
+        });
         mockStorageService.Setup(x => x.GetActiveFarm()).Returns(testFarm);
 
         _mockFieldComponentDtoFactory = new Mock<IFieldFactory>();
@@ -94,11 +98,42 @@ public class FieldComponentViewModelTest
     [TestMethod]
     public void InitializeViewModelSetCropViewItemToNotNull()
     {
+        // Mock the correct CreateDto method that takes a Farm parameter
         _mockCropFactory.Setup(x => x.CreateDto(It.IsAny<Farm>())).Returns(new CropDto());
+        
+        // Create a farm and field system component
+        var testFarm = new Farm { Name = "Test Farm" };
+        var fieldSystemComponent = new FieldSystemComponent() 
+        { 
+            CropViewItems = new ObservableCollection<CropViewItem>()
+        };
+        
+        // Add the component to the farm's components collection
+        testFarm.Components.Add(fieldSystemComponent);
 
-        _viewModel.InitializeViewModel(new FieldSystemComponent() {CropViewItems = new ObservableCollection<CropViewItem>()});
+        // Set up the mock storage service to return this farm
+        var mockStorageService = new Mock<IStorageService>();
+        mockStorageService.Setup(x => x.Storage).Returns(new H.Core.Storage()
+        {
+            ApplicationData = new ApplicationData()
+            {
+                GlobalSettings = new GlobalSettings()
+            }
+        });
+        mockStorageService.Setup(x => x.GetActiveFarm()).Returns(testFarm);
 
-        Assert.IsNotNull(_viewModel.SelectedCropDto);
+        // Create a new view model with the properly mocked storage service
+        var viewModel = new FieldComponentViewModel(
+            new Mock<IRegionManager>().Object,
+            new Mock<IEventAggregator>().Object,
+            mockStorageService.Object,
+            _mockFieldComponentService.Object,
+            new Mock<ILogger>().Object,
+            _mockCropFactory.Object);
+
+        viewModel.InitializeViewModel(fieldSystemComponent);
+
+        Assert.IsNotNull(viewModel.SelectedCropDto);
     }
 
     [TestMethod]

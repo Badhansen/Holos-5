@@ -160,73 +160,20 @@ public class FieldComponentViewModel : ViewModelBase
     /// <param name="component">The <see cref="FieldSystemComponent"/> to display to the user</param>
     public override void InitializeViewModel(ComponentBase component)
     {
-        if (component is FieldSystemComponent fieldSystemComponent)
-        {
-            base.InitializeViewModel(fieldSystemComponent);
+        if (component is not FieldSystemComponent fieldSystemComponent)
+            return;
 
-            // Clean up any existing subscriptions before setting up new ones
-            CleanupResources();
+        base.InitializeViewModel(fieldSystemComponent);
 
-            this.PropertyChanged += ViewModelOnPropertyChanged;
+        // Clean up any existing subscriptions before setting up new ones
+        CleanupResources();
 
-            // Hold a reference to the selected field system object
-            _selectedFieldSystemComponent = fieldSystemComponent;
+        this.PropertyChanged += ViewModelOnPropertyChanged;
 
-            // Build a DTO to represent the model/domain object
-            var fieldComponentDto = _fieldComponentService.TransferToFieldComponentDto(_selectedFieldSystemComponent);
+        InitializeFieldComponent(fieldSystemComponent);
+        InitializeSelectedCrop();
 
-            // Listen for changes on the DTO
-            fieldComponentDto.PropertyChanged += FieldSystemComponentDtoOnPropertyChanged;
-
-            // Assign the DTO to the property that is bound to the view
-            this.SelectedFieldSystemComponentDto = fieldComponentDto;
-
-            // Try to restore previously saved UI state
-            var savedState = _fieldComponentService.GetUIState(_selectedFieldSystemComponent.Guid);
-            ICropDto selectedCrop = null;
-
-            // If there are any crops associated with the field, select based on saved state or default logic
-            if (this.SelectedFieldSystemComponentDto?.CropDtos?.Any() == true)
-            {
-                // First, try to restore the previously selected crop from saved state
-                if (savedState?.SelectedCropGuid.HasValue == true)
-                {
-                    selectedCrop = this.SelectedFieldSystemComponentDto.CropDtos
-                        .FirstOrDefault(dto => dto.Guid == savedState.SelectedCropGuid.Value);
-                    
-                    _logger?.LogDebug("Restored selected crop from saved state: {CropGuid}", savedState.SelectedCropGuid.Value);
-                }
-
-                // If no saved state or saved crop not found, use default logic
-                if (selectedCrop == null)
-                {
-                    // Check if we can restore last selected item (legacy fallback)
-                    if (this.SelectedCropDto != null && this.SelectedFieldSystemComponentDto.CropDtos.Contains(this.SelectedCropDto))
-                    {
-                        selectedCrop = this.SelectedCropDto;
-                    }
-                    else
-                    {
-                        selectedCrop = this.SelectedFieldSystemComponentDto.CropDtos.First();
-                    }
-                }
-
-                this.SelectedCropDto = selectedCrop;
-            }
-            else
-            {
-                // There are no crops associated with this field, add a new one
-                this.AddCropDto();
-            }
-
-            // Hold a reference to the selected crop view item
-            if (this.SelectedCropDto != null)
-            {
-                _selectedCropViewItem = _fieldComponentService.GetCropViewItemFromDto(this.SelectedCropDto, _selectedFieldSystemComponent);
-            }
-
-            this.AddCropCommand.RaiseCanExecuteChanged();
-        }
+        FinalizeInitialization();
     }
 
     /// <summary>
@@ -249,6 +196,46 @@ public class FieldComponentViewModel : ViewModelBase
     #endregion
 
     #region Private Methods
+
+    /// <summary>
+    /// Initializes the selected crop based on existing crops or creates a new one
+    /// </summary>
+    private void InitializeSelectedCrop()
+    {
+        var selectedCrop = DetermineSelectedCrop();
+
+        if (selectedCrop != null)
+        {
+            this.SelectedCropDto = selectedCrop;
+        }
+        else
+        {
+            // There are no crops associated with this field, add a new one
+            this.AddCropDto();
+        }
+
+        // Hold a reference to the selected crop view item
+        UpdateSelectedCropViewItem();
+    }
+
+    /// <summary>
+    /// Initializes the field component and sets up event handlers
+    /// </summary>
+    /// <param name="fieldSystemComponent">The field component to initialize</param>
+    private void InitializeFieldComponent(FieldSystemComponent fieldSystemComponent)
+    {
+        // Hold a reference to the selected field system object
+        _selectedFieldSystemComponent = fieldSystemComponent;
+
+        // Build a DTO to represent the model/domain object
+        var fieldComponentDto = _fieldComponentService.TransferToFieldComponentDto(_selectedFieldSystemComponent);
+
+        // Listen for changes on the DTO
+        fieldComponentDto.PropertyChanged += FieldSystemComponentDtoOnPropertyChanged;
+
+        // Assign the DTO to the property that is bound to the view
+        this.SelectedFieldSystemComponentDto = fieldComponentDto;
+    }
 
     /// <summary>
     /// A user can add a crop under any condition
@@ -395,6 +382,26 @@ public class FieldComponentViewModel : ViewModelBase
         }
     }
 
+
+    /// <summary>
+    /// Determines which crop should be selected based on saved state and existing crops
+    /// </summary>
+    /// <returns>The crop DTO to select, or null if no existing crops should be selected</returns>
+    private ICropDto DetermineSelectedCrop()
+    {
+        // If there are no crops associated with the field, return null to trigger AddCropDto
+        if (this.SelectedFieldSystemComponentDto?.CropDtos?.Any() != true)
+            return null;
+
+        var savedState = _fieldComponentService.GetUIState(_selectedFieldSystemComponent.Guid);
+
+        // First, try to restore the previously selected crop from saved state
+        var selectedCrop = TryRestoreFromSavedState(savedState);
+
+        // If no saved state or saved crop not found, use default logic
+        return selectedCrop ?? GetDefaultSelectedCrop();
+    }
+
     /// <summary>
     /// Adds a new <see cref="CropDto"/> to the <see cref="SelectedFieldSystemComponentDto"/> property
     /// Used in both the <see cref="OnAddCropExecute(object)"/> and in the <see cref="InitializeViewModel(ComponentBase)"/> methods
@@ -490,6 +497,66 @@ public class FieldComponentViewModel : ViewModelBase
                 // Don't rethrow - state saving shouldn't break disposal
             }
         }
+    }
+
+    /// <summary>
+    /// Attempts to restore the selected crop from saved UI state
+    /// </summary>
+    /// <param name="savedState">The saved UI state</param>
+    /// <returns>The restored crop DTO, or null if not found</returns>
+    private ICropDto TryRestoreFromSavedState(FieldComponentUIState savedState)
+    {
+        if (savedState?.SelectedCropGuid.HasValue == true)
+        {
+            var restoredCrop = this.SelectedFieldSystemComponentDto.CropDtos
+                .FirstOrDefault(dto => dto.Guid == savedState.SelectedCropGuid.Value);
+
+            if (restoredCrop != null)
+            {
+                _logger?.LogDebug("Restored selected crop from saved state: {CropGuid}", savedState.SelectedCropGuid.Value);
+                return restoredCrop;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Gets the default selected crop using fallback logic
+    /// </summary>
+    /// <returns>The default crop DTO to select</returns>
+    private ICropDto GetDefaultSelectedCrop()
+    {
+        // Check if we can restore last selected item (legacy fallback)
+        if (this.SelectedCropDto != null &&
+            this.SelectedFieldSystemComponentDto.CropDtos.Contains(this.SelectedCropDto))
+        {
+            return this.SelectedCropDto;
+        }
+
+        // Default to first crop
+        return this.SelectedFieldSystemComponentDto.CropDtos.First();
+    }
+
+    /// <summary>
+    /// Updates the selected crop view item based on the current SelectedCropDto
+    /// </summary>
+    private void UpdateSelectedCropViewItem()
+    {
+        if (this.SelectedCropDto != null)
+        {
+            _selectedCropViewItem = _fieldComponentService.GetCropViewItemFromDto(
+                this.SelectedCropDto,
+                _selectedFieldSystemComponent);
+        }
+    }
+
+    /// <summary>
+    /// Finalizes the initialization process
+    /// </summary>
+    private void FinalizeInitialization()
+    {
+        this.AddCropCommand.RaiseCanExecuteChanged();
     }
 
     #endregion

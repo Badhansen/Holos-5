@@ -269,6 +269,36 @@ namespace H.Avalonia.ViewModels
             }
         }
 
+        protected ViewModelBase(IRegionManager regionManager, INotificationManagerService notificationManager, IStorageService storageService) : this()
+        {
+            if (regionManager != null)
+            {
+                this.RegionManager = regionManager;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(regionManager));
+            }
+
+            if (notificationManager != null)
+            {
+                this.NotificationManager = notificationManager;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(notificationManager));
+            }
+
+            if (storageService != null)
+            {
+                this.StorageService = storageService;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(storageService));
+            }
+        }
+
         #endregion
 
         #region Properties

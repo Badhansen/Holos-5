@@ -13,6 +13,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using H.Avalonia.Services;
+using H.Core.Services.StorageService;
 
 namespace H.Avalonia.ViewModels.Results
 {
@@ -36,7 +37,7 @@ namespace H.Avalonia.ViewModels.Results
 
         public ClimateResultsViewModel() { }
 
-        public ClimateResultsViewModel(IRegionManager regionManager, INotificationManagerService notificationManager, ExportHelpers exportHelpers) : base(regionManager, notificationManager)
+        public ClimateResultsViewModel(IRegionManager regionManager, INotificationManagerService notificationManager, ExportHelpers exportHelpers, IStorageService storageService) : base(regionManager, notificationManager, storageService)
         {
             _regionManager = regionManager;
             _exportHelpers = exportHelpers;

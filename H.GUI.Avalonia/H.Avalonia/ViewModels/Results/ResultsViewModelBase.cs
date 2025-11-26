@@ -1,4 +1,5 @@
 ﻿using H.Avalonia.Services;
+using H.Core.Services.StorageService;
 using Prism.Regions;
 using Prism.Commands;
 
@@ -15,6 +16,10 @@ namespace H.Avalonia.ViewModels.Results
         }
 
         protected ResultsViewModelBase(IRegionManager regionManager, INotificationManagerService notificationManager) : base(regionManager, notificationManager)
+        {
+        }
+
+        protected ResultsViewModelBase(IRegionManager regionManager, INotificationManagerService notificationManager, IStorageService storageService) : base(regionManager, notificationManager, storageService)
         {
         }
 

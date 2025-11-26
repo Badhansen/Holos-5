@@ -100,6 +100,28 @@ namespace H.Avalonia.ViewModels.FarmCreationViews
 
         #endregion
 
+        #region Protected Methods
+
+        /// <summary>
+        /// Override this method to provide specific cleanup logic for FarmCreationViewModel resources
+        /// </summary>
+        protected override void CleanupResources()
+        {
+            // Always call base implementation first to clean up ViewModelBase resources
+            base.CleanupResources();
+
+            // Clean up DelegateCommand if it implements IDisposable
+            if (NavigateToPreviousPage is IDisposable disposableCommand)
+            {
+                disposableCommand.Dispose();
+            }
+
+            // Clear validation errors for FarmName property if any exist
+            RemoveError(nameof(FarmName));
+        }
+
+        #endregion
+
         #region Private Methods
 
         private void OnNavigateToPreviousPage()

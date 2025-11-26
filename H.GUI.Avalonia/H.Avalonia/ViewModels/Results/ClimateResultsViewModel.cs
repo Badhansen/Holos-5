@@ -31,7 +31,7 @@ namespace H.Avalonia.ViewModels.Results
         /// <summary>
         /// A collection of <see cref="ClimateResultsViewItems"/> that are attached to the climate results page. Each viewitem denotes a row in the grid.
         /// </summary>
-        public ObservableCollection<ClimateResultsViewItem> ClimateResultsViewItems { get; set; } = new();
+        public ObservableCollection<DailyClimateDto> ClimateResultsViewItems { get; set; } = new();
         
 
         public ClimateResultsViewModel() { }
@@ -95,7 +95,7 @@ namespace H.Avalonia.ViewModels.Results
             {
                 for (var currentYear = viewItem.StartYear; currentYear <= viewItem.EndYear; currentYear++)
                 {
-                    var resultItem = new ClimateResultsViewItem
+                    var resultItem = new DailyClimateDto
                     {
                         Year = currentYear,
                         Latitude = viewItem.Latitude,

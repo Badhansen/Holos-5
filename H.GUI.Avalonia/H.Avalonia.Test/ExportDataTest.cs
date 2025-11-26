@@ -20,7 +20,7 @@ namespace H.Avalonia.Test
             _climateResultsViewItemMap = new ClimateResultsViewItemMap();
 
 
-            var item = new ClimateResultsViewItem
+            var item = new DailyClimateDto
             {
                 Year = 1991,
                 TotalPET = 510.10,

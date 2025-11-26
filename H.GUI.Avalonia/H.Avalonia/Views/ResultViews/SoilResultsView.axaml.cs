@@ -5,6 +5,7 @@ using Avalonia.Controls.Notifications;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using H.Avalonia.ViewModels.Results;
 
@@ -12,8 +13,14 @@ namespace H.Avalonia.Views.ResultViews
 {
     public partial class SoilResultsView : UserControl
     {
+        #region Fields
+
+        private Button? _navigationButton;
+
+        #endregion
+
         #region Constructors
-        
+
         public SoilResultsView()
         {
             InitializeComponent();
@@ -45,6 +52,28 @@ namespace H.Avalonia.Views.ResultViews
         #endregion
 
         #region Event Handlers
+
+        private void Button_OnClick(object? sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            if (button == null) return;
+
+            if (_navigationButton != null)
+            {
+                _navigationButton.Background = Brushes.Transparent;
+            }
+            _navigationButton = button;
+            HighlightButton(button);
+        }
+
+        private void HighlightButton(Button button)
+        {
+            button.Background = new SolidColorBrush()
+            {
+                Color = Color.FromRgb(175, 225, 175),
+                Opacity = 0.25,
+            };
+        }
 
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
         {

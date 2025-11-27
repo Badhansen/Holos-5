@@ -13,6 +13,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using H.Avalonia.Services;
+using H.Core.Models.Climate;
 using H.Core.Services.StorageService;
 
 namespace H.Avalonia.ViewModels.Results

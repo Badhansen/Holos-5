@@ -2,6 +2,7 @@ using H.Avalonia.Models.ClassMaps;
 using H.Avalonia.Models.Results;
 using H.Avalonia.ViewModels.Results;
 using H.Avalonia.Infrastructure;
+using H.Core.Models.Climate;
 
 namespace H.Avalonia.Test
 {

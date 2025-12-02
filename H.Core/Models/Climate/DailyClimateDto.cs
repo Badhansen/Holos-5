@@ -5,7 +5,7 @@ namespace H.Core.Models.Climate
     /// <summary>
     /// Contains properties that are tied to the Grid shown for the climate results page.
     /// </summary>
-    public class DailyClimateDto : DtoBase
+    public class DailyClimateDto : DtoBase, IDailyClimateDto
     {
         #region Fields
 

@@ -39,10 +39,8 @@ namespace H.CLI.Test.ComponentTemporaryInputs
         [TestMethod]
         public void TestConvertToComponentProperties_ExpectException_ManureStateType()
         {
-        
             Assert.ThrowsException<FormatException>(() => fieldTempInput.ConvertToComponentProperties("ManureStateType", null, "NotAValidManureStateType", 1, 1, "fileName"));
         }
-        
 
         [TestMethod]
         public void TestConvertToComponentProperties_ExpectException_InvalidManureApplicationType()

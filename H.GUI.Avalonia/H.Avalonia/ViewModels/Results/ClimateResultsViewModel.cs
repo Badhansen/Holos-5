@@ -13,6 +13,8 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using H.Avalonia.Services;
+using H.Core.Models.Climate;
+using H.Core.Services.StorageService;
 
 namespace H.Avalonia.ViewModels.Results
 {
@@ -27,18 +29,16 @@ namespace H.Avalonia.ViewModels.Results
         private readonly ExportHelpers _exportHelpers;
         private readonly ClimateResultsViewItemMap _climateResultsViewItemMap;
         private CancellationTokenSource _cancellationTokenSource;
-
-        
         
         /// <summary>
         /// A collection of <see cref="ClimateResultsViewItems"/> that are attached to the climate results page. Each viewitem denotes a row in the grid.
         /// </summary>
-        public ObservableCollection<ClimateResultsViewItem> ClimateResultsViewItems { get; set; } = new();
+        public ObservableCollection<DailyClimateDto> ClimateResultsViewItems { get; set; } = new();
         
 
         public ClimateResultsViewModel() { }
 
-        public ClimateResultsViewModel(IRegionManager regionManager, INotificationManagerService notificationManager, ExportHelpers exportHelpers) : base(regionManager, notificationManager)
+        public ClimateResultsViewModel(IRegionManager regionManager, INotificationManagerService notificationManager, ExportHelpers exportHelpers, IStorageService storageService) : base(regionManager, notificationManager, storageService)
         {
             _regionManager = regionManager;
             _exportHelpers = exportHelpers;
@@ -97,7 +97,7 @@ namespace H.Avalonia.ViewModels.Results
             {
                 for (var currentYear = viewItem.StartYear; currentYear <= viewItem.EndYear; currentYear++)
                 {
-                    var resultItem = new ClimateResultsViewItem
+                    var resultItem = new DailyClimateDto
                     {
                         Year = currentYear,
                         Latitude = viewItem.Latitude,
@@ -214,5 +214,57 @@ namespace H.Avalonia.ViewModels.Results
             await monthlyPPT;
             return result;
         }
+
+        #region Protected Methods
+
+        /// <summary>
+        /// Override this method to provide specific cleanup logic for ClimateResultsViewModel resources
+        /// </summary>
+        protected override void CleanupResources()
+        {
+            // Always call base implementation first to clean up ResultsViewModelBase resources
+            base.CleanupResources();
+
+            // Cancel and dispose of CancellationTokenSource if it exists
+            try
+            {
+                _cancellationTokenSource?.Cancel();
+                _cancellationTokenSource?.Dispose();
+            }
+            catch (ObjectDisposedException)
+            {
+                // Token source may already be disposed, ignore this exception
+            }
+
+            // Clear and dispose of ObservableCollection
+            ClimateResultsViewItems?.Clear();
+
+            // Clean up commands if they implement IDisposable
+            if (GoBackCommand is IDisposable disposableGoBackCommand)
+            {
+                disposableGoBackCommand.Dispose();
+            }
+
+            if (ExportToCsvCommand is IDisposable disposableExportCommand)
+            {
+                disposableExportCommand.Dispose();
+            }
+
+            // Dispose of provider if it implements IDisposable
+            if (_nasaClimateProvider is IDisposable disposableProvider)
+            {
+                disposableProvider.Dispose();
+            }
+
+            if (_exportHelpers is IDisposable disposableExportHelpers)
+            {
+                disposableExportHelpers.Dispose();
+            }
+
+            // Clear navigation journal reference
+            _navigationJournal = null;
+        }
+
+        #endregion
     }
 }

@@ -85,6 +85,10 @@ namespace H.Core.Calculators.UnitsOfMeasurement
         private const double BTUperKcal = 0.2521644;
         private const double MegaJulesToBTUFactor = 947.817;
 
+        // Solar radiation conversion: 1 MJ/m²/day = 88.055 BTU/ft²/day
+        // TODO: verify this conversion factor
+        private const double MegaJoulesPerSquareMeterPerDayToBTUPerSquareFootPerDayFactor = 88.055;
+
         private const double QuartsPerLitre = 0.8799;
 
         // reference -> https://www.nrcan.gc.ca/energy/international/nacei/18057
@@ -480,6 +484,9 @@ namespace H.Core.Calculators.UnitsOfMeasurement
                 case MetricUnitsOfMeasurement.DegreesCelsius:
                     return (value * 9.0 / 5.0) + 32.0;
 
+                case MetricUnitsOfMeasurement.MegaJoulesPerSquareMeterPerDay:
+                    return value * MegaJoulesPerSquareMeterPerDayToBTUPerSquareFootPerDayFactor;
+
                 case MetricUnitsOfMeasurement.MegaJoulesPerKilogram:
                     return value / KgToLbsFactor * JoulesPerMJ / JoulesPerBTU;
 
@@ -679,6 +686,9 @@ namespace H.Core.Calculators.UnitsOfMeasurement
                 case ImperialUnitsOfMeasurement.DegreesFahrenheit:
                     return (value - 32.0) * 5.0 / 9.0;
 
+                case ImperialUnitsOfMeasurement.BTUPerSquareFootPerDay:
+                    return value / MegaJoulesPerSquareMeterPerDayToBTUPerSquareFootPerDayFactor;
+
                 case ImperialUnitsOfMeasurement.BritishThermalUnitPerPound:
                     switch (originalUnit)
                     {
@@ -865,6 +875,9 @@ namespace H.Core.Calculators.UnitsOfMeasurement
 
                 case MetricUnitsOfMeasurement.DegreesCelsius:
                     return ImperialUnitsOfMeasurement.DegreesFahrenheit;
+
+                case MetricUnitsOfMeasurement.MegaJoulesPerSquareMeterPerDay:
+                    return ImperialUnitsOfMeasurement.BTUPerSquareFootPerDay;
 
                 case MetricUnitsOfMeasurement.MegaJoulesPerKilogram:
                     return ImperialUnitsOfMeasurement.BritishThermalUnitPerPound;
@@ -1077,6 +1090,9 @@ namespace H.Core.Calculators.UnitsOfMeasurement
 
                 case ImperialUnitsOfMeasurement.DegreesFahrenheit:
                     return MetricUnitsOfMeasurement.DegreesCelsius;
+
+                case ImperialUnitsOfMeasurement.BTUPerSquareFootPerDay:
+                    return MetricUnitsOfMeasurement.MegaJoulesPerSquareMeterPerDay;
 
                 case ImperialUnitsOfMeasurement.BritishThermalUnitPerPound:
                     return MetricUnitsOfMeasurement.MegaJoulesPerKilogram;

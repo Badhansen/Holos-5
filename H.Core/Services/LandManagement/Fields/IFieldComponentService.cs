@@ -1,4 +1,6 @@
-﻿using H.Core.Factories;
+﻿using System;
+using System.Collections.Generic;
+using H.Core.Factories;
 using H.Core.Factories.Crops;
 using H.Core.Models;
 using H.Core.Models.LandManagement.Fields;
@@ -92,4 +94,25 @@ public interface IFieldComponentService
     void RemoveCropFromSystem(FieldSystemComponent fieldSystemComponent, ICropDto cropDto);
 
     CropViewItem GetCropViewItemFromDto(ICropDto cropDto, FieldSystemComponent fieldSystemComponent);
+
+    /// <summary>
+    /// Saves the UI state for a field component to preserve across ViewModel disposal cycles
+    /// </summary>
+    /// <param name="fieldComponentGuid">The GUID of the field component</param>
+    /// <param name="selectedCropGuid">The GUID of the currently selected crop</param>
+    /// <param name="additionalState">Additional UI state to preserve</param>
+    void SaveUIState(Guid fieldComponentGuid, Guid? selectedCropGuid, Dictionary<string, object> additionalState = null);
+
+    /// <summary>
+    /// Retrieves previously saved UI state for a field component
+    /// </summary>
+    /// <param name="fieldComponentGuid">The GUID of the field component</param>
+    /// <returns>The saved UI state, or null if not found</returns>
+    FieldComponentUIState GetUIState(Guid fieldComponentGuid);
+
+    /// <summary>
+    /// Clears old UI state entries to prevent memory growth
+    /// </summary>
+    /// <param name="maxAge">Maximum age of state entries to keep (default: 1 hour)</param>
+    void CleanupOldUIState(TimeSpan? maxAge = null);
 }

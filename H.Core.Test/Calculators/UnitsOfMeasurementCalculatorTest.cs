@@ -584,5 +584,35 @@ namespace H.Core.Test.Calculators
 
             Assert.IsTrue(calculatorInstance.IsMetric);
         }
+
+        //50 MJ/m²/day * 88.055 = 4402.75 BTU/ft²/day
+        [TestMethod]
+        public void ConverterValueToImperialFromMetric_MegaJoulesPerSquareMeterPerDayToBTUPerSquareFootPerDay()
+        {
+            var convertedValue = _calculator.ConvertValueToImperialFromMetric(MetricUnitsOfMeasurement.MegaJoulesPerSquareMeterPerDay, 50.0);
+            Assert.AreEqual(4402.75, convertedValue);
+        }
+
+        [TestMethod]
+        public void GetImperialUnitsFromMegaJoulesPerSquareMeterPerDay()
+        {
+            var btuPerSquareFootPerDay = _calculator.GetImperialUnitsOfMeasurement(MetricUnitsOfMeasurement.MegaJoulesPerSquareMeterPerDay);
+            Assert.AreEqual(ImperialUnitsOfMeasurement.BTUPerSquareFootPerDay, btuPerSquareFootPerDay);
+        }
+
+        //4402.75 BTU/ft²/day / 88.055 = 50.0 MJ/m²/day
+        [TestMethod]
+        public void ConverterValueToMetricFromImperial_BTUPerSquareFootPerDayToMegaJoulesPerSquareMeterPerDay()
+        {
+            var convertedValue = _calculator.ConvertValueToMetricFromImperial(ImperialUnitsOfMeasurement.BTUPerSquareFootPerDay, 4402.75);
+            Assert.AreEqual(50.0, Math.Round(convertedValue, 1));
+        }
+
+        [TestMethod]
+        public void GetMetricUnitsFromBTUPerSquareFootPerDay()
+        {
+            var megaJoulesPerSquareMeterPerDay = _calculator.GetMetricUnitsOfMeasurement(ImperialUnitsOfMeasurement.BTUPerSquareFootPerDay);
+            Assert.AreEqual(MetricUnitsOfMeasurement.MegaJoulesPerSquareMeterPerDay, megaJoulesPerSquareMeterPerDay);
+        }
     }
 }

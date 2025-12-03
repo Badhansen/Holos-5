@@ -482,6 +482,51 @@ namespace H.Avalonia.ViewModels.OptionsViews.DataTransferObjects
                 return true;
             }
         }
+
+        #endregion
+
+        #region Protected Methods
+
+        /// <summary>
+        /// Override this method to provide specific cleanup logic for UserSettingsDTO resources
+        /// </summary>
+        protected override void CleanupResources()
+        {
+            // Always call base implementation first to clean up ViewModelBase resources
+            base.CleanupResources();
+
+            // Clear and dispose of ObservableCollection objects
+            _carbonModellingStrategiesList?.Clear();
+            _carbonModellingStrategiesList = null;
+
+            _equilibriumCalculationStrategiesList?.Clear();
+            _equilibriumCalculationStrategiesList = null;
+
+            _runInPeriodTillageList?.Clear();
+            _runInPeriodTillageList = null;
+
+            _pumpTypeList?.Clear();
+            _pumpTypeList = null;
+
+            // Clear validation errors for all validated properties
+            RemoveError(nameof(CustomN2OEmissionFactor));
+            RemoveError(nameof(EmissionFactorForLeachingAndRunoff));
+            RemoveError(nameof(EmissionFactorForVolatilization));
+            RemoveError(nameof(DefaultSupplementalFeedingLossPercentage));
+            RemoveError(nameof(PercentageOfStrawReturnedToSoilForRootCrops));
+            RemoveError(nameof(PercentageOfProductReturnedToSoilForRootCrops));
+            RemoveError(nameof(PercentageOfRootsReturnedToSoilForPerennials));
+            RemoveError(nameof(PercentageOfProductReturnedToSoilForPerennials));
+            RemoveError(nameof(PercentageOfRootsReturnedToSoilForFodderCorn));
+            RemoveError(nameof(PercentageOfProductReturnedToSoilForFodderCorn));
+            RemoveError(nameof(PercentageOfRootsReturnedToSoilForAnnuals));
+            RemoveError(nameof(DefaultRunInPeriod));
+            RemoveError(nameof(PercentageOfProductReturnedToSoilForAnnuals));
+            RemoveError(nameof(PercentageOfStrawReturnedToSoilForAnnuals));
+            RemoveError(nameof(CustomEquilibriumCarbonValue));
+            RemoveError(nameof(CarbonConcentration));
+        }
+
         #endregion
     }
 }

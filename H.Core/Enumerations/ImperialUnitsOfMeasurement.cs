@@ -244,5 +244,8 @@ namespace H.Core.Enumerations
 
         [LocalizedDescription("PoundsN2ONPerField", typeof(Resources))]
         PoundsN2ONPerField,
+
+        [LocalizedDescription("BTUPerSquareFootPerDay", typeof(Resources))]
+        BTUPerSquareFootPerDay,
     }
 }

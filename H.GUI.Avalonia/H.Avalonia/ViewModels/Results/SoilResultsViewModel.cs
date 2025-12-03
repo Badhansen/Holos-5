@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using H.Avalonia.Views.ComponentViews;
 using System.Linq;
 using H.Avalonia.Services;
+using H.Avalonia.Views;
 
 namespace H.Avalonia.ViewModels.Results
 {
@@ -52,6 +53,7 @@ namespace H.Avalonia.ViewModels.Results
             ExportToCsvCommand = new DelegateCommand<object>(OnExportToCsv);
             _soilResultsViewItemMap = new SoilResultsViewItemMap();
             this.ChooseSelectedSoilCommand = new DelegateCommand(OnChooseSelectedSoilExecute);
+            SwitchToClimateViewCommand = new DelegateCommand(OnClickSwitchToClimateView);
         }
 
         #endregion
@@ -74,6 +76,12 @@ namespace H.Avalonia.ViewModels.Results
         /// Allows the user to select which soil they want to use as a <see cref="Farm"/>-level default
         /// </summary>
         public DelegateCommand ChooseSelectedSoilCommand { get; set; }
+
+
+        /// <summary>
+        /// A command that helps switch the view to <see cref="ClimateDataView"/>
+        /// </summary>
+        public DelegateCommand SwitchToClimateViewCommand { get; set; } = null!;
 
         #endregion
 
@@ -214,6 +222,11 @@ namespace H.Avalonia.ViewModels.Results
             var view = this.RegionManager.Regions[UiRegions.ContentRegion].ActiveViews.Single();
             this.RegionManager.Regions[UiRegions.ContentRegion].Deactivate(view);
             this.RegionManager.Regions[UiRegions.ContentRegion].Remove(view);
+        }
+
+        private void OnClickSwitchToClimateView()
+        {
+            this.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(ClimateDataView));
         }
 
         #endregion

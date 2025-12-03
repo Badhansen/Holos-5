@@ -1,4 +1,6 @@
-﻿using H.Core.Factories;
+﻿using H.Core.CustomAttributes;
+using H.Core.Enumerations;
+using H.Core.Factories;
 
 namespace H.Core.Models.Climate
 {
@@ -58,6 +60,7 @@ namespace H.Core.Models.Climate
         /// <summary>
         /// The evapotranspiration amount for the given year.
         /// </summary>
+        [Units(MetricUnitsOfMeasurement.Millimeters)]
         public double TotalPET
         {
             get => _totalPET;
@@ -67,6 +70,7 @@ namespace H.Core.Models.Climate
         /// <summary>
         /// The total precipitation amount for the given year.
         /// </summary>
+        [Units(MetricUnitsOfMeasurement.Millimeters)]
         public double TotalPPT
         {
             get => _totalPPT;
@@ -76,6 +80,7 @@ namespace H.Core.Models.Climate
         /// <summary>
         /// A monthly precipitation amount for a range of months specified by the user.
         /// </summary>
+        [Units(MetricUnitsOfMeasurement.Millimeters)]
         public double MonthlyPPT
         {
             get => _monthlyPPT;

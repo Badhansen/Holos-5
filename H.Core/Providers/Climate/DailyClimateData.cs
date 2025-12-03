@@ -1,5 +1,7 @@
-﻿using System;
+﻿using H.Core.CustomAttributes;
+using H.Core.Enumerations;
 using H.Infrastructure;
+using System;
 
 namespace H.Core.Providers.Climate
 {
@@ -14,23 +16,28 @@ namespace H.Core.Providers.Climate
         /// <summary>
         /// (degrees C)
         /// </summary>
+        [Units(MetricUnitsOfMeasurement.DegreesCelsius)]
         public double MeanDailyAirTemperature { get; set; }
 
         /// <summary>
         /// (mm)
         /// </summary>
+        [Units(MetricUnitsOfMeasurement.Millimeters)]
         public double MeanDailyPrecipitation { get; set; }
 
         /// <summary>
         /// (mm)
         /// </summary>
+        [Units(MetricUnitsOfMeasurement.Millimeters)]
         public double MeanDailyPET { get; set; }
 
+        [Units(MetricUnitsOfMeasurement.Percentage)]
         public double RelativeHumidity { get; set; }
 
         /// <summary>
         /// (MJ m^-2 day^-1)
         /// </summary>
+        [Units(MetricUnitsOfMeasurement.MegaJoulesPerSquareMeterPerDay)]
         public double SolarRadiation { get; set; }
 
         public DateTime Date { get;  set; }

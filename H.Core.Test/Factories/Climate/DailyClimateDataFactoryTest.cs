@@ -78,8 +78,8 @@ namespace H.Core.Test.Factories.Climate
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(2023, result.Year);
-            Assert.AreEqual(4.7, result.TotalPET);
-            Assert.AreEqual(2.3, result.TotalPPT);
+            Assert.AreEqual(4.7, result.MeanDailyEvapotranspiration);
+            Assert.AreEqual(2.3, result.MeanDailyPrecipitation);
         }
 
         [TestMethod]
@@ -130,8 +130,8 @@ namespace H.Core.Test.Factories.Climate
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(-5, result.Year);
-            Assert.AreEqual(-2.0, result.TotalPET);
-            Assert.AreEqual(-1.0, result.TotalPPT);
+            Assert.AreEqual(-2.0, result.MeanDailyEvapotranspiration);
+            Assert.AreEqual(-1.0, result.MeanDailyPrecipitation);
         }
 
         [TestMethod]
@@ -156,8 +156,8 @@ namespace H.Core.Test.Factories.Climate
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(int.MaxValue, result.Year);
-            Assert.AreEqual(double.MaxValue, result.TotalPET);
-            Assert.AreEqual(double.MaxValue, result.TotalPPT);
+            Assert.AreEqual(double.MaxValue, result.MeanDailyEvapotranspiration);
+            Assert.AreEqual(double.MaxValue, result.MeanDailyPrecipitation);
         }
 
         [TestMethod]
@@ -227,8 +227,8 @@ namespace H.Core.Test.Factories.Climate
             Assert.IsNotNull(result);
             // Verify only the properties that should be mapped are set
             Assert.AreEqual(2023, result.Year);
-            Assert.AreEqual(7.2, result.TotalPET);
-            Assert.AreEqual(10.5, result.TotalPPT);
+            Assert.AreEqual(7.2, result.MeanDailyEvapotranspiration);
+            Assert.AreEqual(10.5, result.MeanDailyPrecipitation);
             
             // Verify that other properties of the DTO maintain their default values
             Assert.AreEqual(0, result.Latitude);

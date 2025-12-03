@@ -10,8 +10,8 @@ public class DailyClimateDataToDailyClimateDtoMapper : Profile
     {
         CreateMap<DailyClimateData, DailyClimateDto>()
             .ForMember(dest => dest.Year, opt => opt.MapFrom(src => src.Year))
-            .ForMember(dest => dest.TotalPET, opt => opt.MapFrom(src => src.MeanDailyPET))
-            .ForMember(dest => dest.TotalPPT, opt => opt.MapFrom(src => src.MeanDailyPrecipitation))
+            .ForMember(dest => dest.MeanDailyEvapotranspiration, opt => opt.MapFrom(src => src.MeanDailyPET))
+            .ForMember(dest => dest.MeanDailyPrecipitation, opt => opt.MapFrom(src => src.MeanDailyPrecipitation))
             .ForMember(dest => dest.Latitude, opt => opt.Ignore())
             .ForMember(dest => dest.Longitude, opt => opt.Ignore())
             .ForMember(dest => dest.MonthlyPPT, opt => opt.Ignore());

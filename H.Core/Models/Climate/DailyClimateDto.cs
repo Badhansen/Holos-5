@@ -16,7 +16,10 @@ namespace H.Core.Models.Climate
         private double _totalPPT;
         private double _monthlyPPT;
         private double _longitude;
-        private double _latitude; 
+        private double _latitude;
+
+        private double _meanDailyPrecipitation;
+        private double _meanDailyEvapotranspiration;
 
         #endregion
 
@@ -85,7 +88,21 @@ namespace H.Core.Models.Climate
         {
             get => _monthlyPPT;
             set => SetProperty(ref _monthlyPPT, value);
-        } 
+        }
+
+        [Units(MetricUnitsOfMeasurement.Millimeters)]
+        public double MeanDailyPrecipitation
+        {
+            get => _meanDailyPrecipitation;
+            set => SetProperty(ref _meanDailyPrecipitation, value);
+        }
+
+        [Units(MetricUnitsOfMeasurement.Millimeters)]
+        public double MeanDailyEvapotranspiration
+        {
+            get => _meanDailyEvapotranspiration;
+            set => SetProperty(ref _meanDailyEvapotranspiration, value);
+        }
 
         #endregion
     }

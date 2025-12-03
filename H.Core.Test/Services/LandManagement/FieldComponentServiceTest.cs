@@ -265,6 +265,294 @@ public class FieldComponentServiceTest
         Assert.AreEqual("Test Crop", dto.Name);
     }
 
+    #region ConvertCropViewItemsToDtoCollection Tests
+
+    [TestMethod]
+    public void ConvertCropViewItemsToDtoCollection_WithEmptyCollection_ClearsDtoCollection()
+    {
+        // Arrange: field component with no crop view items and field DTO with some existing DTOs
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            CropViewItems = new ObservableCollection<CropViewItem>() 
+        };
+        var fieldComponentDto = new FieldSystemComponentDto() 
+        { 
+            CropDtos = new ObservableCollection<ICropDto> 
+            { 
+                new CropDto(), 
+                new CropDto() 
+            } 
+        };
+
+        // Act: convert empty crop view items to DTO collection
+        _fieldComponentService.ConvertCropViewItemsToDtoCollection(fieldComponent, fieldComponentDto);
+
+        // Assert: DTO collection should be cleared and remain empty
+        Assert.AreEqual(0, fieldComponentDto.CropDtos.Count);
+        Assert.IsFalse(fieldComponentDto.CropDtos.Any());
+    }
+
+    [TestMethod]
+    public void ConvertCropViewItemsToDtoCollection_WithSingleItem_CreatesOneDto()
+    {
+        // Arrange: field component with one crop view item
+        var cropViewItem = new CropViewItem() 
+        { 
+            Guid = Guid.NewGuid(), 
+            Name = "Test Crop", 
+            CropType = CropType.Wheat 
+        };
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            CropViewItems = new ObservableCollection<CropViewItem> { cropViewItem } 
+        };
+        var fieldComponentDto = new FieldSystemComponentDto() 
+        { 
+            CropDtos = new ObservableCollection<ICropDto>() 
+        };
+
+        var expectedDto = new CropDto() 
+        { 
+            Guid = cropViewItem.Guid, 
+            Name = cropViewItem.Name, 
+            CropType = cropViewItem.CropType 
+        };
+
+        // Mock the crop factory to return a specific DTO when called with the crop view item
+        _mockCropFactory.Setup(x => x.CreateCropDto(cropViewItem)).Returns(expectedDto);
+
+        // Act: convert the single crop view item to DTO
+        _fieldComponentService.ConvertCropViewItemsToDtoCollection(fieldComponent, fieldComponentDto);
+
+        // Assert: exactly one DTO should be created and added to the collection
+        Assert.AreEqual(1, fieldComponentDto.CropDtos.Count);
+        Assert.AreSame(expectedDto, fieldComponentDto.CropDtos[0]);
+        _mockCropFactory.Verify(x => x.CreateCropDto(cropViewItem), Times.Once);
+    }
+
+    [TestMethod]
+    public void ConvertCropViewItemsToDtoCollection_WithMultipleItems_CreatesCorrespondingDtos()
+    {
+        // Arrange: field component with multiple crop view items
+        var cropViewItem1 = new CropViewItem() 
+        { 
+            Guid = Guid.NewGuid(), 
+            Name = "Wheat Crop", 
+            CropType = CropType.Wheat 
+        };
+        var cropViewItem2 = new CropViewItem() 
+        { 
+            Guid = Guid.NewGuid(), 
+            Name = "Barley Crop", 
+            CropType = CropType.Barley 
+        };
+        var cropViewItem3 = new CropViewItem() 
+        { 
+            Guid = Guid.NewGuid(), 
+            Name = "Oats Crop", 
+            CropType = CropType.Oats 
+        };
+
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            CropViewItems = new ObservableCollection<CropViewItem> 
+            { 
+                cropViewItem1, 
+                cropViewItem2, 
+                cropViewItem3 
+            } 
+        };
+        var fieldComponentDto = new FieldSystemComponentDto() 
+        { 
+            CropDtos = new ObservableCollection<ICropDto>() 
+        };
+
+        var expectedDto1 = new CropDto() { Guid = cropViewItem1.Guid, Name = cropViewItem1.Name };
+        var expectedDto2 = new CropDto() { Guid = cropViewItem2.Guid, Name = cropViewItem2.Name };
+        var expectedDto3 = new CropDto() { Guid = cropViewItem3.Guid, Name = cropViewItem3.Name };
+
+        // Mock the crop factory to return specific DTOs for each crop view item
+        _mockCropFactory.Setup(x => x.CreateCropDto(cropViewItem1)).Returns(expectedDto1);
+        _mockCropFactory.Setup(x => x.CreateCropDto(cropViewItem2)).Returns(expectedDto2);
+        _mockCropFactory.Setup(x => x.CreateCropDto(cropViewItem3)).Returns(expectedDto3);
+
+        // Act: convert all crop view items to DTOs
+        _fieldComponentService.ConvertCropViewItemsToDtoCollection(fieldComponent, fieldComponentDto);
+
+        // Assert: exactly three DTOs should be created in the correct order
+        Assert.AreEqual(3, fieldComponentDto.CropDtos.Count);
+        Assert.AreSame(expectedDto1, fieldComponentDto.CropDtos[0]);
+        Assert.AreSame(expectedDto2, fieldComponentDto.CropDtos[1]);
+        Assert.AreSame(expectedDto3, fieldComponentDto.CropDtos[2]);
+        
+        // Verify factory was called for each view item
+        _mockCropFactory.Verify(x => x.CreateCropDto(cropViewItem1), Times.Once);
+        _mockCropFactory.Verify(x => x.CreateCropDto(cropViewItem2), Times.Once);
+        _mockCropFactory.Verify(x => x.CreateCropDto(cropViewItem3), Times.Once);
+    }
+
+    [TestMethod]
+    public void ConvertCropViewItemsToDtoCollection_ClearsExistingDtos_BeforeAddingNew()
+    {
+        // Arrange: field DTO already contains some DTOs, field component has one view item
+        var existingDto1 = new CropDto() { Guid = Guid.NewGuid(), Name = "Existing 1" };
+        var existingDto2 = new CropDto() { Guid = Guid.NewGuid(), Name = "Existing 2" };
+        
+        var fieldComponentDto = new FieldSystemComponentDto() 
+        { 
+            CropDtos = new ObservableCollection<ICropDto> { existingDto1, existingDto2 } 
+        };
+
+        var newCropViewItem = new CropViewItem() 
+        { 
+            Guid = Guid.NewGuid(), 
+            Name = "New Crop" 
+        };
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            CropViewItems = new ObservableCollection<CropViewItem> { newCropViewItem } 
+        };
+
+        var newDto = new CropDto() { Guid = newCropViewItem.Guid, Name = newCropViewItem.Name };
+        _mockCropFactory.Setup(x => x.CreateCropDto(newCropViewItem)).Returns(newDto);
+
+        // Act: convert crop view items which should clear existing DTOs first
+        _fieldComponentService.ConvertCropViewItemsToDtoCollection(fieldComponent, fieldComponentDto);
+
+        // Assert: only the new DTO should be present, existing DTOs should be cleared
+        Assert.AreEqual(1, fieldComponentDto.CropDtos.Count);
+        Assert.AreSame(newDto, fieldComponentDto.CropDtos[0]);
+        Assert.IsFalse(fieldComponentDto.CropDtos.Contains(existingDto1));
+        Assert.IsFalse(fieldComponentDto.CropDtos.Contains(existingDto2));
+    }
+
+    [TestMethod]
+    public void ConvertCropViewItemsToDtoCollection_PassesCorrectParametersToFactory()
+    {
+        // Arrange: field component with a specific crop view item to verify factory gets correct parameter
+        var cropViewItem = new CropViewItem() 
+        { 
+            Guid = Guid.NewGuid(), 
+            Name = "Parameter Test Crop",
+            CropType = CropType.Barley,
+            Year = 2023,
+            AmountOfIrrigation = 100.5
+        };
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            CropViewItems = new ObservableCollection<CropViewItem> { cropViewItem } 
+        };
+        var fieldComponentDto = new FieldSystemComponentDto() 
+        { 
+            CropDtos = new ObservableCollection<ICropDto>() 
+        };
+
+        var returnedDto = new CropDto();
+        _mockCropFactory.Setup(x => x.CreateCropDto(It.IsAny<CropViewItem>())).Returns(returnedDto);
+
+        // Act: perform the conversion
+        _fieldComponentService.ConvertCropViewItemsToDtoCollection(fieldComponent, fieldComponentDto);
+
+        // Assert: verify factory was called with the exact crop view item instance
+        _mockCropFactory.Verify(x => x.CreateCropDto(It.Is<CropViewItem>(c => 
+            c.Guid == cropViewItem.Guid && 
+            c.Name == cropViewItem.Name && 
+            c.CropType == cropViewItem.CropType &&
+            c.Year == cropViewItem.Year &&
+            c.AmountOfIrrigation == cropViewItem.AmountOfIrrigation)), Times.Once);
+    }
+
+    [TestMethod]
+    public void ConvertCropViewItemsToDtoCollection_WithNullFieldComponent_DoesNotModifyDto()
+    {
+        // Arrange: field DTO with some existing DTOs, null field component
+        var existingDto = new CropDto() { Name = "Existing DTO" };
+        var fieldComponentDto = new FieldSystemComponentDto() 
+        { 
+            CropDtos = new ObservableCollection<ICropDto> { existingDto } 
+        };
+        FieldSystemComponent fieldComponent = null;
+
+        // Act: calling with null field component should not modify the DTO collection
+        _fieldComponentService.ConvertCropViewItemsToDtoCollection(fieldComponent, fieldComponentDto);
+
+        // Assert: DTO collection should remain unchanged when field component is null
+        Assert.AreEqual(1, fieldComponentDto.CropDtos.Count);
+        Assert.AreSame(existingDto, fieldComponentDto.CropDtos[0]);
+        
+        // Verify factory was never called
+        _mockCropFactory.Verify(x => x.CreateCropDto(It.IsAny<CropViewItem>()), Times.Never);
+    }
+
+    [TestMethod]
+    public void ConvertCropViewItemsToDtoCollection_WithNullFieldComponentDto_DoesNotThrow()
+    {
+        // Arrange: valid field component, null field DTO
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            CropViewItems = new ObservableCollection<CropViewItem> { new CropViewItem() } 
+        };
+        IFieldComponentDto fieldComponentDto = null;
+
+        // Act & Assert: calling with null field DTO should not throw due to null check
+        _fieldComponentService.ConvertCropViewItemsToDtoCollection(fieldComponent, fieldComponentDto);
+
+        // Verify factory was never called
+        _mockCropFactory.Verify(x => x.CreateCropDto(It.IsAny<CropViewItem>()), Times.Never);
+    }
+
+    [TestMethod]
+    public void ConvertCropViewItemsToDtoCollection_WithBothParametersNull_DoesNotThrow()
+    {
+        // Arrange: both parameters are null
+        FieldSystemComponent fieldComponent = null;
+        IFieldComponentDto fieldComponentDto = null;
+
+        // Act & Assert: calling with both null parameters should not throw due to null checks
+        _fieldComponentService.ConvertCropViewItemsToDtoCollection(fieldComponent, fieldComponentDto);
+
+        // Verify factory was never called
+        _mockCropFactory.Verify(x => x.CreateCropDto(It.IsAny<CropViewItem>()), Times.Never);
+    }
+
+    [TestMethod]
+    public void ConvertCropViewItemsToDtoCollection_PreservesOrderOfViewItems()
+    {
+        // Arrange: field component with multiple crop view items in specific order
+        var firstItem = new CropViewItem() { Guid = Guid.NewGuid(), Name = "First" };
+        var secondItem = new CropViewItem() { Guid = Guid.NewGuid(), Name = "Second" };
+        var thirdItem = new CropViewItem() { Guid = Guid.NewGuid(), Name = "Third" };
+        
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            CropViewItems = new ObservableCollection<CropViewItem> { firstItem, secondItem, thirdItem } 
+        };
+        var fieldComponentDto = new FieldSystemComponentDto() 
+        { 
+            CropDtos = new ObservableCollection<ICropDto>() 
+        };
+
+        var firstDto = new CropDto() { Name = "First DTO" };
+        var secondDto = new CropDto() { Name = "Second DTO" };
+        var thirdDto = new CropDto() { Name = "Third DTO" };
+
+        // Setup factory to return specific DTOs for each view item to verify order
+        _mockCropFactory.Setup(x => x.CreateCropDto(firstItem)).Returns(firstDto);
+        _mockCropFactory.Setup(x => x.CreateCropDto(secondItem)).Returns(secondDto);
+        _mockCropFactory.Setup(x => x.CreateCropDto(thirdItem)).Returns(thirdDto);
+
+        // Act: convert view items to DTOs
+        _fieldComponentService.ConvertCropViewItemsToDtoCollection(fieldComponent, fieldComponentDto);
+
+        // Assert: DTOs should be added in the same order as their corresponding view items
+        Assert.AreEqual(3, fieldComponentDto.CropDtos.Count);
+        Assert.AreSame(firstDto, fieldComponentDto.CropDtos[0]);
+        Assert.AreSame(secondDto, fieldComponentDto.CropDtos[1]);
+        Assert.AreSame(thirdDto, fieldComponentDto.CropDtos[2]);
+    }
+
+    #endregion
+
     #region GetCropViewItemFromDto Tests
 
     [TestMethod]

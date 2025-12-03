@@ -218,13 +218,20 @@ public class FieldComponentService : ComponentServiceBase, IFieldComponentServic
     /// <param name="fieldComponentDto">Target DTO to receive crop copies.</param>
     public void ConvertCropViewItemsToDtoCollection(FieldSystemComponent fieldSystemComponent, IFieldComponentDto fieldComponentDto)
     {
-        fieldComponentDto.CropDtos.Clear();
-
-        foreach (var cropViewItem in fieldSystemComponent.CropViewItems)
+        if (fieldComponentDto != null && fieldSystemComponent != null)
         {
-            var dto = _cropFactory.CreateCropDto(template: cropViewItem);
+            // Clear stale and outdated crop DTOs before rebuilding from domain objects
+            fieldComponentDto.CropDtos.Clear();
 
-            fieldComponentDto.CropDtos.Add(dto);
+            // Loop through each crop view item in the domain object and create a corresponding DTO
+            foreach (var cropViewItem in fieldSystemComponent.CropViewItems)
+            {
+                // Use the factory to create a new DTO based on the view item template
+                var dto = _cropFactory.CreateCropDto(template: cropViewItem);
+
+                // Add the newly created DTO to the field component DTO's crop collection
+                fieldComponentDto.CropDtos.Add(dto);
+            }
         }
     }
 

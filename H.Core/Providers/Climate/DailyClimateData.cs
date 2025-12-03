@@ -1,8 +1,9 @@
 ﻿using System;
+using H.Infrastructure;
 
 namespace H.Core.Providers.Climate
 {
-    public class DailyClimateData
+    public class DailyClimateData : ModelBase
     {
         #region Properties
 

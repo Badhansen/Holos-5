@@ -22,7 +22,7 @@ namespace H.Core.Services.Climate
         private readonly IDailyClimateDataFactory _dailyClimateDataFactory;
         private readonly ITransferService<DailyClimateData, DailyClimateDto> _climateTransferService;
         private readonly ILogger _logger;
-        private IClimateProvider _climateProvider;
+        private readonly IClimateProvider _climateProvider;
 
         #endregion
 

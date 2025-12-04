@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using H.Avalonia.Services;
 using H.Avalonia.Views.ResultViews;
+using H.Core.Services.Climate;
 using ClimateResultsView = H.Avalonia.Views.ResultViews.ClimateResultsView;
 
 namespace H.Avalonia.ViewModels
@@ -31,6 +32,7 @@ namespace H.Avalonia.ViewModels
         private readonly ImportHelpers _importHelper;
         private readonly ClimateViewItemMap _climateViewItemMap;
         private INotificationManagerService _notificationManager;
+        private IClimateService _climateService;
 
         /// <summary>
         /// Allows navigation from the current view to the <see cref="SoilResultsView"/>.
@@ -84,30 +86,54 @@ namespace H.Avalonia.ViewModels
         }
 
         public ClimateDataViewModel(
-            IRegionManager regionManager, 
+            IRegionManager regionManager,
             ImportHelpers importHelper,
             IDialogService dialogService,
             Storage storage,
-            INotificationManagerService notificationManager) : base(regionManager, notificationManager)
+            INotificationManagerService notificationManager,
+            IClimateService climateService) : base(regionManager, notificationManager)
         {
-            _regionManager = regionManager;
-            _importHelper = importHelper;
-            _dialogService = dialogService;
-            InitializeCommands();
-            _climateViewItemMap = new ClimateViewItemMap();
-
-            base.StoragePlaceholder = storage;
-
-            if (notificationManager != null)
+            if (climateService != null)
             {
-                _notificationManager = notificationManager;
+                _climateService = climateService;
             }
             else
             {
-                throw new ArgumentNullException(nameof(notificationManager));
+                throw new ArgumentNullException(nameof(climateService));
             }
+
+            if (importHelper != null)
+            {
+                _importHelper = importHelper;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(importHelper));
+            }
+
+            if (dialogService != null)
+            {
+                _dialogService = dialogService;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(dialogService));
+            }
+
+            if (storage != null)
+            {
+                this.StoragePlaceholder = storage;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(storage));
+            }
+
+            InitializeCommands();
+
+            _climateViewItemMap = new ClimateViewItemMap();
         }
-        
+
         /// <summary>
         /// Initializes the various commands used by the related view.
         /// </summary>

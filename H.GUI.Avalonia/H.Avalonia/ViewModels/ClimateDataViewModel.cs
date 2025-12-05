@@ -34,6 +34,7 @@ namespace H.Avalonia.ViewModels
         private readonly ClimateViewItemMap _climateViewItemMap;
         private INotificationManagerService _notificationManager;
         private IClimateService _climateService;
+        private ObservableCollection<ClimateViewItem> _climateViewItems;
 
         /// <summary>
         /// Allows navigation from the current view to the <see cref="SoilResultsView"/>.
@@ -74,13 +75,28 @@ namespace H.Avalonia.ViewModels
         /// <summary>
         /// A bool that indicates if the grid has any climate view items currently added to it. Returns true if Any view items exist, returns false otherwise.
         /// </summary>
-        public bool HasViewItems => StoragePlaceholder?.ClimateViewItems != null && StoragePlaceholder.ClimateViewItems.Any();
+        public bool HasViewItems
+        {
+            get { return this.ClimateViewItems != null && this.ClimateViewItems.Any(); }
+        }
 
         /// <summary>
         /// A bool that indicates if any climate view items are selected or not. Returns true if at least one view item is selected, returns false if none are selected.
         /// </summary>
-        public bool AnyViewItemsSelected => StoragePlaceholder?.ClimateViewItems != null &&
-                                                   StoragePlaceholder.ClimateViewItems.Any(item => item.IsSelected);
+        public bool AnyViewItemsSelected
+        {
+            get
+            {
+                return this.ClimateViewItems != null &&
+                       this.ClimateViewItems.Any(item => item.IsSelected);
+            }
+        }
+
+        public ObservableCollection<ClimateViewItem> ClimateViewItems
+        {
+            get { return _climateViewItems; }
+            set { SetProperty(ref _climateViewItems, value); }
+        }
 
         public ClimateDataViewModel()
         {
@@ -124,6 +140,8 @@ namespace H.Avalonia.ViewModels
             InitializeCommands();
 
             _climateViewItemMap = new ClimateViewItemMap();
+
+            this.ClimateViewItems = new ObservableCollection<ClimateViewItem>();
         }
 
         /// <summary>
@@ -205,12 +223,12 @@ namespace H.Avalonia.ViewModels
             // When we navigate to this view, we instantiate the journal property. This allows us to do navigation through journaling.
             _navigationJournal = navigationContext.NavigationService.Journal;
 
-            var a = base.ActiveFarm.ClimateData.DailyClimateData;
+            //var a = base.ActiveFarm.ClimateData.DailyClimateData;
 
-            //if (StoragePlaceholder?.ClimateViewItems != null)
-            //{
-            //    StoragePlaceholder.ClimateViewItems.CollectionChanged += OnClimateViewItemsCollectionChanged;
-            //}
+            if (this.ClimateViewItems != null)
+            {
+                this.ClimateViewItems.CollectionChanged += OnClimateViewItemsCollectionChanged;
+            }
         }
 
         /// <summary>
@@ -226,7 +244,7 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private void OnAddRow()
         {
-            //StoragePlaceholder?.ClimateViewItems?.Add(new ClimateViewItem());
+            this.ClimateViewItems?.Add(new ClimateViewItem());
         }
 
         /// <summary>
@@ -242,7 +260,7 @@ namespace H.Avalonia.ViewModels
             {
                 if (r.Result == ButtonResult.OK)
                 {
-                    //StoragePlaceholder?.ClimateViewItems?.Remove(viewItem);
+                    this.ClimateViewItems?.Remove(viewItem);
                 }
             });
         }
@@ -252,17 +270,17 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private void OnDeleteSelectedRows()
         {
-            //if (!StoragePlaceholder.ClimateViewItems.Any()) return;
+            if (!this.ClimateViewItems.Any()) return;
 
             var message = Core.Properties.Resources.RowDeleteMessage;
             _dialogService.ShowMessageDialog(nameof(DeleteRowDialog), message, r =>
             {
                 if (r.Result != ButtonResult.OK) return;
-                //var currentItems = StoragePlaceholder.ClimateViewItems.ToList();
-                //foreach (var item in currentItems.Where(item => item.IsSelected))
-                //{
-                //    StoragePlaceholder?.ClimateViewItems?.Remove(item);
-                //}
+                var currentItems = this.ClimateViewItems.ToList();
+                foreach (var item in currentItems.Where(item => item.IsSelected))
+                {
+                    this.ClimateViewItems.Remove(item);
+                }
 
                 if (!HasViewItems)
                 {
@@ -286,7 +304,7 @@ namespace H.Avalonia.ViewModels
             _importHelper.ImportPath = file.Path.AbsolutePath;
             try
             {
-                //StoragePlaceholder?.ClimateViewItems.AddRange(_importHelper.ImportFromCsv(_climateViewItemMap));
+                this.ClimateViewItems.AddRange(_importHelper.ImportFromCsv(_climateViewItemMap));
 
             }
             catch (HeaderValidationException e)
@@ -311,19 +329,19 @@ namespace H.Avalonia.ViewModels
             //if (StoragePlaceholder?.ClimateViewItems == null) return;
             if (AllViewItemsSelected)
             {
-                //foreach (var item in StoragePlaceholder.ClimateViewItems)
-                //{
-                //    item.IsSelected = false;
-                //}
+                foreach (var item in this.ClimateViewItems)
+                {
+                    item.IsSelected = false;
+                }
 
                 AllViewItemsSelected = false;
             }
             else
             {
-                //foreach (var item in StoragePlaceholder.ClimateViewItems)
-                //{
-                //    item.IsSelected = true;
-                //}
+                foreach (var item in this.ClimateViewItems)
+                {
+                    item.IsSelected = true;
+                }
 
                 AllViewItemsSelected = true;
             }

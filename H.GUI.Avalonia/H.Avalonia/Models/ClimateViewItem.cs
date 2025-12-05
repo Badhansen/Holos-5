@@ -22,7 +22,6 @@
             ExtractMonthlyData = false;
         }
 
-
         /// <summary>
         /// The start year for which climate data is required.
         /// </summary>

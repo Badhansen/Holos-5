@@ -1,4 +1,5 @@
-﻿using H.Core.CustomAttributes;
+﻿using System.ComponentModel;
+using H.Core.CustomAttributes;
 using H.Core.Enumerations;
 using H.Core.Factories;
 
@@ -20,6 +21,15 @@ namespace H.Core.Models.Climate
 
         private double _meanDailyPrecipitation;
         private double _meanDailyEvapotranspiration;
+
+        #endregion
+
+        #region Constructors
+
+        public DailyClimateDto()
+        {
+            this.PropertyChanged +=OnPropertyChanged;
+        }
 
         #endregion
 
@@ -102,6 +112,30 @@ namespace H.Core.Models.Climate
         {
             get => _meanDailyEvapotranspiration;
             set => SetProperty(ref _meanDailyEvapotranspiration, value);
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != null)
+            {
+            }
+        }
+
+        private void ValidateMeanDailyPrecipitation()
+        {
+            var key = nameof(MeanDailyPrecipitation);
+            if (this.MeanDailyPrecipitation < 0)
+            {
+                AddError(key, "Mean daily precipitation cannot be negative");
+            }
+            else
+            {
+                RemoveError(key);
+            }
         }
 
         #endregion

@@ -137,14 +137,6 @@ namespace H.Avalonia
             // Logging
             this.SetUpLogging(containerRegistry);
 
-            // Log the successful resolution
-            var appLogger = Container.Resolve<ILogger>();
-            appLogger.LogInformation("Storage services initialized successfully. Active farm: {FarmName}",
-                activeFarm?.Name ?? "None");
-
-            // Register container resolution error logging wrapper
-            containerRegistry.Register<IContainerResolutionLogger, ContainerResolutionLogger>();
-
             // Views - Region Navigation
             containerRegistry.RegisterForNavigation<ToolbarView, ToolbarViewModel>();
             containerRegistry.RegisterForNavigation<SidebarView, SidebarViewModel>();
@@ -166,7 +158,6 @@ namespace H.Avalonia
             containerRegistry.RegisterForNavigation<Views.OptionsViews.DefaultBeddingCompositionView, DefaultBeddingCompositionViewModel>();
             containerRegistry.RegisterForNavigation<Views.OptionsViews.DefaultManureCompositionView, DefaultManureCompositionViewModel>();
             containerRegistry.RegisterForNavigation<Views.OptionsViews.OptionPrecipitationView, PrecipitationSettingsViewModel>();
-
 
             // New development work
             containerRegistry.RegisterForNavigation<MainWindow, MainWindowViewModel>();
@@ -226,10 +217,6 @@ namespace H.Avalonia
             // Blank Page
             containerRegistry.RegisterForNavigation<Views.BlankView, BlankViewModel>();
 
-            //containerRegistry.RegisterSingleton<ResultsViewModelBase>();
-
-
-
             // Providers
             containerRegistry.RegisterSingleton<GeographicDataProvider>();
             containerRegistry.RegisterSingleton<ExportHelpers>();
@@ -238,7 +225,7 @@ namespace H.Avalonia
 
             containerRegistry.RegisterSingleton<ICountrySettings, CountrySettings>();
             containerRegistry.Register<ICountries, CountriesService>();
-            //containerRegistry.RegisterSingleton<IProvinces, ProvincesService>();
+            containerRegistry.RegisterSingleton<IProvinces, ProvincesService>();
             containerRegistry.RegisterSingleton<IDietProvider, DietProvider>();
             containerRegistry.RegisterSingleton<IFeedIngredientProvider, FeedIngredientProvider>();
             containerRegistry.RegisterSingleton<IClimateProvider, ClimateProvider>();
@@ -287,20 +274,6 @@ namespace H.Avalonia
             this.SetUpCaching(containerRegistry);
 
             this.SetupTransferServices(containerRegistry);
-
-            // Test resolution with logging
-            try
-            {
-                var climateService = Container.Resolve<IProvinces>();
-                var registrationLogger = Container.Resolve<ILogger>();
-                registrationLogger.LogInformation("Successfully resolved IClimateService during registration");
-            }
-            catch (Exception ex)
-            {
-                var registrationLogger = Container.Resolve<ILogger>();
-                registrationLogger.LogError(ex, "Failed to resolve IClimateService during registration: {ErrorMessage}", ex.Message);
-                //throw;
-            }
         }
 
         protected override AvaloniaObject CreateShell()
@@ -472,11 +445,6 @@ namespace H.Avalonia
                     modelToDtoMapper: modelToDtoMapper
                 );
             });
-
-
-            var componentInitService = base.Container.Resolve<IComponentInitializationService>();
-            var transferLogger = base.Container.Resolve<ILogger>();
-            transferLogger.LogInformation("Successfully resolved IComponentInitializationService during transfer services setup");
         }
 
         private void SetupMappers(IContainerRegistry containerRegistry)
@@ -581,82 +549,6 @@ namespace H.Avalonia
             containerRegistry.RegisterInstance(dailyClimateDataToDtoConfiguration.CreateMapper(), nameof(DailyClimateDataToDailyClimateDtoMapper));
             containerRegistry.RegisterInstance(dailyClimateDtoToDataConfiguration.CreateMapper(), nameof(DailyClimateDtoToDailyClimateDataMapper));
             containerRegistry.RegisterInstance(dailyClimateDtoToDtoConfiguration.CreateMapper(), nameof(DailyClimateDtoToDailyClimateDtoMapper));
-        }
-    }
-
-    /// <summary>
-    /// Interface for logging container resolution errors
-    /// </summary>
-    public interface IContainerResolutionLogger
-    {
-        T ResolveWithLogging<T>();
-        object ResolveWithLogging(Type type);
-        T ResolveWithLogging<T>(string name);
-    }
-
-    /// <summary>
-    /// Implementation that wraps container resolution with error logging
-    /// </summary>
-    public class ContainerResolutionLogger : IContainerResolutionLogger
-    {
-        private readonly IContainerProvider _container;
-        private readonly ILogger _logger;
-
-        public ContainerResolutionLogger(IContainerProvider container, ILogger logger)
-        {
-            _container = container;
-            _logger = logger;
-        }
-
-        public T ResolveWithLogging<T>()
-        {
-            try
-            {
-                _logger.LogDebug("Resolving type: {TypeName}", typeof(T).Name);
-                var result = _container.Resolve<T>();
-                _logger.LogDebug("Successfully resolved type: {TypeName}", typeof(T).Name);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to resolve type {TypeName}: {ErrorMessage}", typeof(T).Name, ex.Message);
-                _logger.LogError("Resolution stack trace: {StackTrace}", ex.StackTrace);
-                throw;
-            }
-        }
-
-        public object ResolveWithLogging(Type type)
-        {
-            try
-            {
-                _logger.LogDebug("Resolving type: {TypeName}", type.Name);
-                var result = _container.Resolve(type);
-                _logger.LogDebug("Successfully resolved type: {TypeName}", type.Name);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to resolve type {TypeName}: {ErrorMessage}", type.Name, ex.Message);
-                _logger.LogError("Resolution stack trace: {StackTrace}", ex.StackTrace);
-                throw;
-            }
-        }
-
-        public T ResolveWithLogging<T>(string name)
-        {
-            try
-            {
-                _logger.LogDebug("Resolving named type: {TypeName} with name: {Name}", typeof(T).Name, name);
-                var result = _container.Resolve<T>(name);
-                _logger.LogDebug("Successfully resolved named type: {TypeName} with name: {Name}", typeof(T).Name, name);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to resolve named type {TypeName} with name {Name}: {ErrorMessage}", typeof(T).Name, name, ex.Message);
-                _logger.LogError("Resolution stack trace: {StackTrace}", ex.StackTrace);
-                throw;
-            }
         }
     }
 }

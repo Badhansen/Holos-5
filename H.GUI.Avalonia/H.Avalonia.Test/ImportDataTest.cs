@@ -16,7 +16,7 @@ namespace H.Avalonia.Test
         public static void ClassInitialize(TestContext testContext)
         {
             _importHelpers = new ImportHelpers();
-            _climateDataViewModel = new ClimateDataViewModel();
+            //_climateDataViewModel = new ClimateDataViewModel();
             _climateViewItemMap = new ClimateViewItemMap();
         }
 

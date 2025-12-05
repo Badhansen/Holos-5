@@ -7,9 +7,11 @@
              xmlns:properties="clr-namespace:H.Avalonia.Core.Properties;assembly=H.Avalonia.Core"
              mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="450"
              x:Class="H.Avalonia.Views.ClimateDataView">
+
     <Design.DataContext>
         <viewmodels:ClimateDataViewModel/>
     </Design.DataContext>
+
     <UserControl.Resources>
         <DataTemplate x:Key="HeaderTemplate">
             <TextBlock

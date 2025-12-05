@@ -20,6 +20,7 @@ using System.Linq;
 using H.Avalonia.Services;
 using H.Avalonia.Views.ResultViews;
 using H.Core.Services.Climate;
+using H.Core.Services.StorageService;
 using ClimateResultsView = H.Avalonia.Views.ResultViews.ClimateResultsView;
 
 namespace H.Avalonia.ViewModels
@@ -89,9 +90,9 @@ namespace H.Avalonia.ViewModels
             IRegionManager regionManager,
             ImportHelpers importHelper,
             IDialogService dialogService,
-            Storage storage,
             INotificationManagerService notificationManager,
-            IClimateService climateService) : base(regionManager, notificationManager)
+            IClimateService climateService,
+            IStorageService storageService) : base(regionManager, notificationManager, storageService)
         {
             if (climateService != null)
             {
@@ -120,15 +121,6 @@ namespace H.Avalonia.ViewModels
                 throw new ArgumentNullException(nameof(dialogService));
             }
 
-            if (storage != null)
-            {
-                this.StoragePlaceholder = storage;
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(storage));
-            }
-
             InitializeCommands();
 
             _climateViewItemMap = new ClimateViewItemMap();
@@ -139,14 +131,12 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private void InitializeCommands()
         {
-            NavigateToResultsView = new DelegateCommand(SwitchToResultsView).ObservesCanExecute(() => HasViewItems);
-            AddRowCommand = new DelegateCommand(OnAddRow);
-            ImportFromCsvCommand = new DelegateCommand<object>(OnImportCsv);
-            DeleteRowCommand = new DelegateCommand<object>(OnDeleteRow);
-            DeleteSelectedRowsCommand =
-                new DelegateCommand(OnDeleteSelectedRows).ObservesCanExecute(() => AnyViewItemsSelected);
-            ToggleSelectAllRowsCommand =
-                new DelegateCommand(OnToggleSelectAllRows).ObservesCanExecute(() => HasViewItems);
+            this.NavigateToResultsView = new DelegateCommand(SwitchToResultsView).ObservesCanExecute(() => HasViewItems);
+            this.AddRowCommand = new DelegateCommand(OnAddRow);
+            this.ImportFromCsvCommand = new DelegateCommand<object>(OnImportCsv);
+            this.DeleteRowCommand = new DelegateCommand<object>(OnDeleteRow);
+            this.DeleteSelectedRowsCommand = new DelegateCommand(OnDeleteSelectedRows).ObservesCanExecute(() => AnyViewItemsSelected);
+            this.ToggleSelectAllRowsCommand = new DelegateCommand(OnToggleSelectAllRows).ObservesCanExecute(() => HasViewItems);
         }
 
         /// <summary>
@@ -158,15 +148,18 @@ namespace H.Avalonia.ViewModels
         /// <param name="e"></param>
         private void OnClimateViewItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            ToggleSelectAllRowsCommand.RaiseCanExecuteChanged();
-            DeleteSelectedRowsCommand.RaiseCanExecuteChanged();
-            NavigateToResultsView.RaiseCanExecuteChanged();
+            this.ToggleSelectAllRowsCommand.RaiseCanExecuteChanged();
+            this.DeleteSelectedRowsCommand.RaiseCanExecuteChanged();
+            this.NavigateToResultsView.RaiseCanExecuteChanged();
+
             if (e.NewItems != null)
             {
                 foreach (INotifyPropertyChanged item in e.NewItems)
                 {
                     if (item != null)
+                    {
                         item.PropertyChanged += CollectionItemOnPropertyChanged;
+                    }
                 }
 
                 AllViewItemsSelected = false;
@@ -177,7 +170,9 @@ namespace H.Avalonia.ViewModels
                 foreach (INotifyPropertyChanged item in e.OldItems)
                 {
                     if (item != null)
+                    {
                         item.PropertyChanged -= CollectionItemOnPropertyChanged;
+                    }
                 }
             }
         }
@@ -209,10 +204,13 @@ namespace H.Avalonia.ViewModels
         {
             // When we navigate to this view, we instantiate the journal property. This allows us to do navigation through journaling.
             _navigationJournal = navigationContext.NavigationService.Journal;
-            if (StoragePlaceholder?.ClimateViewItems != null)
-            {
-                StoragePlaceholder.ClimateViewItems.CollectionChanged += OnClimateViewItemsCollectionChanged;
-            }
+
+            var a = base.ActiveFarm.ClimateData.DailyClimateData;
+
+            //if (StoragePlaceholder?.ClimateViewItems != null)
+            //{
+            //    StoragePlaceholder.ClimateViewItems.CollectionChanged += OnClimateViewItemsCollectionChanged;
+            //}
         }
 
         /// <summary>
@@ -228,7 +226,7 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private void OnAddRow()
         {
-            StoragePlaceholder?.ClimateViewItems?.Add(new ClimateViewItem());
+            //StoragePlaceholder?.ClimateViewItems?.Add(new ClimateViewItem());
         }
 
         /// <summary>
@@ -244,7 +242,7 @@ namespace H.Avalonia.ViewModels
             {
                 if (r.Result == ButtonResult.OK)
                 {
-                    StoragePlaceholder?.ClimateViewItems?.Remove(viewItem);
+                    //StoragePlaceholder?.ClimateViewItems?.Remove(viewItem);
                 }
             });
         }
@@ -254,16 +252,17 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private void OnDeleteSelectedRows()
         {
-            if (!StoragePlaceholder.ClimateViewItems.Any()) return;
+            //if (!StoragePlaceholder.ClimateViewItems.Any()) return;
+
             var message = Core.Properties.Resources.RowDeleteMessage;
             _dialogService.ShowMessageDialog(nameof(DeleteRowDialog), message, r =>
             {
                 if (r.Result != ButtonResult.OK) return;
-                var currentItems = StoragePlaceholder.ClimateViewItems.ToList();
-                foreach (var item in currentItems.Where(item => item.IsSelected))
-                {
-                    StoragePlaceholder?.ClimateViewItems?.Remove(item);
-                }
+                //var currentItems = StoragePlaceholder.ClimateViewItems.ToList();
+                //foreach (var item in currentItems.Where(item => item.IsSelected))
+                //{
+                //    StoragePlaceholder?.ClimateViewItems?.Remove(item);
+                //}
 
                 if (!HasViewItems)
                 {
@@ -287,7 +286,7 @@ namespace H.Avalonia.ViewModels
             _importHelper.ImportPath = file.Path.AbsolutePath;
             try
             {
-                StoragePlaceholder?.ClimateViewItems.AddRange(_importHelper.ImportFromCsv(_climateViewItemMap));
+                //StoragePlaceholder?.ClimateViewItems.AddRange(_importHelper.ImportFromCsv(_climateViewItemMap));
 
             }
             catch (HeaderValidationException e)
@@ -309,22 +308,22 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private void OnToggleSelectAllRows()
         {
-            if (StoragePlaceholder?.ClimateViewItems == null) return;
+            //if (StoragePlaceholder?.ClimateViewItems == null) return;
             if (AllViewItemsSelected)
             {
-                foreach (var item in StoragePlaceholder.ClimateViewItems)
-                {
-                    item.IsSelected = false;
-                }
+                //foreach (var item in StoragePlaceholder.ClimateViewItems)
+                //{
+                //    item.IsSelected = false;
+                //}
 
                 AllViewItemsSelected = false;
             }
             else
             {
-                foreach (var item in StoragePlaceholder.ClimateViewItems)
-                {
-                    item.IsSelected = true;
-                }
+                //foreach (var item in StoragePlaceholder.ClimateViewItems)
+                //{
+                //    item.IsSelected = true;
+                //}
 
                 AllViewItemsSelected = true;
             }

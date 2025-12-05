@@ -10,6 +10,7 @@
         private bool _extractMonthlyData;
         private int _julianStartDay;
         private int _julianEndDay;
+        public double MonthlyPPT;
 
         public ClimateViewItem()
         {
@@ -82,5 +83,9 @@
             get => _extractMonthlyData;
             set => SetProperty(ref _extractMonthlyData, value);
         }
+
+        public double TotalPET { get; set; }
+        public int Year { get; set; }
+        public double TotalPPT { get; set; }
     }
 }

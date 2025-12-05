@@ -12,7 +12,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using H.Avalonia.Models;
 using H.Avalonia.Services;
+using H.Avalonia.Views.ResultViews;
 using H.Core.Models.Climate;
 using H.Core.Services.StorageService;
 
@@ -33,7 +35,7 @@ namespace H.Avalonia.ViewModels.Results
         /// <summary>
         /// A collection of <see cref="ClimateResultsViewItems"/> that are attached to the climate results page. Each viewitem denotes a row in the grid.
         /// </summary>
-        public ObservableCollection<DailyClimateDto> ClimateResultsViewItems { get; set; } = new();
+        public ObservableCollection<ClimateViewItem> ClimateResultsViewItems { get; set; } = new();
         
 
         public ClimateResultsViewModel() { }
@@ -97,7 +99,7 @@ namespace H.Avalonia.ViewModels.Results
             {
                 for (var currentYear = viewItem.StartYear; currentYear <= viewItem.EndYear; currentYear++)
                 {
-                    var resultItem = new DailyClimateDto
+                    var resultItem = new ClimateViewItem()
                     {
                         Year = currentYear,
                         Latitude = viewItem.Latitude,
@@ -149,7 +151,7 @@ namespace H.Avalonia.ViewModels.Results
             try
             {
                 _exportHelpers.ExportPath = file.Path.AbsolutePath;
-                _exportHelpers.ExportToCSV(ClimateResultsViewItems, _climateResultsViewItemMap);
+                _exportHelpers.ExportToCSV<ClimateViewItem>(ClimateResultsViewItems, _climateResultsViewItemMap);
             }
             catch (IOException e)
             {

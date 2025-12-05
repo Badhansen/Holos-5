@@ -21,13 +21,13 @@ using H.Avalonia.Services;
 using H.Avalonia.Views.ResultViews;
 using H.Core.Services.Climate;
 using H.Core.Services.StorageService;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ClimateResultsView = H.Avalonia.Views.ResultViews.ClimateResultsView;
 
 namespace H.Avalonia.ViewModels
 {
     public class ClimateDataViewModel : ViewModelBase, IDataGridFeatures
     {
-        private readonly IRegionManager _regionManager;
         private IRegionNavigationJournal? _navigationJournal;
         private readonly IDialogService _dialogService;
         private readonly ImportHelpers _importHelper;
@@ -236,7 +236,7 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private void SwitchToResultsView()
         {
-            _regionManager.RequestNavigate(UiRegions.ContentRegion, nameof(ClimateResultsView));
+            base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(ClimateResultsView));
         }
 
         /// <summary>
@@ -263,6 +263,8 @@ namespace H.Avalonia.ViewModels
                     this.ClimateViewItems?.Remove(viewItem);
                 }
             });
+
+            this.NavigateToResultsView.RaiseCanExecuteChanged();
         }
 
         /// <summary>
@@ -287,6 +289,8 @@ namespace H.Avalonia.ViewModels
                     AllViewItemsSelected = false;
                 }
             });
+
+            this.NavigateToResultsView.RaiseCanExecuteChanged();
         }
 
         /// <summary>

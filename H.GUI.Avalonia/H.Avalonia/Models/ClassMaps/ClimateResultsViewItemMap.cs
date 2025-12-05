@@ -13,7 +13,7 @@ namespace H.Avalonia.Models.ClassMaps
     /// A mapping class for CsvReader extension. The class maps properties in <see cref="DailyClimateDto"/> class
     /// so that CsvReader is able to identify these properties and handle them when exporting/importing data.
     /// </summary>
-    public sealed class ClimateResultsViewItemMap : ClassMap<DailyClimateDto>
+    public sealed class ClimateResultsViewItemMap : ClassMap<ClimateViewItem>
     {
         public ClimateResultsViewItemMap()
         {

@@ -31,7 +31,8 @@ namespace H.Avalonia.ViewModels.Results
         private readonly ExportHelpers _exportHelpers;
         private readonly ClimateResultsViewItemMap _climateResultsViewItemMap;
         private CancellationTokenSource _cancellationTokenSource;
-        
+        private ObservableCollection<ClimateViewItem>? _climateViewItems;
+
         /// <summary>
         /// A collection of <see cref="ClimateResultsViewItems"/> that are attached to the climate results page. Each viewitem denotes a row in the grid.
         /// </summary>
@@ -56,6 +57,8 @@ namespace H.Avalonia.ViewModels.Results
         /// <param name="navigationContext">The navigation context of the user. Contains the navigation tree and journal</param>
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
+            _climateViewItems = navigationContext.Parameters["ClimateViewItems"] as ObservableCollection<ClimateViewItem>;
+
             // When we navigate to this view, we instantiate the journal property. This allows us to do navigation through journaling.
             _navigationJournal = navigationContext.NavigationService.Journal;
             GoBackCommand.RaiseCanExecuteChanged();
@@ -94,8 +97,13 @@ namespace H.Avalonia.ViewModels.Results
 
         private async Task AddViewItemsToCollectionAsync(CancellationToken cancellationToken)
         {
+            if (_climateViewItems == null)
+            {
+                return;
+            }
+
             IsProcessingData = true;
-            foreach (var viewItem in StoragePlaceholder.ClimateViewItems)
+            foreach (var viewItem in _climateViewItems)
             {
                 for (var currentYear = viewItem.StartYear; currentYear <= viewItem.EndYear; currentYear++)
                 {
@@ -151,7 +159,7 @@ namespace H.Avalonia.ViewModels.Results
             try
             {
                 _exportHelpers.ExportPath = file.Path.AbsolutePath;
-                _exportHelpers.ExportToCSV<ClimateViewItem>(ClimateResultsViewItems, _climateResultsViewItemMap);
+                _exportHelpers.ExportToCSV(ClimateResultsViewItems, _climateResultsViewItemMap);
             }
             catch (IOException e)
             {

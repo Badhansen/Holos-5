@@ -18,6 +18,7 @@ using H.Avalonia.Views.ComponentViews;
 using System.Linq;
 using H.Avalonia.Services;
 using H.Avalonia.Views;
+using H.Core.Services.StorageService;
 
 namespace H.Avalonia.ViewModels.Results
 {
@@ -31,6 +32,7 @@ namespace H.Avalonia.ViewModels.Results
         private readonly KmlHelpers _kmlHelpers;
         private readonly GeographicDataProvider _geographicDataProvider;
         private readonly SoilResultsViewItemMap _soilResultsViewItemMap;
+        private SoilResultsViewItem _singleSoilResultsViewItem;
         private CancellationTokenSource _cancellationTokenSource;
 
         #endregion
@@ -41,7 +43,7 @@ namespace H.Avalonia.ViewModels.Results
         {
         }
 
-        public SoilResultsViewModel(IRegionManager regionManager, INotificationManagerService notificationManager ,ExportHelpers exportHelpers, KmlHelpers kmlHelpers, GeographicDataProvider geographicDataProvider, Storage storage) : base(regionManager, notificationManager)
+        public SoilResultsViewModel(IRegionManager regionManager, INotificationManagerService notificationManager ,ExportHelpers exportHelpers, KmlHelpers kmlHelpers, GeographicDataProvider geographicDataProvider, Storage storage, IStorageService storageService) : base(regionManager, notificationManager, storageService)
         {
             this.StoragePlaceholder = storage;
 
@@ -82,6 +84,12 @@ namespace H.Avalonia.ViewModels.Results
         /// A command that helps switch the view to <see cref="ClimateDataView"/>
         /// </summary>
         public DelegateCommand SwitchToClimateViewCommand { get; set; } = null!;
+
+        public SoilResultsViewItem SelectedSingleSoilResult
+        {
+            get { return _singleSoilResultsViewItem; }
+            set { SetProperty(ref _singleSoilResultsViewItem, value); }
+        }
 
         #endregion
 

@@ -80,6 +80,7 @@
                   ItemsSource="{Binding SingleSoilResultsViewItems}"
                   Margin="20,0,20,20"
                   IsReadOnly="True"
+                  SelectedItem="{Binding SelectedSingleSoilResult}"
                   IsVisible="{Binding StoragePlaceholder.ShowSingleCoordinateResults}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="{x:Static properties:Resources.LabelLatitude}"

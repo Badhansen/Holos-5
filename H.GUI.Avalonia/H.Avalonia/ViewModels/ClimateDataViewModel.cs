@@ -236,7 +236,7 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private void SwitchToResultsView()
         {
-            base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(ClimateResultsView));
+            base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(ClimateResultsView), new NavigationParameters() { { "ClimateViewItems", this.ClimateViewItems } });
         }
 
         /// <summary>
@@ -244,7 +244,17 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private void OnAddRow()
         {
-            this.ClimateViewItems?.Add(new ClimateViewItem());
+            if (base.ActiveFarm != null)
+            {
+                var climateViewItem = new ClimateViewItem()
+                {
+                    Latitude = base.ActiveFarm.Latitude,
+                    Longitude = base.ActiveFarm.Longitude,
+                };
+
+
+                this.ClimateViewItems?.Add(climateViewItem);
+            }
         }
 
         /// <summary>

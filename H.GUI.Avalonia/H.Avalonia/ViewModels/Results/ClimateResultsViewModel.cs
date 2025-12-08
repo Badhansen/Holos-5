@@ -16,6 +16,7 @@ using H.Avalonia.Models;
 using H.Avalonia.Services;
 using H.Avalonia.Views.ResultViews;
 using H.Core.Models.Climate;
+using H.Core.Services.Climate;
 using H.Core.Services.StorageService;
 
 namespace H.Avalonia.ViewModels.Results
@@ -25,30 +26,53 @@ namespace H.Avalonia.ViewModels.Results
     /// </summary>
     public class ClimateResultsViewModel : ResultsViewModelBase
     {
-        private readonly IRegionManager _regionManager;
+     
         private IRegionNavigationJournal? _navigationJournal;
-        private readonly NasaClimateProvider _nasaClimateProvider;
         private readonly ExportHelpers _exportHelpers;
         private readonly ClimateResultsViewItemMap _climateResultsViewItemMap;
         private CancellationTokenSource _cancellationTokenSource;
         private ObservableCollection<ClimateViewItem>? _climateViewItems;
+        private readonly IClimateService _climateService;
 
         /// <summary>
         /// A collection of <see cref="ClimateResultsViewItems"/> that are attached to the climate results page. Each viewitem denotes a row in the grid.
         /// </summary>
         public ObservableCollection<ClimateViewItem> ClimateResultsViewItems { get; set; } = new();
-        
 
-        public ClimateResultsViewModel() { }
 
-        public ClimateResultsViewModel(IRegionManager regionManager, INotificationManagerService notificationManager, ExportHelpers exportHelpers, IStorageService storageService) : base(regionManager, notificationManager, storageService)
+        public ClimateResultsViewModel()
         {
-            _regionManager = regionManager;
-            _exportHelpers = exportHelpers;
+            this.Construct();
+        }
+
+        public ClimateResultsViewModel(IRegionManager regionManager, INotificationManagerService notificationManager, ExportHelpers exportHelpers, IStorageService storageService, IClimateService climateService) : base(regionManager, notificationManager, storageService)
+        {
+            if (climateService != null)
+            {
+                _climateService = climateService; 
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(climateService));
+            }
+
+            if (exportHelpers != null)
+            {
+                _exportHelpers = exportHelpers; 
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(exportHelpers));
+            }
+            
             _climateResultsViewItemMap = new ClimateResultsViewItemMap();
+            this.Construct();
+        }
+
+        private void Construct()
+        {
             GoBackCommand = new DelegateCommand(OnGoBack, CanGoBack);
             ExportToCsvCommand = new DelegateCommand<object>(OnExportToCSV);
-            _nasaClimateProvider = new NasaClimateProvider();
         }
 
         /// <summary>
@@ -57,6 +81,7 @@ namespace H.Avalonia.ViewModels.Results
         /// <param name="navigationContext">The navigation context of the user. Contains the navigation tree and journal</param>
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
+
             _climateViewItems = navigationContext.Parameters["ClimateViewItems"] as ObservableCollection<ClimateViewItem>;
 
             // When we navigate to this view, we instantiate the journal property. This allows us to do navigation through journaling.
@@ -179,7 +204,7 @@ namespace H.Avalonia.ViewModels.Results
             var result = 0.0;
             var calculation = Task.Run(() =>
             {
-                result = _nasaClimateProvider.GetTotalPET(year, latitude, longitude);
+                result = _climateService.GetTotalPET(year, latitude, longitude);
             });
             await calculation;
             return result;
@@ -197,7 +222,7 @@ namespace H.Avalonia.ViewModels.Results
             var result = 0.0;
             var calculation = Task.Run(() =>
             {
-                result = _nasaClimateProvider.GetTotalPPT(year, latitude, longitude);
+                result = _climateService.GetTotalPPT(year, latitude, longitude);
             });
             await calculation;
             return result;
@@ -219,7 +244,7 @@ namespace H.Avalonia.ViewModels.Results
             var result = 0.0;
             var monthlyPPT = Task.Run(() =>
             {
-                result = _nasaClimateProvider.GetMonthlyPPT(year, startingDay, endingDay, latitude, longitude);
+                result = _climateService.GetMonthlyPPT(year, startingDay, endingDay, latitude, longitude);
             });
             await monthlyPPT;
             return result;
@@ -260,8 +285,8 @@ namespace H.Avalonia.ViewModels.Results
                 disposableExportCommand.Dispose();
             }
 
-            // Dispose of provider if it implements IDisposable
-            if (_nasaClimateProvider is IDisposable disposableProvider)
+            // Dispose of service if it implements IDisposable
+            if (_climateService is IDisposable disposableProvider)
             {
                 disposableProvider.Dispose();
             }

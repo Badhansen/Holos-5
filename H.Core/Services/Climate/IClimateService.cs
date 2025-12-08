@@ -9,7 +9,7 @@ namespace H.Core.Services.Climate
     /// - Applies unit conversions via configured transfer services.
     /// - Provides climate data operations for UI-bound workflows.
     /// </summary>
-    public interface IClimateService
+    public interface IClimateService : IClimateProvider
     {
         /// <summary>
         /// Converts a <see cref="DailyClimateData"/> domain object to a <see cref="DailyClimateDto"/> for UI binding.

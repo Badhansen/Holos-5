@@ -200,6 +200,21 @@ namespace H.Core.Services.Climate
             return _climateProvider.Get(latitude, longitude, climateNormalTimeFrame, farm);
         }
 
+        public double GetTotalPET(int year, double latitude, double longitude)
+        {
+            return _climateProvider.GetTotalPET(year, latitude, longitude);
+        }
+
+        public double GetTotalPPT(int year, double latitude, double longitude)
+        {
+            return _climateProvider.GetTotalPPT(year, latitude, longitude);
+        }
+
+        public double GetMonthlyPPT(int year, int startingDay, int endingDay, double latitude, double longitude)
+        {
+            return _climateProvider.GetMonthlyPPT(year, startingDay, endingDay, latitude, longitude);
+        }
+
         #endregion
     }
 }

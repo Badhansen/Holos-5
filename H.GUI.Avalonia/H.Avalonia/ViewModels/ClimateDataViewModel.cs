@@ -39,7 +39,7 @@ namespace H.Avalonia.ViewModels
         /// <summary>
         /// Allows navigation from the current view to the <see cref="SoilResultsView"/>.
         /// </summary>
-        public DelegateCommand NavigateToResultsView { get; set; }
+        public DelegateCommand OnGetClimateDataCommand { get; set; }
 
         /// <summary>
         /// A command that adds rows to the grid displayed on <see cref="ClimateDataView"/>. Each row indicates <see cref="ClimateViewItem"/>.
@@ -149,12 +149,12 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private void InitializeCommands()
         {
-            this.NavigateToResultsView = new DelegateCommand(SwitchToResultsView).ObservesCanExecute(() => HasViewItems);
-            this.AddRowCommand = new DelegateCommand(OnAddRow);
-            this.ImportFromCsvCommand = new DelegateCommand<object>(OnImportCsv);
-            this.DeleteRowCommand = new DelegateCommand<object>(OnDeleteRow);
-            this.DeleteSelectedRowsCommand = new DelegateCommand(OnDeleteSelectedRows).ObservesCanExecute(() => AnyViewItemsSelected);
-            this.ToggleSelectAllRowsCommand = new DelegateCommand(OnToggleSelectAllRows).ObservesCanExecute(() => HasViewItems);
+            this.OnGetClimateDataCommand = new DelegateCommand(OnGetClimateDataExecute).ObservesCanExecute(() => HasViewItems);
+            this.AddRowCommand = new DelegateCommand(OnAddRowExecute);
+            this.ImportFromCsvCommand = new DelegateCommand<object>(OnImportCsvExecute);
+            this.DeleteRowCommand = new DelegateCommand<object>(OnDeleteRowExecute);
+            this.DeleteSelectedRowsCommand = new DelegateCommand(OnDeleteSelectedRowsExecute).ObservesCanExecute(() => AnyViewItemsSelected);
+            this.ToggleSelectAllRowsCommand = new DelegateCommand(OnToggleSelectAllRowsExecute).ObservesCanExecute(() => HasViewItems);
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace H.Avalonia.ViewModels
         {
             this.ToggleSelectAllRowsCommand.RaiseCanExecuteChanged();
             this.DeleteSelectedRowsCommand.RaiseCanExecuteChanged();
-            this.NavigateToResultsView.RaiseCanExecuteChanged();
+            this.OnGetClimateDataCommand.RaiseCanExecuteChanged();
 
             if (e.NewItems != null)
             {
@@ -234,7 +234,7 @@ namespace H.Avalonia.ViewModels
         /// <summary>
         /// Uses Prism framework to switch from <see cref="ClimateDataView"/> to <see cref="ClimateResultsView"/>.
         /// </summary>
-        private void SwitchToResultsView()
+        private void OnGetClimateDataExecute()
         {
             base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(ClimateResultsView), new NavigationParameters() { { "ClimateViewItems", this.ClimateViewItems } });
         }
@@ -242,7 +242,7 @@ namespace H.Avalonia.ViewModels
         /// <summary>
         /// Add a row to the grid on  the <see cref="ClimateDataView"/>
         /// </summary>
-        private void OnAddRow()
+        private void OnAddRowExecute()
         {
             if (base.ActiveFarm != null)
             {
@@ -261,7 +261,7 @@ namespace H.Avalonia.ViewModels
         /// Deletes a row from the grid on <see cref="ClimateDataView"/>
         /// </summary>
         /// <param name="obj">The <see cref="ClimateViewItem"/> that needs to be deleted.</param>
-        private void OnDeleteRow(object obj)
+        private void OnDeleteRowExecute(object obj)
         {
             if (obj is not ClimateViewItem viewItem) return;
 
@@ -274,13 +274,13 @@ namespace H.Avalonia.ViewModels
                 }
             });
 
-            this.NavigateToResultsView.RaiseCanExecuteChanged();
+            this.OnGetClimateDataCommand.RaiseCanExecuteChanged();
         }
 
         /// <summary>
         /// Deletes a group of <see cref="ClimateViewItem"/> that are selected by the user.
         /// </summary>
-        private void OnDeleteSelectedRows()
+        private void OnDeleteSelectedRowsExecute()
         {
             if (!this.ClimateViewItems.Any()) return;
 
@@ -300,7 +300,7 @@ namespace H.Avalonia.ViewModels
                 }
             });
 
-            this.NavigateToResultsView.RaiseCanExecuteChanged();
+            this.OnGetClimateDataCommand.RaiseCanExecuteChanged();
         }
 
         /// <summary>
@@ -308,7 +308,7 @@ namespace H.Avalonia.ViewModels
         /// Latitude, Longitude, Start Year, End Year, Julian day start, Julian day end (respectively).
         /// </summary>
         /// <param name="obj">The <see cref="IStorageItem"/> object passed to the method containing the file path where the csv is located.</param>
-        private void OnImportCsv(object? obj)
+        private void OnImportCsvExecute(object? obj)
         {
             var item = obj as IReadOnlyCollection<IStorageItem>;
             var file = item?.FirstOrDefault();
@@ -338,7 +338,7 @@ namespace H.Avalonia.ViewModels
         /// <summary>
         /// Helps select all rows that are currently added to the grid.
         /// </summary>
-        private void OnToggleSelectAllRows()
+        private void OnToggleSelectAllRowsExecute()
         {
             //if (StoragePlaceholder?.ClimateViewItems == null) return;
             if (AllViewItemsSelected)

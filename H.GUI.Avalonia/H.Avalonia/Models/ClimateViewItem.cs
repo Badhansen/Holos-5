@@ -5,12 +5,21 @@
     /// </summary>
     public class ClimateViewItem : ModelBase
     {
+        #region Fields
+
         private int _startYear;
         private int _endYear;
         private bool _extractMonthlyData;
         private int _julianStartDay;
         private int _julianEndDay;
-        public double MonthlyPPT;
+        private double _montlyPPT;
+        private double _totalPet;
+        private int _year;
+        private double _totalPpt;
+
+        #endregion
+
+        #region Constructors
 
         public ClimateViewItem()
         {
@@ -21,6 +30,16 @@
             JulianStartDay = 0;
             JulianEndDay = 0;
             ExtractMonthlyData = false;
+        }
+
+        #endregion
+
+        #region Properties
+
+        public double MonthlyPPT
+        {
+            get => _montlyPPT;
+            set => SetProperty(ref _montlyPPT, value);
         }
 
         /// <summary>
@@ -84,8 +103,24 @@
             set => SetProperty(ref _extractMonthlyData, value);
         }
 
-        public double TotalPET { get; set; }
-        public int Year { get; set; }
-        public double TotalPPT { get; set; }
+        public double TotalPET
+        {
+            get => _totalPet;
+            set => SetProperty(ref _totalPet, value);
+        }
+
+        public int Year
+        {
+            get => _year;
+            set => SetProperty(ref _year, value);
+        }
+
+        public double TotalPPT
+        {
+            get => _totalPpt;
+            set => SetProperty(ref _totalPpt, value);
+        }
+
+        #endregion
     }
 }

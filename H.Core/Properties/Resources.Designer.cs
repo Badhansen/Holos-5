@@ -745,6 +745,15 @@ namespace H.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Coordinates for the given address could not be found..
+        /// </summary>
+        public static string CantFindCoordinate {
+            get {
+                return ResourceManager.GetString("CantFindCoordinate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Caragana.
         /// </summary>
         public static string Caragana {
@@ -912,6 +921,15 @@ namespace H.Core.Properties {
         public static string ContinousCroppingToFallow {
             get {
                 return ResourceManager.GetString("ContinousCroppingToFallow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coordinate error.
+        /// </summary>
+        public static string CoordinateError {
+            get {
+                return ResourceManager.GetString("CoordinateError", resourceCulture);
             }
         }
         

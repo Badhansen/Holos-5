@@ -6418,4 +6418,10 @@ Please note: emissions related to the deposition or application of livestock man
   <data name="VerifyBeforeProceed" xml:space="preserve">
     <value>Verify this before proceeding...</value>
   </data>
+  <data name="CantFindCoordinate" xml:space="preserve">
+    <value>Coordinates for the given address could not be found.</value>
+  </data>
+  <data name="CoordinateError" xml:space="preserve">
+    <value>Coordinate error</value>
+  </data>
 </root>

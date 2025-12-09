@@ -18,6 +18,7 @@ using H.Avalonia.Views.ResultViews;
 using H.Core.Models.Climate;
 using H.Core.Services.Climate;
 using H.Core.Services.StorageService;
+using Microsoft.Extensions.Logging;
 
 namespace H.Avalonia.ViewModels.Results
 {
@@ -26,30 +27,39 @@ namespace H.Avalonia.ViewModels.Results
     /// </summary>
     public class ClimateResultsViewModel : ResultsViewModelBase
     {
-     
+        #region Fields
+
         private IRegionNavigationJournal? _navigationJournal;
         private readonly ExportHelpers _exportHelpers;
         private readonly ClimateResultsViewItemMap _climateResultsViewItemMap;
         private CancellationTokenSource _cancellationTokenSource;
         private ObservableCollection<ClimateViewItem>? _climateViewItems;
         private readonly IClimateService _climateService;
+        private readonly ILogger _logger;
 
-        /// <summary>
-        /// A collection of <see cref="ClimateResultsViewItems"/> that are attached to the climate results page. Each viewitem denotes a row in the grid.
-        /// </summary>
-        public ObservableCollection<ClimateViewItem> ClimateResultsViewItems { get; set; } = new();
+        #endregion
 
+        #region Constructors
 
         public ClimateResultsViewModel()
         {
             this.Construct();
         }
 
-        public ClimateResultsViewModel(IRegionManager regionManager, INotificationManagerService notificationManager, ExportHelpers exportHelpers, IStorageService storageService, IClimateService climateService) : base(regionManager, notificationManager, storageService)
+        public ClimateResultsViewModel(IRegionManager regionManager, INotificationManagerService notificationManager, ExportHelpers exportHelpers, IStorageService storageService, IClimateService climateService, ILogger logger) : base(regionManager, notificationManager, storageService)
         {
+            if (logger != null)
+            {
+                _logger = logger;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
+
             if (climateService != null)
             {
-                _climateService = climateService; 
+                _climateService = climateService;
             }
             else
             {
@@ -58,22 +68,30 @@ namespace H.Avalonia.ViewModels.Results
 
             if (exportHelpers != null)
             {
-                _exportHelpers = exportHelpers; 
+                _exportHelpers = exportHelpers;
             }
             else
             {
                 throw new ArgumentNullException(nameof(exportHelpers));
             }
-            
+
             _climateResultsViewItemMap = new ClimateResultsViewItemMap();
+
             this.Construct();
         }
 
-        private void Construct()
-        {
-            GoBackCommand = new DelegateCommand(OnGoBack, CanGoBack);
-            ExportToCsvCommand = new DelegateCommand<object>(OnExportToCSV);
-        }
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// A collection of <see cref="ClimateResultsViewItems"/> that are attached to the climate results page. Each viewitem denotes a row in the grid.
+        /// </summary>
+        public ObservableCollection<ClimateViewItem> ClimateResultsViewItems { get; set; } = new ObservableCollection<ClimateViewItem>();
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Triggered when a user navigates to this page.
@@ -81,7 +99,6 @@ namespace H.Avalonia.ViewModels.Results
         /// <param name="navigationContext">The navigation context of the user. Contains the navigation tree and journal</param>
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-
             _climateViewItems = navigationContext.Parameters["ClimateViewItems"] as ObservableCollection<ClimateViewItem>;
 
             // When we navigate to this view, we instantiate the journal property. This allows us to do navigation through journaling.
@@ -97,6 +114,16 @@ namespace H.Avalonia.ViewModels.Results
         public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
             ClimateResultsViewItems.Clear();
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void Construct()
+        {
+            GoBackCommand = new DelegateCommand(OnGoBack, CanGoBack);
+            ExportToCsvCommand = new DelegateCommand<object>(OnExportToCSV);
         }
 
         /// <summary>
@@ -118,7 +145,6 @@ namespace H.Avalonia.ViewModels.Results
                 _cancellationTokenSource.Dispose();
             }
         }
-
 
         private async Task AddViewItemsToCollectionAsync(CancellationToken cancellationToken)
         {
@@ -249,6 +275,8 @@ namespace H.Avalonia.ViewModels.Results
             await monthlyPPT;
             return result;
         }
+
+        #endregion
 
         #region Protected Methods
 

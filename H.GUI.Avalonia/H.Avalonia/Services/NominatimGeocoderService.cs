@@ -89,7 +89,6 @@ namespace H.Avalonia.Services
             {
                content = await GetAndCacheNominatimData(address);
             }
-
             // If cached data or API data was available, parse it and return coordinates.
             if (!string.IsNullOrWhiteSpace(content))
             {
@@ -131,8 +130,8 @@ namespace H.Avalonia.Services
                         // Check if content returned by API is empty, if so do not return
                         if (content == "[]")
                         {
-                            _logger.LogWarning($"{nameof(NominatimGeocoderService)}.{nameof(DownloadNominatimApiData)}: API content empty.");
-                            return String.Empty;
+                            _logger.LogError($"{nameof(NominatimGeocoderService)}.{nameof(DownloadNominatimApiData)}: API content empty. Address not valid.");
+                            return null;
                         }
                         CacheData(address, content);
                     }

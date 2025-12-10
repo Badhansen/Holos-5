@@ -44,7 +44,7 @@ namespace H.Avalonia.ViewModels
         private IRegionNavigationJournal? _navigationJournal;
         private readonly MapHelpers _mapHelpers;
         private readonly IDialogService _dialogService;
-        private readonly INominatimGeocoderService _nominatimGeocoderService;
+        private readonly IDefaultGeocoderService _defaultGeocoderService;
         private double _longitude;
         private double _latitude;
         private string _address = string.Empty;
@@ -153,7 +153,7 @@ namespace H.Avalonia.ViewModels
             Storage storage,
             INotificationManagerService notificationManager,
             ILogger logger,
-            INominatimGeocoderService nominatimGeocoderService) : base(regionManager, storageService, notificationManager, logger)
+            IDefaultGeocoderService defaultGeocoderService) : base(regionManager, storageService, notificationManager, logger)
         {
             if (countrySettings != null)
             {
@@ -164,13 +164,13 @@ namespace H.Avalonia.ViewModels
                 throw new ArgumentNullException(nameof(countrySettings));
             }
 
-            if (nominatimGeocoderService != null)
+            if (defaultGeocoderService != null)
             {
-                _nominatimGeocoderService = nominatimGeocoderService;
+                _defaultGeocoderService = defaultGeocoderService;
             }
             else
             {
-                throw new ArgumentNullException(nameof(nominatimGeocoderService));
+                throw new ArgumentNullException(nameof(defaultGeocoderService));
             }
 
             this.StoragePlaceholder = storage;
@@ -515,7 +515,7 @@ namespace H.Avalonia.ViewModels
             {
                 // Call the geocoding service to get coordinates from the address, return early if problem encountered.
                 Logger.LogInformation($"Attempting coordinate acquisition from address in {nameof(SoilDataViewModel)}.{nameof(OnGetAddress)}");
-                var point = await _nominatimGeocoderService.GetCoordinates(Address);
+                var point = await _defaultGeocoderService.GetCoordinates(Address);
                 if (point.latitude == 0 || point.longitude == 0)
                 {
                     Logger.LogDebug($@"Cannot find the coordinate from the address entered.");
@@ -523,7 +523,7 @@ namespace H.Avalonia.ViewModels
                     return;
                 }
                 // Call the geocoding service to get province from the address, return early if problem encountered.
-                var province = await _nominatimGeocoderService.GetProvince(Address);
+                var province = await _defaultGeocoderService.GetProvince(Address);
                 if (province == null)
                 {
                     Logger.LogDebug($@"Cannot find the province from the address entered.");

@@ -23,7 +23,7 @@ using Path = System.IO.Path;
 
 namespace H.Avalonia.Services
 {
-    public class NominatimGeocoderService : INominatimGeocoderService
+    public class NominatimGeocoderService : IDefaultGeocoderService
     {
         #region Fields
 
@@ -54,12 +54,22 @@ namespace H.Avalonia.Services
 
         #region Public Methods
 
+        /// <summary>
+        /// Checks if the address is already cached.
+        /// </summary>
+        /// <param name="address">The address to check if a cache exists.</param>
+        /// <returns></returns>
         public bool IsCached(string address)
         {
             var path = this.GetCachePath(address);
             return File.Exists(path);
         }
 
+        /// <summary>
+        /// Returns the latitude and longitude for the given address.
+        /// </summary>
+        /// <param name="address">The address to geocode and get coordinates for.</param>
+        /// <returns>Longitude and latitude coordinates.</returns>
         public async Task<(double latitude, double longitude)> GetCoordinates(string address)
         {
             // If no cached data, get data from Nominatim API and cache it.
@@ -81,6 +91,11 @@ namespace H.Avalonia.Services
             }
         }
 
+        /// <summary>
+        /// Returns the province for the given address.
+        /// </summary>
+        /// <param name="address">The address to geocode and get the province for.</param>
+        /// <returns>Province enum of where the address is located.</returns>
         public async Task<Province?> GetProvince(string address)
         {
             string content = this.GetCachedData(address);
@@ -106,6 +121,11 @@ namespace H.Avalonia.Services
 
         #region Private Methods
 
+        /// <summary>
+        /// Gets the correct Nominatim API URL for the given address.
+        /// </summary>
+        /// <param name="address">The address to format for a Nominatim API call.</param>
+        /// <returns>Returns the url needed to access the API for the given address.</returns>
         private string GetCorrectApiUrl(string address)
         {
             address = Uri.EscapeDataString(address);
@@ -114,6 +134,12 @@ namespace H.Avalonia.Services
             return Url;
         }
 
+        /// <summary>
+        /// Returns geocoding data for the specified address from the Nominatim API and caches the result.
+        /// </summary>
+        /// <param name="address">The address to geocode. Must be a non-empty string representing a valid location.</param>
+        /// <returns>A JSON string containing the geocoding data for the specified address if the API call is successful;
+        /// otherwise, returns null.</returns>
         private async Task<string> GetAndCacheNominatimData(string address)
         {
             string apiUrl = GetCorrectApiUrl(address);
@@ -151,6 +177,11 @@ namespace H.Avalonia.Services
             return content;
         }
 
+        /// <summary>
+        /// Given a Nominatim API URL, downloads the data from the API.
+        /// </summary>
+        /// <param name="url">The URL used to access the Nominatim API.</param>
+        /// <returns>Returns JSON array in string format from Nominatim's API.</returns>
         private async Task<string> DownloadNominatimApiData(string url)
         {
             // using HttpClient over WebClient as more features supported in HttpClient.
@@ -170,6 +201,12 @@ namespace H.Avalonia.Services
             }
             return content;
         }
+
+        /// <summary>
+        /// Based off the address, returns the cache path for the address.
+        /// </summary>
+        /// <param name="address">The address the path will be based off of.</param>
+        /// <returns>The path based off of the given address.</returns>
         private string GetCachePath(string address)
         {
             // Sanitize address for file name, replace common address characters with underscores.
@@ -181,6 +218,11 @@ namespace H.Avalonia.Services
             return Path.Combine(path, filename);
         }
 
+        /// <summary>
+        /// Retrieves cached data for the given address if it exists.
+        /// </summary>
+        /// <param name="address">The address tied to the cached file.</param>
+        /// <returns>Returns JSON array in string format from a previous Nominatim API call.</returns>
         private string GetCachedData(string address)
         {
             var path = GetCachePath(address);
@@ -192,6 +234,11 @@ namespace H.Avalonia.Services
             return null;
         }
 
+        /// <summary>
+        /// Caches the Nominatim API data for the given address.
+        /// </summary>
+        /// <param name="address">The address tied to the cached file.</param>
+        /// <param name="content">The content returned from the API call tied to the address.</param>
         private void CacheData(string address, string content)
         {
             _logger.LogInformation($"Caching Nominatim Geocoder data for address: {address}");
@@ -199,6 +246,11 @@ namespace H.Avalonia.Services
             File.WriteAllText(path, content);
         }
 
+        /// <summary>
+        /// Parses the Nominatim API content for latitude and longitude coordinates.
+        /// </summary>
+        /// <param name="content">The content from the API call to be parsed for longitude and latitude data.</param>
+        /// <returns>Two doubles representing the longitude and latitude.</returns>
         private (double latitude, double longitude) ParseNominatimApiContentForCoordinates(string content)
         {
             // Initially read as JArray since Nominatim returns an array of one JSON object.
@@ -209,6 +261,11 @@ namespace H.Avalonia.Services
             return (latitude: lat, longitude: lon);
         }
 
+        /// <summary>
+        /// Parses the Nominatim API content for province information.
+        /// </summary>
+        /// <param name="content">The content from the API call to be parsed for provincial data.</param>
+        /// <returns>Province enum based off of the given API data.</returns>
         private Province ParseNominatimApiContentForProvince(string content)
         {
             // Initially read as JArray since Nominatim returns an array of one JSON object.

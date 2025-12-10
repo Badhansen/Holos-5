@@ -5867,4 +5867,10 @@ Please note: emissions related to the deposition or application of livestock man
   <data name="VerifyBeforeProceed" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="CantFindCoordinate" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="CoordinateError" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
 </root>

@@ -1,0 +1,88 @@
+﻿using H.Avalonia.Services;
+using H.Core.Enumerations;
+using Microsoft.Extensions.Logging;
+using Moq;
+using Newtonsoft.Json.Linq;
+using SharpKml.Dom.Atom;
+
+
+namespace H.Avalonia.Test.Services
+{
+    [TestClass]
+    public class NominatimGeocoderServiceTest
+    {
+        private static NominatimGeocoderService _nominatimGeocoderService;
+        private Mock<ILogger> _mockLogger;
+        private ILogger _loggerMock;
+        private string _address = "5403 1 Ave S, Lethbridge, AB T1J 4B1";
+
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext testContext)
+        {
+        }
+
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            // Clean up cached file for future test runs
+            var path = Path.GetTempPath();
+            var invalidCharacters = Path.GetInvalidFileNameChars();
+            var cleanedFileName = invalidCharacters.Aggregate("5403 1 Ave S, Lethbridge, AB T1J 4B1", (current, c) => current.Replace(c, '_')).Replace(" ", "_").Replace(",", "");
+            var filename = $"nominatim_geocoder_data_address_{cleanedFileName}";
+            var fullPath = Path.Combine(path, filename);
+            if (File.Exists(fullPath))
+            {
+                File.Delete(fullPath);
+            }
+        }
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            _mockLogger = new Mock<ILogger>();
+            _loggerMock = _mockLogger.Object;
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+        }
+
+        [TestMethod]
+        public void TestConstructorValidParameters()
+        {
+            _nominatimGeocoderService = new NominatimGeocoderService(_loggerMock);
+            Assert.IsNotNull(_nominatimGeocoderService);
+        }
+
+        [TestMethod]
+        public void TestConstructorNullLogger()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => new NominatimGeocoderService(null));
+        }
+
+        [TestMethod]
+        public async Task TestGeocoderLongLat()
+        {
+            _nominatimGeocoderService = new NominatimGeocoderService(_loggerMock);
+            var latitudeAndLongitude = await _nominatimGeocoderService.GetCoordinates(_address);
+            Assert.AreEqual(latitudeAndLongitude.latitude, 49.697567, 0.01);
+            Assert.AreEqual(latitudeAndLongitude.longitude, -112.84844, 0.01);
+        }
+
+        [TestMethod]
+        public void TestCachingOfGeocodedData()
+        {
+            // Test that after geocoding an address, it is cached
+            Assert.IsTrue(_nominatimGeocoderService.IsCached(_address));
+        }
+
+        [TestMethod]
+        public async Task TestGeocoderProvince()
+        {
+            _nominatimGeocoderService = new NominatimGeocoderService(_loggerMock);
+            Province? province = await _nominatimGeocoderService.GetProvince(_address);
+            Assert.AreEqual(province, Province.Alberta);
+        }
+    }
+}

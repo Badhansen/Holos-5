@@ -2,6 +2,8 @@ using H.Avalonia.Models.ClassMaps;
 using H.Avalonia.Models.Results;
 using H.Avalonia.ViewModels.Results;
 using H.Avalonia.Infrastructure;
+using H.Avalonia.Models;
+using H.Core.Models.Climate;
 
 namespace H.Avalonia.Test
 {
@@ -20,7 +22,7 @@ namespace H.Avalonia.Test
             _climateResultsViewItemMap = new ClimateResultsViewItemMap();
 
 
-            var item = new ClimateResultsViewItem
+            var item = new ClimateViewItem()
             {
                 Year = 1991,
                 TotalPET = 510.10,

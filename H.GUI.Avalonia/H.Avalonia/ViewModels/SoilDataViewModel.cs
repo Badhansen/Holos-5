@@ -452,10 +452,25 @@ namespace H.Avalonia.ViewModels
         }
 
         /// <summary>
+        /// Sets the coordinates of the active farm based on the current latitude and longitude values.
+        /// </summary>
+        private void SetCoordinates()
+        {
+            var activeFarm = this.StorageService.GetActiveFarm();
+            if (activeFarm != null)
+            {
+                activeFarm.Latitude = this.Latitude;
+                activeFarm.Longitude = this.Longitude;
+            }
+        }
+
+        /// <summary>
         /// Switch to <see cref="SoilResultsView"/> from the current single page coordinate tab.
         /// </summary>
         private void SwitchToSoilResultsViewFromSingleCoordinate()
         {
+            this.SetCoordinates();
+
             StoragePlaceholder.SingleSoilViewItem.Latitude = Latitude;
             StoragePlaceholder.SingleSoilViewItem.Longitude = Longitude;
             StoragePlaceholder.ShowSingleCoordinateResults = true;
@@ -468,6 +483,8 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private void SwitchToSoilResultsViewFromMultiCoordinate()
         {
+            this.SetCoordinates();
+
             StoragePlaceholder.ShowMultipleCoordinateResults = true;
             StoragePlaceholder.ShowSingleCoordinateResults = false;
             _regionManager.RequestNavigate(UiRegions.ContentRegion, nameof(SoilResultsView));

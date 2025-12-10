@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.ComponentModel;
 using H.Avalonia.ViewModels.OptionsViews.DataTransferObjects;
 using H.Core.Models;
@@ -51,6 +50,31 @@ namespace H.Avalonia.ViewModels.OptionsViews
             {
                 this.Initialize();
                 base.IsInitialized = true;
+            }
+        }
+
+        #endregion
+
+        #region Protected Methods
+
+        /// <summary>
+        /// Override this method to provide specific cleanup logic for UserSettingsViewModel resources
+        /// </summary>
+        protected override void CleanupResources()
+        {
+            // Always call base implementation first to clean up ViewModelBase resources
+            base.CleanupResources();
+
+            // Clean up UserSettingsDTO if it implements IDisposable
+            if (_data is IDisposable disposableData)
+            {
+                disposableData.Dispose();
+                _data = null;
+            }
+            else if (_data != null)
+            {
+                // Even if it doesn't implement IDisposable, clear the reference to help GC
+                _data = null;
             }
         }
 

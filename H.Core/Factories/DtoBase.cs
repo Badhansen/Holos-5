@@ -12,7 +12,6 @@ public abstract class DtoBase : ErrorValidationBase, IDto
 {
     #region Fields
 
-
     #endregion
 
     #region Properties

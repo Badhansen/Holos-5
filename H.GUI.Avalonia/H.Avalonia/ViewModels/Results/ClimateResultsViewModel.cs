@@ -12,7 +12,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using H.Avalonia.Models;
 using H.Avalonia.Services;
+using H.Avalonia.Views.ResultViews;
+using H.Core.Models.Climate;
+using H.Core.Services.Climate;
+using H.Core.Services.StorageService;
+using Microsoft.Extensions.Logging;
 
 namespace H.Avalonia.ViewModels.Results
 {
@@ -21,32 +27,71 @@ namespace H.Avalonia.ViewModels.Results
     /// </summary>
     public class ClimateResultsViewModel : ResultsViewModelBase
     {
-        private readonly IRegionManager _regionManager;
+        #region Fields
+
         private IRegionNavigationJournal? _navigationJournal;
-        private readonly NasaClimateProvider _nasaClimateProvider;
         private readonly ExportHelpers _exportHelpers;
         private readonly ClimateResultsViewItemMap _climateResultsViewItemMap;
         private CancellationTokenSource _cancellationTokenSource;
+        private ObservableCollection<ClimateViewItem>? _climateViewItems;
+        private readonly IClimateService _climateService;
+        private readonly ILogger _logger;
 
-        
-        
+        #endregion
+
+        #region Constructors
+
+        public ClimateResultsViewModel()
+        {
+            this.Construct();
+        }
+
+        public ClimateResultsViewModel(IRegionManager regionManager, INotificationManagerService notificationManager, ExportHelpers exportHelpers, IStorageService storageService, IClimateService climateService, ILogger logger) : base(regionManager, notificationManager, storageService)
+        {
+            if (logger != null)
+            {
+                _logger = logger;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
+
+            if (climateService != null)
+            {
+                _climateService = climateService;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(climateService));
+            }
+
+            if (exportHelpers != null)
+            {
+                _exportHelpers = exportHelpers;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(exportHelpers));
+            }
+
+            _climateResultsViewItemMap = new ClimateResultsViewItemMap();
+
+            this.Construct();
+        }
+
+        #endregion
+
+        #region Properties
+
         /// <summary>
         /// A collection of <see cref="ClimateResultsViewItems"/> that are attached to the climate results page. Each viewitem denotes a row in the grid.
         /// </summary>
-        public ObservableCollection<ClimateResultsViewItem> ClimateResultsViewItems { get; set; } = new();
-        
+        public ObservableCollection<ClimateViewItem> ClimateResultsViewItems { get; set; } = new ObservableCollection<ClimateViewItem>();
 
-        public ClimateResultsViewModel() { }
+        #endregion
 
-        public ClimateResultsViewModel(IRegionManager regionManager, INotificationManagerService notificationManager, ExportHelpers exportHelpers) : base(regionManager, notificationManager)
-        {
-            _regionManager = regionManager;
-            _exportHelpers = exportHelpers;
-            _climateResultsViewItemMap = new ClimateResultsViewItemMap();
-            GoBackCommand = new DelegateCommand(OnGoBack, CanGoBack);
-            ExportToCsvCommand = new DelegateCommand<object>(OnExportToCSV);
-            _nasaClimateProvider = new NasaClimateProvider();
-        }
+        #region Public Methods
 
         /// <summary>
         /// Triggered when a user navigates to this page.
@@ -54,6 +99,8 @@ namespace H.Avalonia.ViewModels.Results
         /// <param name="navigationContext">The navigation context of the user. Contains the navigation tree and journal</param>
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
+            _climateViewItems = navigationContext.Parameters["ClimateViewItems"] as ObservableCollection<ClimateViewItem>;
+
             // When we navigate to this view, we instantiate the journal property. This allows us to do navigation through journaling.
             _navigationJournal = navigationContext.NavigationService.Journal;
             GoBackCommand.RaiseCanExecuteChanged();
@@ -67,6 +114,16 @@ namespace H.Avalonia.ViewModels.Results
         public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
             ClimateResultsViewItems.Clear();
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void Construct()
+        {
+            GoBackCommand = new DelegateCommand(OnGoBack, CanGoBack);
+            ExportToCsvCommand = new DelegateCommand<object>(OnExportToCSV);
         }
 
         /// <summary>
@@ -89,15 +146,19 @@ namespace H.Avalonia.ViewModels.Results
             }
         }
 
-
         private async Task AddViewItemsToCollectionAsync(CancellationToken cancellationToken)
         {
+            if (_climateViewItems == null)
+            {
+                return;
+            }
+
             IsProcessingData = true;
-            foreach (var viewItem in StoragePlaceholder.ClimateViewItems)
+            foreach (var viewItem in _climateViewItems)
             {
                 for (var currentYear = viewItem.StartYear; currentYear <= viewItem.EndYear; currentYear++)
                 {
-                    var resultItem = new ClimateResultsViewItem
+                    var resultItem = new ClimateViewItem()
                     {
                         Year = currentYear,
                         Latitude = viewItem.Latitude,
@@ -169,7 +230,7 @@ namespace H.Avalonia.ViewModels.Results
             var result = 0.0;
             var calculation = Task.Run(() =>
             {
-                result = _nasaClimateProvider.GetTotalPET(year, latitude, longitude);
+                result = _climateService.GetTotalPET(year, latitude, longitude);
             });
             await calculation;
             return result;
@@ -187,7 +248,7 @@ namespace H.Avalonia.ViewModels.Results
             var result = 0.0;
             var calculation = Task.Run(() =>
             {
-                result = _nasaClimateProvider.GetTotalPPT(year, latitude, longitude);
+                result = _climateService.GetTotalPPT(year, latitude, longitude);
             });
             await calculation;
             return result;
@@ -209,10 +270,64 @@ namespace H.Avalonia.ViewModels.Results
             var result = 0.0;
             var monthlyPPT = Task.Run(() =>
             {
-                result = _nasaClimateProvider.GetMonthlyPPT(year, startingDay, endingDay, latitude, longitude);
+                result = _climateService.GetMonthlyPPT(year, startingDay, endingDay, latitude, longitude);
             });
             await monthlyPPT;
             return result;
         }
+
+        #endregion
+
+        #region Protected Methods
+
+        /// <summary>
+        /// Override this method to provide specific cleanup logic for ClimateResultsViewModel resources
+        /// </summary>
+        protected override void CleanupResources()
+        {
+            // Always call base implementation first to clean up ResultsViewModelBase resources
+            base.CleanupResources();
+
+            // Cancel and dispose of CancellationTokenSource if it exists
+            try
+            {
+                _cancellationTokenSource?.Cancel();
+                _cancellationTokenSource?.Dispose();
+            }
+            catch (ObjectDisposedException)
+            {
+                // Token source may already be disposed, ignore this exception
+            }
+
+            // Clear and dispose of ObservableCollection
+            ClimateResultsViewItems?.Clear();
+
+            // Clean up commands if they implement IDisposable
+            if (GoBackCommand is IDisposable disposableGoBackCommand)
+            {
+                disposableGoBackCommand.Dispose();
+            }
+
+            if (ExportToCsvCommand is IDisposable disposableExportCommand)
+            {
+                disposableExportCommand.Dispose();
+            }
+
+            // Dispose of service if it implements IDisposable
+            if (_climateService is IDisposable disposableProvider)
+            {
+                disposableProvider.Dispose();
+            }
+
+            if (_exportHelpers is IDisposable disposableExportHelpers)
+            {
+                disposableExportHelpers.Dispose();
+            }
+
+            // Clear navigation journal reference
+            _navigationJournal = null;
+        }
+
+        #endregion
     }
 }

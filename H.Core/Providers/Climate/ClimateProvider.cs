@@ -108,6 +108,21 @@ namespace H.Core.Providers.Climate
             return climateData;
         }
 
+        public double GetTotalPET(int year, double latitude, double longitude)
+        {
+            return _nasaClimateProvider.GetTotalPET(year, latitude, longitude);
+        }
+
+        public double GetTotalPPT(int year, double latitude, double longitude)
+        {
+            return _nasaClimateProvider.GetTotalPPT(year, latitude, longitude);
+        }
+
+        public double GetMonthlyPPT(int year, int startingDay, int endingDay, double latitude, double longitude)
+        {
+            return _nasaClimateProvider.GetMonthlyPPT(year, startingDay, endingDay, latitude, longitude);
+        }
+
         public double GetMeanTemperatureForDay(Farm farm, DateTime dateTime)
         {
             return farm.ClimateData.GetMeanTemperatureForDay(dateTime);

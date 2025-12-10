@@ -7,9 +7,11 @@
              xmlns:properties="clr-namespace:H.Avalonia.Core.Properties;assembly=H.Avalonia.Core"
              mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="450"
              x:Class="H.Avalonia.Views.ClimateDataView">
+
     <Design.DataContext>
         <viewmodels:ClimateDataViewModel/>
     </Design.DataContext>
+
     <UserControl.Resources>
         <DataTemplate x:Key="HeaderTemplate">
             <TextBlock
@@ -51,7 +53,7 @@
 
         <DataGrid Name="ClimateDataGrid"
                 Grid.Row="2" 
-                ItemsSource="{Binding Storage.ClimateViewItems, Mode=TwoWay}"
+                ItemsSource="{Binding ClimateViewItems, Mode=TwoWay}"
                 CanUserSortColumns="False"
                 GridLinesVisibility="None"
                 Margin="20, 10"
@@ -172,6 +174,6 @@
         <Button  Classes="calculate-results-button" 
                  Grid.Row="4"
                  Content="{x:Static properties:Resources.LabelGetClimateData}"
-                 Command="{Binding NavigateToResultsView}"/>
+                 Command="{Binding OnGetClimateDataCommand}"/>
     </Grid>
 </UserControl>

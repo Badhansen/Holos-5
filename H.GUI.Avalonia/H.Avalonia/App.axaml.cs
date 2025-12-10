@@ -67,11 +67,16 @@ using System;
 using System.Text.RegularExpressions;
 using System.Threading;
 using H.Core.Factories.Crops;
+using H.Core.Factories.Climate;
+using H.Core.Services.Climate;
+using H.Core.Models.Climate;
+using H.Core.Providers.Climate;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using ClimateResultsView = H.Avalonia.Views.ResultViews.ClimateResultsView;
 using KmlHelpers = H.Avalonia.Infrastructure.KmlHelpers;
 using SoilResultsView = H.Avalonia.Views.ResultViews.SoilResultsView;
+using DryIoc;
 
 namespace H.Avalonia
 {
@@ -122,8 +127,10 @@ namespace H.Avalonia
 
             var storage = Container.Resolve<IStorage>();
             storage.Load();
-            var b = base.Container.Resolve<IStorageService>();
-            var c = b.GetActiveFarm();
+            var storageService = base.Container.Resolve<IStorageService>();
+            var activeFarm = storageService.GetActiveFarm();
+
+
 
             #endregion
 
@@ -151,7 +158,6 @@ namespace H.Avalonia
             containerRegistry.RegisterForNavigation<Views.OptionsViews.DefaultBeddingCompositionView, DefaultBeddingCompositionViewModel>();
             containerRegistry.RegisterForNavigation<Views.OptionsViews.DefaultManureCompositionView, DefaultManureCompositionViewModel>();
             containerRegistry.RegisterForNavigation<Views.OptionsViews.OptionPrecipitationView, PrecipitationSettingsViewModel>();
-
 
             // New development work
             containerRegistry.RegisterForNavigation<MainWindow, MainWindowViewModel>();
@@ -211,10 +217,6 @@ namespace H.Avalonia
             // Blank Page
             containerRegistry.RegisterForNavigation<Views.BlankView, BlankViewModel>();
 
-            //containerRegistry.RegisterSingleton<ResultsViewModelBase>();
-
-
-
             // Providers
             containerRegistry.RegisterSingleton<GeographicDataProvider>();
             containerRegistry.RegisterSingleton<ExportHelpers>();
@@ -226,11 +228,14 @@ namespace H.Avalonia
             containerRegistry.RegisterSingleton<IProvinces, ProvincesService>();
             containerRegistry.RegisterSingleton<IDietProvider, DietProvider>();
             containerRegistry.RegisterSingleton<IFeedIngredientProvider, FeedIngredientProvider>();
+            containerRegistry.RegisterSingleton<IClimateProvider, ClimateProvider>();
+            containerRegistry.RegisterSingleton<ISlcClimateProvider, SlcClimateDataProvider>();
 
             // Services
             containerRegistry.RegisterSingleton<IFarmHelper, FarmHelper>();
             containerRegistry.RegisterSingleton<IComponentInitializationService, ComponentInitializationService>();
             containerRegistry.RegisterSingleton<IFieldComponentService, FieldComponentService>();
+            containerRegistry.RegisterSingleton<IClimateService, ClimateService>();
             containerRegistry.RegisterSingleton<IFarmResultsService_NEW, FarmResultsService_NEW>();
             containerRegistry.RegisterSingleton<IDietService, DefaultDietService>();
             containerRegistry.RegisterSingleton<ICropInitializationService, CropInitializationService>();
@@ -242,8 +247,6 @@ namespace H.Avalonia
 
             // Unit conversion
             containerRegistry.RegisterSingleton<IUnitsOfMeasurementCalculator, UnitsOfMeasurementCalculator>();
-
-            var a = Container.Resolve<IUnitsOfMeasurementCalculator>();
             
             // Dialogs
             containerRegistry.RegisterDialog<DeleteRowDialog, DeleteRowDialogViewModel>();
@@ -252,10 +255,12 @@ namespace H.Avalonia
             containerRegistry.RegisterSingleton<IDietFactory, DietFactory>();
             containerRegistry.RegisterSingleton<IFarmFactory, FarmFactory>();
             containerRegistry.RegisterSingleton<IManagementPeriodFactory, ManagementPeriodFactory>();
+            containerRegistry.RegisterSingleton<IDailyClimateDataFactory, DailyClimateDataFactory>();
 
             containerRegistry.Register(typeof(IFactory<CropDto>), typeof(CropFactory));
             containerRegistry.Register(typeof(IFactory<FieldSystemComponentDto>), typeof(FieldFactory));
             containerRegistry.Register(typeof(IFactory<AnimalComponentDto>), typeof(AnimalComponentFactory));
+            containerRegistry.Register(typeof(IFactory<DailyClimateDto>), typeof(DailyClimateDataFactory));
 
             containerRegistry.Register(typeof(ICropFactory), typeof(CropFactory));
             containerRegistry.Register(typeof(IFieldFactory), typeof(FieldFactory));
@@ -337,11 +342,58 @@ namespace H.Avalonia
 
             // Register the ILogger instance as a singleton in the Prism container
             containerRegistry.RegisterInstance(typeof(ILogger), logger);
+            
+            // Configure DryIoc logging for resolution errors
+            this.ConfigureDryIocLogging(containerRegistry, logger);
+        }
+
+        private void ConfigureDryIocLogging(IContainerRegistry containerRegistry, ILogger logger)
+        {
+            try
+            {
+                // Access the underlying DryIoc container
+                if (containerRegistry is Prism.DryIoc.DryIocContainerExtension dryIocExtension)
+                {
+                    var container = dryIocExtension.Instance;
+                    
+                    // Configure DryIoc with enhanced error reporting
+                    var newContainer = container.With(rules => rules
+                        .WithCaptureContainerDisposeStackTrace()
+                        .WithTrackingDisposableTransients()
+                        .WithDefaultReuse(Reuse.Transient));
+                    
+                    logger.LogInformation("DryIoc container logging configured successfully");
+                }
+                else
+                {
+                    logger.LogWarning("Unable to configure DryIoc logging - container is not a DryIocContainerExtension");
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Failed to configure DryIoc logging: {ErrorMessage}", ex.Message);
+            }
         }
 
         private void SetupTransferServices(IContainerRegistry containerRegistry)
         {
             containerRegistry.Register(typeof(ITransferService<,>), typeof(TransferService<,>));
+
+            // Register TransferService for DailyClimateData and DailyClimateDto using the named mapper
+            containerRegistry.Register<ITransferService<DailyClimateData, DailyClimateDto>>(() =>
+            {
+                var unitsCalculator = base.Container.Resolve<IUnitsOfMeasurementCalculator>();
+                var dailyClimateDataFactory = base.Container.Resolve<IFactory<DailyClimateDto>>();
+                var dtoToModelMapper = base.Container.Resolve<IMapper>(nameof(DailyClimateDtoToDailyClimateDataMapper));
+                var modelToDtoMapper = base.Container.Resolve<IMapper>(nameof(DailyClimateDataToDailyClimateDtoMapper));
+
+                return new TransferService<DailyClimateData, DailyClimateDto>(
+                    unitsOfMeasurementCalculator: unitsCalculator,
+                    dtoFactory: dailyClimateDataFactory,
+                    dtoToModelMapper: dtoToModelMapper,
+                    modelToDtoMapper: modelToDtoMapper
+                );
+            });
 
             // Register TransferService for CropViewItem and CropDto using the named mapper
             containerRegistry.Register<ITransferService<CropViewItem, CropDto>>(() =>
@@ -394,9 +446,6 @@ namespace H.Avalonia
                     modelToDtoMapper: modelToDtoMapper
                 );
             });
-
-
-            var ld = base.Container.Resolve< IComponentInitializationService> ();
         }
 
         private void SetupMappers(IContainerRegistry containerRegistry)
@@ -466,6 +515,22 @@ namespace H.Avalonia
                 expression.AddProfile<ManagementPeriodDtoToManagementPeriodMapper>();
             });
 
+            // Climate mappers
+            var dailyClimateDataToDtoConfiguration = new MapperConfiguration(expression =>
+            {
+                expression.AddProfile<DailyClimateDataToDailyClimateDtoMapper>();
+            });
+
+            var dailyClimateDtoToDataConfiguration = new MapperConfiguration(expression =>
+            {
+                expression.AddProfile<DailyClimateDtoToDailyClimateDataMapper>();
+            });
+
+            var dailyClimateDtoToDtoConfiguration = new MapperConfiguration(expression =>
+            {
+                expression.AddProfile<DailyClimateDtoToDailyClimateDtoMapper>();
+            });
+
             // Register named mappers
             containerRegistry.RegisterInstance(cropDtoToCropDtoConfiguration.CreateMapper(), nameof(CropDtoToCropDtoMapper));
             containerRegistry.RegisterInstance(cropDtoToCropVieItemConfiguration.CreateMapper(), nameof(CropDtoToCropViewItemMapper));
@@ -480,6 +545,11 @@ namespace H.Avalonia
             containerRegistry.RegisterInstance(managementPeriodDtoToManagementPeriodDtoConfiguration.CreateMapper(), nameof(ManagementPeriodDtoToManagementPeriodDtoMapper));
             containerRegistry.RegisterInstance(managementPeriodToManagementPeriodDtoConfiguration.CreateMapper(), nameof(ManagementPeriodToManagementPeriodDtoMapper));
             containerRegistry.RegisterInstance(managementPeriodDtoToManagementPeriodConfiguration.CreateMapper(), nameof(ManagementPeriodDtoToManagementPeriodMapper));
+            
+            // Climate mappers
+            containerRegistry.RegisterInstance(dailyClimateDataToDtoConfiguration.CreateMapper(), nameof(DailyClimateDataToDailyClimateDtoMapper));
+            containerRegistry.RegisterInstance(dailyClimateDtoToDataConfiguration.CreateMapper(), nameof(DailyClimateDtoToDailyClimateDataMapper));
+            containerRegistry.RegisterInstance(dailyClimateDtoToDtoConfiguration.CreateMapper(), nameof(DailyClimateDtoToDailyClimateDtoMapper));
         }
     }
 }

@@ -54,12 +54,33 @@
                     Background="MediumAquamarine"
                     Margin="20, 10"
                     Cursor="Hand"/>
+
+            <Button Background="Transparent"
+                    Padding="10"
+                    Margin="10"
+                    HorizontalAlignment="Stretch"
+                    Command="{Binding SwitchToClimateViewCommand}"
+                    Click="Button_OnClick"
+                    FontFamily="{DynamicResource RobotoFontFamily}"
+                    FontWeight="Regular"
+                    FontSize="14"
+                    CornerRadius="5">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Assets/Images/Icons/climate-icon.png" 
+                           Width="15" 
+                           Height="15"
+                           RenderOptions.BitmapInterpolationMode="HighQuality"/>
+                    <TextBlock Text="{x:Static properties:Resources.LabelClimateData}"
+                               Padding="10, 0, 0, 5"/>
+                </StackPanel>
+            </Button>
 		</StackPanel>
 
         <DataGrid Grid.Row="3"
                   ItemsSource="{Binding SingleSoilResultsViewItems}"
                   Margin="20,0,20,20"
                   IsReadOnly="True"
+                  SelectedItem="{Binding SelectedSingleSoilResult}"
                   IsVisible="{Binding StoragePlaceholder.ShowSingleCoordinateResults}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="{x:Static properties:Resources.LabelLatitude}"

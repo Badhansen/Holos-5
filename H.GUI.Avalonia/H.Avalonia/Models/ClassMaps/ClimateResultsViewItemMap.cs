@@ -5,14 +5,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using H.Core.Models.Climate;
 
 namespace H.Avalonia.Models.ClassMaps
 {
     /// <summary>
-    /// A mapping class for CsvReader extension. The class maps properties in <see cref="ClimateResultsViewItem"/> class
+    /// A mapping class for CsvReader extension. The class maps properties in <see cref="DailyClimateDto"/> class
     /// so that CsvReader is able to identify these properties and handle them when exporting/importing data.
     /// </summary>
-    public sealed class ClimateResultsViewItemMap : ClassMap<ClimateResultsViewItem>
+    public sealed class ClimateResultsViewItemMap : ClassMap<ClimateViewItem>
     {
         public ClimateResultsViewItemMap()
         {

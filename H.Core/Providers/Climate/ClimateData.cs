@@ -12,7 +12,7 @@ using H.Infrastructure;
 namespace H.Core.Providers.Climate
 {
     /// <summary>
-    /// A container class to hold climate data (including temperature, precipitation, and evapotranspiration according to the farm location
+    /// A container class to hold climate data (including temperature, precipitation, and evapotranspiration) according to the farm location
     /// </summary>
     public class ClimateData : ModelBase
     {

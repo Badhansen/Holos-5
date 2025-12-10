@@ -120,18 +120,21 @@ public partial class CropDto : DtoBase, ICropDto
 
     private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName.Equals(nameof(CropType)))
+        if (e.PropertyName != null)
         {
-            // Ensure the crop type is valid
-            this.ValidateCropType();
-        }
-        else if (e.PropertyName.Equals(nameof(AmountOfIrrigation)))
-        {
-            this.ValidateAmountOfIrrigation();
-        }
-        else if (e.PropertyName.Equals(nameof(WetYield)))
-        {
-            this.ValidateWetYield();
+            if (e.PropertyName.Equals(nameof(CropType)))
+            {
+                // Ensure the crop type is valid
+                this.ValidateCropType();
+            }
+            else if (e.PropertyName.Equals(nameof(AmountOfIrrigation)))
+            {
+                this.ValidateAmountOfIrrigation();
+            }
+            else if (e.PropertyName.Equals(nameof(WetYield)))
+            {
+                this.ValidateWetYield();
+            }
         }
     }
 

@@ -11,6 +11,7 @@ using Prism.Ioc;
 using System.Collections.ObjectModel;
 using H.Core.Factories.Crops;
 using Microsoft.Extensions.Logging;
+using H.Core.Models;
 
 namespace H.Core.Test.Services.LandManagement;
 
@@ -23,7 +24,6 @@ public class FieldComponentServiceTest
     
     private Mock<IFieldFactory> _mockFieldComponentDtoFactory;
     private Mock<ICropFactory> _mockCropFactory;
-    private Mock<IUnitsOfMeasurementCalculator> _mockUnitsOfMeasurementCalculator;
     private Mock<ITransferService<CropViewItem, CropDto>> _mockCropTransferService;
     private Mock<ITransferService<FieldSystemComponent, FieldSystemComponentDto>> _mockFieldTransferService;
 
@@ -46,9 +46,9 @@ public class FieldComponentServiceTest
     {
         _mockFieldComponentDtoFactory = new Mock<IFieldFactory>();
         _mockCropFactory = new Mock<ICropFactory>();
-        _mockUnitsOfMeasurementCalculator = new Mock<IUnitsOfMeasurementCalculator>();
         _mockCropTransferService = new Mock<ITransferService<CropViewItem, CropDto>>();
         _mockFieldTransferService = new Mock<ITransferService<FieldSystemComponent, FieldSystemComponentDto>>();
+
         var mockLogger = new Mock<ILogger>();
         var mockContainerProvider = new Mock<IContainerProvider>();
 
@@ -99,7 +99,216 @@ public class FieldComponentServiceTest
 
     #endregion
 
-    #region Tests
+    #region Constructor Tests
+
+    [TestMethod]
+    public void Constructor_WithValidDependencies_CreatesInstance()
+    {
+        // Arrange: valid dependencies
+        var mockFieldFactory = new Mock<IFieldFactory>();
+        var mockCropFactory = new Mock<ICropFactory>();
+        var mockLogger = new Mock<ILogger>();
+        var mockCropTransferService = new Mock<ITransferService<CropViewItem, CropDto>>();
+        var mockFieldTransferService = new Mock<ITransferService<FieldSystemComponent, FieldSystemComponentDto>>();
+
+        // Act: create instance with valid dependencies
+        var service = new FieldComponentService(
+            mockFieldFactory.Object,
+            mockCropFactory.Object,
+            mockLogger.Object,
+            mockCropTransferService.Object,
+            mockFieldTransferService.Object
+        );
+
+        // Assert: instance should be created successfully
+        Assert.IsNotNull(service);
+        Assert.IsInstanceOfType(service, typeof(FieldComponentService));
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void Constructor_WithNullFieldFactory_ThrowsArgumentNullException()
+    {
+        // Arrange: null fieldFactory but valid other dependencies
+        IFieldFactory fieldFactory = null;
+        var mockCropFactory = new Mock<ICropFactory>();
+        var mockLogger = new Mock<ILogger>();
+        var mockCropTransferService = new Mock<ITransferService<CropViewItem, CropDto>>();
+        var mockFieldTransferService = new Mock<ITransferService<FieldSystemComponent, FieldSystemComponentDto>>();
+
+        // Act: attempt to create instance with null fieldFactory
+        var service = new FieldComponentService(
+            fieldFactory,
+            mockCropFactory.Object,
+            mockLogger.Object,
+            mockCropTransferService.Object,
+            mockFieldTransferService.Object
+        );
+
+        // Assert: exception attribute handles verification
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void Constructor_WithNullCropFactory_ThrowsArgumentNullException()
+    {
+        // Arrange: null cropFactory but valid other dependencies
+        var mockFieldFactory = new Mock<IFieldFactory>();
+        ICropFactory cropFactory = null;
+        var mockLogger = new Mock<ILogger>();
+        var mockCropTransferService = new Mock<ITransferService<CropViewItem, CropDto>>();
+        var mockFieldTransferService = new Mock<ITransferService<FieldSystemComponent, FieldSystemComponentDto>>();
+
+        // Act: attempt to create instance with null cropFactory
+        var service = new FieldComponentService(
+            mockFieldFactory.Object,
+            cropFactory,
+            mockLogger.Object,
+            mockCropTransferService.Object,
+            mockFieldTransferService.Object
+        );
+
+        // Assert: exception attribute handles verification
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void Constructor_WithNullLogger_ThrowsArgumentNullException()
+    {
+        // Arrange: null logger but valid other dependencies
+        var mockFieldFactory = new Mock<IFieldFactory>();
+        var mockCropFactory = new Mock<ICropFactory>();
+        ILogger logger = null;
+        var mockCropTransferService = new Mock<ITransferService<CropViewItem, CropDto>>();
+        var mockFieldTransferService = new Mock<ITransferService<FieldSystemComponent, FieldSystemComponentDto>>();
+
+        // Act: attempt to create instance with null logger
+        var service = new FieldComponentService(
+            mockFieldFactory.Object,
+            mockCropFactory.Object,
+            logger,
+            mockCropTransferService.Object,
+            mockFieldTransferService.Object
+        );
+
+        // Assert: exception attribute handles verification
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void Constructor_WithNullCropTransferService_ThrowsArgumentNullException()
+    {
+        // Arrange: null cropTransferService but valid other dependencies
+        var mockFieldFactory = new Mock<IFieldFactory>();
+        var mockCropFactory = new Mock<ICropFactory>();
+        var mockLogger = new Mock<ILogger>();
+        ITransferService<CropViewItem, CropDto> cropTransferService = null;
+        var mockFieldTransferService = new Mock<ITransferService<FieldSystemComponent, FieldSystemComponentDto>>();
+
+        // Act: attempt to create instance with null cropTransferService
+        var service = new FieldComponentService(
+            mockFieldFactory.Object,
+            mockCropFactory.Object,
+            mockLogger.Object,
+            cropTransferService,
+            mockFieldTransferService.Object
+        );
+
+        // Assert: exception attribute handles verification
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void Constructor_WithNullFieldTransferService_ThrowsArgumentNullException()
+    {
+        // Arrange: null fieldTransferService but valid other dependencies
+        var mockFieldFactory = new Mock<IFieldFactory>();
+        var mockCropFactory = new Mock<ICropFactory>();
+        var mockLogger = new Mock<ILogger>();
+        var mockCropTransferService = new Mock<ITransferService<CropViewItem, CropDto>>();
+        ITransferService<FieldSystemComponent, FieldSystemComponentDto> fieldTransferService = null;
+
+        // Act: attempt to create instance with null fieldTransferService
+        var service = new FieldComponentService(
+            mockFieldFactory.Object,
+            mockCropFactory.Object,
+            mockLogger.Object,
+            mockCropTransferService.Object,
+            fieldTransferService
+        );
+
+        // Assert: exception attribute handles verification
+    }
+
+    [TestMethod]
+    public void Constructor_VerifyParameterNames_InExceptionMessages()
+    {
+        // Test fieldFactory parameter name in exception
+        try
+        {
+            new FieldComponentService(null, new Mock<ICropFactory>().Object, new Mock<ILogger>().Object, 
+                new Mock<ITransferService<CropViewItem, CropDto>>().Object, 
+                new Mock<ITransferService<FieldSystemComponent, FieldSystemComponentDto>>().Object);
+            Assert.Fail("Expected ArgumentNullException was not thrown");
+        }
+        catch (ArgumentNullException ex)
+        {
+            Assert.AreEqual("fieldFactory", ex.ParamName);
+        }
+
+        // Test cropFactory parameter name in exception
+        try
+        {
+            new FieldComponentService(new Mock<IFieldFactory>().Object, null, new Mock<ILogger>().Object,
+                new Mock<ITransferService<CropViewItem, CropDto>>().Object,
+                new Mock<ITransferService<FieldSystemComponent, FieldSystemComponentDto>>().Object);
+            Assert.Fail("Expected ArgumentNullException was not thrown");
+        }
+        catch (ArgumentNullException ex)
+        {
+            Assert.AreEqual("cropFactory", ex.ParamName);
+        }
+
+        // Test logger parameter name in exception (this should be handled by base class)
+        try
+        {
+            new FieldComponentService(new Mock<IFieldFactory>().Object, new Mock<ICropFactory>().Object, null,
+                new Mock<ITransferService<CropViewItem, CropDto>>().Object,
+                new Mock<ITransferService<FieldSystemComponent, FieldSystemComponentDto>>().Object);
+            Assert.Fail("Expected ArgumentNullException was not thrown");
+        }
+        catch (ArgumentNullException ex)
+        {
+            Assert.AreEqual("logger", ex.ParamName);
+        }
+
+        // Test cropTransferService parameter name in exception
+        try
+        {
+            new FieldComponentService(new Mock<IFieldFactory>().Object, new Mock<ICropFactory>().Object, 
+                new Mock<ILogger>().Object, null,
+                new Mock<ITransferService<FieldSystemComponent, FieldSystemComponentDto>>().Object);
+            Assert.Fail("Expected ArgumentNullException was not thrown");
+        }
+        catch (ArgumentNullException ex)
+        {
+            Assert.AreEqual("cropTransferService", ex.ParamName);
+        }
+
+        // Test fieldTransferService parameter name in exception
+        try
+        {
+            new FieldComponentService(new Mock<IFieldFactory>().Object, new Mock<ICropFactory>().Object,
+                new Mock<ILogger>().Object, new Mock<ITransferService<CropViewItem, CropDto>>().Object, null);
+            Assert.Fail("Expected ArgumentNullException was not thrown");
+        }
+        catch (ArgumentNullException ex)
+        {
+            Assert.AreEqual("fieldTransferService", ex.ParamName);
+        }
+    }
+
+    #endregion
 
     [TestMethod]
     public void TransferCropDtoToSystemConvertsImperialValueToMetric()
@@ -264,6 +473,294 @@ public class FieldComponentServiceTest
         Assert.IsInstanceOfType(dto, typeof(CropDto));
         Assert.AreEqual("Test Crop", dto.Name);
     }
+
+    #region ConvertCropViewItemsToDtoCollection Tests
+
+    [TestMethod]
+    public void ConvertCropViewItemsToDtoCollection_WithEmptyCollection_ClearsDtoCollection()
+    {
+        // Arrange: field component with no crop view items and field DTO with some existing DTOs
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            CropViewItems = new ObservableCollection<CropViewItem>() 
+        };
+        var fieldComponentDto = new FieldSystemComponentDto() 
+        { 
+            CropDtos = new ObservableCollection<ICropDto> 
+            { 
+                new CropDto(), 
+                new CropDto() 
+            } 
+        };
+
+        // Act: convert empty crop view items to DTO collection
+        _fieldComponentService.ConvertCropViewItemsToDtoCollection(fieldComponent, fieldComponentDto);
+
+        // Assert: DTO collection should be cleared and remain empty
+        Assert.AreEqual(0, fieldComponentDto.CropDtos.Count);
+        Assert.IsFalse(fieldComponentDto.CropDtos.Any());
+    }
+
+    [TestMethod]
+    public void ConvertCropViewItemsToDtoCollection_WithSingleItem_CreatesOneDto()
+    {
+        // Arrange: field component with one crop view item
+        var cropViewItem = new CropViewItem() 
+        { 
+            Guid = Guid.NewGuid(), 
+            Name = "Test Crop", 
+            CropType = CropType.Wheat 
+        };
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            CropViewItems = new ObservableCollection<CropViewItem> { cropViewItem } 
+        };
+        var fieldComponentDto = new FieldSystemComponentDto() 
+        { 
+            CropDtos = new ObservableCollection<ICropDto>() 
+        };
+
+        var expectedDto = new CropDto() 
+        { 
+            Guid = cropViewItem.Guid, 
+            Name = cropViewItem.Name, 
+            CropType = cropViewItem.CropType 
+        };
+
+        // Mock the crop factory to return a specific DTO when called with the crop view item
+        _mockCropFactory.Setup(x => x.CreateCropDto(cropViewItem)).Returns(expectedDto);
+
+        // Act: convert the single crop view item to DTO
+        _fieldComponentService.ConvertCropViewItemsToDtoCollection(fieldComponent, fieldComponentDto);
+
+        // Assert: exactly one DTO should be created and added to the collection
+        Assert.AreEqual(1, fieldComponentDto.CropDtos.Count);
+        Assert.AreSame(expectedDto, fieldComponentDto.CropDtos[0]);
+        _mockCropFactory.Verify(x => x.CreateCropDto(cropViewItem), Times.Once);
+    }
+
+    [TestMethod]
+    public void ConvertCropViewItemsToDtoCollection_WithMultipleItems_CreatesCorrespondingDtos()
+    {
+        // Arrange: field component with multiple crop view items
+        var cropViewItem1 = new CropViewItem() 
+        { 
+            Guid = Guid.NewGuid(), 
+            Name = "Wheat Crop", 
+            CropType = CropType.Wheat 
+        };
+        var cropViewItem2 = new CropViewItem() 
+        { 
+            Guid = Guid.NewGuid(), 
+            Name = "Barley Crop", 
+            CropType = CropType.Barley 
+        };
+        var cropViewItem3 = new CropViewItem() 
+        { 
+            Guid = Guid.NewGuid(), 
+            Name = "Oats Crop", 
+            CropType = CropType.Oats 
+        };
+
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            CropViewItems = new ObservableCollection<CropViewItem> 
+            { 
+                cropViewItem1, 
+                cropViewItem2, 
+                cropViewItem3 
+            } 
+        };
+        var fieldComponentDto = new FieldSystemComponentDto() 
+        { 
+            CropDtos = new ObservableCollection<ICropDto>() 
+        };
+
+        var expectedDto1 = new CropDto() { Guid = cropViewItem1.Guid, Name = cropViewItem1.Name };
+        var expectedDto2 = new CropDto() { Guid = cropViewItem2.Guid, Name = cropViewItem2.Name };
+        var expectedDto3 = new CropDto() { Guid = cropViewItem3.Guid, Name = cropViewItem3.Name };
+
+        // Mock the crop factory to return specific DTOs for each crop view item
+        _mockCropFactory.Setup(x => x.CreateCropDto(cropViewItem1)).Returns(expectedDto1);
+        _mockCropFactory.Setup(x => x.CreateCropDto(cropViewItem2)).Returns(expectedDto2);
+        _mockCropFactory.Setup(x => x.CreateCropDto(cropViewItem3)).Returns(expectedDto3);
+
+        // Act: convert all crop view items to DTOs
+        _fieldComponentService.ConvertCropViewItemsToDtoCollection(fieldComponent, fieldComponentDto);
+
+        // Assert: exactly three DTOs should be created in the correct order
+        Assert.AreEqual(3, fieldComponentDto.CropDtos.Count);
+        Assert.AreSame(expectedDto1, fieldComponentDto.CropDtos[0]);
+        Assert.AreSame(expectedDto2, fieldComponentDto.CropDtos[1]);
+        Assert.AreSame(expectedDto3, fieldComponentDto.CropDtos[2]);
+        
+        // Verify factory was called for each view item
+        _mockCropFactory.Verify(x => x.CreateCropDto(cropViewItem1), Times.Once);
+        _mockCropFactory.Verify(x => x.CreateCropDto(cropViewItem2), Times.Once);
+        _mockCropFactory.Verify(x => x.CreateCropDto(cropViewItem3), Times.Once);
+    }
+
+    [TestMethod]
+    public void ConvertCropViewItemsToDtoCollection_ClearsExistingDtos_BeforeAddingNew()
+    {
+        // Arrange: field DTO already contains some DTOs, field component has one view item
+        var existingDto1 = new CropDto() { Guid = Guid.NewGuid(), Name = "Existing 1" };
+        var existingDto2 = new CropDto() { Guid = Guid.NewGuid(), Name = "Existing 2" };
+        
+        var fieldComponentDto = new FieldSystemComponentDto() 
+        { 
+            CropDtos = new ObservableCollection<ICropDto> { existingDto1, existingDto2 } 
+        };
+
+        var newCropViewItem = new CropViewItem() 
+        { 
+            Guid = Guid.NewGuid(), 
+            Name = "New Crop" 
+        };
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            CropViewItems = new ObservableCollection<CropViewItem> { newCropViewItem } 
+        };
+
+        var newDto = new CropDto() { Guid = newCropViewItem.Guid, Name = newCropViewItem.Name };
+        _mockCropFactory.Setup(x => x.CreateCropDto(newCropViewItem)).Returns(newDto);
+
+        // Act: convert crop view items which should clear existing DTOs first
+        _fieldComponentService.ConvertCropViewItemsToDtoCollection(fieldComponent, fieldComponentDto);
+
+        // Assert: only the new DTO should be present, existing DTOs should be cleared
+        Assert.AreEqual(1, fieldComponentDto.CropDtos.Count);
+        Assert.AreSame(newDto, fieldComponentDto.CropDtos[0]);
+        Assert.IsFalse(fieldComponentDto.CropDtos.Contains(existingDto1));
+        Assert.IsFalse(fieldComponentDto.CropDtos.Contains(existingDto2));
+    }
+
+    [TestMethod]
+    public void ConvertCropViewItemsToDtoCollection_PassesCorrectParametersToFactory()
+    {
+        // Arrange: field component with a specific crop view item to verify factory gets correct parameter
+        var cropViewItem = new CropViewItem() 
+        { 
+            Guid = Guid.NewGuid(), 
+            Name = "Parameter Test Crop",
+            CropType = CropType.Barley,
+            Year = 2023,
+            AmountOfIrrigation = 100.5
+        };
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            CropViewItems = new ObservableCollection<CropViewItem> { cropViewItem } 
+        };
+        var fieldComponentDto = new FieldSystemComponentDto() 
+        { 
+            CropDtos = new ObservableCollection<ICropDto>() 
+        };
+
+        var returnedDto = new CropDto();
+        _mockCropFactory.Setup(x => x.CreateCropDto(It.IsAny<CropViewItem>())).Returns(returnedDto);
+
+        // Act: perform the conversion
+        _fieldComponentService.ConvertCropViewItemsToDtoCollection(fieldComponent, fieldComponentDto);
+
+        // Assert: verify factory was called with the exact crop view item instance
+        _mockCropFactory.Verify(x => x.CreateCropDto(It.Is<CropViewItem>(c => 
+            c.Guid == cropViewItem.Guid && 
+            c.Name == cropViewItem.Name && 
+            c.CropType == cropViewItem.CropType &&
+            c.Year == cropViewItem.Year &&
+            c.AmountOfIrrigation == cropViewItem.AmountOfIrrigation)), Times.Once);
+    }
+
+    [TestMethod]
+    public void ConvertCropViewItemsToDtoCollection_WithNullFieldComponent_DoesNotModifyDto()
+    {
+        // Arrange: field DTO with some existing DTOs, null field component
+        var existingDto = new CropDto() { Name = "Existing DTO" };
+        var fieldComponentDto = new FieldSystemComponentDto() 
+        { 
+            CropDtos = new ObservableCollection<ICropDto> { existingDto } 
+        };
+        FieldSystemComponent fieldComponent = null;
+
+        // Act: calling with null field component should not modify the DTO collection
+        _fieldComponentService.ConvertCropViewItemsToDtoCollection(fieldComponent, fieldComponentDto);
+
+        // Assert: DTO collection should remain unchanged when field component is null
+        Assert.AreEqual(1, fieldComponentDto.CropDtos.Count);
+        Assert.AreSame(existingDto, fieldComponentDto.CropDtos[0]);
+        
+        // Verify factory was never called
+        _mockCropFactory.Verify(x => x.CreateCropDto(It.IsAny<CropViewItem>()), Times.Never);
+    }
+
+    [TestMethod]
+    public void ConvertCropViewItemsToDtoCollection_WithNullFieldComponentDto_DoesNotThrow()
+    {
+        // Arrange: valid field component, null field DTO
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            CropViewItems = new ObservableCollection<CropViewItem> { new CropViewItem() } 
+        };
+        IFieldComponentDto fieldComponentDto = null;
+
+        // Act & Assert: calling with null field DTO should not throw due to null check
+        _fieldComponentService.ConvertCropViewItemsToDtoCollection(fieldComponent, fieldComponentDto);
+
+        // Verify factory was never called
+        _mockCropFactory.Verify(x => x.CreateCropDto(It.IsAny<CropViewItem>()), Times.Never);
+    }
+
+    [TestMethod]
+    public void ConvertCropViewItemsToDtoCollection_WithBothParametersNull_DoesNotThrow()
+    {
+        // Arrange: both parameters are null
+        FieldSystemComponent fieldComponent = null;
+        IFieldComponentDto fieldComponentDto = null;
+
+        // Act & Assert: calling with both null parameters should not throw due to null checks
+        _fieldComponentService.ConvertCropViewItemsToDtoCollection(fieldComponent, fieldComponentDto);
+
+        // Verify factory was never called
+        _mockCropFactory.Verify(x => x.CreateCropDto(It.IsAny<CropViewItem>()), Times.Never);
+    }
+
+    [TestMethod]
+    public void ConvertCropViewItemsToDtoCollection_PreservesOrderOfViewItems()
+    {
+        // Arrange: field component with multiple crop view items in specific order
+        var firstItem = new CropViewItem() { Guid = Guid.NewGuid(), Name = "First" };
+        var secondItem = new CropViewItem() { Guid = Guid.NewGuid(), Name = "Second" };
+        var thirdItem = new CropViewItem() { Guid = Guid.NewGuid(), Name = "Third" };
+        
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            CropViewItems = new ObservableCollection<CropViewItem> { firstItem, secondItem, thirdItem } 
+        };
+        var fieldComponentDto = new FieldSystemComponentDto() 
+        { 
+            CropDtos = new ObservableCollection<ICropDto>() 
+        };
+
+        var firstDto = new CropDto() { Name = "First DTO" };
+        var secondDto = new CropDto() { Name = "Second DTO" };
+        var thirdDto = new CropDto() { Name = "Third DTO" };
+
+        // Setup factory to return specific DTOs for each view item to verify order
+        _mockCropFactory.Setup(x => x.CreateCropDto(firstItem)).Returns(firstDto);
+        _mockCropFactory.Setup(x => x.CreateCropDto(secondItem)).Returns(secondDto);
+        _mockCropFactory.Setup(x => x.CreateCropDto(thirdItem)).Returns(thirdDto);
+
+        // Act: convert view items to DTOs
+        _fieldComponentService.ConvertCropViewItemsToDtoCollection(fieldComponent, fieldComponentDto);
+
+        // Assert: DTOs should be added in the same order as their corresponding view items
+        Assert.AreEqual(3, fieldComponentDto.CropDtos.Count);
+        Assert.AreSame(firstDto, fieldComponentDto.CropDtos[0]);
+        Assert.AreSame(secondDto, fieldComponentDto.CropDtos[1]);
+        Assert.AreSame(thirdDto, fieldComponentDto.CropDtos[2]);
+    }
+
+    #endregion
 
     #region GetCropViewItemFromDto Tests
 
@@ -594,8 +1091,230 @@ public class FieldComponentServiceTest
 
     #endregion
 
+    #region Tests for InitializeFieldSystemComponent
+
+    [TestMethod]
+    public void InitializeFieldSystemComponent_WithUninitializedComponent_SetsNameAndInitializesFlag()
+    {
+        // Arrange: create a farm and an uninitialized field component
+        var farm = new Farm();
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            ComponentNameDisplayString = "Field", 
+            IsInitialized = false,
+            Name = null 
+        };
+
+        // Act: initialize the field component
+        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+
+        // Assert: component should now be initialized with a unique name
+        Assert.IsTrue(fieldComponent.IsInitialized);
+        Assert.IsNotNull(fieldComponent.Name);
+        Assert.AreEqual("Field", fieldComponent.Name);
+    }
+
+    [TestMethod]
+    public void InitializeFieldSystemComponent_WithAlreadyInitializedComponent_DoesNothing()
+    {
+        // Arrange: create a field component that is already initialized
+        var farm = new Farm();
+        var originalName = "Original Field Name";
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            IsInitialized = true,
+            Name = originalName 
+        };
+
+        // Act: attempt to initialize an already initialized component
+        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+
+        // Assert: component should remain unchanged
+        Assert.IsTrue(fieldComponent.IsInitialized);
+        Assert.AreEqual(originalName, fieldComponent.Name);
+    }
+
+    [TestMethod]
+    public void InitializeFieldSystemComponent_WithFarmContainingNoComponents_AssignsBaseName()
+    {
+        // Arrange: empty farm with no existing components
+        var farm = new Farm() { Components = new List<ComponentBase>() };
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            ComponentNameDisplayString = "Test Field",
+            IsInitialized = false 
+        };
+
+        // Act
+        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+
+        // Assert: should get the base name without any numbering
+        Assert.IsTrue(fieldComponent.IsInitialized);
+        Assert.AreEqual("Test Field", fieldComponent.Name);
+    }
+
+    [TestMethod]
+    public void InitializeFieldSystemComponent_WithFarmContainingExistingComponents_AssignsUniqueName()
+    {
+        // Arrange: farm with existing components that have conflicting names
+        var existingComponent1 = new FieldSystemComponent() { Name = "Field" };
+        var existingComponent2 = new FieldSystemComponent() { Name = "Field #2" };
+        var farm = new Farm() 
+        { 
+            Components = new List<ComponentBase> { existingComponent1, existingComponent2 } 
+        };
+
+        var newFieldComponent = new FieldSystemComponent() 
+        { 
+            ComponentNameDisplayString = "Field",
+            IsInitialized = false 
+        };
+
+        // Act
+        _fieldComponentService.InitializeFieldSystemComponent(farm, newFieldComponent);
+
+        // Assert: should get a unique name that doesn't conflict with existing components
+        Assert.IsTrue(newFieldComponent.IsInitialized);
+        Assert.AreEqual("Field #3", newFieldComponent.Name);
+    }
+
+    [TestMethod]
+    public void InitializeFieldSystemComponent_WithFarmContainingComponentsWithEmptyNames_IgnoresEmptyNames()
+    {
+        // Arrange: farm with existing components where some have empty/null names
+        var componentWithEmptyName = new FieldSystemComponent() { Name = "" };
+        var componentWithNullName = new FieldSystemComponent() { Name = null };
+        var componentWithWhitespaceName = new FieldSystemComponent() { Name = "   " };
+        var farm = new Farm() 
+        { 
+            Components = new List<ComponentBase> 
+            { 
+                componentWithEmptyName, 
+                componentWithNullName, 
+                componentWithWhitespaceName 
+            } 
+        };
+
+        var newFieldComponent = new FieldSystemComponent() 
+        { 
+            ComponentNameDisplayString = "Field",
+            IsInitialized = false 
+        };
+
+        // Act: empty/null names should be ignored in uniqueness check
+        _fieldComponentService.InitializeFieldSystemComponent(farm, newFieldComponent);
+
+        // Assert: should get base name since empty names are ignored
+        Assert.IsTrue(newFieldComponent.IsInitialized);
+        Assert.AreEqual("Field", newFieldComponent.Name);
+    }
+
+    [TestMethod]
+    public void InitializeFieldSystemComponent_WithMultipleCallsOnSameComponent_OnlyInitializesOnce()
+    {
+        // Arrange: single field component and farm
+        var farm = new Farm() { Components = new List<ComponentBase>() };
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            ComponentNameDisplayString = "Field",
+            IsInitialized = false 
+        };
+
+        // Act: call initialize multiple times
+        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+        var nameAfterFirstCall = fieldComponent.Name;
+        
+        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+
+        // Assert: should only be initialized once and name should not change
+        Assert.IsTrue(fieldComponent.IsInitialized);
+        Assert.AreEqual(nameAfterFirstCall, fieldComponent.Name);
+    }
+
+    [TestMethod]
+    public void InitializeFieldSystemComponent_WithNullFarm_DoesNotThrow()
+    {
+        // Arrange: null farm parameter
+        Farm farm = null;
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            ComponentNameDisplayString = "Field",
+            IsInitialized = false 
+        };
+
+        // Act & Assert: should handle null farm gracefully without throwing
+        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+
+        // The component should still be marked as initialized even if farm is null
+        // This tests the early return behavior for already initialized components
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void InitializeFieldSystemComponent_WithNullFieldComponent_ThrowsArgumentNullException()
+    {
+        // Arrange: valid farm but null field component
+        var farm = new Farm() { Components = new List<ComponentBase>() };
+        FieldSystemComponent fieldComponent = null;
+
+        // Act: should throw ArgumentNullException when fieldSystemComponent is null
+        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+
+        // Assert: exception attribute on the test method handles verification
+    }
+
+    [TestMethod]
+    public void InitializeFieldSystemComponent_WithMixedComponentTypes_OnlyConsidersNamesFromAllComponents()
+    {
+        // Arrange: farm with mixed component types to ensure name uniqueness across all component types
+        var fieldComponent1 = new FieldSystemComponent() { Name = "Component" };
+        // Note: In a real scenario, you might have other component types like AnimalComponent
+        // For this test, we'll use another FieldSystemComponent to simulate different component types
+        var fieldComponent2 = new FieldSystemComponent() { Name = "Component #2" };
+        
+        var farm = new Farm() 
+        { 
+            Components = new List<ComponentBase> { fieldComponent1, fieldComponent2 } 
+        };
+
+        var newFieldComponent = new FieldSystemComponent() 
+        { 
+            ComponentNameDisplayString = "Component",
+            IsInitialized = false 
+        };
+
+        // Act
+        _fieldComponentService.InitializeFieldSystemComponent(farm, newFieldComponent);
+
+        // Assert: should consider names from all component types when generating unique name
+        Assert.IsTrue(newFieldComponent.IsInitialized);
+        Assert.AreEqual("Component #3", newFieldComponent.Name);
+    }
+
+    [TestMethod]
+    public void InitializeFieldSystemComponent_WithLongComponentNameDisplayString_PreservesFullName()
+    {
+        // Arrange: field component with a long display name
+        var farm = new Farm() { Components = new List<ComponentBase>() };
+        var longDisplayName = "Very Long Field System Component Name For Testing Purposes";
+        var fieldComponent = new FieldSystemComponent() 
+        { 
+            ComponentNameDisplayString = longDisplayName,
+            IsInitialized = false 
+        };
+
+        // Act
+        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+
+        // Assert: should preserve the full display name
+        Assert.IsTrue(fieldComponent.IsInitialized);
+        Assert.AreEqual(longDisplayName, fieldComponent.Name);
+    }
+
+    #endregion
+
     #region Tests for ResetAllYears
-    // ---------------------------------------------------
 
     [TestMethod]
     public void ResetAllYears_WithEmptyCollection_DoesNotThrow()
@@ -769,8 +1488,6 @@ public class FieldComponentServiceTest
         var expectedMinYear = originalMaxYear - cropDtos.Count + 1;
         Assert.AreEqual(expectedMinYear, actualYears.Last());
     }
-
-    #endregion
 
     #endregion
 }

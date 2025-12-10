@@ -18,5 +18,8 @@ namespace H.Core.Providers.Climate
         double GetGrowingSeasonPrecipitation(Farm farm, int year);
         double GetGrowingSeasonEvapotranspiration(Farm farm, int year);
         ClimateData Get(double latitude, double longitude, TimeFrame climateNormalTimeFrame, Farm farm);
+        double GetTotalPET(int year, double latitude, double longitude);
+        double GetTotalPPT(int year, double latitude, double longitude);
+        double GetMonthlyPPT(int year, int startingDay, int endingDay, double latitude, double longitude);
     }
 }

@@ -173,7 +173,7 @@ namespace H.Avalonia.ViewModels
                 throw new ArgumentNullException(nameof(nominatimGeocoderService));
             }
 
-                this.StoragePlaceholder = storage;
+            this.StoragePlaceholder = storage;
 
             _regionManager = regionManager;
             _importHelper = importHelper;

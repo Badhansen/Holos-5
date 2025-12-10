@@ -128,6 +128,12 @@ namespace H.Avalonia.Services
                     {
                         _logger.LogInformation($"{nameof(NominatimGeocoderService)}.{nameof(GetCoordinates)}, Nominatim API Task Status: {getNominatimApi.Status}");
                         content = getNominatimApi.Result;
+                        // Check if content returned by API is empty, if so do not return
+                        if (content == "[]")
+                        {
+                            _logger.LogWarning($"{nameof(NominatimGeocoderService)}.{nameof(DownloadNominatimApiData)}: API content empty.");
+                            return String.Empty;
+                        }
                         CacheData(address, content);
                     }
                     else
@@ -157,7 +163,6 @@ namespace H.Avalonia.Services
             if (content != string.Empty)
             {
                 _logger.LogInformation($"{nameof(NominatimGeocoderService)}.{nameof(DownloadNominatimApiData)} : API content downloaded successfully.");
-                
             }
             else
             {
@@ -165,6 +170,16 @@ namespace H.Avalonia.Services
                 _logger.LogError($"{nameof(NominatimGeocoderService)}.{nameof(DownloadNominatimApiData)}, API url: {url}");
             }
             return content;
+        }
+        private string GetCachePath(string address)
+        {
+            // Sanitize address for file name, replace common address characters with underscores.
+            var invalidCharacters = Path.GetInvalidFileNameChars();
+            var cleanedFileName = invalidCharacters.Aggregate(address, (current, c) => current.Replace(c, '_')).Replace(" ", "_").Replace(",", "");
+            var filename = $"nominatim_geocoder_data_address_{cleanedFileName}";
+
+            var path = Path.GetTempPath();
+            return Path.Combine(path, filename);
         }
 
         private string GetCachedData(string address)
@@ -176,17 +191,6 @@ namespace H.Avalonia.Services
                 return File.ReadAllText(path);
             }
             return null;
-        }
-
-        private string GetCachePath(string address)
-        {
-            // Sanitize address for file name, replace common address characters with underscores.
-            var invalidCharacters = Path.GetInvalidFileNameChars();
-            var cleanedFileName = invalidCharacters.Aggregate(address, (current, c) => current.Replace(c, '_')).Replace(" ", "_").Replace(",", "");
-            var filename = $"nominatim_geocoder_data_address_{cleanedFileName}";
-
-            var path = Path.GetTempPath();
-            return Path.Combine(path, filename);
         }
 
         private void CacheData(string address, string content)

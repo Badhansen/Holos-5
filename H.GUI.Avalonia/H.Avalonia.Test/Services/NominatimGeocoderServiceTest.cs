@@ -81,8 +81,8 @@ namespace H.Avalonia.Test.Services
         public async Task TestGeocoderProvince()
         {
             _nominatimGeocoderService = new NominatimGeocoderService(_loggerMock);
-            Province? latitudeAndLongitude = await _nominatimGeocoderService.GetProvince(_address);
-            Assert.AreEqual(latitudeAndLongitude, Province.Alberta);
+            Province? province = await _nominatimGeocoderService.GetProvince(_address);
+            Assert.AreEqual(province, Province.Alberta);
         }
     }
 }

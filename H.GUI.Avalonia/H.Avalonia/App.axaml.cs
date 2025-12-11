@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using H.Avalonia.Infrastructure;
 using H.Avalonia.Infrastructure.Dialogs;
+using H.Avalonia.Infrastructure.MapperServices;
 using H.Avalonia.ViewModels;
 using H.Avalonia.ViewModels.ComponentViews;
 using H.Avalonia.ViewModels.ComponentViews.Beef;
@@ -77,6 +78,17 @@ using ClimateResultsView = H.Avalonia.Views.ResultViews.ClimateResultsView;
 using KmlHelpers = H.Avalonia.Infrastructure.KmlHelpers;
 using SoilResultsView = H.Avalonia.Views.ResultViews.SoilResultsView;
 using DryIoc;
+using H.Avalonia.Views.ComponentViews.Beef;
+using H.Avalonia.Views.ComponentViews.Dairy;
+using H.Avalonia.Views.ComponentViews.Infrastructure;
+using H.Avalonia.Views.ComponentViews.LandManagement;
+using H.Avalonia.Views.ComponentViews.OtherAnimals;
+using H.Avalonia.Views.ComponentViews.Poultry;
+using H.Avalonia.Views.ComponentViews.Sheep;
+using H.Avalonia.Views.ComponentViews.Swine;
+using H.Avalonia.Views.OptionsViews;
+using H.Avalonia.Views.OptionsViews.FileMenuViews;
+using H.Avalonia.Views.SupportingViews.Start;
 
 namespace H.Avalonia
 {
@@ -127,7 +139,7 @@ namespace H.Avalonia
 
             var storage = Container.Resolve<IStorage>();
             storage.Load();
-            var storageService = base.Container.Resolve<IStorageService>();
+            var storageService = Container.Resolve<IStorageService>();
             var activeFarm = storageService.GetActiveFarm();
 
 
@@ -135,7 +147,7 @@ namespace H.Avalonia
             #endregion
 
             // Logging
-            this.SetUpLogging(containerRegistry);
+            SetUpLogging(containerRegistry);
 
             // Views - Region Navigation
             containerRegistry.RegisterForNavigation<ToolbarView, ToolbarViewModel>();
@@ -149,21 +161,21 @@ namespace H.Avalonia
             containerRegistry.RegisterForNavigation<MyComponentsView, MyComponentsViewModel>();
             containerRegistry.RegisterForNavigation<ChooseComponentsView, ChooseComponentsViewModel>();
             containerRegistry.RegisterForNavigation<FieldComponentView, FieldComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.OptionsViews.OptionsView, OptionsViewModel>();
-            containerRegistry.RegisterForNavigation<Views.OptionsViews.SelectOptionView, SelectOptionViewModel>();
-            containerRegistry.RegisterForNavigation<Views.OptionsViews.OptionFarmView, FarmSettingsViewModel>();
-            containerRegistry.RegisterForNavigation<Views.OptionsViews.OptionUserSettingsView, UserSettingsViewModel>();
-            containerRegistry.RegisterForNavigation<Views.OptionsViews.OptionSoilView, SoilSettingsViewModel>();
-            containerRegistry.RegisterForNavigation<Views.OptionsViews.OptionSoilN2OBreakdownView, SoilN2OBreakdownSettingsViewModel>();
-            containerRegistry.RegisterForNavigation<Views.OptionsViews.DefaultBeddingCompositionView, DefaultBeddingCompositionViewModel>();
-            containerRegistry.RegisterForNavigation<Views.OptionsViews.DefaultManureCompositionView, DefaultManureCompositionViewModel>();
-            containerRegistry.RegisterForNavigation<Views.OptionsViews.OptionPrecipitationView, PrecipitationSettingsViewModel>();
+            containerRegistry.RegisterForNavigation<OptionsView, OptionsViewModel>();
+            containerRegistry.RegisterForNavigation<SelectOptionView, SelectOptionViewModel>();
+            containerRegistry.RegisterForNavigation<OptionFarmView, FarmSettingsViewModel>();
+            containerRegistry.RegisterForNavigation<OptionUserSettingsView, UserSettingsViewModel>();
+            containerRegistry.RegisterForNavigation<OptionSoilView, SoilSettingsViewModel>();
+            containerRegistry.RegisterForNavigation<OptionSoilN2OBreakdownView, SoilN2OBreakdownSettingsViewModel>();
+            containerRegistry.RegisterForNavigation<DefaultBeddingCompositionView, DefaultBeddingCompositionViewModel>();
+            containerRegistry.RegisterForNavigation<DefaultManureCompositionView, DefaultManureCompositionViewModel>();
+            containerRegistry.RegisterForNavigation<OptionPrecipitationView, PrecipitationSettingsViewModel>();
 
             // New development work
             containerRegistry.RegisterForNavigation<MainWindow, MainWindowViewModel>();
-            containerRegistry.RegisterForNavigation<Views.OptionsViews.OptionEvapotranspirationView, EvapotranspirationSettingsViewModel>();
-            containerRegistry.RegisterForNavigation<Views.OptionsViews.OptionTemperatureView, TemperatureSettingsViewModel>();
-            containerRegistry.RegisterForNavigation<Views.OptionsViews.OptionBarnTemperatureView, BarnTemperatureSettingsViewModel>();
+            containerRegistry.RegisterForNavigation<OptionEvapotranspirationView, EvapotranspirationSettingsViewModel>();
+            containerRegistry.RegisterForNavigation<OptionTemperatureView, TemperatureSettingsViewModel>();
+            containerRegistry.RegisterForNavigation<OptionBarnTemperatureView, BarnTemperatureSettingsViewModel>();
             containerRegistry.RegisterForNavigation<DisclaimerView, DisclaimerViewModel>();
             containerRegistry.RegisterForNavigation<RegionSelectionView, RegionSelectionViewModel>();
             containerRegistry.RegisterForNavigation<MeasurementProvinceView, MeasurementProvinceViewModel>();
@@ -171,51 +183,51 @@ namespace H.Avalonia
             containerRegistry.RegisterForNavigation<FarmOptionsView,FarmOptionsViewModel>();
             containerRegistry.RegisterForNavigation<FarmCreationView, FarmCreationViewModel>();
             containerRegistry.RegisterForNavigation<FarmOpenExistingView, FarmOpenExistingViewmodel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.LandManagement.SheepComponentView, SheepComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.LandManagement.RotationComponentView, RotationComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.Sheep.SheepFeedlotComponentView, SheepFeedlotComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.LandManagement.ShelterbeltComponentView, ShelterbeltComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.Beef.CowCalfComponentView, CowCalfComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.Beef.BackgroundingComponentView, BackgroundingComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.Beef.FinishingComponentView, FinishingComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.Dairy.DairyComponentView, DairyComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.Sheep.RamsComponentView, RamsComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.Sheep.LambsAndEwesComponentView, LambsAndEwesComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.OtherAnimals.GoatsComponentView, GoatsComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.OtherAnimals.DeerComponentView, DeerComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.OtherAnimals.HorsesComponentView, HorsesComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.OtherAnimals.MulesComponentView, MulesComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.OtherAnimals.BisonComponentView, BisonComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.OtherAnimals.LlamaComponentView, LlamaComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.Infrastructure.AnaerobicDigestionComponentView, AnaerobicDigestionComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.Swine.GrowerToFinishComponentView, GrowerToFinishComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.Swine.FarrowToWeanComponentView, FarrowToWeanComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.Swine.IsoWeanComponentView, IsoWeanComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.Swine.FarrowToFinishComponentView, FarrowToFinishComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.Poultry.ChickenPulletsComponentView, ChickenPulletsComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.Poultry.ChickenMultiplierBreederComponentView, ChickenMultiplierBreederComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.Poultry.ChickenMeatProductionComponentView, ChickenMeatProductionComponentViewModel>(); 
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.Poultry.TurkeyMultiplierBreederComponentView, TurkeyMultiplierBreederComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.Poultry.TurkeyMeatProductionComponentView, TurkeyMeatProductionComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.Poultry.ChickenEggProductionComponentView, ChickenEggProductionComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.ComponentViews.Poultry.ChickenMultiplierHatcheryComponentView,  ChickenMultiplierHatcheryComponentViewModel>();
-            containerRegistry.RegisterForNavigation<Views.SupportingViews.Start.StartView, StartViewModel>();
-            containerRegistry.RegisterForNavigation<Views.FarmCreationViews.FileNewFarmView, FileNewFarmViewModel>();
-            containerRegistry.RegisterForNavigation<Views.FarmCreationViews.FileOpenFarmView, FileOpenFarmViewModel>();
-            containerRegistry.RegisterForNavigation<Views.OptionsViews.FileMenuViews.FarmManagementView, FarmManagementViewModel>();
-            containerRegistry.RegisterForNavigation<Views.OptionsViews.FileMenuViews.FileSaveOptionsView, FileSaveOptionsViewModel>();
-            containerRegistry.RegisterForNavigation<Views.OptionsViews.FileMenuViews.FileExportFarmView, FileExportFarmViewModel>();
-            containerRegistry.RegisterForNavigation<Views.OptionsViews.FileMenuViews.FileImportFarmView, FileImportFarmViewModel>();
-            containerRegistry.RegisterForNavigation<Views.FarmCreationViews.FarmImportFileView, FarmImportFileViewModel>();
-            containerRegistry.RegisterForNavigation<Views.OptionsViews.FileMenuViews.FileExportClimateView, FileExportClimateViewModel>();
-            containerRegistry.RegisterForNavigation<Views.OptionsViews.FileMenuViews.FileExportManureView, FileExportManureViewModel>();
+            containerRegistry.RegisterForNavigation<SheepComponentView, SheepComponentViewModel>();
+            containerRegistry.RegisterForNavigation<RotationComponentView, RotationComponentViewModel>();
+            containerRegistry.RegisterForNavigation<SheepFeedlotComponentView, SheepFeedlotComponentViewModel>();
+            containerRegistry.RegisterForNavigation<ShelterbeltComponentView, ShelterbeltComponentViewModel>();
+            containerRegistry.RegisterForNavigation<CowCalfComponentView, CowCalfComponentViewModel>();
+            containerRegistry.RegisterForNavigation<BackgroundingComponentView, BackgroundingComponentViewModel>();
+            containerRegistry.RegisterForNavigation<FinishingComponentView, FinishingComponentViewModel>();
+            containerRegistry.RegisterForNavigation<DairyComponentView, DairyComponentViewModel>();
+            containerRegistry.RegisterForNavigation<RamsComponentView, RamsComponentViewModel>();
+            containerRegistry.RegisterForNavigation<LambsAndEwesComponentView, LambsAndEwesComponentViewModel>();
+            containerRegistry.RegisterForNavigation<GoatsComponentView, GoatsComponentViewModel>();
+            containerRegistry.RegisterForNavigation<DeerComponentView, DeerComponentViewModel>();
+            containerRegistry.RegisterForNavigation<HorsesComponentView, HorsesComponentViewModel>();
+            containerRegistry.RegisterForNavigation<MulesComponentView, MulesComponentViewModel>();
+            containerRegistry.RegisterForNavigation<BisonComponentView, BisonComponentViewModel>();
+            containerRegistry.RegisterForNavigation<LlamaComponentView, LlamaComponentViewModel>();
+            containerRegistry.RegisterForNavigation<AnaerobicDigestionComponentView, AnaerobicDigestionComponentViewModel>();
+            containerRegistry.RegisterForNavigation<GrowerToFinishComponentView, GrowerToFinishComponentViewModel>();
+            containerRegistry.RegisterForNavigation<FarrowToWeanComponentView, FarrowToWeanComponentViewModel>();
+            containerRegistry.RegisterForNavigation<IsoWeanComponentView, IsoWeanComponentViewModel>();
+            containerRegistry.RegisterForNavigation<FarrowToFinishComponentView, FarrowToFinishComponentViewModel>();
+            containerRegistry.RegisterForNavigation<ChickenPulletsComponentView, ChickenPulletsComponentViewModel>();
+            containerRegistry.RegisterForNavigation<ChickenMultiplierBreederComponentView, ChickenMultiplierBreederComponentViewModel>();
+            containerRegistry.RegisterForNavigation<ChickenMeatProductionComponentView, ChickenMeatProductionComponentViewModel>();
+            containerRegistry.RegisterForNavigation<TurkeyMultiplierBreederComponentView, TurkeyMultiplierBreederComponentViewModel>();
+            containerRegistry.RegisterForNavigation<TurkeyMeatProductionComponentView, TurkeyMeatProductionComponentViewModel>();
+            containerRegistry.RegisterForNavigation<ChickenEggProductionComponentView, ChickenEggProductionComponentViewModel>();
+            containerRegistry.RegisterForNavigation<ChickenMultiplierHatcheryComponentView, ChickenMultiplierHatcheryComponentViewModel>();
+            containerRegistry.RegisterForNavigation<StartView, StartViewModel>();
+            containerRegistry.RegisterForNavigation<FileNewFarmView, FileNewFarmViewModel>();
+            containerRegistry.RegisterForNavigation<FileOpenFarmView, FileOpenFarmViewModel>();
+            containerRegistry.RegisterForNavigation<FarmManagementView, FarmManagementViewModel>();
+            containerRegistry.RegisterForNavigation<FileSaveOptionsView, FileSaveOptionsViewModel>();
+            containerRegistry.RegisterForNavigation<FileExportFarmView, FileExportFarmViewModel>();
+            containerRegistry.RegisterForNavigation<FileImportFarmView, FileImportFarmViewModel>();
+            containerRegistry.RegisterForNavigation<FarmImportFileView, FarmImportFileViewModel>();
+            containerRegistry.RegisterForNavigation<FileExportClimateView, FileExportClimateViewModel>();
+            containerRegistry.RegisterForNavigation<FileExportManureView, FileExportManureViewModel>();
 
             // Diet
-            containerRegistry.RegisterForNavigation<Views.SupportingViews.DietFormulatorView, DietFormulatorViewModel>();
-            containerRegistry.RegisterForNavigation<Views.SupportingViews.FeedIngredientsView, FeedIngredientsViewModel>();
+            containerRegistry.RegisterForNavigation<DietFormulatorView, DietFormulatorViewModel>();
+            containerRegistry.RegisterForNavigation<FeedIngredientsView, FeedIngredientsViewModel>();
 
             // Blank Page
-            containerRegistry.RegisterForNavigation<Views.BlankView, BlankViewModel>();
+            containerRegistry.RegisterForNavigation<BlankView, BlankViewModel>();
 
             // Providers
             containerRegistry.RegisterSingleton<GeographicDataProvider>();
@@ -271,25 +283,26 @@ namespace H.Avalonia
             containerRegistry.RegisterSingleton<ITable50FuelEnergyEstimatesProvider, Table50FuelEnergyEstimatesProvider>();
 
             // Mappers
-            this.SetupMappers(containerRegistry);
+            var mapperRegistrationService = new MapperRegistrationService();
+            mapperRegistrationService.RegisterMappers(containerRegistry);
 
-            this.SetUpCaching(containerRegistry);
+            SetUpCaching(containerRegistry);
 
-            this.SetupTransferServices(containerRegistry);
+            SetupTransferServices(containerRegistry);
         }
 
         protected override AvaloniaObject CreateShell()
         {
-            return base.Container.Resolve<MainWindow>();
+            return Container.Resolve<MainWindow>();
         }
 
         /// <summary>Called after Initialize.</summary>
         protected override void OnInitialized()
         {
-            this.SetLanguage();
+            SetLanguage();
 
             // Register views to the Region it will appear in. Don't register them in the ViewModel.
-            var regionManager = base.Container.Resolve<IRegionManager>();
+            var regionManager = Container.Resolve<IRegionManager>();
 
             regionManager.RegisterViewWithRegion(UiRegions.ToolbarRegion, typeof(ToolbarView));
                         
@@ -308,7 +321,7 @@ namespace H.Avalonia
 
         private void SetLanguage()
         {
-            var settings = this.Container.Resolve<ICountrySettings>();
+            var settings = Container.Resolve<ICountrySettings>();
             var language = settings.Language;
 
             if (language == Languages.French)
@@ -345,7 +358,7 @@ namespace H.Avalonia
             containerRegistry.RegisterInstance(typeof(ILogger), logger);
             
             // Configure DryIoc logging for resolution errors
-            this.ConfigureDryIocLogging(containerRegistry, logger);
+            ConfigureDryIocLogging(containerRegistry, logger);
         }
 
         private void ConfigureDryIocLogging(IContainerRegistry containerRegistry, ILogger logger)
@@ -353,7 +366,7 @@ namespace H.Avalonia
             try
             {
                 // Access the underlying DryIoc container
-                if (containerRegistry is Prism.DryIoc.DryIocContainerExtension dryIocExtension)
+                if (containerRegistry is DryIocContainerExtension dryIocExtension)
                 {
                     var container = dryIocExtension.Instance;
                     
@@ -383,10 +396,10 @@ namespace H.Avalonia
             // Register TransferService for DailyClimateData and DailyClimateDto using the named mapper
             containerRegistry.Register<ITransferService<DailyClimateData, DailyClimateDto>>(() =>
             {
-                var unitsCalculator = base.Container.Resolve<IUnitsOfMeasurementCalculator>();
-                var dailyClimateDataFactory = base.Container.Resolve<IFactory<DailyClimateDto>>();
-                var dtoToModelMapper = base.Container.Resolve<IMapper>(nameof(DailyClimateDtoToDailyClimateDataMapper));
-                var modelToDtoMapper = base.Container.Resolve<IMapper>(nameof(DailyClimateDataToDailyClimateDtoMapper));
+                var unitsCalculator = Container.Resolve<IUnitsOfMeasurementCalculator>();
+                var dailyClimateDataFactory = Container.Resolve<IFactory<DailyClimateDto>>();
+                var dtoToModelMapper = Container.Resolve<IMapper>(nameof(DailyClimateDtoToDailyClimateDataMapper));
+                var modelToDtoMapper = Container.Resolve<IMapper>(nameof(DailyClimateDataToDailyClimateDtoMapper));
 
                 return new TransferService<DailyClimateData, DailyClimateDto>(
                     unitsOfMeasurementCalculator: unitsCalculator,
@@ -399,10 +412,10 @@ namespace H.Avalonia
             // Register TransferService for CropViewItem and CropDto using the named mapper
             containerRegistry.Register<ITransferService<CropViewItem, CropDto>>(() =>
             {
-                var unitsCalculator = base.Container.Resolve<IUnitsOfMeasurementCalculator>();
-                var cropDtoFactory = base.Container.Resolve<IFactory<CropDto>>();
-                var dtoToModelMapper = base.Container.Resolve<IMapper>(nameof(CropDtoToCropViewItemMapper));
-                var modelToDtoMapper = base.Container.Resolve<IMapper>(nameof(CropViewItemToCropDtoMapper));
+                var unitsCalculator = Container.Resolve<IUnitsOfMeasurementCalculator>();
+                var cropDtoFactory = Container.Resolve<IFactory<CropDto>>();
+                var dtoToModelMapper = Container.Resolve<IMapper>(nameof(CropDtoToCropViewItemMapper));
+                var modelToDtoMapper = Container.Resolve<IMapper>(nameof(CropViewItemToCropDtoMapper));
 
                 // If TransferService supports injecting IMapper, pass it here.
                 return new TransferService<CropViewItem, CropDto>(
@@ -416,10 +429,10 @@ namespace H.Avalonia
             // Register TransferService for CropViewItem and CropDto using the named mapper
             containerRegistry.Register<ITransferService<FieldSystemComponent, FieldSystemComponentDto>>(() =>
             {
-                var unitsCalculator = base.Container.Resolve<IUnitsOfMeasurementCalculator>();
-                var cropDtoFactory = base.Container.Resolve<IFactory<FieldSystemComponentDto>>();
-                var dtoToModelMapper = base.Container.Resolve<IMapper>(nameof(FieldDtoToFieldComponentMapper));
-                var modelToDtoMapper = base.Container.Resolve<IMapper>(nameof(FieldComponentToDtoMapper));
+                var unitsCalculator = Container.Resolve<IUnitsOfMeasurementCalculator>();
+                var cropDtoFactory = Container.Resolve<IFactory<FieldSystemComponentDto>>();
+                var dtoToModelMapper = Container.Resolve<IMapper>(nameof(FieldDtoToFieldComponentMapper));
+                var modelToDtoMapper = Container.Resolve<IMapper>(nameof(FieldComponentToDtoMapper));
 
                 // If TransferService supports injecting IMapper, pass it here.
                 return new TransferService<FieldSystemComponent, FieldSystemComponentDto>(
@@ -434,10 +447,10 @@ namespace H.Avalonia
             // Register TransferService for CropViewItem and CropDto using the named mapper
             containerRegistry.Register<ITransferService<AnimalComponentBase, AnimalComponentDto>>(() =>
             {
-                var unitsCalculator = base.Container.Resolve<IUnitsOfMeasurementCalculator>();
-                var animalDtoFactory = base.Container.Resolve<IFactory<AnimalComponentDto>>();
-                var dtoToModelMapper = base.Container.Resolve<IMapper>(nameof(AnimalComponentDtoToAnimalComponentMapper));
-                var modelToDtoMapper = base.Container.Resolve<IMapper>(nameof(AnimalComponentBaseToAnimalComponentDtoMapper));
+                var unitsCalculator = Container.Resolve<IUnitsOfMeasurementCalculator>();
+                var animalDtoFactory = Container.Resolve<IFactory<AnimalComponentDto>>();
+                var dtoToModelMapper = Container.Resolve<IMapper>(nameof(AnimalComponentDtoToAnimalComponentMapper));
+                var modelToDtoMapper = Container.Resolve<IMapper>(nameof(AnimalComponentBaseToAnimalComponentDtoMapper));
 
                 // If TransferService supports injecting IMapper, pass it here.
                 return new TransferService<AnimalComponentBase, AnimalComponentDto>(
@@ -447,110 +460,6 @@ namespace H.Avalonia
                     modelToDtoMapper: modelToDtoMapper
                 );
             });
-        }
-
-        private void SetupMappers(IContainerRegistry containerRegistry)
-        {
-            var cropDtoToCropDtoConfiguration = new MapperConfiguration(expression =>
-            {
-                expression.AddProfile<CropDtoToCropDtoMapper>();
-            });
-
-            var cropDtoToCropVieItemConfiguration = new MapperConfiguration(expression =>
-            {
-                expression.AddProfile<CropDtoToCropViewItemMapper>();
-            });
-
-            var cropViewItemToCropVieItemConfiguration = new MapperConfiguration(expression =>
-            {
-                expression.AddProfile<CropViewItemToCropDtoMapper>();
-            });
-
-            var fieldComponentToFieldDtoConfiguration = new MapperConfiguration(expression =>
-            {
-                expression.AddProfile<FieldComponentToDtoMapper>();
-            });
-
-            var fieldDtoToFieldComponentConfiguration = new MapperConfiguration(expression =>
-            {
-                expression.AddProfile<FieldDtoToFieldComponentMapper>();
-            });
-
-            var fieldDtoToFieldDtoConfiguration = new MapperConfiguration(expression =>
-            {
-                expression.AddProfile<FieldDtoToFieldDtoMapper>();
-            });
-
-            var feedIngredientToFeedIngredientConfiguration = new MapperConfiguration(expression =>
-            {
-                expression.AddProfile<FeedIngredientToFeedIngredientMapper>();
-            });
-
-            var animalComponentDtoToAnimalComponentConfiguration = new MapperConfiguration(expression =>
-            {
-                expression.AddProfile<AnimalComponentDtoToAnimalComponentMapper>();
-            });
-
-            var animalComponentDtoToAnimalComponentDtoConfiguration = new MapperConfiguration(expression =>
-            {
-                expression.AddProfile<AnimalComponentDtoToAnimalComponentDtoMapper>();
-            });
-
-            var animalComponentToAnimalComponentDtoConfiguration = new MapperConfiguration(expression =>
-            {
-                expression.AddProfile<AnimalComponentBaseToAnimalComponentDtoMapper>();
-            });
-
-            var managementPeriodDtoToManagementPeriodDtoConfiguration = new MapperConfiguration(expression =>
-            {
-                expression.AddProfile<ManagementPeriodDtoToManagementPeriodDtoMapper>();
-            });
-
-            var managementPeriodToManagementPeriodDtoConfiguration = new MapperConfiguration(expression =>
-            {
-                expression.AddProfile<ManagementPeriodToManagementPeriodDtoMapper>();
-            });
-
-            var managementPeriodDtoToManagementPeriodConfiguration = new MapperConfiguration(expression =>
-            {
-                expression.AddProfile<ManagementPeriodDtoToManagementPeriodMapper>();
-            });
-
-            // Climate mappers
-            var dailyClimateDataToDtoConfiguration = new MapperConfiguration(expression =>
-            {
-                expression.AddProfile<DailyClimateDataToDailyClimateDtoMapper>();
-            });
-
-            var dailyClimateDtoToDataConfiguration = new MapperConfiguration(expression =>
-            {
-                expression.AddProfile<DailyClimateDtoToDailyClimateDataMapper>();
-            });
-
-            var dailyClimateDtoToDtoConfiguration = new MapperConfiguration(expression =>
-            {
-                expression.AddProfile<DailyClimateDtoToDailyClimateDtoMapper>();
-            });
-
-            // Register named mappers
-            containerRegistry.RegisterInstance(cropDtoToCropDtoConfiguration.CreateMapper(), nameof(CropDtoToCropDtoMapper));
-            containerRegistry.RegisterInstance(cropDtoToCropVieItemConfiguration.CreateMapper(), nameof(CropDtoToCropViewItemMapper));
-            containerRegistry.RegisterInstance(cropViewItemToCropVieItemConfiguration.CreateMapper(), nameof(CropViewItemToCropDtoMapper));
-            containerRegistry.RegisterInstance(fieldComponentToFieldDtoConfiguration.CreateMapper(), nameof(FieldComponentToDtoMapper));
-            containerRegistry.RegisterInstance(fieldDtoToFieldComponentConfiguration.CreateMapper(), nameof(FieldDtoToFieldComponentMapper));
-            containerRegistry.RegisterInstance(fieldDtoToFieldDtoConfiguration.CreateMapper(), nameof(FieldDtoToFieldDtoMapper));
-            containerRegistry.RegisterInstance(feedIngredientToFeedIngredientConfiguration.CreateMapper(), nameof(FeedIngredientToFeedIngredientMapper));
-            containerRegistry.RegisterInstance(animalComponentDtoToAnimalComponentConfiguration.CreateMapper(), nameof(AnimalComponentDtoToAnimalComponentMapper));
-            containerRegistry.RegisterInstance(animalComponentDtoToAnimalComponentDtoConfiguration.CreateMapper(), nameof(AnimalComponentDtoToAnimalComponentDtoMapper));
-            containerRegistry.RegisterInstance(animalComponentToAnimalComponentDtoConfiguration.CreateMapper(), nameof(AnimalComponentBaseToAnimalComponentDtoMapper));
-            containerRegistry.RegisterInstance(managementPeriodDtoToManagementPeriodDtoConfiguration.CreateMapper(), nameof(ManagementPeriodDtoToManagementPeriodDtoMapper));
-            containerRegistry.RegisterInstance(managementPeriodToManagementPeriodDtoConfiguration.CreateMapper(), nameof(ManagementPeriodToManagementPeriodDtoMapper));
-            containerRegistry.RegisterInstance(managementPeriodDtoToManagementPeriodConfiguration.CreateMapper(), nameof(ManagementPeriodDtoToManagementPeriodMapper));
-            
-            // Climate mappers
-            containerRegistry.RegisterInstance(dailyClimateDataToDtoConfiguration.CreateMapper(), nameof(DailyClimateDataToDailyClimateDtoMapper));
-            containerRegistry.RegisterInstance(dailyClimateDtoToDataConfiguration.CreateMapper(), nameof(DailyClimateDtoToDailyClimateDataMapper));
-            containerRegistry.RegisterInstance(dailyClimateDtoToDtoConfiguration.CreateMapper(), nameof(DailyClimateDtoToDailyClimateDtoMapper));
         }
     }
 }

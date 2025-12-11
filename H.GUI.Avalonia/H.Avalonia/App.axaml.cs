@@ -244,6 +244,7 @@ namespace H.Avalonia
             containerRegistry.RegisterSingleton<IManagementPeriodService, ManagementPeriodService>();
             containerRegistry.RegisterSingleton<IErrorHandlerService, ErrorHandlerService>();
             containerRegistry.RegisterSingleton<INotificationManagerService, NotificationManagerService>();
+            containerRegistry.RegisterSingleton<IDefaultGeocoderService, NominatimGeocoderService>();
 
             // Unit conversion
             containerRegistry.RegisterSingleton<IUnitsOfMeasurementCalculator, UnitsOfMeasurementCalculator>();

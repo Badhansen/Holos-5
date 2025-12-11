@@ -31,12 +31,20 @@ namespace H.Avalonia
 {
     public partial class App : PrismApplication
     {
+        /// <summary>
+        /// Initializes the application by loading XAML resources and calling base initialization.
+        /// This is the first method called during application startup.
+        /// </summary>
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
             base.Initialize();
         }
 
+        /// <summary>
+        /// Completes framework initialization by setting up the main window and exit handler.
+        /// Called after Initialize() when the application framework is ready.
+        /// </summary>
         public override void OnFrameworkInitializationCompleted()
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -49,6 +57,11 @@ namespace H.Avalonia
             base.OnFrameworkInitializationCompleted();
         }
 
+        /// <summary>
+        /// Handles application exit by ensuring storage data is saved before shutdown.
+        /// </summary>
+        /// <param name="sender">The application lifetime object</param>
+        /// <param name="e">Exit event arguments</param>
         private void OnExit(object sender, ControlledApplicationLifetimeExitEventArgs e)
         {
             var storage = Container.Resolve<IStorage>();
@@ -58,8 +71,11 @@ namespace H.Avalonia
             }
         }
 
-        /// <summary>Register Services and Views.</summary>
-        /// <param name="containerRegistry"></param>
+        /// <summary>
+        /// Registers all dependency injection services and views with comprehensive error handling.
+        /// Sets up logging first, then delegates to ContainerRegistrationService for organized registration.
+        /// </summary>
+        /// <param name="containerRegistry">The container registry to register types with</param>
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // Set up logging first as it's needed for error handling
@@ -83,12 +99,20 @@ namespace H.Avalonia
             }
         }
 
+        /// <summary>
+        /// Creates and returns the main application shell (window).
+        /// Resolves the MainWindow through the DI container to ensure proper initialization.
+        /// </summary>
+        /// <returns>The main application window as an AvaloniaObject</returns>
         protected override AvaloniaObject CreateShell()
         {
             return Container.Resolve<MainWindow>();
         }
 
-        /// <summary>Called after Initialize.</summary>
+        /// <summary>
+        /// Performs post-initialization setup including language configuration and view region registration.
+        /// Called after all services are registered and the container is ready for use.
+        /// </summary>
         protected override void OnInitialized()
         {
             SetLanguage();
@@ -111,6 +135,10 @@ namespace H.Avalonia
             Container.Resolve<KmlHelpers>();
         }
 
+        /// <summary>
+        /// Configures application language and culture settings based on country settings.
+        /// Sets culture for both Avalonia and Core resource dictionaries.
+        /// </summary>
         private void SetLanguage()
         {
             var settings = Container.Resolve<ICountrySettings>();
@@ -123,6 +151,11 @@ namespace H.Avalonia
             }
         }
 
+        /// <summary>
+        /// Configures application logging using NLog provider with comprehensive error tracking.
+        /// Sets up logger factory, registers logger instance, and configures DryIoc container logging.
+        /// </summary>
+        /// <param name="containerRegistry">The container registry to register the logger with</param>
         private void SetUpLogging(IContainerRegistry containerRegistry)
         {
             // Create a LoggerFactory and add NLog as the logging provider
@@ -142,6 +175,12 @@ namespace H.Avalonia
             ConfigureDryIocLogging(containerRegistry, logger);
         }
 
+        /// <summary>
+        /// Configures DryIoc container with enhanced error reporting and diagnostic features.
+        /// Enables stack trace capture and disposable object tracking for better debugging.
+        /// </summary>
+        /// <param name="containerRegistry">The container registry to configure</param>
+        /// <param name="logger">Logger instance for recording configuration status</param>
         private void ConfigureDryIocLogging(IContainerRegistry containerRegistry, ILogger logger)
         {
             try

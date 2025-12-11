@@ -175,29 +175,9 @@ public class FieldComponentService : ComponentServiceBase, IFieldComponentServic
     /// <param name="farm">The target farm.</param>
     /// <param name="fieldSystemComponent">The field component to initialize.</param>
     /// <exception cref="ArgumentNullException">Thrown when <see cref="fieldSystemComponent"/> is null.</exception>
-    public void InitializeFieldSystemComponent(Farm farm, FieldSystemComponent fieldSystemComponent)
+    public void InitializeComponent(Farm farm, FieldSystemComponent fieldSystemComponent)
     {
-        Logger.LogDebug("Initializing fieldComponent: {ComponentName}", fieldSystemComponent?.Name ?? "(name not set)");
-
-        if (fieldSystemComponent == null)
-        {
-            Logger.LogError("Called with null fieldSystemComponent parameter");
-            throw new ArgumentNullException(nameof(fieldSystemComponent), "Field system component cannot be null");
-        }
-
-        if (fieldSystemComponent.IsInitialized)
-        {
-            Logger.LogDebug("Field component '{ComponentName}' is already initialized, skipping initialization", fieldSystemComponent.Name);
-            // The field has already been initialized - do not overwrite with default values
-            return;
-        }
-
-        Logger.LogDebug("Initializing field component '{ComponentName}'", fieldSystemComponent?.Name ?? "(name not set)");
-
-        fieldSystemComponent.Name = base.GetUniqueComponentName(farm, fieldSystemComponent);
-        fieldSystemComponent.IsInitialized = true;
-
-        Logger.LogInformation("Successfully initialized field component with name: '{ComponentName}'", fieldSystemComponent.Name);
+        base.InitializeComponent(farm, fieldSystemComponent);
     }
 
     /// <summary>

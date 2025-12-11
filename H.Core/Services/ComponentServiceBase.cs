@@ -1,5 +1,6 @@
 ﻿using H.Core.Calculators.UnitsOfMeasurement;
 using H.Core.Models;
+using H.Core.Models.LandManagement.Fields;
 using Microsoft.Extensions.Logging;
 using Prism.Ioc;
 
@@ -78,6 +79,10 @@ public abstract class ComponentServiceBase : IComponentService
         }
     }
 
+    protected ComponentServiceBase()
+    {
+    }
+
     #region Public Methods
     
     public string GetUniqueComponentName(Farm farm, ComponentBase component)
@@ -105,13 +110,26 @@ public abstract class ComponentServiceBase : IComponentService
 
     public void InitializeComponent(Farm farm, ComponentBase component)
     {
-        if (component.IsInitialized)
+        if (component == null)
         {
+            Logger.LogError($"Called with null {nameof(component)} parameter");
+
             return;
         }
 
+        if (component.IsInitialized)
+        {
+            Logger.LogDebug("Component '{ComponentName}' is already initialized, skipping initialization", component.Name);
+
+            return;
+        }
+
+        Logger.LogDebug("Initializing component: {ComponentName}", component?.Name ?? "(name not set)");
+
         component.IsInitialized = true;
         component.Name = this.GetUniqueComponentName(farm, component);
+
+        Logger.LogInformation("Successfully initialized component with name: '{ComponentName}'", component.Name);
     }
 
     #endregion

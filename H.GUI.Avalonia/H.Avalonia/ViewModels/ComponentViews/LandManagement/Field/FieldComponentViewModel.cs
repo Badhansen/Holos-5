@@ -161,7 +161,9 @@ public class FieldComponentViewModel : ViewModelBase
     public override void InitializeViewModel(ComponentBase component)
     {
         if (component is not FieldSystemComponent fieldSystemComponent)
+        {
             return;
+        }
 
         base.InitializeViewModel(fieldSystemComponent);
 
@@ -224,6 +226,11 @@ public class FieldComponentViewModel : ViewModelBase
     /// <param name="fieldSystemComponent">The field component to initialize</param>
     private void InitializeFieldComponent(FieldSystemComponent fieldSystemComponent)
     {
+        if (fieldSystemComponent == null)
+        {
+            return;
+        }
+
         // Hold a reference to the selected field system object
         _selectedFieldSystemComponent = fieldSystemComponent;
 

@@ -1091,7 +1091,7 @@ public class FieldComponentServiceTest
 
     #endregion
 
-    #region Tests for InitializeFieldSystemComponent
+    #region Tests for InitializeComponent
 
     [TestMethod]
     public void InitializeFieldSystemComponent_WithUninitializedComponent_SetsNameAndInitializesFlag()
@@ -1106,7 +1106,7 @@ public class FieldComponentServiceTest
         };
 
         // Act: initialize the field component
-        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+        _fieldComponentService.InitializeComponent(farm, fieldComponent);
 
         // Assert: component should now be initialized with a unique name
         Assert.IsTrue(fieldComponent.IsInitialized);
@@ -1127,7 +1127,7 @@ public class FieldComponentServiceTest
         };
 
         // Act: attempt to initialize an already initialized component
-        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+        _fieldComponentService.InitializeComponent(farm, fieldComponent);
 
         // Assert: component should remain unchanged
         Assert.IsTrue(fieldComponent.IsInitialized);
@@ -1146,7 +1146,7 @@ public class FieldComponentServiceTest
         };
 
         // Act
-        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+        _fieldComponentService.InitializeComponent(farm, fieldComponent);
 
         // Assert: should get the base name without any numbering
         Assert.IsTrue(fieldComponent.IsInitialized);
@@ -1171,7 +1171,7 @@ public class FieldComponentServiceTest
         };
 
         // Act
-        _fieldComponentService.InitializeFieldSystemComponent(farm, newFieldComponent);
+        _fieldComponentService.InitializeComponent(farm, newFieldComponent);
 
         // Assert: should get a unique name that doesn't conflict with existing components
         Assert.IsTrue(newFieldComponent.IsInitialized);
@@ -1202,7 +1202,7 @@ public class FieldComponentServiceTest
         };
 
         // Act: empty/null names should be ignored in uniqueness check
-        _fieldComponentService.InitializeFieldSystemComponent(farm, newFieldComponent);
+        _fieldComponentService.InitializeComponent(farm, newFieldComponent);
 
         // Assert: should get base name since empty names are ignored
         Assert.IsTrue(newFieldComponent.IsInitialized);
@@ -1221,11 +1221,11 @@ public class FieldComponentServiceTest
         };
 
         // Act: call initialize multiple times
-        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+        _fieldComponentService.InitializeComponent(farm, fieldComponent);
         var nameAfterFirstCall = fieldComponent.Name;
         
-        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
-        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+        _fieldComponentService.InitializeComponent(farm, fieldComponent);
+        _fieldComponentService.InitializeComponent(farm, fieldComponent);
 
         // Assert: should only be initialized once and name should not change
         Assert.IsTrue(fieldComponent.IsInitialized);
@@ -1244,24 +1244,10 @@ public class FieldComponentServiceTest
         };
 
         // Act & Assert: should handle null farm gracefully without throwing
-        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+        _fieldComponentService.InitializeComponent(farm, fieldComponent);
 
         // The component should still be marked as initialized even if farm is null
         // This tests the early return behavior for already initialized components
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void InitializeFieldSystemComponent_WithNullFieldComponent_ThrowsArgumentNullException()
-    {
-        // Arrange: valid farm but null field component
-        var farm = new Farm() { Components = new List<ComponentBase>() };
-        FieldSystemComponent fieldComponent = null;
-
-        // Act: should throw ArgumentNullException when fieldSystemComponent is null
-        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
-
-        // Assert: exception attribute on the test method handles verification
     }
 
     [TestMethod]
@@ -1285,7 +1271,7 @@ public class FieldComponentServiceTest
         };
 
         // Act
-        _fieldComponentService.InitializeFieldSystemComponent(farm, newFieldComponent);
+        _fieldComponentService.InitializeComponent(farm, newFieldComponent);
 
         // Assert: should consider names from all component types when generating unique name
         Assert.IsTrue(newFieldComponent.IsInitialized);
@@ -1305,7 +1291,7 @@ public class FieldComponentServiceTest
         };
 
         // Act
-        _fieldComponentService.InitializeFieldSystemComponent(farm, fieldComponent);
+        _fieldComponentService.InitializeComponent(farm, fieldComponent);
 
         // Assert: should preserve the full display name
         Assert.IsTrue(fieldComponent.IsInitialized);

@@ -1,9 +1,11 @@
 ﻿using H.Core.Models;
 using H.Core.Models.Animals;
 using H.Core.Models.LandManagement.Fields;
+using H.Core.Models.LandManagement.Rotation;
 using H.Core.Services.Animals;
 using H.Core.Services.LandManagement.Fields;
 using H.Core.Services.StorageService;
+using Microsoft.Extensions.Logging;
 
 namespace H.Core.Services;
 
@@ -14,16 +16,41 @@ public class ComponentInitializationService : IComponentInitializationService
     private readonly IFieldComponentService _fieldComponentService;
     private readonly IStorageService _storageService;
     private IAnimalComponentService _animalComponentService;
+    private IRotationComponentService _rotationComponentService;
+    private ILogger _logger;
 
     #endregion
 
     #region Constructors
 
-    public ComponentInitializationService(IStorageService storageService, IFieldComponentService fieldComponentService, IAnimalComponentService animalComponentService)
+    public ComponentInitializationService(
+        ILogger logger,
+        IStorageService storageService, 
+        IFieldComponentService fieldComponentService, 
+        IAnimalComponentService animalComponentService,
+        IRotationComponentService rotationComponentService)
     {
-        if (animalComponentService  != null)
+        if (logger != null)
         {
-            _animalComponentService = animalComponentService; 
+            _logger = logger; 
+        }
+        else
+        {
+            throw new ArgumentNullException(nameof(logger));
+        }
+
+        if (rotationComponentService != null)
+        {
+            _rotationComponentService = rotationComponentService;
+        }
+        else
+        {
+            throw new ArgumentNullException(nameof(rotationComponentService));
+        }
+
+        if (animalComponentService != null)
+        {
+            _animalComponentService = animalComponentService;
         }
         else
         {
@@ -59,11 +86,15 @@ public class ComponentInitializationService : IComponentInitializationService
 
         if (componentBase is FieldSystemComponent fieldSystemComponent)
         {
-            _fieldComponentService.InitializeFieldSystemComponent(activeFarm, fieldSystemComponent);
+            _fieldComponentService.InitializeComponent(activeFarm, fieldSystemComponent);
         }
         else if (componentBase is AnimalComponentBase animalComponentBase)
         {
             _animalComponentService.InitializeComponent(activeFarm, animalComponentBase);
+        }
+        else if (componentBase is RotationComponent rotationComponentBase)
+        {
+            _rotationComponentService.InitializeComponent(activeFarm, rotationComponentBase);
         }
     } 
 

@@ -27,7 +27,7 @@ public interface IFieldComponentService
     /// </summary>
     /// <param name="farm">The <see cref="Farm"/> the component is being added to</param>
     /// <param name="fieldSystemComponent">The <see cref="FieldSystemComponent"/> that has been created</param>
-    void InitializeFieldSystemComponent(Farm farm, FieldSystemComponent fieldSystemComponent);
+    void InitializeComponent(Farm farm, FieldSystemComponent fieldSystemComponent);
 
     /// <summary>
     /// All years in a collection of crops must be consecutive with no years missing. If a crop is removed, ensure all years are represented from start to finish of collection.

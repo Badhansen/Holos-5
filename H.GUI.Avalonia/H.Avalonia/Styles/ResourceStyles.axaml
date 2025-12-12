@@ -44,6 +44,7 @@
 		  <converters:BoolToBorderBrushConverter x:Key="BoolToBorderBrushConverter"/>
 		  <converters:BoolToBorderThicknessConverter x:Key="BoolToBorderThicknessConverter"/>
 		  <converters:BoolToScaleTransformConverter x:Key="BoolToScaleTransformConverter"/>
+		  <converters:WidthMinusMarginConverter x:Key="WidthMinusMarginConverter"/>
 
 		  <FontFamily x:Key="RobotoFontFamily">/Assets/Fonts/Roboto-Slab*.ttf#Roboto Slab</FontFamily>
           <FontFamily x:Key="MonaSansFontFamily">/Assets/Fonts/Mona-Sans*.ttf#Mona Sans</FontFamily>

@@ -88,3 +88,25 @@ public class BoolToScaleTransformConverter : IValueConverter
         throw new NotImplementedException();
     }
 }
+
+/// <summary>
+/// Converts a width value by subtracting margin values
+/// </summary>
+public class WidthMinusMarginConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is double width)
+        {
+            // DefaultUserControlMargin is typically 6,6,6,6, so subtract 12 (left + right)
+            return Math.Max(0, width - 12);
+        }
+        
+        return value;
+    }
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}

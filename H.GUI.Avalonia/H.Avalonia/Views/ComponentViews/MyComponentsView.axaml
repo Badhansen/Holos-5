@@ -21,21 +21,15 @@
 	<Grid Name="MyComponentsGrid">
 
 		<Grid.RowDefinitions>
-
 			<!-- Title row definition -->
 			<RowDefinition Height="100"/>
-
-			<!-- Listbox row definition -->
+			<!-- Components cards row definition -->
 			<RowDefinition Height="*"/>
-
-            <!-- Gridsplitter row definition -->
-            <RowDefinition Height="Auto"/>
-
 			<!-- Command row definition -->
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Grid Row="0">
+		<Grid Grid.Row="0" Name="MyComponentHeaderGrid">
 			<Border Classes="component-border">
                 <Grid>
                     <TextBlock
@@ -50,20 +44,96 @@
 			</Border>
 		</Grid>
 
-		<ListBox Name="MyComponentsListBox"
-                 SelectionMode="Single"
-                 BorderBrush="LightGray"
-                 BorderThickness="1"
-                 Grid.Row="1"
-                 SelectedItem="{Binding Path=SelectedComponent}"
-                 ItemsSource="{Binding Path=MyComponents}">
-
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Path=Name}"></TextBlock>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+		<ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+			<StackPanel Margin="{StaticResource DefaultUserControlMargin}">
+				<!-- Components List -->
+				<ItemsControl ItemsSource="{Binding Path=MyComponentItems}">
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<StackPanel Spacing="15"/>
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+					
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<!-- Component Card -->
+							<Button Background="Transparent"
+							       BorderThickness="0"
+							       Padding="0"
+							       HorizontalContentAlignment="Stretch"
+							       VerticalContentAlignment="Stretch"
+							       HorizontalAlignment="Stretch"
+							       Command="{Binding $parent[UserControl].((componentView:MyComponentsViewModel)DataContext).SetSelectedComponentCommand}"
+							       CommandParameter="{Binding}">
+								
+								<Border Classes="component-card" 
+								       HorizontalAlignment="Stretch"
+								       Width="{Binding #MyComponentHeaderGrid.Bounds.Width, Converter={StaticResource WidthMinusMarginConverter}}">
+									<StackPanel Spacing="8">
+										<!-- Component Details -->
+										<StackPanel Spacing="6">
+											<TextBlock Text="{Binding Name}" 
+											          FontSize="18" 
+											          FontWeight="Bold" 
+											          Foreground="#2C3E50"
+											          TextWrapping="Wrap"/>
+											
+											<TextBlock Text="{Binding ComponentNameDisplayString}" 
+											          FontSize="14" 
+											          Foreground="Gray" 
+											          FontStyle="Italic"
+											          TextWrapping="Wrap"/>
+											          
+											<TextBlock Text="{Binding ComponentDescriptionString}" 
+											          FontSize="12" 
+											          Foreground="DimGray"
+											          TextWrapping="Wrap"
+											          MaxLines="3"/>
+										</StackPanel>
+									</StackPanel>
+								</Border>
+							</Button>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+				
+				<!-- Empty State Watermark -->
+				<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" 
+				           Spacing="20" Margin="40"
+				           IsVisible="{Binding !MyComponentItems.Count}">
+					<TextBlock Text="No components added yet" 
+					          FontSize="24" 
+					          FontWeight="SemiBold" 
+					          Foreground="LightGray"
+					          HorizontalAlignment="Center"/>
+					          
+					<TextBlock Text="Click 'Edit Components' below to add components to your farm" 
+					          FontSize="16" 
+					          Foreground="Gray"
+					          FontStyle="Italic"
+					          HorizontalAlignment="Center"
+					          TextWrapping="Wrap"
+					          TextAlignment="Center"
+					          MaxWidth="400"/>
+					          
+					<Border Background="#F0F0F0" 
+					       CornerRadius="8" 
+					       Padding="16,12"
+					       HorizontalAlignment="Center">
+						<StackPanel Orientation="Horizontal" Spacing="8">
+							<!-- Simple tip icon using global styles -->
+							<Border Classes="tip-icon">
+								<TextBlock Classes="tip-icon-text"/>
+							</Border>
+							<TextBlock Text="Tip: Start with field or livestock components" 
+							          FontSize="14" 
+							          Foreground="#666666"
+							          VerticalAlignment="Center"/>
+						</StackPanel>
+					</Border>
+				</StackPanel>
+			</StackPanel>
+		</ScrollViewer>
 
 
 		<Border Grid.Row="2"

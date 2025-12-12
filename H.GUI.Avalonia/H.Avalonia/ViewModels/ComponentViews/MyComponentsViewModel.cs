@@ -21,7 +21,9 @@ public class MyComponentsViewModel : ViewModelBase
     #region Fields
 
     private ComponentBase _selectedComponent;
+    private ComponentItemViewModel _selectedComponentItem;
     private ObservableCollection<ComponentBase> _myComponents;
+    private ObservableCollection<ComponentItemViewModel> _myComponentItems;
     private H.Core.Models.Farm _selectedFarm;
 
     private IComponentInitializationService _componentInitializationService;
@@ -33,6 +35,7 @@ public class MyComponentsViewModel : ViewModelBase
     public MyComponentsViewModel()
     {
         this.MyComponents = new ObservableCollection<ComponentBase>();
+        this.MyComponentItems = new ObservableCollection<ComponentItemViewModel>();
     }
 
     public MyComponentsViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IStorageService storageService, IComponentInitializationService componentInitializationService, ILogger logger) : base(regionManager, eventAggregator, storageService, logger)
@@ -49,9 +52,11 @@ public class MyComponentsViewModel : ViewModelBase
         base.PropertyChanged += OnPropertyChanged;
 
         this.MyComponents = new ObservableCollection<ComponentBase>();
+        this.MyComponentItems = new ObservableCollection<ComponentItemViewModel>();
         
         // Initialize the RemoveComponent command
         RemoveComponent = new DelegateCommand(OnRemoveComponentExecute, OnRemoveComponentCanExecute);
+        SetSelectedComponentCommand = new DelegateCommand<object>(OnSetSelectedComponentExecute);
         
         base.EventAggregator.GetEvent<ComponentAddedEvent>().Subscribe(OnComponentAddedEvent);
         base.EventAggregator.GetEvent<EditingComponentsCompletedEvent>().Subscribe(OnEditingComponentsCompletedEvent);
@@ -66,8 +71,25 @@ public class MyComponentsViewModel : ViewModelBase
         get => _selectedComponent;
         set 
         {
-            SetProperty(ref _selectedComponent, value);
-            RemoveComponent.RaiseCanExecuteChanged();
+            if (SetProperty(ref _selectedComponent, value))
+            {
+                // Update selection states for all components
+                UpdateComponentSelectionStates(value);
+                RemoveComponent.RaiseCanExecuteChanged();
+            }
+        }
+    }
+
+    public ComponentItemViewModel SelectedComponentItem
+    {
+        get => _selectedComponentItem;
+        set 
+        {
+            if (SetProperty(ref _selectedComponentItem, value))
+            {
+                // Update the actual selected component
+                SelectedComponent = value?.Component;
+            }
         }
     }
 
@@ -76,6 +98,12 @@ public class MyComponentsViewModel : ViewModelBase
         get => _myComponents;
         set => SetProperty(ref _myComponents, value);
     }
+
+    public ObservableCollection<ComponentItemViewModel> MyComponentItems
+    {
+        get => _myComponentItems;
+        set => SetProperty(ref _myComponentItems, value);
+    }
     public H.Core.Models.Farm SelectedFarm
     {
         get => _selectedFarm;
@@ -83,6 +111,7 @@ public class MyComponentsViewModel : ViewModelBase
     }
 
     public DelegateCommand RemoveComponent { get; }
+    public DelegateCommand<object> SetSelectedComponentCommand { get; set; }
 
     #endregion
 
@@ -99,20 +128,51 @@ public class MyComponentsViewModel : ViewModelBase
         if (!base.IsInitialized)
         {
             MyComponents.Clear();
+            MyComponentItems.Clear();
+            
             foreach (var component in base.ActiveFarm.Components)
             {
                 this.MyComponents.Add(component);
+                this.MyComponentItems.Add(new ComponentItemViewModel(component));
             }
 
             base.IsInitialized = true;
 
-            this.SelectedComponent = this.MyComponents.FirstOrDefault();
+            var firstComponent = this.MyComponents.FirstOrDefault();
+            this.SelectedComponent = firstComponent;
         }
     }
 
     #endregion
 
     #region Event Handlers
+
+    /// <summary>
+    /// Sets the selected component when a component card is clicked
+    /// </summary>
+    /// <param name="obj">The ComponentItemViewModel to select</param>
+    private void OnSetSelectedComponentExecute(object obj)
+    {
+        if (!IsDisposed && obj is ComponentItemViewModel componentItem)
+        {
+            this.SelectedComponentItem = componentItem;
+        }
+    }
+
+    /// <summary>
+    /// Updates the IsSelected property on all component items based on the currently selected component
+    /// </summary>
+    /// <param name="selectedComponent">The currently selected component</param>
+    private void UpdateComponentSelectionStates(ComponentBase selectedComponent)
+    {
+        foreach (var item in this.MyComponentItems)
+        {
+            item.IsSelected = item.Component == selectedComponent;
+        }
+        
+        // Also update the SelectedComponentItem to match
+        this.SelectedComponentItem = this.MyComponentItems.FirstOrDefault(x => x.Component == selectedComponent);
+    }
 
     public void OnEditComponentsExecute()
     {
@@ -129,9 +189,15 @@ public class MyComponentsViewModel : ViewModelBase
         {
             // Store the component to remove since the SelectedComponent will be null after removal from the local collection
             var componentToRemove = this.SelectedComponent;
+            var componentItemToRemove = this.MyComponentItems.FirstOrDefault(x => x.Component == componentToRemove);
 
-            // Remove from the local collection
+            // Remove from the local collections
             this.MyComponents.Remove(componentToRemove);
+            if (componentItemToRemove != null)
+            {
+                this.MyComponentItems.Remove(componentItemToRemove);
+                componentItemToRemove.Cleanup(); // Cleanup the wrapper
+            }
             
             // Remove from the farm's Components collection
             base.ActiveFarm.Components.Remove(componentToRemove);
@@ -158,6 +224,7 @@ public class MyComponentsViewModel : ViewModelBase
         _componentInitializationService.Initialize(instance);
 
         this.MyComponents.Add(instance);
+        this.MyComponentItems.Add(new ComponentItemViewModel(instance));
         this.SelectedComponent = instance;
 
         base.ActiveFarm.Components.Add(instance);

@@ -37,4 +37,9 @@ public interface ICropDto : IDto
     /// (kg ha^-1)
     /// </summary>
     double WetYield { get; set; }
+
+    /// <summary>
+    /// Indicates whether this crop is currently selected in the UI
+    /// </summary>
+    bool IsSelected { get; set; }
 }

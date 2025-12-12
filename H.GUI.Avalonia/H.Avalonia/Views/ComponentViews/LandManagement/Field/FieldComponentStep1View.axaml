@@ -11,12 +11,16 @@
 	</Design.DataContext>
 
 	<StackPanel>
-        <StackPanel>
-			<TextBlock Name="HeaderTextBlock" 
-					   Classes="step-number">Step #1</TextBlock>
-
-            <TextBlock Name="SubHeaderTextBlock"
-                       Classes="step-number-description">Enter basic information for this field</TextBlock>
+        <StackPanel Classes="step-header">
+            <!-- Step Badge -->
+            <Border Classes="step-badge">
+                <TextBlock Text="Step 1" Classes="step-badge-text"/>
+            </Border>
+            
+            <!-- Step Description -->
+            <TextBlock Text="Enter basic information for this field"
+                       Classes="step-number-description"
+                       VerticalAlignment="Center"/>
         </StackPanel>
 
 		<Grid HorizontalAlignment="Left">

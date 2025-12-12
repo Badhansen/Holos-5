@@ -19,6 +19,7 @@ public partial class CropDto : DtoBase, ICropDto
     private CropType _cropType;
     private ObservableCollection<CropType> _cropTypes;
     private double _wetYield;
+    private bool _isSelected;
 
     #endregion
 
@@ -70,6 +71,15 @@ public partial class CropDto : DtoBase, ICropDto
     {
         get => _wetYield;
         set => SetProperty(ref _wetYield, value);
+    }
+
+    /// <summary>
+    /// Indicates whether this crop is currently selected in the UI
+    /// </summary>
+    public bool IsSelected
+    {
+        get => _isSelected;
+        set => SetProperty(ref _isSelected, value);
     }
 
     #endregion

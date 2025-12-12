@@ -13,12 +13,16 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Margin="10,8,0,0">
-            <TextBlock Name="HeaderTextBlock"
-                       Classes="step-number">Step #3</TextBlock>
-
-            <TextBlock Name="SubHeaderTextBlock"
-                       Classes="step-number-description">Define management</TextBlock>
+        <StackPanel Grid.Row="0" Classes="step-header" Margin="10,8,0,20">
+            <!-- Step Badge -->
+            <Border Classes="step-badge">
+                <TextBlock Text="Step 3" Classes="step-badge-text"/>
+            </Border>
+            
+            <!-- Step Description -->
+            <TextBlock Text="Define management"
+                       Classes="step-number-description"
+                       VerticalAlignment="Center"/>
         </StackPanel>
 
         <TabControl Grid.Row="1" Margin="0,10,0,0">

@@ -1,12 +1,13 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Design.PreviewWith>
-        <Border Padding="20">
-            <!-- Add Controls for Previewer Here -->
-        </Border>
-    </Design.PreviewWith>
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:H.Avalonia.Converters">
+<Design.PreviewWith>
+    <Border Padding="20">
+        <!-- Add Controls for Previewer Here -->
+    </Border>
+</Design.PreviewWith>
 
-    <!-- Add Styles Here -->
+	  <!-- Add Styles Here -->
       <Styles.Resources>
 
 		  <Thickness x:Key="DefaultUserControlMargin">6,6,6,6</Thickness>
@@ -14,6 +15,35 @@
 		  <!-- Brushes -->
 		<SolidColorBrush x:Key="DefaultForegroundTextBrush" Color="DimGray" />
 		  <SolidColorBrush x:Key="DefaultHighlightBrush" Color="DarkGreen" />
+
+		  <!-- Card and UI State Brushes -->
+		  <SolidColorBrush x:Key="CardBackgroundBrush" Color="White" />
+		  <SolidColorBrush x:Key="CardSelectedBackgroundBrush" Color="#E3F2FD" />
+		  <SolidColorBrush x:Key="CardBorderBrush" Color="LightGray" />
+		  <SolidColorBrush x:Key="CardSelectedBorderBrush" Color="DodgerBlue" />
+		  <SolidColorBrush x:Key="CardHoverBackgroundBrush" Color="#F8F9FA" />
+		  <SolidColorBrush x:Key="BadgeBackgroundBrush" Color="DodgerBlue" />
+		  <SolidColorBrush x:Key="BadgeTextBrush" Color="White" />
+		  <SolidColorBrush x:Key="DeleteButtonBrush" Color="#FF6B6B" />
+
+		  <!-- Card Dimensions -->
+		  <Thickness x:Key="CardBorderThickness">2</Thickness>
+		  <Thickness x:Key="CardSelectedBorderThickness">3</Thickness>
+		  <CornerRadius x:Key="CardCornerRadius">8</CornerRadius>
+		  <Thickness x:Key="CardPadding">12</Thickness>
+		  <Thickness x:Key="CardMargin">5</Thickness>
+
+		  <!-- Badge Dimensions -->
+		  <CornerRadius x:Key="StepBadgeCornerRadius">4</CornerRadius>
+		  <CornerRadius x:Key="YearBadgeCornerRadius">12</CornerRadius>
+		  <Thickness x:Key="StepBadgePadding">12,6</Thickness>
+		  <Thickness x:Key="YearBadgePadding">8,4</Thickness>
+
+		  <!-- Selection State Converters -->
+		  <converters:BoolToBackgroundConverter x:Key="BoolToBackgroundConverter"/>
+		  <converters:BoolToBorderBrushConverter x:Key="BoolToBorderBrushConverter"/>
+		  <converters:BoolToBorderThicknessConverter x:Key="BoolToBorderThicknessConverter"/>
+		  <converters:BoolToScaleTransformConverter x:Key="BoolToScaleTransformConverter"/>
 
 		  <FontFamily x:Key="RobotoFontFamily">/Assets/Fonts/Roboto-Slab*.ttf#Roboto Slab</FontFamily>
           <FontFamily x:Key="MonaSansFontFamily">/Assets/Fonts/Mona-Sans*.ttf#Mona Sans</FontFamily>

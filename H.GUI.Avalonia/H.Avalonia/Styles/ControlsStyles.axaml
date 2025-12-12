@@ -204,4 +204,116 @@
 		<Setter Property="MinWidth" Value="120"/>
         <Setter Property="FontStyle" Value="Italic"/>
 	</Style>
+
+    <!-- Card Styles -->
+    <Style Selector="Border.card">
+        <Setter Property="Background" Value="{StaticResource CardBackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="{StaticResource CardBorderThickness}"/>
+        <Setter Property="CornerRadius" Value="{StaticResource CardCornerRadius}"/>
+        <Setter Property="Padding" Value="{StaticResource CardPadding}"/>
+        <Setter Property="Margin" Value="{StaticResource CardMargin}"/>
+    </Style>
+
+    <Style Selector="Border.step-card">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="LightGray"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="BoxShadow" Value="0 2 8 0 #1A000000"/>
+    </Style>
+
+    <!-- Timeline Card Styles -->
+    <Style Selector="Border.timeline-card">
+        <Setter Property="Background" Value="{Binding IsSelected, Converter={StaticResource BoolToBackgroundConverter}}"/>
+        <Setter Property="BorderBrush" Value="{Binding IsSelected, Converter={StaticResource BoolToBorderBrushConverter}}"/>
+        <Setter Property="BorderThickness" Value="{Binding IsSelected, Converter={StaticResource BoolToBorderThicknessConverter}}"/>
+        <Setter Property="RenderTransform" Value="{Binding IsSelected, Converter={StaticResource BoolToScaleTransformConverter}}"/>
+        <Setter Property="CornerRadius" Value="{StaticResource CardCornerRadius}"/>
+        <Setter Property="MinWidth" Value="180"/>
+        <Setter Property="MaxWidth" Value="200"/>
+        <Setter Property="Padding" Value="{StaticResource CardPadding}"/>
+    </Style>
+
+    <Style Selector="Button:pointerover > Border.timeline-card">
+        <Setter Property="BorderBrush" Value="{StaticResource CardSelectedBorderBrush}"/>
+        <Setter Property="Background" Value="{StaticResource CardHoverBackgroundBrush}"/>
+    </Style>
+
+    <!-- Badge Styles -->
+    <Style Selector="Border.step-badge">
+        <Setter Property="Background" Value="{StaticResource BadgeBackgroundBrush}"/>
+        <Setter Property="CornerRadius" Value="{StaticResource StepBadgeCornerRadius}"/>
+        <Setter Property="Padding" Value="{StaticResource StepBadgePadding}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,12,0"/>
+    </Style>
+
+    <Style Selector="Border.year-badge">
+        <Setter Property="Background" Value="{StaticResource BadgeBackgroundBrush}"/>
+        <Setter Property="CornerRadius" Value="{StaticResource YearBadgeCornerRadius}"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="{StaticResource YearBadgePadding}"/>
+    </Style>
+
+    <Style Selector="TextBlock.badge-text">
+        <Setter Property="Foreground" Value="{StaticResource BadgeTextBrush}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+
+    <Style Selector="TextBlock.step-badge-text">
+        <Setter Property="Foreground" Value="{StaticResource BadgeTextBrush}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+
+    <Style Selector="TextBlock.year-badge-text">
+        <Setter Property="Foreground" Value="{StaticResource BadgeTextBrush}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Delete Button Style -->
+    <Style Selector="Button.delete-button">
+        <Setter Property="Background" Value="{StaticResource DeleteButtonBrush}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Padding" Value="8,4"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Margin" Value="0,12,0,0"/>
+    </Style>
+
+    <!-- Timeline Container Styles -->
+    <Style Selector="Border.timeline-container">
+        <Setter Property="BorderBrush" Value="LightGray"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="10"/>
+        <Setter Property="Margin" Value="0,10"/>
+    </Style>
+
+    <Style Selector="TextBlock.timeline-header">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Margin" Value="0,0,0,10"/>
+    </Style>
+
+    <Style Selector="TextBlock.timeline-hint">
+        <Setter Property="FontStyle" Value="Italic"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Foreground" Value="Gray"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,8,0,0"/>
+    </Style>
+
+    <!-- Step Header Styles -->
+    <Style Selector="StackPanel.step-header">
+        <Setter Property="Orientation" Value="Horizontal"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,0,20"/>
+    </Style>
 </Styles>

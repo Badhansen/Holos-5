@@ -158,7 +158,14 @@ public class FieldComponentViewModel : ViewModelBase
     public ICropDto SelectedCropDto
     {
         get => _selectedCropDto;
-        set => SetProperty(ref _selectedCropDto, value);
+        set 
+        { 
+            if (SetProperty(ref _selectedCropDto, value))
+            {
+                // Update selection states for all crops
+                UpdateCropSelectionStates(value);
+            }
+        }
     }
 
     #endregion
@@ -272,7 +279,11 @@ public class FieldComponentViewModel : ViewModelBase
     {
         if (!IsDisposed && obj is ICropDto cropDto)
         {
+            // Update the selected crop
             this.SelectedCropDto = cropDto;
+            
+            // Update IsSelected property on all crops
+            UpdateCropSelectionStates(cropDto);
         }
     }
 
@@ -617,6 +628,21 @@ public class FieldComponentViewModel : ViewModelBase
             _selectedCropViewItem = _fieldComponentService.GetCropViewItemFromDto(
                 this.SelectedCropDto,
                 _selectedFieldSystemComponent);
+        }
+    }
+
+    /// <summary>
+    /// Updates the IsSelected property on all crops based on the currently selected crop
+    /// </summary>
+    /// <param name="selectedCrop">The currently selected crop DTO</param>
+    private void UpdateCropSelectionStates(ICropDto selectedCrop)
+    {
+        if (this.SelectedFieldSystemComponentDto?.CropDtos != null)
+        {
+            foreach (var crop in this.SelectedFieldSystemComponentDto.CropDtos)
+            {
+                crop.IsSelected = crop == selectedCrop;
+            }
         }
     }
 

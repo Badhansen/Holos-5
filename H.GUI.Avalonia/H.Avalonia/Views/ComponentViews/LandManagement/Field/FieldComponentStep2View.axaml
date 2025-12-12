@@ -20,36 +20,129 @@
                        Classes="step-number-description">Enter field history</TextBlock>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal" Margin="0,10">
             <Button Command="{Binding AddCropCommand}" Classes="add-group" Content="Add Crop"/>
-            <Button Command="{Binding RemoveCropCommand}" Classes="add-group" Content="Remove Crop"/>
         </StackPanel>
 
-        <DataGrid ItemsSource="{Binding Path= SelectedFieldSystemComponentDto.CropDtos}"
-                  SelectedItem="{Binding Path=SelectedCropDto}"
-                  AutoGenerateColumns="False"
-                  HorizontalAlignment="Left"
-                  Height="300"
-                  BorderThickness="1"
-                  GridLinesVisibility="All">
+        <!-- Timeline Container -->
+        <Border BorderBrush="LightGray" BorderThickness="1" Padding="10" Margin="0,10">
+            <StackPanel>
+                <!-- Timeline Header -->
+                <TextBlock Text="Field History Timeline" 
+                          FontWeight="Bold" 
+                          FontSize="14" 
+                          Margin="0,0,0,10"/>
+                
+                <!-- Timeline Scrollable Area -->
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                             VerticalScrollBarVisibility="Hidden"
+                             MaxHeight="250"
+                             MinHeight="150">
+                    <ItemsControl ItemsSource="{Binding Path=SelectedFieldSystemComponentDto.CropDtos}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="15"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <!-- Timeline Card -->
+                                <Button Background="Transparent"
+                                       BorderThickness="0"
+                                       Padding="0"
+                                       Margin="5"
+                                       HorizontalContentAlignment="Stretch"
+                                       VerticalContentAlignment="Stretch"
+                                       Command="{Binding $parent[UserControl].((field:FieldComponentViewModel)DataContext).SetSelectedCropCommand}"
+                                       CommandParameter="{Binding}">
+                                    
+                                    <Border Background="White" 
+                                           BorderThickness="2"
+                                           BorderBrush="LightGray"
+                                           CornerRadius="8"
+                                           MinWidth="180"
+                                           MaxWidth="200"
+                                           Padding="12">
+                                        
+                                        <!-- Card Selection Styling -->
+                                        <Border.Styles>
+                                            <Style Selector="Button:pointerover > Border">
+                                                <Setter Property="BorderBrush" Value="DodgerBlue"/>
+                                                <Setter Property="Background" Value="#F8F9FA"/>
+                                            </Style>
+                                        </Border.Styles>
 
-            <DataGrid.Columns>
-                <DataGridTextColumn Width="Auto"
-                                    Header="Year"
-                                    Binding="{Binding Path=Year}"
-                                    IsReadOnly="True"/>
+                                        <StackPanel Spacing="8">
+                                            <!-- Year Badge -->
+                                            <Border Background="DodgerBlue" 
+                                                   CornerRadius="12" 
+                                                   HorizontalAlignment="Center"
+                                                   Padding="8,4">
+                                                <TextBlock Text="{Binding Path=Year}" 
+                                                          Foreground="White" 
+                                                          FontWeight="Bold" 
+                                                          FontSize="16"
+                                                          HorizontalAlignment="Center"/>
+                                            </Border>
 
-                <DataGridTemplateColumn MinWidth="120"  Header="Crop" IsReadOnly="False">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox x:Name="combo"
-                                      MinWidth="200"
-                                      ItemsSource="{Binding Path=ValidCropTypes}"
-                                      SelectedItem="{Binding Path=CropType}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+                                            <!-- Crop Type Section -->
+                                            <StackPanel Spacing="4">
+                                                <TextBlock Text="Select crop" 
+                                                          FontSize="11" 
+                                                          Foreground="Gray" 
+                                                          FontWeight="SemiBold"
+                                                          HorizontalAlignment="Left"/>
+                                                
+                                                <ComboBox ItemsSource="{Binding Path=ValidCropTypes}"
+                                                         SelectedItem="{Binding Path=CropType}"
+                                                         MinWidth="140"
+                                                         HorizontalAlignment="Stretch"/>
+                                            </StackPanel>
+
+                                            <!-- Delete Button -->
+                                            <Button Background="#FF6B6B" 
+                                                   Foreground="White"
+                                                   CornerRadius="4"
+                                                   Padding="8,4"
+                                                   HorizontalAlignment="Center"
+                                                   FontSize="11"
+                                                   Margin="0,12,0,0"
+                                                   Command="{Binding $parent[UserControl].((field:FieldComponentViewModel)DataContext).RemoveSpecificCropCommand}"
+                                                   CommandParameter="{Binding}">
+                                                <TextBlock Text="Delete"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </Border>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                
+                <!-- Current Selection Display -->
+                <Border Background="#E3F2FD" 
+                       BorderBrush="DodgerBlue" 
+                       BorderThickness="1" 
+                       CornerRadius="4" 
+                       Padding="8" 
+                       Margin="0,10,0,0">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="Selected:" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding SelectedCropDto.Year, StringFormat='Year {0}'}"/>
+                        <TextBlock Text="-"/>
+                        <TextBlock Text="{Binding SelectedCropDto.CropType}"/>
+                    </StackPanel>
+                </Border>
+                
+                <!-- Timeline Navigation Hint -->
+                <TextBlock Text="Tip: Scroll horizontally to view all crops in your field history, click cards to select" 
+                          FontStyle="Italic" 
+                          FontSize="11" 
+                          Foreground="Gray" 
+                          HorizontalAlignment="Center"
+                          Margin="0,8,0,0"/>
+            </StackPanel>
+        </Border>
     </StackPanel>
 </UserControl>

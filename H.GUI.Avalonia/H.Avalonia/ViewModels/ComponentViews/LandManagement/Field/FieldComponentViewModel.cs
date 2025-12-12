@@ -115,6 +115,8 @@ public class FieldComponentViewModel : ViewModelBase
 
         this.AddCropCommand = new DelegateCommand<object>(OnAddCropExecute, AddCropCanExecute);
         this.RemoveCropCommand = new DelegateCommand<object>(OnRemoveCropExecute, RemoveCropCanExecute);
+        this.SetSelectedCropCommand = new DelegateCommand<object>(OnSetSelectedCropExecute);
+        this.RemoveSpecificCropCommand = new DelegateCommand<object>(OnRemoveSpecificCropExecute);
     }
 
     #endregion
@@ -130,6 +132,16 @@ public class FieldComponentViewModel : ViewModelBase
     /// Responsible for handling the removal of crops
     /// </summary>
     public DelegateCommand<object> RemoveCropCommand { get; set; }
+
+    /// <summary>
+    /// Responsible for setting the selected crop when a card is clicked in the timeline view
+    /// </summary>
+    public DelegateCommand<object> SetSelectedCropCommand { get; set; }
+
+    /// <summary>
+    /// Responsible for removing a specific crop from the timeline cards
+    /// </summary>
+    public DelegateCommand<object> RemoveSpecificCropCommand { get; set; }
 
     /// <summary>
     /// The selected <see cref="SelectedFieldSystemComponentDto"/>
@@ -250,6 +262,56 @@ public class FieldComponentViewModel : ViewModelBase
     private bool AddCropCanExecute(object arg)
     {
         return !IsDisposed && _selectedFieldSystemComponent != null;
+    }
+
+    /// <summary>
+    /// Sets the selected crop when a timeline card is clicked
+    /// </summary>
+    /// <param name="obj">The crop DTO to select</param>
+    private void OnSetSelectedCropExecute(object obj)
+    {
+        if (!IsDisposed && obj is ICropDto cropDto)
+        {
+            this.SelectedCropDto = cropDto;
+        }
+    }
+
+    /// <summary>
+    /// Removes a specific crop when the delete button on a card is clicked
+    /// </summary>
+    /// <param name="obj">The crop DTO to remove</param>
+    private void OnRemoveSpecificCropExecute(object obj)
+    {
+        if (!IsDisposed && obj is ICropDto cropDto)
+        {
+            try
+            {
+                // Remove the specific crop from the collection
+                this.SelectedFieldSystemComponentDto?.CropDtos?.Remove(cropDto);
+
+                // Ensure consecutive ordering (by year) of all crops now that one has been removed
+                if (this.SelectedFieldSystemComponentDto?.CropDtos != null)
+                {
+                    _fieldComponentService.ResetAllYears(this.SelectedFieldSystemComponentDto.CropDtos);
+                }
+
+                // Update command states
+                this.RemoveCropCommand?.RaiseCanExecuteChanged();
+
+                // Remove from the system
+                _fieldComponentService.RemoveCropFromSystem(_selectedFieldSystemComponent, cropDto);
+
+                // If the removed crop was selected, clear or select another crop
+                if (this.SelectedCropDto == cropDto)
+                {
+                    this.SelectedCropDto = this.SelectedFieldSystemComponentDto?.CropDtos?.FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Failed to remove specific crop");
+            }
+        }
     }
 
     /// <summary>

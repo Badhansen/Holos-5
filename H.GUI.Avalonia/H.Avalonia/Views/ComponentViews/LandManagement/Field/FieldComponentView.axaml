@@ -28,7 +28,8 @@
 			<Border Classes="title-underline"/>
 		</StackPanel>
 
-		<Grid Grid.Row="1">
+		<ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+			<Grid>
 			<Grid.RowDefinitions>
 				<!-- Step 1 row -->
                 <RowDefinition Height="Auto"/>
@@ -36,37 +37,76 @@
                 <!-- Step 1 GridSplitter row -->
 				<RowDefinition Height="Auto"/>
 
-                <!-- Step 2 row -->
-				<RowDefinition/>
+                <!-- Step 2 row - Auto height to accommodate timeline -->
+				<RowDefinition Height="Auto"/>
 
                 <!-- Step 2 GridSplitter row -->
 				<RowDefinition Height="Auto"/>
 
-                <!-- Step 3 row -->
-				<RowDefinition/>
+                <!-- Step 3 row - Auto height to ensure visibility -->
+				<RowDefinition Height="Auto"/>
 				
 			</Grid.RowDefinitions>
 
-			<!-- Begin step 1 -->
+		<!-- Begin step 1 -->
 
-			<fieldViews:FieldComponentStep1View Grid.Row="0" Margin="{StaticResource DefaultUserControlMargin}"/>
+		<Border Grid.Row="0"
+		       Background="White" 
+		       BorderBrush="LightGray" 
+		       BorderThickness="1" 
+		       CornerRadius="8" 
+		       Padding="20"
+		       Margin="{StaticResource DefaultUserControlMargin}">
+				<Border.Styles>
+					<Style Selector="Border">
+						<Setter Property="BoxShadow" Value="0 2 8 0 #1A000000"/>
+					</Style>
+				</Border.Styles>
+				
+				<fieldViews:FieldComponentStep1View/>
+			</Border>
 
 			<!-- End step 1 -->
 
-			<GridSplitter Grid.Row="1" Classes="default-horizontal-style"/>
+		<!-- Begin step 2 -->
 
-			<!-- Begin step 2 -->
-
-			<avalonia:FieldComponentStep2View Grid.Row="2" Margin="{StaticResource DefaultUserControlMargin}"/>
+		<Border Grid.Row="2"
+		       Background="White" 
+		       BorderBrush="LightGray" 
+		       BorderThickness="1" 
+		       CornerRadius="8" 
+		       Padding="20"
+		       Margin="{StaticResource DefaultUserControlMargin}">
+				<Border.Styles>
+					<Style Selector="Border">
+						<Setter Property="BoxShadow" Value="0 2 8 0 #1A000000"/>
+					</Style>
+				</Border.Styles>
+				
+				<avalonia:FieldComponentStep2View/>
+			</Border>
 
 			<!-- End step 2 -->
 
-			<GridSplitter Grid.Row="3" Classes="default-horizontal-style"/>
-
-			<!-- Begin step 3 -->
-			<avalonia:SelectedCropTabView Grid.Row="4"/>
+		<!-- Begin step 3 -->
+		<Border Grid.Row="4"
+		       Background="White" 
+		       BorderBrush="LightGray" 
+		       BorderThickness="1" 
+		       CornerRadius="8" 
+		       Padding="20"
+		       Margin="{StaticResource DefaultUserControlMargin}">
+				<Border.Styles>
+					<Style Selector="Border">
+						<Setter Property="BoxShadow" Value="0 2 8 0 #1A000000"/>
+					</Style>
+				</Border.Styles>
+				
+				<avalonia:SelectedCropTabView/>
+			</Border>
 
 			<!-- End step 3 -->
-		</Grid>
+			</Grid>
+		</ScrollViewer>
 	</Grid>
 </UserControl>

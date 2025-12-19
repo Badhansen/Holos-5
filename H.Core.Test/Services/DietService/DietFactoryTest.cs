@@ -6,7 +6,7 @@ using H.Infrastructure.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace H.Core.Test;
+namespace H.Core.Test.Services.DietService;
 
 [TestClass]
 public class DietFactoryTest

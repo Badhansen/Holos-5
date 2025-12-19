@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:avalonia="clr-namespace:H.Avalonia"
              xmlns:properties="clr-namespace:H.Core.Properties;assembly=H.Core"
+             xmlns:field="clr-namespace:H.Avalonia.Views.ComponentViews.LandManagement.Field"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="H.Avalonia.SelectedCropTabView">
+             x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Field.SelectedCropTabView">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -27,10 +28,10 @@
 
         <TabControl Grid.Row="1" Margin="0,10,0,0">
         <TabItem Header="{x:Static properties:Resources.TabHeaderGeneral}">
-            <avalonia:SelectedCropGeneralTabView/>
+            <field:SelectedCropGeneralTabView/>
         </TabItem>
         <TabItem Header="{x:Static properties:Resources.TabHeaderResidues}">
-            <avalonia:SelectedCropResiduesTabView/>
+            <field:SelectedCropResiduesTabView/>
         </TabItem>
         <TabItem Header="{x:Static properties:Resources.TabHeaderFertilizer}"></TabItem>
     </TabControl>

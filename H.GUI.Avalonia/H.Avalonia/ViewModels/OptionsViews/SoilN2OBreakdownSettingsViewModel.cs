@@ -4,6 +4,7 @@ using System.Reflection.Metadata;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Media;
+using H.Avalonia.Events;
 using H.Core.Events;
 using H.Avalonia.ViewModels.OptionsViews.DataTransferObjects;
 using H.Core.Enumerations;

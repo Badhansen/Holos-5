@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:field="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Field"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="H.Avalonia.SelectedCropGeneralTabView">
+             x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Field.SelectedCropGeneralTabView">
 
 	<Design.DataContext>
 		<field:FieldComponentViewModelDesign/>

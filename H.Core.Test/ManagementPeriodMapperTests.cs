@@ -1,12 +1,9 @@
 using AutoMapper;
-using H.Avalonia.ViewModels.ComponentViews;
 using H.Core.Factories;
 using H.Core.Mappers;
 using H.Core.Models.Animals;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
-namespace H.Core.Test.Mappers;
+namespace H.Core.Test;
 
 [TestClass]
 public class ManagementPeriodMapperTests

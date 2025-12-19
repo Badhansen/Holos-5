@@ -2,6 +2,7 @@
 using Prism.Events;
 using System;
 using Avalonia.Controls.Notifications;
+using H.Avalonia.Events;
 using H.Core.Events;
 using H.Core.Models;
 

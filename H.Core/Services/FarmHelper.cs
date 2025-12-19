@@ -1,10 +1,8 @@
 ﻿using H.Core.Models;
 using H.Core.Providers.Animals;
 using H.Core.Providers.Feed;
-using System;
 using System.Collections.ObjectModel;
 using H.Core.Enumerations;
-using FastExpressionCompiler.LightExpression;
 
 namespace H.Core.Services
 {

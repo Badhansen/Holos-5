@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using H.Core.Models.LandManagement.Fields;
+﻿using H.Core.Models.LandManagement.Fields;
 using H.Core.Providers.Fertilizer;
 
 namespace H.Core.Test.Models.LandManagement.Fields

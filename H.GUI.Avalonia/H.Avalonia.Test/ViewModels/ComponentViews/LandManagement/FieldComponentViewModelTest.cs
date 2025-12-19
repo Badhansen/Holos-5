@@ -1,13 +1,10 @@
 ﻿using System.Collections.ObjectModel;
-using H.Avalonia.ViewModels.ComponentViews.LandManagement;
 using H.Avalonia.ViewModels.ComponentViews.LandManagement.Field;
-using H.Core.Calculators.UnitsOfMeasurement;
 using H.Core.Factories;
 using H.Core.Factories.Crops;
 using H.Core.Models;
 using H.Core.Models.Animals.Beef;
 using H.Core.Models.LandManagement.Fields;
-using H.Core.Providers.Feed;
 using H.Core.Services.LandManagement.Fields;
 using H.Core.Services.StorageService;
 using Microsoft.Extensions.Logging;

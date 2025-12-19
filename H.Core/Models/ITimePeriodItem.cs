@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace H.Core.Models
+﻿namespace H.Core.Models
 {
     public interface ITimePeriodItem
     {

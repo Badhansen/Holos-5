@@ -1,8 +1,5 @@
 ﻿using H.Core.Enumerations;
 using H.Core.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace H.Core.Providers.Animals
 {

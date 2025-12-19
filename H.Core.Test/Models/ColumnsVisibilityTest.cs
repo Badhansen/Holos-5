@@ -1,7 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using H.Core.Models;
-using System.Collections.Generic;
+﻿using H.Core.Models;
 
 namespace H.Core.Test.Models
 {

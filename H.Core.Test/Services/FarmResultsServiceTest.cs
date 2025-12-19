@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using H.Core.Calculators.Carbon;
+﻿using System.Collections.ObjectModel;
 using H.Core.Calculators.Infrastructure;
-using H.Core.Calculators.Nitrogen;
-using H.Core.Emissions.Results;
 using H.Core.Enumerations;
 using H.Core.Models;
 using H.Core.Models.Animals;
@@ -15,12 +9,9 @@ using H.Core.Models.Animals.Sheep;
 using H.Core.Models.LandManagement.Fields;
 using H.Core.Providers;
 using H.Core.Providers.Climate;
-using H.Core.Providers.Feed;
 using H.Core.Providers.Soil;
 using H.Core.Services;
 using H.Core.Services.Animals;
-using H.Core.Services.LandManagement;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prism.Events;
 

@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using H.Core.Enumerations;
-using Prism.Mvvm;
 
 namespace H.Core.Calculators.UnitsOfMeasurement
 {

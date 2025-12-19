@@ -4,12 +4,6 @@ using H.Avalonia.Views.FarmCreationViews;
 using H.Core.Services.StorageService;
 using Prism.Commands;
 using Prism.Regions;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace H.Avalonia.ViewModels.FarmCreationViews
 {

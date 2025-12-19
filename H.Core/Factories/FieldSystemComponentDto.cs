@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using H.Core.CustomAttributes;
 using H.Core.Enumerations;

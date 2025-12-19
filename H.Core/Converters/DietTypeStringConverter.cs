@@ -1,7 +1,5 @@
-﻿using System;
-using H.Core.Enumerations;
+﻿using H.Core.Enumerations;
 using H.Core.Properties;
-using H.Core.Providers.Feed;
 
 namespace H.Core.Converters
 {

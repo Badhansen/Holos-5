@@ -1,6 +1,4 @@
 ﻿using H.Core.Providers.Climate;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 
 namespace H.Core.Test.Providers.Climate
 {

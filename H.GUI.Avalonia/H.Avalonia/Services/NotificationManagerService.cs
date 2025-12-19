@@ -1,14 +1,10 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
-using Castle.Core.Logging;
 using Microsoft.Extensions.Logging;
-using Prism.Events;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Numerics;
 using System.Threading.Tasks;
-using Mapsui.Extensions;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace H.Avalonia.Services

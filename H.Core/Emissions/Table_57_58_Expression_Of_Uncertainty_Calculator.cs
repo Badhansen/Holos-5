@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace H.Core.Emissions
+﻿namespace H.Core.Emissions
 {
     /// <summary>
     /// Implements both Table 57 and 58 from the Algorithm Document.

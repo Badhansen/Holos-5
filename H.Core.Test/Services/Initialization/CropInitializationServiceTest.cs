@@ -1,10 +1,8 @@
-using System;
 using H.Core.Models;
 using H.Core.Providers.Energy;
 using H.Core.Services.Initialization;
 using H.Infrastructure.Services;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace H.Core.Test.Services.Initialization

@@ -1,21 +1,13 @@
 ﻿using H.CLI.Converters;
 using H.CLI.TemporaryComponentStorage;
 using H.Core.Enumerations;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using H.CLI.FileAndDirectoryAccessors;
 using H.CLI.Interfaces;
 using H.CLI.UserInput;
 using H.Core.Models;
 using H.Core.Models.Animals.Swine;
 using H.Core.Models.LandManagement.Fields;
-using H.Core.Models.Animals.Sheep;
 
 namespace H.CLI.Test.Converters
 {

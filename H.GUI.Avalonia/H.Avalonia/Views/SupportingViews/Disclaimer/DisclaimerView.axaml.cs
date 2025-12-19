@@ -1,7 +1,5 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using H.Avalonia.ViewModels.SupportingViews.Disclaimer;
 
 namespace H.Avalonia.Views.SupportingViews.Disclaimer

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace H.Core.Providers.Soil
+﻿namespace H.Core.Providers.Soil
 {
     /// <summary>
     /// Table 15: Default soil N2O emission breakdown.

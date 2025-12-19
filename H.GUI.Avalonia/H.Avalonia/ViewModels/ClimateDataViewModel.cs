@@ -21,7 +21,6 @@ using H.Avalonia.Services;
 using H.Avalonia.Views.ResultViews;
 using H.Core.Services.Climate;
 using H.Core.Services.StorageService;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ClimateResultsView = H.Avalonia.Views.ResultViews.ClimateResultsView;
 
 namespace H.Avalonia.ViewModels

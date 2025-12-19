@@ -1,9 +1,6 @@
-using System;
-using System.Linq;
 using H.Avalonia.ViewModels.ComponentViews.LandManagement;
 using H.Core.Factories.Crops;
 using H.Core.Models;
-using H.Core.Models.Animals.Beef;
 using H.Core.Models.LandManagement.Rotation;
 using H.Core.Services.LandManagement.Fields;
 using H.Core.Services.StorageService;

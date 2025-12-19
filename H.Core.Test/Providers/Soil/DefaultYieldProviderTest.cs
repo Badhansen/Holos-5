@@ -1,6 +1,4 @@
 ﻿using H.Core.Providers.Soil;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
 using H.Core.Enumerations;
 
 namespace H.Core.Test.Providers.Soil

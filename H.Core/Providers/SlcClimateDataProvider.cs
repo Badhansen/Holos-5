@@ -1,9 +1,6 @@
 ﻿#region Imports
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using H.Content;
 using H.Core.Enumerations;
 using H.Core.Providers.Climate;

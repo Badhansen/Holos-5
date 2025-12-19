@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using H.Avalonia.ViewModels.OptionsViews.DataTransferObjects;
 using H.Core.Calculators.UnitsOfMeasurement;
-using H.Core.Models;
 using H.Core.Services.StorageService;
 using Microsoft.Extensions.Logging;
 using Prism.Events;

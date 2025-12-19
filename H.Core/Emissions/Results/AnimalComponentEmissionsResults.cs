@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Security.AccessControl;
-using H.Core.Enumerations;
-using H.Core.Models;
+﻿using H.Core.Models;
 
 namespace H.Core.Emissions.Results
 {

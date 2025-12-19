@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Text;
 using H.Core.Calculators.UnitsOfMeasurement;
 using H.Core.Emissions.Results;
 using H.Core.Enumerations;
 using H.Core.Models;
-using H.Core.Models.LandManagement.Fields;
 using H.Core.Models.Results;
-using H.Core.Providers.Animals;
 using H.Core.Providers.Economics;
-using H.Core.Services;
 using H.Core.Services.LandManagement;
 using H.Infrastructure;
 

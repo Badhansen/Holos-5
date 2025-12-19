@@ -1,22 +1,8 @@
-﻿using H.Core.Enumerations;
-using H.Core.Providers.AnaerobicDigestion;
-using H.Core.Providers.Climate;
-using H.Core.Providers.Temperature;
+﻿using H.Core.Providers.Temperature;
 using H.Core.Services.StorageService;
 using Prism.Regions;
 using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 using System.ComponentModel;
-using Prism.Events;
-using H.Core.Services;
-using H.Avalonia.ViewModels.Styles;
-using Avalonia.Metadata;
-using ImTools;
 
 namespace H.Avalonia.ViewModels.OptionsViews
 {

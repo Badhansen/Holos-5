@@ -1,20 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using H.Avalonia.ViewModels.Styles;
 using H.Core;
 using H.Core.Enumerations;
-using H.Core.Providers.Temperature;
 using H.Core.Services.StorageService;
 using ImTools;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
-using Prism.Events;
-using Prism.Regions;
 
 namespace H.Avalonia.ViewModels.OptionsViews
 {

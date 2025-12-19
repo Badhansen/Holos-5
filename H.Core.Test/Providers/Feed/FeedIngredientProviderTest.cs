@@ -1,6 +1,5 @@
 ﻿#region Imports
 
-using System.Linq;
 using AutoMapper;
 using H.Core.Enumerations;
 using H.Core.Mappers;
@@ -8,7 +7,6 @@ using H.Core.Models;
 using H.Core.Providers.Feed;
 using H.Infrastructure.Services;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prism.Ioc;
 

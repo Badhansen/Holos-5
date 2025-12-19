@@ -2,18 +2,11 @@
 using H.Avalonia.ViewModels.OptionsViews;
 using H.Core;
 using H.Core.Enumerations;
-using H.Core.Events;
 using H.Core.Models;
 using H.Core.Providers.Soil;
 using H.Core.Services.StorageService;
 using Moq;
 using Prism.Events;
-using Prism.Regions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using H.Avalonia.Events;
 
 namespace H.Avalonia.Test.ViewModels.OptionsViews

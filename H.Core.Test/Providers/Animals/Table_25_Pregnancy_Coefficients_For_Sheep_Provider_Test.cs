@@ -1,6 +1,4 @@
-﻿using H.Core.Enumerations;
-using H.Core.Providers.Animals;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using H.Core.Providers.Animals;
 
 namespace H.Core.Test.Providers.Animals
 {

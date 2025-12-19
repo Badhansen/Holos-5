@@ -7,7 +7,6 @@ using H.Core.Models.LandManagement.Rotation;
 using H.Core.Services.LandManagement.Fields;
 using H.Core.Services.StorageService;
 using Microsoft.Extensions.Logging;
-using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 

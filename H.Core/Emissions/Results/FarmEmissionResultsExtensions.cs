@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace H.Core.Emissions.Results
+﻿namespace H.Core.Emissions.Results
 {
     public static class FarmEmissionResultsExtensions
     {

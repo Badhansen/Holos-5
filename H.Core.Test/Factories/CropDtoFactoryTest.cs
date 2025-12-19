@@ -1,12 +1,8 @@
 using AutoMapper;
-using H.Avalonia.ViewModels.ComponentViews.LandManagement.Field;
-using H.Core.Enumerations;
-using H.Core.Factories;
 using H.Core.Factories.Crops;
 using H.Core.Mappers;
 using H.Core.Models;
 using H.Core.Services.Initialization;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prism.Ioc;
 

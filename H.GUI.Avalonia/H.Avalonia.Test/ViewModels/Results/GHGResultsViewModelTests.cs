@@ -2,7 +2,6 @@ using H.Avalonia.ViewModels.Results;
 using H.Core.Services.StorageService;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
 
 namespace H.Avalonia.Test.ViewModels.Results
 {

@@ -1,7 +1,5 @@
 ﻿#region Imports
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 #endregion
 
 namespace H.Core.Test

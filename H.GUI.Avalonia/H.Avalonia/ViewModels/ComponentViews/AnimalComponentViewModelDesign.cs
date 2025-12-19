@@ -1,9 +1,6 @@
-﻿using H.Core.Enumerations;
-using H.Core.Factories;
-using H.Core.Models.Animals;
+﻿using H.Core.Factories;
 using H.Core.Services.StorageService;
 using Microsoft.Extensions.Logging;
-using System;
 using H.Core.Services.Animals;
 
 namespace H.Avalonia.ViewModels.ComponentViews;

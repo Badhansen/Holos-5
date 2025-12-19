@@ -1,5 +1,4 @@
 using AutoMapper;
-using H.Core.Calculators.UnitsOfMeasurement;
 using H.Core.Enumerations;
 using H.Core.Factories;
 using H.Core.Mappers;

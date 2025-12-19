@@ -11,18 +11,12 @@ using H.Core.Providers.Soil;
 using H.Core.Tools;
 using H.Core.Models.Infrastructure;
 using H.Infrastructure;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Security.Permissions;
-using AutoMapper.Configuration.Conventions;
 using H.Core.Models.Animals;
 using H.Core.Converters;
-using H.Core.Emissions.Results;
 
 #endregion
 

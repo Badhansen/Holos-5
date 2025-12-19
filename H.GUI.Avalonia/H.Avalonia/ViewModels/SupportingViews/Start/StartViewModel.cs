@@ -7,7 +7,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using H.Infrastructure;
-using Avalonia;
 using Avalonia.Threading;
 using H.Avalonia.Views.FarmCreationViews;
 using H.Core.Services.StorageService;

@@ -1,13 +1,9 @@
 using AutoMapper;
-using H.Avalonia.ViewModels.ComponentViews;
 using H.Core.Factories;
 using H.Core.Mappers;
 using H.Core.Models.Animals;
-using H.Core.Services.Initialization;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prism.Ioc;
-using System;
 using IManagementPeriodDto = H.Core.Factories.IManagementPeriodDto;
 
 namespace H.Core.Test.Factories;

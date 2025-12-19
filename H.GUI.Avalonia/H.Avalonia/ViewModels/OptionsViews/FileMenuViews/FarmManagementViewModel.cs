@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using DynamicData;
 using System.Linq;
 using H.Core.Models;
@@ -8,7 +7,6 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 using H.Avalonia.Views.FarmCreationViews;
-using System.ComponentModel;
 using Avalonia.Controls.Notifications;
 using Microsoft.Extensions.Logging;
 using H.Avalonia.Services;

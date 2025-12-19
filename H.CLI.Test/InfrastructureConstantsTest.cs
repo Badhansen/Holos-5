@@ -1,7 +1,5 @@
 ﻿using H.CLI.Interfaces;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System.IO;
 
 namespace H.CLI.Test
 {

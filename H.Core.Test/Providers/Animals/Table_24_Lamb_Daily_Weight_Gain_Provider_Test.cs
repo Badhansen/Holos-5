@@ -1,5 +1,4 @@
 ﻿using H.Core.Providers.Animals;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace H.Core.Test.Providers.Animals
 {

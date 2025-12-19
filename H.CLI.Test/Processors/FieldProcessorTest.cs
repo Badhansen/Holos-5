@@ -1,13 +1,9 @@
 ﻿using H.CLI.Processors;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using H.Core.Models;
-using System.Collections.Generic;
 using H.Core.Enumerations;
 using H.Core.Models.LandManagement.Fields;
-using System.IO;
 using H.Core.Calculators.Carbon;
 using H.Core.Calculators.Nitrogen;
-using H.Core.Providers.Climate;
 using H.Core.Services.LandManagement;
 using H.Core.Test;
 

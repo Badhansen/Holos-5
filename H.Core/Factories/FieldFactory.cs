@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
-using Avalonia.Markup.Xaml.Templates;
-using H.Core.Calculators.UnitsOfMeasurement;
-using H.Core.Converters;
 using H.Core.Mappers;
 using H.Core.Models;
-using H.Core.Models.LandManagement.Fields;
 using Prism.Ioc;
 
 namespace H.Core.Factories;

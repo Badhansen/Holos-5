@@ -1,6 +1,5 @@
 ﻿#region Imports
 
-using System;
 using AutoMapper;
 using H.Core.Calculators.UnitsOfMeasurement;
 using H.Core.CustomAttributes;

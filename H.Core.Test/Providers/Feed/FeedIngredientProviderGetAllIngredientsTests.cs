@@ -1,7 +1,5 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using H.Core.Enumerations;
 using H.Core.Providers.Feed;
-using System.Linq;
 
 namespace H.Core.Test.Providers.Feed
 {

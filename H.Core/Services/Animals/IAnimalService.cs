@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using H.Core.Emissions.Results;
+﻿using H.Core.Emissions.Results;
 using H.Core.Enumerations;
 using H.Core.Models;
 using H.Core.Models.Animals;

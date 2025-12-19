@@ -1,9 +1,8 @@
 ﻿#region Imports
 
-using System;
 using System.Globalization;
 using Avalonia.Data.Converters;
-using System.Windows;
+
 #endregion
 
 namespace H.Infrastructure.Controls.ValueConverters

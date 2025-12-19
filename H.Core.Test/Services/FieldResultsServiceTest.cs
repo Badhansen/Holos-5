@@ -16,12 +16,8 @@ using H.Core.Providers.Precipitation;
 using H.Core.Providers.Soil;
 using H.Core.Services.Animals;
 using H.Core.Services.LandManagement;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using GroupEmissionsByDay = H.Core.Emissions.Results.GroupEmissionsByDay;
 
 #endregion

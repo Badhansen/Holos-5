@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
 using H.Core.Calculators.UnitsOfMeasurement;
 using H.Core.Enumerations;
@@ -8,7 +6,6 @@ using H.Core.Mappers;
 using H.Core.Models.Animals;
 using H.Core.Services.Animals;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prism.Ioc;
 

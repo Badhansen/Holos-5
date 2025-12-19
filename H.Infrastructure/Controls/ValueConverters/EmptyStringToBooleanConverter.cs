@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Windows;
+﻿using System.Globalization;
 using Avalonia.Data.Converters;
 
 namespace H.Infrastructure.Controls.ValueConverters

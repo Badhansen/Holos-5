@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using H.Core.Enumerations;
+﻿using H.Core.Enumerations;
 using H.Core.Models.LandManagement.Fields;
 
 namespace H.Core.Services.LandManagement

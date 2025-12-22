@@ -1,8 +1,4 @@
 ﻿using H.Core.Providers.Animals;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using H.Core.Enumerations;
 
 namespace H.Core.Test.Providers.Animals

@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using H.Core.Providers.Shelterbelt;
+﻿using H.Core.Providers.Shelterbelt;
 using H.Core.Enumerations;
 
 namespace H.Core.Test.Providers.Shelterbelt

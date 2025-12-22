@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using H.Core.Models.Results;
+﻿using H.Core.Models.Results;
 
 namespace H.Core.Models.LandManagement.Fields
 {

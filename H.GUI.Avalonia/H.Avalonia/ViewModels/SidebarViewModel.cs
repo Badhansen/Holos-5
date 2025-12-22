@@ -1,13 +1,7 @@
-﻿using Avalonia.Controls.Chrome;
-using H.Avalonia.Views;
+﻿using H.Avalonia.Views;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using H.Core.Services.StorageService;
 using Microsoft.Extensions.Logging;
 

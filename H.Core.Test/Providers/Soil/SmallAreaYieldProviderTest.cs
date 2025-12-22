@@ -1,10 +1,5 @@
-﻿using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using H.Core.Enumerations;
-using H.Core.Providers.Fertilizer;
+﻿using H.Core.Enumerations;
 using H.Core.Providers.Soil;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace H.Core.Test.Providers.Soil
 {

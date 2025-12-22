@@ -83,7 +83,7 @@
 					</Style>
 				</Border.Styles>
 				
-				<avalonia:FieldComponentStep2View/>
+				<fieldViews:FieldComponentStep2View/>
 			</Border>
 
 			<!-- End step 2 -->
@@ -102,7 +102,7 @@
 					</Style>
 				</Border.Styles>
 				
-				<avalonia:SelectedCropTabView/>
+				<fieldViews:SelectedCropTabView/>
 			</Border>
 
 			<!-- End step 3 -->

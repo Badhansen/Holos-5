@@ -1,13 +1,5 @@
 ﻿using H.Avalonia.Services;
-using Prism.Events;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using H.Core.Events;
-using H.Infrastructure;
-using Tmds.DBus.Protocol;
 
 namespace H.Avalonia.ViewModels
 {

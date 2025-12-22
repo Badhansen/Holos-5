@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using H.Core.Models;
-using H.Infrastructure;
 
 namespace H.Avalonia.Models;
 

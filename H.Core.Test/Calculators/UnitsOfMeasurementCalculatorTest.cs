@@ -1,9 +1,7 @@
 ﻿using H.Core.Calculators.UnitsOfMeasurement;
 using H.Core.Enumerations;
 using H.Core.Services.StorageService;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
 using H.Core.Models;
 
 namespace H.Core.Test.Calculators

@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using H.Core;
-using H.Core.Enumerations;
 using H.Core.Services;
 using H.Core.Services.Animals;
 

@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace H.Infrastructure.Test
+﻿namespace H.Infrastructure.Test
 {
     [TestClass]
     public class ListExtensionsTest

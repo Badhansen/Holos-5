@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace H.Core.Calculators.Climate
+﻿namespace H.Core.Calculators.Climate
 {
     public class EvapotranspirationCalculator
     {

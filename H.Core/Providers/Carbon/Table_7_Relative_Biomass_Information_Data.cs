@@ -1,6 +1,5 @@
 ﻿#region Imports
 
-using System.Collections.Generic;
 using H.Core.Enumerations;
 using H.Core.Providers.AnaerobicDigestion;
 

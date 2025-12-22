@@ -1,10 +1,6 @@
 ﻿#region Imports
 
-using System;
-using System.Linq;
 using H.Core.Providers.Climate;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
 #endregion
 

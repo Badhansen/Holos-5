@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using H.Core.Factories;
 using H.Core.Factories.Crops;
 using H.Core.Models.LandManagement.Fields;
 

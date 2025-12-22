@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using H.Core.Providers.Climate;
+﻿using System.Diagnostics;
 using H.Infrastructure;
 
 namespace H.Core.Providers.Soil

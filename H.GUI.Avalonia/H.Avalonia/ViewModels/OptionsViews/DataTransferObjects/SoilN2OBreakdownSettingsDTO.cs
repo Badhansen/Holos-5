@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mapsui.Extensions;
 using H.Core.Services.StorageService;
-using ExCSS;
 using H.Core;
 using H.Core.Enumerations;
-using Avalonia.Controls.Notifications;
-using Prism.Events;
-using Prism.Regions;
 
 namespace H.Avalonia.ViewModels.OptionsViews.DataTransferObjects
 {

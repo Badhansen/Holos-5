@@ -1,14 +1,10 @@
-﻿using H.Avalonia.Views;
-using H.Core.Enumerations;
-using H.Core.Services;
+﻿using H.Core.Enumerations;
 using H.Infrastructure;
 using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Regions;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Linq;
-using System.Collections.Generic;
 using H.Core.Services.Provinces;
 using System;
 

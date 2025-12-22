@@ -1,9 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Linq;
-using System.Net.Sockets;
-using System.Reflection;
-using H.Core.CustomAttributes;
+﻿using H.Core.CustomAttributes;
 using H.Core.Enumerations;
 
 namespace H.Core.Test.CustomAttributes

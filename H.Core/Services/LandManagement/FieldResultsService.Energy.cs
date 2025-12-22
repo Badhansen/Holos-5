@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using H.Core.Emissions.Results;
 using H.Core.Enumerations;
 using H.Core.Models;

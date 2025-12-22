@@ -1,15 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using H.Core.Providers.Climate;
 using H.Content;
 using System.Text;
 using H.Core.Models;
 using H.Core.Models.LandManagement.Fields;
-using H.Core.Providers;
 
 namespace H.Core.Test.Providers.Climate
 {

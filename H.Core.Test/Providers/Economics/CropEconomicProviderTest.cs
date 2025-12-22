@@ -1,6 +1,4 @@
 ﻿using System.Diagnostics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 using H.Core.Enumerations;
 using H.Core.Providers.Economics;
 

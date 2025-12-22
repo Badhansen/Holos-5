@@ -1,17 +1,13 @@
-using System;
 using System.ComponentModel;
 using AutoMapper;
 using H.Core.Calculators.UnitsOfMeasurement;
-using H.Core.Converters;
 using H.Core.Enumerations;
 using H.Core.Factories;
 using H.Core.Factories.Crops;
 using H.Core.Models;
-using H.Core.Models.Animals;
 using H.Core.Models.LandManagement.Fields;
 using H.Core.Services.Animals;
 using H.Infrastructure;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace H.Core.Test.Services.Animals

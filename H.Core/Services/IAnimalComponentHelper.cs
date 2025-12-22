@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using H.Core.Models;
+﻿using H.Core.Models;
 using H.Core.Models.Animals;
 
 namespace H.Core.Services

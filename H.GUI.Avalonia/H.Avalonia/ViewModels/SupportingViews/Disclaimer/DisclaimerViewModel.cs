@@ -1,22 +1,12 @@
-using ExCSS;
 using H.Core.Enumerations;
 using H.Core.Properties;
 using H.Infrastructure;
 using Prism.Events;
 using Prism.Regions;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using H.Avalonia.Views;
 using H.Core.Services;
 using Prism.Commands;
-using H.Avalonia.Views.SupportingViews.MeasurementProvince;
-using H.Avalonia.Views.SupportingViews.RegionSelection;
-using H.Avalonia.Views.FarmCreationViews;
 
 namespace H.Avalonia.ViewModels.SupportingViews.Disclaimer
 {

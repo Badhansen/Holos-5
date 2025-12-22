@@ -1,6 +1,4 @@
 ﻿using H.Core.Providers.Animals.Table_69;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using H.Core.Providers.Animals.Table_70;
 using H.Core.Enumerations;
 

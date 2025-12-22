@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using AutoMapper;
 using H.Core.Enumerations;
 using H.Core.Models;
 using H.Core.Models.LandManagement.Fields;
 using H.Core.Models.LandManagement.Rotation;
-using H.Core.Services.LandManagement;
 using H.Infrastructure;
 
 namespace H.Core.Services

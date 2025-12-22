@@ -1,9 +1,6 @@
 using AutoMapper;
-using H.Core.Calculators.UnitsOfMeasurement;
 using H.Core.Factories;
 using H.Core.Mappers;
-using H.Core.Services.Animals;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prism.Ioc;
 

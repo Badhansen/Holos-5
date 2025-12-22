@@ -1,6 +1,5 @@
 using System.Linq;
 using Avalonia.Controls;
-using Avalonia.Controls.Notifications;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using H.Avalonia.ViewModels.OptionsViews.FileMenuViews;

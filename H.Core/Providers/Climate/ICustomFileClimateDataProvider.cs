@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using H.Core.Models;
-using H.Core.Providers.Temperature;
-
-namespace H.Core.Providers.Climate
+﻿namespace H.Core.Providers.Climate
 {
     public interface ICustomFileClimateDataProvider 
     {        

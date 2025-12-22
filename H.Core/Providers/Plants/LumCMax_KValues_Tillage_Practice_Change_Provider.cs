@@ -1,11 +1,8 @@
 ﻿using H.Content;
 using H.Core.Converters;
 using H.Infrastructure;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using H.Core.Enumerations;
-using H.Core.Providers.Soil;
 using H.Core.Tools;
 
 namespace H.Core.Providers.Plants

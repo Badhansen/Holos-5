@@ -2,7 +2,7 @@
 using Prism.Events;
 using System;
 using Avalonia.Controls.Notifications;
-using H.Core.Events;
+using H.Avalonia.Events;
 using H.Core.Models;
 
 namespace H.Avalonia.Services

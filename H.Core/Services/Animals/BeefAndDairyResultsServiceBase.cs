@@ -1,7 +1,6 @@
 ﻿using H.Core.Emissions.Results;
 using H.Core.Models.Animals;
 using H.Core.Models;
-using System;
 using H.Core.Enumerations;
 
 namespace H.Core.Services.Animals

@@ -1,8 +1,6 @@
-﻿using System;
-using H.Core.Emissions.Results;
+﻿using H.Core.Emissions.Results;
 using H.Core.Models;
 using H.Core.Models.LandManagement.Fields;
-using System.Collections.Generic;
 using H.Core.Services.Animals;
 
 namespace H.Core.Calculators.Carbon

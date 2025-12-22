@@ -1,13 +1,7 @@
 ﻿using H.Core.Calculators.Climate;
-using H.Core.Tools;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace H.Core.Providers.Climate
 {

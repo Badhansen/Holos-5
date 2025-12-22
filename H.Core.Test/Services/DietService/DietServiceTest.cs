@@ -3,8 +3,6 @@ using H.Core.Providers.Feed;
 using H.Core.Services.DietService;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 
 namespace H.Core.Test.Services.DietService;
 

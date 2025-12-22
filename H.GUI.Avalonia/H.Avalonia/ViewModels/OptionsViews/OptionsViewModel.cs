@@ -1,9 +1,7 @@
-﻿using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using H.Avalonia.Events;
 using H.Avalonia.Views.ComponentViews;
 using H.Avalonia.Views.FarmCreationViews;
-using H.Core.Events;
 using H.Avalonia.Views.SupportingViews;
 using H.Core.Models;
 using Prism.Events;

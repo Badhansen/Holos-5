@@ -2,8 +2,6 @@
 using H.Core.Enumerations;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Newtonsoft.Json.Linq;
-using SharpKml.Dom.Atom;
 
 
 namespace H.Avalonia.Test.Services

@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using System.Collections.Generic;
 using H.Core.Enumerations;
 using H.Core.Providers.Feed;
 

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace H.Core.Emissions
+﻿namespace H.Core.Emissions
 {
     public class SummationsCalculator
     {

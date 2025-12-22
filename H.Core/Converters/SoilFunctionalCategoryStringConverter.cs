@@ -1,6 +1,4 @@
 ﻿using H.Core.Enumerations;
-using H.Core.Properties;
-using System;
 using System.Diagnostics;
 
 namespace H.Core.Converters

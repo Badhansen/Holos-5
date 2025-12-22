@@ -3,7 +3,6 @@ using H.Core.Enumerations;
 using H.Core.Providers.Animals.Table_69;
 using H.Infrastructure;
 using System.Diagnostics;
-using System.Linq;
 
 namespace H.Core.Providers.Animals.Table_70
 {

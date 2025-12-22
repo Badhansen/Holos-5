@@ -1,89 +1,89 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-         xmlns:field="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Field"
-         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-         x:Class="H.Avalonia.FieldComponentStep2View">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:field="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Field"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Field.FieldComponentStep2View">
 
-<Design.DataContext>
-    <field:FieldComponentViewModelDesign/>
-</Design.DataContext>
+    <Design.DataContext>
+        <field:FieldComponentViewModelDesign />
+    </Design.DataContext>
 
     <StackPanel>
 
         <StackPanel Classes="step-header">
             <!-- Step Badge -->
             <Border Classes="step-badge">
-                <TextBlock Text="Step 2" Classes="step-badge-text"/>
+                <TextBlock Text="Step 2" Classes="step-badge-text" />
             </Border>
-            
+
             <!-- Step Description -->
             <TextBlock Text="Enter field history"
                        Classes="step-number-description"
-                       VerticalAlignment="Center"/>
+                       VerticalAlignment="Center" />
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Margin="0,10">
-            <Button Command="{Binding AddCropCommand}" Classes="add-group" Content="Add Crop"/>
+            <Button Command="{Binding AddCropCommand}" Classes="add-group" Content="Add Crop" />
         </StackPanel>
 
         <!-- Timeline Container -->
         <Border Classes="timeline-container">
             <StackPanel>
                 <!-- Timeline Header -->
-                <TextBlock Text="Field History Timeline" Classes="timeline-header"/>
-                
+                <TextBlock Text="Field History Timeline" Classes="timeline-header" />
+
                 <!-- Timeline Scrollable Area -->
-                <ScrollViewer HorizontalScrollBarVisibility="Auto" 
-                             VerticalScrollBarVisibility="Hidden"
-                             MaxHeight="250"
-                             MinHeight="150">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Hidden"
+                              MaxHeight="250"
+                              MinHeight="150">
                     <ItemsControl ItemsSource="{Binding Path=SelectedFieldSystemComponentDto.CropDtos}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal" Spacing="15"/>
+                                <StackPanel Orientation="Horizontal" Spacing="15" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
-                        
+
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <!-- Timeline Card -->
                                 <Button Background="Transparent"
-                                       BorderThickness="0"
-                                       Padding="0"
-                                       Margin="5"
-                                       HorizontalContentAlignment="Stretch"
-                                       VerticalContentAlignment="Stretch"
-                                       Command="{Binding $parent[UserControl].((field:FieldComponentViewModel)DataContext).SetSelectedCropCommand}"
-                                       CommandParameter="{Binding}">
-                                    
+                                        BorderThickness="0"
+                                        Padding="0"
+                                        Margin="5"
+                                        HorizontalContentAlignment="Stretch"
+                                        VerticalContentAlignment="Stretch"
+                                        Command="{Binding $parent[UserControl].((field:FieldComponentViewModel)DataContext).SetSelectedCropCommand}"
+                                        CommandParameter="{Binding}">
+
                                     <Border Classes="timeline-card">
                                         <StackPanel Spacing="8">
                                             <!-- Year Badge -->
                                             <Border Classes="year-badge">
-                                                <TextBlock Text="{Binding Path=Year}" Classes="year-badge-text"/>
+                                                <TextBlock Text="{Binding Path=Year}" Classes="year-badge-text" />
                                             </Border>
 
                                             <!-- Crop Type Section -->
                                             <StackPanel Spacing="4">
-                                                <TextBlock Text="Select crop" 
-                                                          FontSize="11" 
-                                                          Foreground="Gray" 
-                                                          FontWeight="SemiBold"
-                                                          HorizontalAlignment="Left"/>
-                                                
+                                                <TextBlock Text="Select crop"
+                                                           FontSize="11"
+                                                           Foreground="Gray"
+                                                           FontWeight="SemiBold"
+                                                           HorizontalAlignment="Left" />
+
                                                 <ComboBox ItemsSource="{Binding Path=ValidCropTypes}"
-                                                         SelectedItem="{Binding Path=CropType}"
-                                                         MinWidth="140"
-                                                         HorizontalAlignment="Stretch"/>
+                                                          SelectedItem="{Binding Path=CropType}"
+                                                          MinWidth="140"
+                                                          HorizontalAlignment="Stretch" />
                                             </StackPanel>
 
                                             <!-- Delete Button -->
                                             <Button Classes="delete-button"
-                                                   Command="{Binding $parent[UserControl].((field:FieldComponentViewModel)DataContext).RemoveSpecificCropCommand}"
-                                                   CommandParameter="{Binding}">
-                                                <TextBlock Text="Delete"/>
+                                                    Command="{Binding $parent[UserControl].((field:FieldComponentViewModel)DataContext).RemoveSpecificCropCommand}"
+                                                    CommandParameter="{Binding}">
+                                                <TextBlock Text="Delete" />
                                             </Button>
                                         </StackPanel>
                                     </Border>
@@ -92,11 +92,11 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
-                
-                
+
+
                 <!-- Timeline Navigation Hint -->
-                <TextBlock Text="Tip: Scroll horizontally to view all crops, selected crop will be highlighted" 
-                          Classes="timeline-hint"/>
+                <TextBlock Text="Tip: Scroll horizontally to view all crops, selected crop will be highlighted"
+                           Classes="timeline-hint" />
             </StackPanel>
         </Border>
     </StackPanel>

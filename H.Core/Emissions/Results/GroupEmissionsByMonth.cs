@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using H.Core.Converters;
+﻿using H.Core.Converters;
 using H.Core.Enumerations;
 using H.Core.Models;
 using H.Core.Models.Animals;

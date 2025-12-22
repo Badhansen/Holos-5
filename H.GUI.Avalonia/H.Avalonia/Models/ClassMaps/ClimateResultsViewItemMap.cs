@@ -1,10 +1,4 @@
 ﻿using CsvHelper.Configuration;
-using H.Avalonia.Models.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using H.Core.Models.Climate;
 
 namespace H.Avalonia.Models.ClassMaps

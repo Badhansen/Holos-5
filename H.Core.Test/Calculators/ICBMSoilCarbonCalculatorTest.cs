@@ -1,22 +1,16 @@
 ﻿#region Imports
 
-using System;
 using System.Collections.ObjectModel;
 using H.Core.Calculators.Carbon;
-using H.Core.Calculators.Nitrogen;
 using H.Core.Enumerations;
 using H.Core.Models;
 using H.Core.Models.LandManagement.Fields;
 using H.Core.Providers;
 using H.Core.Providers.Animals;
-using H.Core.Providers.Carbon;
 using H.Core.Providers.Climate;
 using H.Core.Providers.Evapotranspiration;
 using H.Core.Providers.Precipitation;
 using H.Core.Providers.Soil;
-using H.Core.Services.LandManagement;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
 #endregion
 

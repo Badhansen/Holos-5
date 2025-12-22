@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace H.Core.Providers
+﻿namespace H.Core.Providers
 {
     public interface IProvider<T> where T : class
     {

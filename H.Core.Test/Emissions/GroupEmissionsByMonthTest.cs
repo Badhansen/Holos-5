@@ -1,7 +1,4 @@
 ﻿using H.Core.Emissions.Results;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 
 namespace H.Core.Test.Emissions
 {

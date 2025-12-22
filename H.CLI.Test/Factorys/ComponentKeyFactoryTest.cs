@@ -1,4 +1,3 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Globalization;
 using H.CLI.ComponentKeys;
 using H.CLI.Factories;

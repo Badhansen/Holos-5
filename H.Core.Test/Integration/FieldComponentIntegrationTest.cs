@@ -1,23 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using H.Core.Calculators.Infrastructure;
+﻿using System.Globalization;
 using H.Core.Enumerations;
 using H.Core.Models;
-using H.Core.Models.Animals.Sheep;
 using H.Core.Models.LandManagement.Fields;
 using H.Core.Models.LandManagement.Rotation;
 using H.Core.Providers;
 using H.Core.Providers.Climate;
 using H.Core.Services;
-using H.Core.Services.Animals;
 using H.Core.Services.LandManagement;
-using Prism.Events;
-using H.Core.Calculators.Carbon;
-using H.Core.Calculators.Nitrogen;
 
 namespace H.Core.Test.Integration
 {

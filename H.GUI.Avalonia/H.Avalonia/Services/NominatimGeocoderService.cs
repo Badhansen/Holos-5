@@ -1,24 +1,11 @@
-﻿using Avalonia.Controls.Shapes;
-using BruTile.Wmts.Generated;
-using H.Core.Enumerations;
-using H.Core.Providers.Climate;
-using ImTools;
-using Mapsui;
+﻿using H.Core.Enumerations;
 using Microsoft.Extensions.Logging;
-using NetTopologySuite.Utilities;
 using Newtonsoft.Json.Linq;
-using SharpKml.Dom.Atom;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using Tmds.DBus.Protocol;
 using Path = System.IO.Path;
 
 namespace H.Avalonia.Services

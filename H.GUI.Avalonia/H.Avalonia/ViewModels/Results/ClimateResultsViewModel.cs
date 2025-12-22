@@ -1,9 +1,7 @@
 ﻿using Avalonia.Controls.Notifications;
 using Avalonia.Platform.Storage;
 using H.Avalonia.Models.ClassMaps;
-using H.Avalonia.Models.Results;
 using H.Avalonia.Infrastructure;
-using H.Core.Providers.Climate;
 using Prism.Commands;
 using Prism.Regions;
 using System;
@@ -14,8 +12,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using H.Avalonia.Models;
 using H.Avalonia.Services;
-using H.Avalonia.Views.ResultViews;
-using H.Core.Models.Climate;
 using H.Core.Services.Climate;
 using H.Core.Services.StorageService;
 using Microsoft.Extensions.Logging;

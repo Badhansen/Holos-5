@@ -1,16 +1,8 @@
-﻿using H.Avalonia.ViewModels;
-using H.Avalonia.Views;
-using Prism.Events;
+﻿using Prism.Events;
 using Prism.Regions;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Reactive;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using H.Avalonia.Events;
 using H.Core.Models;
 using H.Core.Models.Animals.Sheep;
@@ -27,7 +19,6 @@ using H.Core.Models.Animals.Poultry.Turkey;
 using H.Core.Services.StorageService;
 using H.Infrastructure;
 using Microsoft.Extensions.Logging;
-using ReactiveUI;
 
 namespace H.Avalonia.ViewModels.ComponentViews
 {

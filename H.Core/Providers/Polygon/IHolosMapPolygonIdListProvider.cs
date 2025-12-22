@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace H.Core.Providers.Polygon
+﻿namespace H.Core.Providers.Polygon
 {
     public interface IHolosMapPolygonIdListProvider
     {

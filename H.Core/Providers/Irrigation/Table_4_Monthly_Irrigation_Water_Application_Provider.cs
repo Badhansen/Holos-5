@@ -2,9 +2,6 @@
 using H.Core.Enumerations;
 using H.Infrastructure;
 using H.Core.Converters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Diagnostics;
 
 namespace H.Core.Providers.Irrigation

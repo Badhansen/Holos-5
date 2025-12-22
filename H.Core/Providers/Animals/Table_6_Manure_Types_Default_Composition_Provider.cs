@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using H.Core.Enumerations;
+﻿using H.Core.Enumerations;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using H.Content;
 using H.Core.Converters;
 using H.Core.Tools;

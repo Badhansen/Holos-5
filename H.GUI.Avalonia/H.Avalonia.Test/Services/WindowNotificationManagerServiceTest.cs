@@ -1,22 +1,10 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using H.Avalonia.Services;
-using H.Avalonia.ViewModels.OptionsViews;
-using H.Core;
-using H.Core.Models;
-using H.Core.Services.StorageService;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Prism.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Avalonia.Controls.Notifications;
-using Avalonia.Platform;
 using Avalonia.Headless;
-using Avalonia.Markup.Xaml;
 
 namespace H.Avalonia.Test.Services
 {

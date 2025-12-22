@@ -1,11 +1,7 @@
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using H.Content;
 using H.Core.Converters;
 using H.Core.Enumerations;
-using H.Core.Models.Animals.Sheep;
-using H.Core.Providers.Plants;
 using H.Core.Tools;
 using H.Infrastructure;
 

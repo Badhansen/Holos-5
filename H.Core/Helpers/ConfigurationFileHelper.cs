@@ -1,5 +1,4 @@
-﻿using Splat;
-using System.Configuration;
+﻿using System.Configuration;
 using H.Core.Enumerations;
 
 namespace H.Core.Helpers

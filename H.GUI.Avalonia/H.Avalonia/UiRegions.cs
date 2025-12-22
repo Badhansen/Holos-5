@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace H.Avalonia
+﻿namespace H.Avalonia
 {
     /// <summary>
     /// Specifies the various UI regions on the window that the user will be using for navigation. In used for navigation

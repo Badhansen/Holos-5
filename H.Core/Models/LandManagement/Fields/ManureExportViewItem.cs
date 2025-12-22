@@ -1,8 +1,4 @@
-﻿using System;
-using H.Core.Enumerations;
-using H.Infrastructure;
-
-namespace H.Core.Models.LandManagement.Fields
+﻿namespace H.Core.Models.LandManagement.Fields
 {
     public class ManureExportViewItem : ManureItemBase
     {

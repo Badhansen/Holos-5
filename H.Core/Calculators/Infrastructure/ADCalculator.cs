@@ -2,17 +2,8 @@
 using H.Core.Enumerations;
 using H.Core.Models;
 using H.Core.Models.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using H.Core.Models.Animals;
 using H.Core.Providers.AnaerobicDigestion;
-using System.ComponentModel;
 using AutoMapper;
-using H.Core.Providers.Climate;
-using H.Core.Models.LandManagement.Fields;
 using H.Core.Services.Animals;
 using SubstrateFlowInformation = H.Core.Models.Infrastructure.SubstrateFlowInformation;
 

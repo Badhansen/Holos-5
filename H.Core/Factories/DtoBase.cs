@@ -1,6 +1,4 @@
-﻿using DryIoc;
-using H.Core.Helpers;
-using Prism.Mvvm;
+﻿using H.Core.Helpers;
 
 namespace H.Core.Factories;
 

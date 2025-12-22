@@ -4,7 +4,6 @@ using System.ComponentModel;
 using H.Core.Factories;
 using H.Core.Models;
 using H.Core.Models.Animals;
-using H.Core.Models.LandManagement.Fields;
 using H.Core.Services.Animals;
 using H.Core.Services.StorageService;
 using Microsoft.Extensions.Logging;

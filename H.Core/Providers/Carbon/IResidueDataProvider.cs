@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using H.Core.Enumerations;
+﻿using H.Core.Enumerations;
 using H.Core.Providers.AnaerobicDigestion;
 
 namespace H.Core.Providers.Carbon

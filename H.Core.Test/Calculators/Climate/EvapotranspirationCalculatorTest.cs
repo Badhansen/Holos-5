@@ -1,6 +1,4 @@
-﻿using System;
-using H.Core.Calculators.Climate;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using H.Core.Calculators.Climate;
 
 namespace H.Core.Test.Calculators.Climate
 {

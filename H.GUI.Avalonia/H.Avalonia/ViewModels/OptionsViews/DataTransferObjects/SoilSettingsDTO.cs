@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using H.Core.Enumerations;
-using H.Core.Providers.Precipitation;
 using H.Core.Providers.Soil;
 using H.Core.Services.StorageService;
-using Mapsui.Extensions;
 
 namespace H.Avalonia.ViewModels.OptionsViews.DataTransferObjects
 {

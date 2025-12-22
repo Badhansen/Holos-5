@@ -5,6 +5,7 @@
              xmlns:avalonia="clr-namespace:H.Avalonia"
              xmlns:properties="clr-namespace:H.Core.Properties;assembly=H.Core"
              xmlns:field="clr-namespace:H.Avalonia.Views.ComponentViews.LandManagement.Field"
+             xmlns:fieldViews="clr-namespace:H.Avalonia.Views.ComponentViews.LandManagement.Field"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="950"
              x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Field.SelectedCropTabView">
 
@@ -14,46 +15,17 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Header Section with Advanced Toggle -->
-        <StackPanel Grid.Row="0" Margin="10,8,0,20">
-            <!-- Step Header Row -->
-            <StackPanel Classes="step-header" Margin="0,0,0,16">
-                <!-- Step Badge -->
-                <Border Classes="step-badge">
-                    <TextBlock Text="Step 3" Classes="step-badge-text"/>
-                </Border>
-                
-                <!-- Step Description -->
-                <TextBlock Text="Define management practices for your selected crop"
-                           Classes="step-number-description"
-                           VerticalAlignment="Center"/>
-            </StackPanel>
-            
-            <!-- Advanced Options Toggle Section -->
-            <Border Background="#F8F9FA" CornerRadius="8" Padding="16,12" BorderBrush="#E9ECEF" BorderThickness="1">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    
-                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                        <TextBlock Text="Show Advanced Options" 
-                                  FontSize="15" FontWeight="SemiBold" 
-                                  Foreground="#495057" Margin="0,0,0,2"/>
-                        <TextBlock Text="Display additional configuration options for detailed crop management" 
-                                  FontSize="11" Foreground="#6C757D" 
-                                  FontStyle="Italic"/>
-                    </StackPanel>
-                    
-                    <ToggleSwitch Grid.Column="1" 
-                                Name="ShowAdvancedOptionsToggle"
-                                VerticalAlignment="Center"
-                                Margin="12,0,0,0"
-                                OffContent="Basic"
-                                OnContent="Advanced"/>
-                </Grid>
+        <!-- Header Section -->
+        <StackPanel Grid.Row="0" Classes="step-header" Margin="10,8,0,20">
+            <!-- Step Badge -->
+            <Border Classes="step-badge">
+                <TextBlock Text="Step 3" Classes="step-badge-text"/>
             </Border>
+            
+            <!-- Step Description -->
+            <TextBlock Text="Define management practices for your selected crop"
+                       Classes="step-number-description"
+                       VerticalAlignment="Center"/>
         </StackPanel>
 
         <!-- Card-based Content Section -->
@@ -80,7 +52,7 @@
 
                 <!-- Residues Information Card (Advanced Only) -->
                 <Border Classes="step-card" 
-                       IsVisible="{Binding #ShowAdvancedOptionsToggle.IsChecked}"
+                       IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource FindAncestor, AncestorType=fieldViews:FieldComponentView}, FallbackValue=False}"
                        BorderBrush="#FF8C00" 
                        BorderThickness="3,3,3,3">
                     <StackPanel>
@@ -123,7 +95,7 @@
 
                 <!-- Fertilizer Information Card (Advanced Only) -->
                 <Border Classes="step-card" 
-                       IsVisible="{Binding #ShowAdvancedOptionsToggle.IsChecked}"
+                       IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource FindAncestor, AncestorType=fieldViews:FieldComponentView}, FallbackValue=False}"
                        BorderBrush="#FF8C00" 
                        BorderThickness="3,3,3,3">
                     <StackPanel>
@@ -176,7 +148,7 @@
 
                 <!-- Placeholder for Future Advanced Cards -->
                 <!-- Additional advanced cards can be added here with the same pattern:
-                     IsVisible="{Binding #ShowAdvancedOptionsToggle.IsChecked}" and orange header style -->
+                     IsVisible="{Binding ShowAdvancedOptionsToggle.IsChecked}" and orange header style -->
                 
             </StackPanel>
         </ScrollViewer>

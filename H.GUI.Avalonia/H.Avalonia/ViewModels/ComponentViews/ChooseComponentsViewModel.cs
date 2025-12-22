@@ -19,9 +19,17 @@ using H.Core.Models.Animals.Poultry.Turkey;
 using H.Core.Services.StorageService;
 using H.Infrastructure;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using Prism.Commands;
 
 namespace H.Avalonia.ViewModels.ComponentViews
 {
+    public class ComponentGroup
+    {
+        public string CategoryName { get; set; }
+        public ObservableCollection<ComponentBase> Components { get; set; } = new ObservableCollection<ComponentBase>();
+    }
+
     public class ChooseComponentsViewModel : ViewModelBase
     {
         #region Fields
@@ -32,6 +40,7 @@ namespace H.Avalonia.ViewModels.ComponentViews
         private ComponentBase _selectedComponent;
 
         private ObservableCollection<ComponentBase> _availableComponents;
+        private ObservableCollection<ComponentGroup> _groupedComponents;
 
         #endregion
 
@@ -41,7 +50,9 @@ namespace H.Avalonia.ViewModels.ComponentViews
         {
             this.AvailableComponents = new ObservableCollection<ComponentBase>();
             InitializeAvailableComponents();
+            CreateGroupedComponents();
             this.SelectedComponent = this.AvailableComponents.First();
+            InitializeCommands();
         }
 
         public ChooseComponentsViewModel(IEventAggregator eventAggregator, IRegionManager regionManager, IStorageService storageService, ILogger logger) : base(regionManager, eventAggregator, storageService, logger)
@@ -49,7 +60,9 @@ namespace H.Avalonia.ViewModels.ComponentViews
             this.PropertyChanged += OnPropertyChanged;
             this.AvailableComponents = new ObservableCollection<ComponentBase>();
             InitializeAvailableComponents();
+            CreateGroupedComponents();
             this.SelectedComponent = this.AvailableComponents.First();
+            InitializeCommands();
         }
 
         #endregion
@@ -74,11 +87,19 @@ namespace H.Avalonia.ViewModels.ComponentViews
             set => SetProperty(ref _availableComponents, value);
         }
 
+        public ObservableCollection<ComponentGroup> GroupedComponents
+        {
+            get => _groupedComponents;
+            private set => SetProperty(ref _groupedComponents, value);
+        }
+
         public ComponentBase SelectedComponent
         {
             get => _selectedComponent;
             set => SetProperty(ref _selectedComponent, value);
         }
+
+        public DelegateCommand<ComponentBase> SelectComponentCommand { get; private set; }
 
         #endregion
 
@@ -86,7 +107,7 @@ namespace H.Avalonia.ViewModels.ComponentViews
 
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            base.OnNavigatedTo(navigationContext);                 
+            base.OnNavigatedTo(navigationContext);                
 
             this.InitializeViewModel();
         }
@@ -104,6 +125,45 @@ namespace H.Avalonia.ViewModels.ComponentViews
         #endregion
 
         #region Private Methods
+
+        private void InitializeCommands()
+        {
+            SelectComponentCommand = new DelegateCommand<ComponentBase>(OnSelectComponent);
+        }
+
+        private void OnSelectComponent(ComponentBase component)
+        {
+            if (component != null)
+            {
+                SelectedComponent = component;
+            }
+        }
+
+        private void CreateGroupedComponents()
+        {
+            GroupedComponents = new ObservableCollection<ComponentGroup>();
+            
+            var groupedData = AvailableComponents
+                .GroupBy(c => c.ComponentCategory)
+                .OrderBy(g => g.Key)
+                .ToList();
+
+            foreach (var group in groupedData)
+            {
+                var componentGroup = new ComponentGroup
+                {
+                    CategoryName = group.Key.GetDescription(),
+                };
+
+                var sortedComponents = group.OrderBy(c => c.ComponentType.GetDescription()).ToList();
+                foreach (var component in sortedComponents)
+                {
+                    componentGroup.Components.Add(component);
+                }
+
+                GroupedComponents.Add(componentGroup);
+            }
+        }
 
         private void UpdateComponentDescription()
         {
@@ -175,7 +235,7 @@ namespace H.Avalonia.ViewModels.ComponentViews
             _availableComponents.Add(new ChickenMultiplierHatcheryComponent());
 
             /* 
-             * Land Management
+             * Infrastructure
              */
 
             _availableComponents.Add(new AnaerobicDigestionComponent());

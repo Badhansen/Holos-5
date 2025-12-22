@@ -5,7 +5,7 @@
              xmlns:componentViews="clr-namespace:H.Avalonia.ViewModels.ComponentViews"
              xmlns:infrastructure="clr-namespace:H.Avalonia.Infrastructure;assembly=H.Avalonia.Infrastructure"
 			 xmlns:properties="clr-namespace:H.Core.Properties;assembly=H.Core"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="950"
              x:Class="H.Avalonia.Views.ComponentViews.ChooseComponentsView">
 
     <Design.DataContext>
@@ -41,7 +41,7 @@
             <ColumnDefinition Width="Auto"/>
 
 			<!-- Component description column -->
-            <ColumnDefinition/>
+            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
         <Grid Name="TitleGrid" 
@@ -65,6 +65,11 @@
                         <TextBlock Text="{x:Static properties:Resources.ChooseComponents}" 
                                   Classes="title-textblock"
                                   Margin="0"/>
+                        
+                        <!-- Horizontal Separator Line -->
+                        <Border BorderBrush="#D0D0D0" 
+                               BorderThickness="0,1,0,0" 
+                               Margin="0,8,0,12"/>
                         
                         <!-- Instructions Header -->
                         <TextBlock Text="Follow these steps to add components to your farm:" 
@@ -194,15 +199,25 @@
                    Padding="16,12" 
                    Margin="10,0,10,0">
                 <StackPanel Margin="10">
+                    <!-- Component Title -->
                     <TextBlock FontSize="20" Classes="title-textblock" Text="{Binding Path=SelectedComponentTitle}"/>
-                    <TextBlock FontSize="16" TextWrapping="Wrap" Margin="0,20,0,0" Text="{Binding Path=SelectedComponentDescription}"/>
+                    
+                    <!-- Horizontal Separator Line -->
+                    <Border BorderBrush="#D0D0D0" 
+                           BorderThickness="0,1,0,0" 
+                           Margin="0,12,0,16"/>
+                    
+                    <!-- Component Description -->
+                    <TextBlock FontSize="16" TextWrapping="Wrap" Margin="0,0,0,0" Text="{Binding Path=SelectedComponentDescription}"/>
                     
                     <!-- Add Component Button - Using same responsive-button styling -->
                     <Button Content="Add This Component" 
                            Command="{Binding OnAddComponentExecute}"
                            Classes="responsive-button"
-                           HorizontalAlignment="Stretch"
+                           HorizontalAlignment="Center"
                            Margin="0,30,0,10"
+                           MinWidth="180"
+                           MaxWidth="220"
                            IsVisible="{Binding SelectedComponent, Converter={x:Static ObjectConverters.IsNotNull}}">
                         <Button.Styles>
                             <Style Selector="Button.responsive-button">

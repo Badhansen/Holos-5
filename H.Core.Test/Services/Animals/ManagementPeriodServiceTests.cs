@@ -149,7 +149,7 @@ namespace H.Core.Test.Services.Animals
             };
             var managementPeriod = new ManagementPeriod();
 
-            _mockManagementPeriodFactory.Setup(x => x.CreateManagementPeriodDto(It.IsAny<IManagementPeriodDto>()))
+            _mockManagementPeriodFactory.Setup(x => x.CreateDtoFromDtoTemplate(It.IsAny<IManagementPeriodDto>()))
                 .Returns(dto);
 
             // Act

@@ -35,10 +35,17 @@ public class CropFactory : ICropFactory
         {
             throw new ArgumentNullException(nameof(cropInitializationService));
         }
-        
-        _cropViewItemToDtoMapper = containerProvider.Resolve<IMapper>(nameof(CropViewItemToCropDtoMapper));
-        _cropDtoToDtoMapper = containerProvider.Resolve<IMapper>(nameof(CropDtoToCropDtoMapper));
-        _cropDtoToViewItemMapper = containerProvider.Resolve<IMapper>(nameof(CropDtoToCropViewItemMapper));
+
+        if (containerProvider == null)
+        {
+            throw new ArgumentNullException(nameof(containerProvider));
+        }
+        else
+        {
+            _cropViewItemToDtoMapper = containerProvider.Resolve<IMapper>(nameof(CropViewItemToCropDtoMapper));
+            _cropDtoToDtoMapper = containerProvider.Resolve<IMapper>(nameof(CropDtoToCropDtoMapper));
+            _cropDtoToViewItemMapper = containerProvider.Resolve<IMapper>(nameof(CropDtoToCropViewItemMapper));
+        }
     }
 
     #endregion

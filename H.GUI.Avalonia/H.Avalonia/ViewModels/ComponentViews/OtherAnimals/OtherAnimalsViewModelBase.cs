@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using H.Core.Enumerations;
+﻿using H.Core.Enumerations;
 using H.Core.Factories;
 using H.Core.Models;
 using H.Core.Models.Animals;
@@ -7,6 +6,7 @@ using H.Core.Services.Animals;
 using H.Core.Services.StorageService;
 using Microsoft.Extensions.Logging;
 using Prism.Regions;
+using System.Collections.ObjectModel;
 
 namespace H.Avalonia.ViewModels.ComponentViews.OtherAnimals
 {
@@ -26,9 +26,13 @@ namespace H.Avalonia.ViewModels.ComponentViews.OtherAnimals
             this.Construct();
         }
 
-        public OtherAnimalsViewModelBase(ILogger logger, IAnimalComponentService animalComponentService, IStorageService storageService, IManagementPeriodService managementPeriodService) : base(animalComponentService, logger, storageService, managementPeriodService)
+        public OtherAnimalsViewModelBase(
+            ILogger logger, 
+            IAnimalComponentService animalComponentService, 
+            IStorageService storageService, 
+            IManagementPeriodService managementPeriodService) : base(animalComponentService, logger, storageService, managementPeriodService)
         {
-this.Construct();
+            this.Construct();
         }
 
         #endregion
@@ -71,7 +75,7 @@ this.Construct();
         {
             Farm currentFarm = StorageService.GetActiveFarm();
             var existingManagementPeriods = currentFarm.GetAllManagementPeriods();
-            foreach(var managementPeriod in existingManagementPeriods)
+            foreach (var managementPeriod in existingManagementPeriods)
             {
                 var newManagementPeriodViewModel = new ManagementPeriodDto();
                 newManagementPeriodViewModel.Name = managementPeriod.GroupName;

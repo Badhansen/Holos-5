@@ -89,7 +89,7 @@ public class ManagementPeriodFactoryTests
         template.NumberOfDays = 366;
 
         // Act
-        var dto = _factory.CreateManagementPeriodDto(template);
+        var dto = _factory.CreateDtoFromDtoTemplate(template);
 
         // Assert
         Assert.IsNotNull(dto);

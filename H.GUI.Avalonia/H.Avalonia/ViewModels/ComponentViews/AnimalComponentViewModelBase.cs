@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using DryIoc;
 using H.Core.Factories;
 using H.Core.Models;
 using H.Core.Models.Animals;
@@ -15,12 +16,24 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
 {
     #region Fields
 
+    /// <summary>
+    /// The selected animal component
+    /// </summary>
     private AnimalComponentBase _selectedAnimalComponent;
 
-    protected IAnimalComponentDto _selectedAnimalComponentDto;
+    /// <summary>
+    /// The selected management period
+    /// </summary>
+    private ManagementPeriod _selectedManagementPeriod;
 
     protected IAnimalComponentService AnimalComponentService;
+
     private ObservableCollection<ManagementPeriodDto> _managementPeriodDtos;
+
+    /// <summary>
+    /// An animal component DTO that is bound to the view and is based on the values from the <see cref="_selectedAnimalComponent"/> model object.
+    /// </summary>
+    private IAnimalComponentDto _selectedAnimalComponentDto;
 
     #endregion
 
@@ -86,25 +99,50 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// When the user navigates to a <see cref="AnimalComponentBase"/>, we must initialize the component and any DTOs
+    /// that will be used with the view
+    /// </summary>
+    /// <param name="component">The <see cref="AnimalComponentBase"/> to display to the user</param>
     public override void InitializeViewModel(ComponentBase component)
     {
-        if (component is AnimalComponentBase animalComponentBase)
+        if (component is not AnimalComponentBase animalComponentBase)
         {
-            base.InitializeViewModel(component);
-
-            this.PropertyChanged += OnPropertyChanged;
-
-            _selectedAnimalComponent = animalComponentBase;
-
-            this.AnimalComponentService.InitializeComponent(base.StorageService.GetActiveFarm(), animalComponentBase);
-
-            // Build a DTO to represent the model/domain object
-            var dto = this.AnimalComponentService.TransferToAnimalComponentDto(animalComponentBase);
-
-            this.SelectedAnimalComponentDto = dto;
-
-            dto.PropertyChanged += OnAnimalComponentDtoPropertyChanged;
+            return;
         }
+
+        base.InitializeViewModel(component);
+
+        this.PropertyChanged += OnPropertyChanged;
+
+        this.InitializeAnimalComponent(animalComponentBase);
+
+        // Build a DTO to represent the model/domain object
+        var dto = this.AnimalComponentService.TransferToAnimalComponentDto(animalComponentBase);
+
+        this.SelectedAnimalComponentDto = dto;
+
+        dto.PropertyChanged += OnAnimalComponentDtoPropertyChanged;
+    }
+
+    protected void InitializeAnimalComponent(AnimalComponentBase animalComponent)
+    {
+        if (animalComponent == null)
+        {
+            return;
+        }
+
+        // Hold a reference to the selected animal component
+        _selectedAnimalComponent = animalComponent;
+
+        // Build a DTO to represent the model/domain object
+        var animalComponentDto = this.AnimalComponentService.TransferToAnimalComponentDto(_selectedAnimalComponent);
+
+        // Listen for changes on the DTO
+        animalComponentDto.PropertyChanged += OnAnimalComponentDtoPropertyChanged;
+
+        // Assign the DTO to the property bound to the view
+        this.SelectedAnimalComponentDto = animalComponentDto;
     }
 
     private void OnAnimalComponentDtoPropertyChanged(object? sender, PropertyChangedEventArgs e)

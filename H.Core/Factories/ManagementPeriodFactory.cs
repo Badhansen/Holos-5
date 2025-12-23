@@ -23,10 +23,12 @@ public class ManagementPeriodFactory : IManagementPeriodFactory
         {
             throw new ArgumentNullException(nameof(containerProvider));
         }
-
-        _managementPeriodDtoToManagementPeriodDtoMapper = containerProvider.Resolve<IMapper>(nameof(ManagementPeriodDtoToManagementPeriodDtoMapper));
-        _managementPeriodToManagementPeriodDtoMapper = containerProvider.Resolve<IMapper>(nameof(ManagementPeriodToManagementPeriodDtoMapper));
-        _managementPeriodDtoToManagementPeriodMapper = containerProvider.Resolve<IMapper>(nameof(ManagementPeriodDtoToManagementPeriodMapper));
+        else
+        {
+            _managementPeriodDtoToManagementPeriodDtoMapper = containerProvider.Resolve<IMapper>(nameof(ManagementPeriodDtoToManagementPeriodDtoMapper));
+            _managementPeriodToManagementPeriodDtoMapper = containerProvider.Resolve<IMapper>(nameof(ManagementPeriodToManagementPeriodDtoMapper));
+            _managementPeriodDtoToManagementPeriodMapper = containerProvider.Resolve<IMapper>(nameof(ManagementPeriodDtoToManagementPeriodMapper));
+        }
     }
 
     #endregion
@@ -44,7 +46,7 @@ public class ManagementPeriodFactory : IManagementPeriodFactory
         return dto;
     }
 
-    public IManagementPeriodDto CreateManagementPeriodDto(IManagementPeriodDto template)
+    public IManagementPeriodDto CreateDtoFromDtoTemplate(IManagementPeriodDto template)
     {
         var dto = new ManagementPeriodDto();
         _managementPeriodDtoToManagementPeriodDtoMapper.Map(template, dto);

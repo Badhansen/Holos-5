@@ -1,9 +1,13 @@
 ﻿using System.ComponentModel;
 using H.Core.CustomAttributes;
 using H.Core.Enumerations;
+using H.Core.Models.Animals;
 
 namespace H.Core.Factories
 {
+    /// <summary>
+    /// A class used to validate input as it relates to a <see cref="IManagementPeriodDto"/>. This class is used to valid input before any input is transferred to the <see cref="ManagementPeriod"/>
+    /// </summary>
     public class ManagementPeriodDto : DtoBase, IManagementPeriodDto
     {
         #region Fields

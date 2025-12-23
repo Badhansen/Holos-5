@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using DryIoc;
 using H.Core.Factories;
+using H.Core.Factories.Animals;
 using H.Core.Models;
 using H.Core.Models.Animals;
 using H.Core.Services.Animals;
@@ -160,14 +161,7 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
 
     #endregion
 
-    #region Private Methods
 
-    private void Construct()
-    {
-        this.ManagementPeriodDtos = new ObservableCollection<ManagementPeriodDto>();
-    }
-
-    #endregion
 
     #region Event Handlers
 
@@ -179,6 +173,15 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
         int numPeriods = ManagementPeriodDtos.Count;
         var newManagementPeriodViewModel = new ManagementPeriodDto { Name = $"Period #{numPeriods}", Start = new DateTime(2024, 01, 01), End = new DateTime(2025, 01, 01), NumberOfDays = 364 };
         ManagementPeriodDtos.Add(newManagementPeriodViewModel);
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    private void Construct()
+    {
+        this.ManagementPeriodDtos = new ObservableCollection<ManagementPeriodDto>();
     }
 
     #endregion

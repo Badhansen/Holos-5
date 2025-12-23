@@ -1,4 +1,4 @@
-﻿namespace H.Core.Factories;
+﻿namespace H.Core.Factories.Animals;
 
 public interface IAnimalComponentDto : IDto
 {

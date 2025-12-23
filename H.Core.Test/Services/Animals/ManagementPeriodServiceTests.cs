@@ -2,6 +2,7 @@ using AutoMapper;
 using H.Core.Calculators.UnitsOfMeasurement;
 using H.Core.Enumerations;
 using H.Core.Factories;
+using H.Core.Factories.Animals;
 using H.Core.Mappers;
 using H.Core.Models.Animals;
 using H.Core.Services.Animals;

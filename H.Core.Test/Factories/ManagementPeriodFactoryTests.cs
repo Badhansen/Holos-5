@@ -1,10 +1,11 @@
 using AutoMapper;
 using H.Core.Factories;
+using H.Core.Factories.Animals;
 using H.Core.Mappers;
 using H.Core.Models.Animals;
 using Moq;
 using Prism.Ioc;
-using IManagementPeriodDto = H.Core.Factories.IManagementPeriodDto;
+using IManagementPeriodDto = H.Core.Factories.Animals.IManagementPeriodDto;
 
 namespace H.Core.Test.Factories;
 

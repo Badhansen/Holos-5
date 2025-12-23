@@ -3,6 +3,7 @@ using H.Core.Calculators.UnitsOfMeasurement;
 using H.Core.Converters;
 using H.Core.Enumerations;
 using H.Core.Factories;
+using H.Core.Factories.Animals;
 using H.Core.Mappers;
 using H.Core.Models;
 using H.Core.Models.Animals;

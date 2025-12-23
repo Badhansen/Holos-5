@@ -3,7 +3,7 @@ using H.Core.Mappers;
 using H.Core.Models;
 using Prism.Ioc;
 
-namespace H.Core.Factories;
+namespace H.Core.Factories.Animals;
 
 public class AnimalComponentFactory : IAnimalComponentFactory
 {

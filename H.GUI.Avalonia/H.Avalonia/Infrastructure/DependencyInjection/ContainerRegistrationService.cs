@@ -46,6 +46,7 @@ using H.Avalonia.Views.SupportingViews.Start;
 using H.Core;
 using H.Core.Calculators.UnitsOfMeasurement;
 using H.Core.Factories;
+using H.Core.Factories.Animals;
 using H.Core.Factories.Climate;
 using H.Core.Factories.Crops;
 using H.Core.Factories.FarmFactory;

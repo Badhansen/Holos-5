@@ -7,6 +7,7 @@ using H.Core.Services.StorageService;
 using Microsoft.Extensions.Logging;
 using Prism.Regions;
 using System.Collections.ObjectModel;
+using H.Core.Factories.Animals;
 
 namespace H.Avalonia.ViewModels.ComponentViews.OtherAnimals
 {

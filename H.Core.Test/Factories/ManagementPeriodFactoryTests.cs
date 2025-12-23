@@ -59,11 +59,10 @@ public class ManagementPeriodFactoryTests
     #endregion
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void Constructor_WithNullContainerProvider_ThrowsArgumentNullException()
     {
-        // Act
-        var factory = new ManagementPeriodFactory(null);
+        // Arrange, Act & Assert
+        Assert.ThrowsException<ArgumentNullException>(() => new ManagementPeriodFactory(null));
     }
 
     [TestMethod]

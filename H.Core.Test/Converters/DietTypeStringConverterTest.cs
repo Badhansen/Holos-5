@@ -24,10 +24,10 @@ namespace H.Core.Test.Converters
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
         public void ConvertReturnsException()
         {
-            converter.Convert("m7");
+            // Arrange, Act & Assert
+            Assert.ThrowsException<Exception>(() => converter.Convert("m7"));
         }
 
         [TestMethod]

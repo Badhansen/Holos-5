@@ -49,21 +49,27 @@ public class ManagementPeriodFactory : IManagementPeriodFactory
     public IManagementPeriodDto CreateDtoFromDtoTemplate(IManagementPeriodDto template)
     {
         var dto = new ManagementPeriodDto();
+
         _managementPeriodDtoToManagementPeriodDtoMapper.Map(template, dto);
+
         return dto;
     }
 
     public IManagementPeriodDto CreateManagementPeriodDto(ManagementPeriod managementPeriod)
     {
         var dto = new ManagementPeriodDto();
+
         _managementPeriodToManagementPeriodDtoMapper.Map(managementPeriod, dto);
+
         return dto;
     }
 
     public ManagementPeriod CreateManagementPeriod(IManagementPeriodDto dto)
     {
         var managementPeriod = new ManagementPeriod();
+
         _managementPeriodDtoToManagementPeriodMapper.Map(dto, managementPeriod);
+
         return managementPeriod;
     }
 

@@ -30,10 +30,10 @@ namespace H.Core.Test.Converters
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
         public void ConvertReturnsException()
         {
-            converter.Convert("-");
+            // Arrange, Act & Assert
+            Assert.ThrowsException<Exception>(() => converter.Convert("-"));
         }
 
         [TestMethod]

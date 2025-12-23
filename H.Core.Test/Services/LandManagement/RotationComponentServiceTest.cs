@@ -70,7 +70,6 @@ public class RotationComponentServiceTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void Constructor_WithNullLogger_ThrowsArgumentNullException()
     {
         // Arrange: null logger parameter
@@ -78,14 +77,12 @@ public class RotationComponentServiceTest
         var mockFieldFactory = new Mock<IFieldFactory>();
         var mockCropFactory = new Mock<ICropFactory>();
 
-        // Act: attempt to create instance with null logger
-        var service = new RotationComponentService(logger, mockFieldFactory.Object, mockCropFactory.Object);
-
-        // Assert: exception attribute handles verification
+        // Act & Assert: attempt to create instance with null logger
+        Assert.ThrowsException<ArgumentNullException>(() => 
+            new RotationComponentService(logger, mockFieldFactory.Object, mockCropFactory.Object));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void Constructor_WithNullFieldFactory_ThrowsArgumentNullException()
     {
         // Arrange: null field factory parameter
@@ -93,14 +90,12 @@ public class RotationComponentServiceTest
         IFieldFactory fieldFactory = null;
         var mockCropFactory = new Mock<ICropFactory>();
 
-        // Act: attempt to create instance with null field factory
-        var service = new RotationComponentService(mockLogger.Object, fieldFactory, mockCropFactory.Object);
-
-        // Assert: exception attribute handles verification
+        // Act & Assert: attempt to create instance with null field factory
+        Assert.ThrowsException<ArgumentNullException>(() => 
+            new RotationComponentService(mockLogger.Object, fieldFactory, mockCropFactory.Object));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void Constructor_WithNullCropFactory_ThrowsArgumentNullException()
     {
         // Arrange: null crop factory parameter
@@ -108,10 +103,9 @@ public class RotationComponentServiceTest
         var mockFieldFactory = new Mock<IFieldFactory>();
         ICropFactory cropFactory = null;
 
-        // Act: attempt to create instance with null crop factory
-        var service = new RotationComponentService(mockLogger.Object, mockFieldFactory.Object, cropFactory);
-
-        // Assert: exception attribute handles verification
+        // Act & Assert: attempt to create instance with null crop factory
+        Assert.ThrowsException<ArgumentNullException>(() => 
+            new RotationComponentService(mockLogger.Object, mockFieldFactory.Object, cropFactory));
     }
 
     [TestMethod]

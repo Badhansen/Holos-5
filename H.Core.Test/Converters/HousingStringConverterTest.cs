@@ -102,10 +102,10 @@ namespace H.Core.Test.Converters
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
         public void ConvertReturnsException()
         {
-            converter.Convert("Beef");
+            // Arrange, Act & Assert
+            Assert.ThrowsException<Exception>(() => converter.Convert("Beef"));
         }
 
         #region Additional test attributes

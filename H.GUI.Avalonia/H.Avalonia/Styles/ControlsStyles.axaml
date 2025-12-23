@@ -259,6 +259,37 @@
         <Setter Property="Background" Value="{StaticResource CardHoverBackgroundBrush}"/>
     </Style>
 
+    <!-- Animal Group Card Styles - Static styling without binding -->
+    <Style Selector="Border.timeline-card.animal-group-card">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="LightGray"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="RenderTransform" Value="scale(1.0)"/>
+        <Setter Property="CornerRadius" Value="{StaticResource CardCornerRadius}"/>
+        <Setter Property="MinWidth" Value="180"/>
+        <Setter Property="MaxWidth" Value="200"/>
+        <Setter Property="Padding" Value="{StaticResource CardPadding}"/>
+    </Style>
+
+    <Style Selector="Button:pointerover > Border.timeline-card.animal-group-card">
+        <Setter Property="BorderBrush" Value="DodgerBlue"/>
+        <Setter Property="Background" Value="#F0F8FF"/>
+    </Style>
+
+    <!-- Selected animal group card state - applied via code when needed -->
+    <Style Selector="Border.timeline-card.animal-group-card.selected">
+        <Setter Property="Background" Value="#E3F2FD"/>
+        <Setter Property="BorderBrush" Value="DodgerBlue"/>
+        <Setter Property="BorderThickness" Value="3"/>
+        <Setter Property="RenderTransform" Value="scale(0.98)"/>
+    </Style>
+
+    <Style Selector="Button:pointerover > Border.timeline-card.animal-group-card.selected">
+        <Setter Property="BorderBrush" Value="DodgerBlue"/>
+        <Setter Property="Background" Value="#E3F2FD"/>
+        <Setter Property="RenderTransform" Value="scale(0.98)"/>
+    </Style>
+
     <!-- Component List Card Styles -->
     <Style Selector="Border.component-card">
         <Setter Property="Background" Value="{Binding IsSelected, Converter={StaticResource BoolToBackgroundConverter}}"/>

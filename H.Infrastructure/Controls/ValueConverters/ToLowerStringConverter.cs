@@ -5,7 +5,7 @@ namespace H.Infrastructure.Controls.ValueConverters
 {
     public class ToLowerStringConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             if (parameter is string s)
             {
@@ -15,7 +15,7 @@ namespace H.Infrastructure.Controls.ValueConverters
             return value;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

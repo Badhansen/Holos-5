@@ -14,7 +14,7 @@ namespace H.Infrastructure.Controls.ValueConverters
     {
         public bool Inverse { get; set; }
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             if (value is bool == false)
             {
@@ -26,9 +26,12 @@ namespace H.Infrastructure.Controls.ValueConverters
             return this.Inverse ? !boolValue : boolValue;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            var boolValue = (bool) value;
+            if (value is not bool boolValue)
+            {
+                return BindingOperations.DoNothing;
+            }
 
             if (!boolValue)
             {

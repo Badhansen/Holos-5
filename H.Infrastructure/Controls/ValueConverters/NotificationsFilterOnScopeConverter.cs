@@ -6,7 +6,7 @@ namespace H.Infrastructure.Controls.ValueConverters
 {
     public class NotificationsFilterOnScopeConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             if (value is ObservableCollection<NotificationInformation> notifications)
             {
@@ -16,7 +16,7 @@ namespace H.Infrastructure.Controls.ValueConverters
             return value;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

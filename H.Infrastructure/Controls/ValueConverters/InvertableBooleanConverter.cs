@@ -27,7 +27,7 @@ namespace H.Infrastructure.Controls.ValueConverters
 
         #region Properties
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             var result = value != null && (bool) value;
             if (parameter != null)
@@ -42,7 +42,7 @@ namespace H.Infrastructure.Controls.ValueConverters
             return result;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             return this.Convert(value, targetType, parameter, culture);
         }

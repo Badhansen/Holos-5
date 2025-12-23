@@ -19,9 +19,9 @@ namespace H.Infrastructure.Controls.ValueConverters
 
         #region Public Methods
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (string.IsNullOrWhiteSpace((string)value))
+            if (string.IsNullOrWhiteSpace(value as string))
             {
                 return false;
             }
@@ -29,7 +29,7 @@ namespace H.Infrastructure.Controls.ValueConverters
             return true;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

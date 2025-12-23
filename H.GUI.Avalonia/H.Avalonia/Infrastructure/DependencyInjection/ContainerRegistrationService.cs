@@ -392,6 +392,7 @@ namespace H.Avalonia.Infrastructure.DependencyInjection
             containerRegistry.Register(typeof(ICropFactory), typeof(CropFactory));
             containerRegistry.Register(typeof(IFieldFactory), typeof(FieldFactory));
             containerRegistry.RegisterSingleton<IAnimalComponentFactory, AnimalComponentFactory>();
+            containerRegistry.RegisterSingleton<IAnimalGroupFactory, AnimalGroupFactory>();
             
             _logger.LogInformation("Successfully registered factory services");
         }

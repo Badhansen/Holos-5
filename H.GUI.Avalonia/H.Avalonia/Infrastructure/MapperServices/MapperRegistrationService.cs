@@ -105,9 +105,21 @@ public class MapperRegistrationService
             expression.AddProfile<AnimalComponentBaseToAnimalComponentDtoMapper>();
         });
 
+        var animalGroupDtoToAnimalGroupConfiguration = new MapperConfiguration(expression =>
+        {
+            expression.AddProfile<AnimalGroupDtoToAnimalGroupMapper>();
+        });
+
+        var animalGroupDtoToAnimalGroupDtoConfiguration = new MapperConfiguration(expression =>
+        {
+            expression.AddProfile<AnimalGroupDtoToAnimalGroupDtoMapper>();
+        });
+
         containerRegistry.RegisterInstance(animalComponentDtoToAnimalComponentConfiguration.CreateMapper(), nameof(AnimalComponentDtoToAnimalComponentMapper));
         containerRegistry.RegisterInstance(animalComponentDtoToAnimalComponentDtoConfiguration.CreateMapper(), nameof(AnimalComponentDtoToAnimalComponentDtoMapper));
         containerRegistry.RegisterInstance(animalComponentToAnimalComponentDtoConfiguration.CreateMapper(), nameof(AnimalComponentBaseToAnimalComponentDtoMapper));
+        containerRegistry.RegisterInstance(animalGroupDtoToAnimalGroupConfiguration.CreateMapper(), nameof(AnimalGroupDtoToAnimalGroupMapper));
+        containerRegistry.RegisterInstance(animalGroupDtoToAnimalGroupDtoConfiguration.CreateMapper(), nameof(AnimalGroupDtoToAnimalGroupDtoMapper));
     }
 
     private void RegisterManagementPeriodMappers(IContainerRegistry containerRegistry)

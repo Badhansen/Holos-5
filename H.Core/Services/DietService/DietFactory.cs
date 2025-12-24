@@ -56,11 +56,11 @@ namespace H.Core.Services.DietService
     {
         #region Fields
 
-        private readonly ILogger _logger;
-        private readonly ICacheService _cacheService;
-        private readonly IReadOnlyList<Tuple<AnimalType, DietType>> _validDietKeys;
-        private readonly IFeedIngredientProvider _feedIngredientProvider;
-        private readonly IReadOnlyCollection<IDietDto> _dietCollection;
+        private readonly ILogger? _logger;
+        private readonly ICacheService? _cacheService;
+        private readonly IReadOnlyList<Tuple<AnimalType, DietType>>? _validDietKeys;
+        private readonly IFeedIngredientProvider? _feedIngredientProvider;
+        private readonly IReadOnlyCollection<IDietDto>? _dietCollection;
 
         #endregion
 

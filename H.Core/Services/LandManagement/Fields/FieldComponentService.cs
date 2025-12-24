@@ -208,7 +208,7 @@ public class FieldComponentService : ComponentServiceBase, IFieldComponentServic
     /// Re-numbers crop years so that they are consecutive, descending from the maximum year.
     /// </summary>
     /// <param name="cropDtos">The collection of crops to normalize.</param>
-    public void ResetAllYears(IEnumerable<ICropDto> cropDtos)
+    public void ResetAllYears(IEnumerable<ICropDto>? cropDtos)
     {
         var dtos = cropDtos.ToList();
         if (dtos.Any())

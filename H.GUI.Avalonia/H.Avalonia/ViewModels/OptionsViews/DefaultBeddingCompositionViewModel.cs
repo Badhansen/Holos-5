@@ -13,11 +13,11 @@ namespace H.Avalonia.ViewModels.OptionsViews
     {
         #region Fields
 
-        private ObservableCollection<DefaultBeddingCompositionDTO> _beddingCompositionDTOs;
-        private IUnitsOfMeasurementCalculator _unitsCalculator;
-        private string _nitrogenConcentrationHeader;
-        private string _phosphorusConcentrationHeader;
-        private string _carbonConcentrationHeader;
+        private ObservableCollection<DefaultBeddingCompositionDTO>? _beddingCompositionDTOs;
+        private IUnitsOfMeasurementCalculator? _unitsCalculator;
+        private string? _nitrogenConcentrationHeader;
+        private string? _phosphorusConcentrationHeader;
+        private string? _carbonConcentrationHeader;
 
         #endregion
 
@@ -43,25 +43,25 @@ namespace H.Avalonia.ViewModels.OptionsViews
 
         #region Properties
 
-        public ObservableCollection<DefaultBeddingCompositionDTO> BeddingCompositionDTOs
+        public ObservableCollection<DefaultBeddingCompositionDTO>? BeddingCompositionDTOs
         {
             get => _beddingCompositionDTOs;
             set => SetProperty(ref _beddingCompositionDTOs, value);
         }
 
-        public string NitrogenConcentrationHeader
+        public string? NitrogenConcentrationHeader
         {
             get => _nitrogenConcentrationHeader;
             set => SetProperty(ref _nitrogenConcentrationHeader, value);
         }
 
-        public string PhosphorusConcentrationHeader
+        public string? PhosphorusConcentrationHeader
         {
             get => _phosphorusConcentrationHeader;
             set => SetProperty(ref _phosphorusConcentrationHeader, value);
         }
 
-        public string CarbonConcentrationHeader
+        public string? CarbonConcentrationHeader
         {
             get => _carbonConcentrationHeader;
             set => SetProperty(ref _carbonConcentrationHeader, value);

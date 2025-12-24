@@ -17,7 +17,7 @@ public class FieldSystemComponentDto : DtoBase, IFieldComponentDto
 
     private double _fieldArea;
 
-    private ObservableCollection<ICropDto> _cropDtoModels;
+    private ObservableCollection<ICropDto>? _cropDtoModels;
 
     #endregion
 
@@ -38,7 +38,7 @@ public class FieldSystemComponentDto : DtoBase, IFieldComponentDto
     /// A collection of <see cref="CropDto"/>. Each <see cref="CropDto"/> in the collection represents the crop data input for one particular year on the
     /// given <see cref="FieldSystemComponentDto"/>
     /// </summary>
-    public ObservableCollection<ICropDto> CropDtos
+    public ObservableCollection<ICropDto>? CropDtos
     {
         get => _cropDtoModels;
         set => SetProperty(ref _cropDtoModels, value);

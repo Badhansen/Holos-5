@@ -8,7 +8,7 @@ namespace H.Core.Models.LandManagement.Shelterbelt
     {
         #region Fields
 
-        private ShelterbeltCalculator ShelterbeltCalculator = new ShelterbeltCalculator();
+        private readonly ShelterbeltCalculator ShelterbeltCalculator = new ShelterbeltCalculator();
 
         private bool _circumferenceGenerationOverriden;
         private double _userCircumference;

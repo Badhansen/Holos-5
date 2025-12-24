@@ -18,7 +18,7 @@ namespace H.Core.Providers.Feed
 
         private bool _isCustomIngredient;
 
-        private string _ingredientStringType;
+        private string? _ingredientStringType;
         private double _percentageInDiet;
         private IngredientType _ingredientType;
         private double _sugars;
@@ -32,7 +32,7 @@ namespace H.Core.Providers.Feed
         private double _fat;
         private double _totalDigestibleNutrient;
         private double _starch;
-        private string _ifn;
+        private string? _ifn;
         private double _cost;
         private double _forage;
         private double _rdp;
@@ -113,7 +113,7 @@ namespace H.Core.Providers.Feed
         private double _vitB12;
         private double _kdPb;
         private double _pef;
-        private string _feedNumber;
+        private string? _feedNumber;
         private DairyFeedClassType _dairyFeedClass;
         private double _paf;
         private double _nel_threex;
@@ -166,8 +166,8 @@ namespace H.Core.Providers.Feed
         private double _proDigestSID;
         private double _serDigestSID;
         private double _tyrDigestSID;
-        private string _aafco;
-        private string _aafco2010;
+        private string? _aafco;
+        private string? _aafco2010;
         private double _attdPhosphorous;
         private double _sttdPhosphorous;
         private double _biotin;
@@ -200,7 +200,7 @@ namespace H.Core.Providers.Feed
         private double _pufa;
         private double _iv;
         private double _ivp;
-        private static IMapper _ingredientMapper;
+        private static IMapper? _ingredientMapper;
 
         #endregion
 
@@ -224,7 +224,7 @@ namespace H.Core.Providers.Feed
         /// </summary>
         public bool IsReadonly { get; set; }
 
-        public string IngredientTypeString
+        public string? IngredientTypeString
         {
             get { return _ingredientStringType; }
             set { this.SetProperty(ref _ingredientStringType, value); }
@@ -297,7 +297,7 @@ namespace H.Core.Providers.Feed
             set { this.SetProperty(ref _starch, value); }
         }
 
-        public string IFN
+        public string? IFN
         {
             get { return _ifn; }
             set { this.SetProperty(ref _ifn, value); }
@@ -811,7 +811,7 @@ namespace H.Core.Providers.Feed
             set { this.SetProperty(ref _isCustomIngredient, value); }
         }
 
-        public string FeedNumber
+        public string? FeedNumber
         {
             get { return _feedNumber; }
             set { this.SetProperty(ref _feedNumber, value); }
@@ -1138,12 +1138,12 @@ namespace H.Core.Providers.Feed
             get { return _tyrDigestSID; }
             set { this.SetProperty(ref _tyrDigestSID, value); }
         }
-        public string AAFCO
+        public string? AAFCO
         {
             get { return _aafco; }
             set { this.SetProperty(ref _aafco, value); }
         }
-        public string AAFCO2010
+        public string? AAFCO2010
         {
             get { return _aafco2010; }
             set { this.SetProperty(ref _aafco2010, value); }

@@ -10,11 +10,24 @@ public abstract class DtoBase : ErrorValidationBase, IDto
 {
     #region Fields
 
+    private string? _name;
+    private Guid _guid = Guid.NewGuid();
+
     #endregion
 
     #region Properties
 
+    public string? Name
+    {
+        get => _name;
+        set => SetProperty(ref _name, value);
+    }
 
+    public Guid Guid
+    {
+        get => _guid;
+        set => SetProperty(ref _guid, value);
+    }
 
     #endregion
 }

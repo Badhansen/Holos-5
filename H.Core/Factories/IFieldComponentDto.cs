@@ -5,7 +5,7 @@ namespace H.Core.Factories;
 
 public interface IFieldComponentDto : IDto
 {
-    ObservableCollection<ICropDto> CropDtos { get; set; }
+    ObservableCollection<ICropDto>? CropDtos { get; set; }
 
     /// <summary>
     /// The total size of the field

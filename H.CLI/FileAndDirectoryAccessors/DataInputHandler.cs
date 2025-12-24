@@ -13,11 +13,11 @@ namespace H.CLI.FileAndDirectoryAccessors
     {
         #region Fields
 
-        private FarmHelper _farmHelper = new FarmHelper();
+        private readonly FarmHelper _farmHelper = new FarmHelper();
 
-        private ParserHandler parserHandler = new ParserHandler();
-        private DirectoryHandler _directoryHandler = new DirectoryHandler();
-        private ComponentConverterHandler _componentConverter = new ComponentConverterHandler();
+        private readonly ParserHandler parserHandler = new ParserHandler();
+        private readonly DirectoryHandler _directoryHandler = new DirectoryHandler();
+        private readonly ComponentConverterHandler _componentConverter = new ComponentConverterHandler();
         //public Farm Farm { get; set; }
         public Dictionary<string, string> GlobalSettingsDictionary { get; set; } = new Dictionary<string, string>(); 
         #endregion

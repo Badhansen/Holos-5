@@ -17,13 +17,13 @@ namespace H.Avalonia.ViewModels
 
         protected bool IsInitialized;
 
-        private Storage _storagePlaceholder;
-        private IEventAggregator _eventAggregator;
-        private IRegionManager _regionManager;
-        private IStorageService _storageService;
-        private string _viewName;
+        private Storage? _storagePlaceholder;
+        private IEventAggregator? _eventAggregator;
+        private IRegionManager? _regionManager;
+        private IStorageService? _storageService;
+        private string? _viewName;
         private bool _allowNavigation;
-        protected ILogger Logger;
+        protected ILogger? Logger;
 
         /// <summary>
         /// Flag to track if the object has been disposed
@@ -292,7 +292,7 @@ namespace H.Avalonia.ViewModels
 
         #region Properties
 
-        public Storage StoragePlaceholder
+        public Storage? StoragePlaceholder
         {
             get => _storagePlaceholder;
             set => SetProperty(ref _storagePlaceholder, value);
@@ -301,27 +301,27 @@ namespace H.Avalonia.ViewModels
         /// <summary>
         /// The notification manager that handles displaying notifications on the page.
         /// </summary>
-        public INotificationManagerService NotificationManager { get; set; }
+        public INotificationManagerService? NotificationManager { get; set; }
 
-        protected IRegionManager RegionManager
+        protected IRegionManager? RegionManager
         {
             get => _regionManager;
             set => SetProperty(ref _regionManager, value);
         }
 
-        protected IEventAggregator EventAggregator 
+        protected IEventAggregator? EventAggregator 
         {
             get => _eventAggregator;
             set { SetProperty(ref _eventAggregator, value); } 
         }
 
-        public IStorageService StorageService
+        public IStorageService? StorageService
         {
             get => _storageService;
             set => SetProperty(ref _storageService, value);
         }
 
-        public Farm ActiveFarm
+        public Farm? ActiveFarm
         {
             get => this.StorageService?.GetActiveFarm();
             //set => SetProperty(ref _activeFarm, value);
@@ -331,7 +331,7 @@ namespace H.Avalonia.ViewModels
         /// String used to refer to a particular other animals component, value set by child classes. Bound to the view(s), used as a title.
         /// Can be changed by the user, if they happen to leave it empty, an error will be thrown.
         /// </summary>
-        public string ViewName
+        public string? ViewName
         {
             get => _viewName;
             set 

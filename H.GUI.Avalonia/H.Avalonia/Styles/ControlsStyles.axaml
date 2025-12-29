@@ -1,58 +1,60 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Design.PreviewWith>
-        <Border Padding="20">
-            <!-- Add Controls for Previewer Here -->
-        </Border>
-    </Design.PreviewWith>
+	<Design.PreviewWith>
+		<Border Padding="20">
+			<!-- Add Controls for Previewer Here -->
+		</Border>
+	</Design.PreviewWith>
 
-    <!-- Button Styles -->
-    <Style Selector="Button">
-        <Setter Property="Cursor" Value="Hand"/>
-        <Setter Property="Background" Value="{StaticResource DefaultHighlightBrush}" />
+	<!-- Button Styles -->
+	<Style Selector="Button">
+		<Setter Property="Cursor" Value="Hand"/>
+		<Setter Property="Background" Value="{StaticResource DefaultHighlightBrush}" />
 		<Setter Property="Foreground" Value="White" />
 		<Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="Padding" Value="50, 10"/>
-    </Style>
-    <Style Selector="Button:pointerover.user-prompt-button--confirm /template/ ContentPresenter">
-        <Setter Property="Background" Value="#e34234" />
-    </Style>
-    <Style Selector="Button.user-prompt-button--cancel">
-        <Setter Property="Background" Value="#D3D3D3" />
-    </Style>
-    <Style Selector="DataGridCell Button.row-delete-button">
-        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-        <Setter Property="Background" Value="Transparent"/>
-    </Style>
-    <Style Selector="Button:pointerover.row-delete-button--pointerOver /template/ ContentPresenter">
-        <Setter Property="Background" Value="#e34234" />
-    </Style>
-    <Style Selector="Button.multiple-row-delete-button">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-    </Style>
-    <Style Selector="Button.add-row-datagrid-button">
-        <Setter Property="Margin" Value="20,0,20,0"/>
-        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="Background" Value="MediumAquamarine"/>
-    </Style>
-    <Style Selector="Button.calculate-results-button">
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="CornerRadius" Value="15" />
-        <!-- <Setter Property="" Value="" /> -->
-        <Setter Property="Padding" Value="20" />
-        <Setter Property="Margin" Value="20" />
-        <Setter Property="Width" Value="240" />
-        <Setter Property="FontSize" Value="16" />
-        <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="FontFamily" Value="{DynamicResource RobotoFontFamily}" />
-        <Setter Property="Background" Value="MediumAquamarine"/>
-    </Style>
+		<Setter Property="Padding" Value="50, 10"/>
+	</Style>
+	<Style Selector="Button.generic-button">
+	</Style>
+	<Style Selector="Button:pointerover.user-prompt-button--confirm /template/ ContentPresenter">
+		<Setter Property="Background" Value="#e34234" />
+	</Style>
+	<Style Selector="Button.user-prompt-button--cancel">
+		<Setter Property="Background" Value="#D3D3D3" />
+	</Style>
+	<Style Selector="DataGridCell Button.row-delete-button">
+		<Setter Property="HorizontalAlignment" Value="Stretch"/>
+		<Setter Property="Background" Value="Transparent"/>
+	</Style>
+	<Style Selector="Button:pointerover.row-delete-button--pointerOver /template/ ContentPresenter">
+		<Setter Property="Background" Value="#e34234" />
+	</Style>
+	<Style Selector="Button.multiple-row-delete-button">
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+	</Style>
+	<Style Selector="Button.add-row-datagrid-button">
+		<Setter Property="Margin" Value="20,0,20,0"/>
+		<Setter Property="HorizontalAlignment" Value="Stretch"/>
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="Background" Value="MediumAquamarine"/>
+	</Style>
+	<Style Selector="Button.calculate-results-button">
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="CornerRadius" Value="15" />
+		<!-- <Setter Property="" Value="" /> -->
+		<Setter Property="Padding" Value="20" />
+		<Setter Property="Margin" Value="20" />
+		<Setter Property="Width" Value="240" />
+		<Setter Property="FontSize" Value="16" />
+		<Setter Property="FontWeight" Value="Bold" />
+		<Setter Property="FontFamily" Value="{DynamicResource RobotoFontFamily}" />
+		<Setter Property="Background" Value="MediumAquamarine"/>
+	</Style>
 	<Style Selector="Button.add-management-period">
 		<Setter Property="Margin" Value="10,20,0,0"/>
-		<Setter Property="BorderBrush" Value="#D7D7D7"/>   
+		<Setter Property="BorderBrush" Value="#D7D7D7"/>
 		<Setter Property="Background" Value="White"/>
 		<Setter Property="Foreground" Value="#605D5D"/>
 		<Setter Property="Width" Value="275"/>
@@ -70,19 +72,19 @@
 		<Setter Property="Background" Value="#EDEDED" />
 		<Setter Property="Foreground" Value="Black" />
 	</Style>
-	
-    <!-- DataGrid Styles -->
-    <Style Selector="DataGridCell NumericUpDown">
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="ShowButtonSpinner" Value="False"/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="Width" Value="{Binding $parent[DataGridCell].Bounds.Width}"></Setter>
-    </Style>
-    <Style Selector="DataGridColumnHeader">
-        <Setter Property="BorderBrush" Value="Transparent"/>
-    </Style>
-    <Style Selector="DataGridCell.numericStyle">
-    </Style>
+
+	<!-- DataGrid Styles -->
+	<Style Selector="DataGridCell NumericUpDown">
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="ShowButtonSpinner" Value="False"/>
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="Width" Value="{Binding $parent[DataGridCell].Bounds.Width}"></Setter>
+	</Style>
+	<Style Selector="DataGridColumnHeader">
+		<Setter Property="BorderBrush" Value="Transparent"/>
+	</Style>
+	<Style Selector="DataGridCell.numericStyle">
+	</Style>
 
 	<!-- GridSplitter Styles -->
 	<Style Selector="GridSplitter.default-vertical-gridsplitter">
@@ -90,11 +92,11 @@
 		<Setter Property="Width" Value="2"/>
 	</Style>
 
-    <!-- Grid.Border Styles-->
-    <Style Selector="Border.component-border">
-        <Setter Property="BorderBrush" Value="LightGray" />
-        <Setter Property="BorderThickness" Value="1" />
-    </Style>
+	<!-- Grid.Border Styles-->
+	<Style Selector="Border.component-border">
+		<Setter Property="BorderBrush" Value="LightGray" />
+		<Setter Property="BorderThickness" Value="1" />
+	</Style>
 
 
 	<!-- TextBlock Styles -->
@@ -102,42 +104,49 @@
 		<Setter Property="FontWeight" Value="Bold"/>
 		<Setter Property="FontSize" Value="18" />
 		<Setter Property="Foreground" Value="{StaticResource DefaultForegroundTextBrush}" />
-        <Setter Property="Padding" Value="20" />
-        <Setter Property="TextWrapping" Value="Wrap" />
-        <Setter Property="VerticalAlignment" Value="Center" />
+		<Setter Property="Padding" Value="20" />
+		<Setter Property="TextWrapping" Value="Wrap" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+	</Style>
+
+	<Style Selector="TextBlock.step-title-textblock">
+		<Setter Property="FontWeight" Value="Bold"/>
+		<Setter Property="FontSize" Value="24" />
+		<Setter Property="Foreground" Value="{StaticResource DefaultForegroundTextBrush}" />
+		<Setter Property="TextWrapping" Value="Wrap" />
 	</Style>
 
 	<Style Selector="TextBlock.inline-text-block-error">
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="Foreground" Value="Red"/>
-        <Setter Property="FontSize" Value="14"/>
-    </Style>
+		<Setter Property="FontWeight" Value="Bold"/>
+		<Setter Property="Foreground" Value="Red"/>
+		<Setter Property="FontSize" Value="14"/>
+	</Style>
 
-    <Style Selector="TextBlock.inline-text-block-succeed">
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="Foreground" Value="Green"/>
-        <Setter Property="FontSize" Value="14"/>
-    </Style>
+	<Style Selector="TextBlock.inline-text-block-succeed">
+		<Setter Property="FontWeight" Value="Bold"/>
+		<Setter Property="Foreground" Value="Green"/>
+		<Setter Property="FontSize" Value="14"/>
+	</Style>
 
 	<!--TextBlock Styles - Disclaimer text-->
 	<Style Selector="TextBlock.disclaimer">
 		<Setter Property="FontStyle" Value="Italic"/>
 	</Style>
 
-    <Style Selector="TextBlock.step-number">
-        <Setter Property="FontSize" Value="22"/>
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="Foreground" Value="{StaticResource DefaultHighlightBrush}"/>
-        <Setter Property="TextDecorations" Value="Underline"/>
-        <Setter Property="Margin" Value="0,0,0,14"/>
-    </Style>
+	<Style Selector="TextBlock.step-number">
+		<Setter Property="FontSize" Value="22"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+		<Setter Property="Foreground" Value="{StaticResource DefaultHighlightBrush}"/>
+		<Setter Property="TextDecorations" Value="Underline"/>
+		<Setter Property="Margin" Value="0,0,0,14"/>
+	</Style>
 
-    <Style Selector="TextBlock.step-number-description">
-        <Setter Property="FontSize" Value="16"/>
-        <Setter Property="FontStyle" Value="Italic"/>
-        <Setter Property="Foreground" Value="#605D5D"/>
-        <Setter Property="Margin" Value="0,0,4,0"/>
-    </Style>
+	<Style Selector="TextBlock.step-number-description">
+		<Setter Property="FontSize" Value="16"/>
+		<Setter Property="FontStyle" Value="Italic"/>
+		<Setter Property="Foreground" Value="#605D5D"/>
+		<Setter Property="Margin" Value="0,0,4,0"/>
+	</Style>
 
 	<!-- TextBox Styles -->
 	<Style Selector="TextBox.view-title">
@@ -147,7 +156,7 @@
 		<Setter Property="Foreground" Value="#605D5D"/>
 		<Setter Property="BorderThickness" Value="0"/>
 	</Style>
-	
+
 	<!-- Border Styles -->
 	<Style Selector="Border.title-underline">
 		<Setter Property="BorderBrush" Value="DarkGray"/>
@@ -155,232 +164,232 @@
 		<Setter Property="Margin" Value="0,10,0,0"/>
 	</Style>
 
-    <Style Selector="Border.control-separator">
-        <Setter Property="BorderBrush" Value="#D7D7D7"/>
-        <Setter Property="BorderThickness" Value="0,0,0,3"/>
-        <Setter Property="Margin" Value="0,10,0,0"/>
-    </Style>
+	<Style Selector="Border.control-separator">
+		<Setter Property="BorderBrush" Value="#D7D7D7"/>
+		<Setter Property="BorderThickness" Value="0,0,0,3"/>
+		<Setter Property="Margin" Value="0,10,0,0"/>
+	</Style>
 
-    <Style Selector="GridSplitter.default-horizontal-style">
-        <Setter Property="ResizeDirection" Value="Rows"/>
-        <Setter Property="Height" Value="1"/>
-        <Setter Property="Background" Value="LightGray"/>
-        <Setter Property="BorderThickness" Value="0,0,0,3"/>
-        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-    </Style>
+	<Style Selector="GridSplitter.default-horizontal-style">
+		<Setter Property="ResizeDirection" Value="Rows"/>
+		<Setter Property="Height" Value="1"/>
+		<Setter Property="Background" Value="LightGray"/>
+		<Setter Property="BorderThickness" Value="0,0,0,3"/>
+		<Setter Property="HorizontalAlignment" Value="Stretch"/>
+	</Style>
 
 	<!-- DataValidationErrors Styles-->
-	    <!--Textblock-->
-		<Style Selector="DataValidationErrors">
-			<Setter Property="ErrorTemplate">
-				<DataTemplate>
-					<ItemsControl ItemsSource="{Binding}">
-						<ItemsControl.Styles>
-							<Style Selector="TextBlock">
-								<Setter Property="FontSize" Value="12"/>
-								<Setter Property="TextWrapping" Value="Wrap" />
-								<Setter Property="Foreground" Value="Red"/>
-							</Style>
-						</ItemsControl.Styles>
-					</ItemsControl>
-				</DataTemplate>
-			</Setter>
-		</Style>
+	<!--Textblock-->
+	<Style Selector="DataValidationErrors">
+		<Setter Property="ErrorTemplate">
+			<DataTemplate>
+				<ItemsControl ItemsSource="{Binding}">
+					<ItemsControl.Styles>
+						<Style Selector="TextBlock">
+							<Setter Property="FontSize" Value="12"/>
+							<Setter Property="TextWrapping" Value="Wrap" />
+							<Setter Property="Foreground" Value="Red"/>
+						</Style>
+					</ItemsControl.Styles>
+				</ItemsControl>
+			</DataTemplate>
+		</Setter>
+	</Style>
 
 	<!-- Label Styles -->
 	<!-- Style for labels that appear before input boxes -->
 	<Style Selector="Label.input-label">
 		<Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="HorizontalContentAlignment" Value="Left"/>
-        <Setter Property="HorizontalAlignment" Value="Left"/>
-        <Setter Property="Foreground" Value="RoyalBlue"/>
+		<Setter Property="HorizontalContentAlignment" Value="Left"/>
+		<Setter Property="HorizontalAlignment" Value="Left"/>
+		<Setter Property="Foreground" Value="RoyalBlue"/>
 		<Setter Property="MinWidth" Value="220"/>
-        <Setter Property="FontWeight" Value="Medium"/>
+		<Setter Property="FontWeight" Value="Medium"/>
 	</Style>
-	
+
 	<!-- Style for unit labels -->
 	<Style Selector="Label.unit-label">
 		<Setter Property="VerticalContentAlignment" Value="Center"/>
 		<Setter Property="MinWidth" Value="120"/>
-        <Setter Property="FontStyle" Value="Italic"/>
+		<Setter Property="FontStyle" Value="Italic"/>
 	</Style>
 
-    <!-- Card Styles -->
-    <Style Selector="Border.card">
-        <Setter Property="Background" Value="{StaticResource CardBackgroundBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
-        <Setter Property="BorderThickness" Value="{StaticResource CardBorderThickness}"/>
-        <Setter Property="CornerRadius" Value="{StaticResource CardCornerRadius}"/>
-        <Setter Property="Padding" Value="{StaticResource CardPadding}"/>
-        <Setter Property="Margin" Value="{StaticResource CardMargin}"/>
-    </Style>
+	<!-- Card Styles -->
+	<Style Selector="Border.card">
+		<Setter Property="Background" Value="{StaticResource CardBackgroundBrush}"/>
+		<Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
+		<Setter Property="BorderThickness" Value="{StaticResource CardBorderThickness}"/>
+		<Setter Property="CornerRadius" Value="{StaticResource CardCornerRadius}"/>
+		<Setter Property="Padding" Value="{StaticResource CardPadding}"/>
+		<Setter Property="Margin" Value="{StaticResource CardMargin}"/>
+	</Style>
 
-    <Style Selector="Border.step-card">
-        <Setter Property="Background" Value="White"/>
-        <Setter Property="BorderBrush" Value="LightGray"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="CornerRadius" Value="8"/>
-        <Setter Property="Padding" Value="20"/>
-        <Setter Property="BoxShadow" Value="0 2 8 0 #1A000000"/>
-    </Style>
+	<Style Selector="Border.step-card">
+		<Setter Property="Background" Value="White"/>
+		<Setter Property="BorderBrush" Value="LightGray"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="CornerRadius" Value="8"/>
+		<Setter Property="Padding" Value="20"/>
+		<Setter Property="BoxShadow" Value="0 2 8 0 #1A000000"/>
+	</Style>
 
-    <!-- Timeline Card Styles -->
-    <Style Selector="Border.timeline-card">
-        <Setter Property="Background" Value="{Binding IsSelected, Converter={StaticResource BoolToBackgroundConverter}}"/>
-        <Setter Property="BorderBrush" Value="{Binding IsSelected, Converter={StaticResource BoolToBorderBrushConverter}}"/>
-        <Setter Property="BorderThickness" Value="{Binding IsSelected, Converter={StaticResource BoolToBorderThicknessConverter}}"/>
-        <Setter Property="RenderTransform" Value="{Binding IsSelected, Converter={StaticResource BoolToScaleTransformConverter}}"/>
-        <Setter Property="CornerRadius" Value="{StaticResource CardCornerRadius}"/>
-        <Setter Property="MinWidth" Value="180"/>
-        <Setter Property="MaxWidth" Value="200"/>
-        <Setter Property="Padding" Value="{StaticResource CardPadding}"/>
-    </Style>
+	<!-- Timeline Card Styles -->
+	<Style Selector="Border.timeline-card">
+		<Setter Property="Background" Value="{Binding IsSelected, Converter={StaticResource BoolToBackgroundConverter}}"/>
+		<Setter Property="BorderBrush" Value="{Binding IsSelected, Converter={StaticResource BoolToBorderBrushConverter}}"/>
+		<Setter Property="BorderThickness" Value="{Binding IsSelected, Converter={StaticResource BoolToBorderThicknessConverter}}"/>
+		<Setter Property="RenderTransform" Value="{Binding IsSelected, Converter={StaticResource BoolToScaleTransformConverter}}"/>
+		<Setter Property="CornerRadius" Value="{StaticResource CardCornerRadius}"/>
+		<Setter Property="MinWidth" Value="180"/>
+		<Setter Property="MaxWidth" Value="200"/>
+		<Setter Property="Padding" Value="{StaticResource CardPadding}"/>
+	</Style>
 
-    <Style Selector="Button:pointerover > Border.timeline-card">
-        <Setter Property="BorderBrush" Value="{StaticResource CardSelectedBorderBrush}"/>
-        <Setter Property="Background" Value="{StaticResource CardHoverBackgroundBrush}"/>
-    </Style>
+	<Style Selector="Button:pointerover > Border.timeline-card">
+		<Setter Property="BorderBrush" Value="{StaticResource CardSelectedBorderBrush}"/>
+		<Setter Property="Background" Value="{StaticResource CardHoverBackgroundBrush}"/>
+	</Style>
 
-    <!-- Component List Card Styles -->
-    <Style Selector="Border.component-card">
-        <Setter Property="Background" Value="{Binding IsSelected, Converter={StaticResource BoolToBackgroundConverter}}"/>
-        <Setter Property="BorderBrush" Value="{Binding IsSelected, Converter={StaticResource BoolToBorderBrushConverter}}"/>
-        <Setter Property="BorderThickness" Value="{Binding IsSelected, Converter={StaticResource BoolToBorderThicknessConverter}}"/>
-        <Setter Property="RenderTransform" Value="{Binding IsSelected, Converter={StaticResource BoolToScaleTransformConverter}}"/>
-        <Setter Property="CornerRadius" Value="{StaticResource CardCornerRadius}"/>
-        <Setter Property="MinHeight" Value="120"/>
-        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-        <Setter Property="Padding" Value="{StaticResource CardPadding}"/>
-    </Style>
+	<!-- Component List Card Styles -->
+	<Style Selector="Border.component-card">
+		<Setter Property="Background" Value="{Binding IsSelected, Converter={StaticResource BoolToBackgroundConverter}}"/>
+		<Setter Property="BorderBrush" Value="{Binding IsSelected, Converter={StaticResource BoolToBorderBrushConverter}}"/>
+		<Setter Property="BorderThickness" Value="{Binding IsSelected, Converter={StaticResource BoolToBorderThicknessConverter}}"/>
+		<Setter Property="RenderTransform" Value="{Binding IsSelected, Converter={StaticResource BoolToScaleTransformConverter}}"/>
+		<Setter Property="CornerRadius" Value="{StaticResource CardCornerRadius}"/>
+		<Setter Property="MinHeight" Value="120"/>
+		<Setter Property="HorizontalAlignment" Value="Stretch"/>
+		<Setter Property="Padding" Value="{StaticResource CardPadding}"/>
+	</Style>
 
-    <Style Selector="Button:pointerover > Border.component-card">
-        <Setter Property="BorderBrush" Value="{StaticResource CardSelectedBorderBrush}"/>
-        <Setter Property="Background" Value="{StaticResource CardHoverBackgroundBrush}"/>
-    </Style>
+	<Style Selector="Button:pointerover > Border.component-card">
+		<Setter Property="BorderBrush" Value="{StaticResource CardSelectedBorderBrush}"/>
+		<Setter Property="Background" Value="{StaticResource CardHoverBackgroundBrush}"/>
+	</Style>
 
-    <!-- Badge Styles -->
-    <Style Selector="Border.step-badge">
-        <Setter Property="Background" Value="{StaticResource BadgeBackgroundBrush}"/>
-        <Setter Property="CornerRadius" Value="{StaticResource StepBadgeCornerRadius}"/>
-        <Setter Property="Padding" Value="{StaticResource StepBadgePadding}"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Margin" Value="0,0,12,0"/>
-    </Style>
+	<!-- Badge Styles -->
+	<Style Selector="Border.step-badge">
+		<Setter Property="Background" Value="{StaticResource BadgeBackgroundBrush}"/>
+		<Setter Property="CornerRadius" Value="{StaticResource StepBadgeCornerRadius}"/>
+		<Setter Property="Padding" Value="{StaticResource StepBadgePadding}"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Margin" Value="0,0,12,0"/>
+	</Style>
 
-    <Style Selector="Border.year-badge">
-        <Setter Property="Background" Value="{StaticResource BadgeBackgroundBrush}"/>
-        <Setter Property="CornerRadius" Value="{StaticResource YearBadgeCornerRadius}"/>
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-        <Setter Property="Padding" Value="{StaticResource YearBadgePadding}"/>
-    </Style>
+	<Style Selector="Border.year-badge">
+		<Setter Property="Background" Value="{StaticResource BadgeBackgroundBrush}"/>
+		<Setter Property="CornerRadius" Value="{StaticResource YearBadgeCornerRadius}"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="Padding" Value="{StaticResource YearBadgePadding}"/>
+	</Style>
 
-    <Style Selector="TextBlock.badge-text">
-        <Setter Property="Foreground" Value="{StaticResource BadgeTextBrush}"/>
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-    </Style>
+	<Style Selector="TextBlock.badge-text">
+		<Setter Property="Foreground" Value="{StaticResource BadgeTextBrush}"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+	</Style>
 
-    <Style Selector="TextBlock.step-badge-text">
-        <Setter Property="Foreground" Value="{StaticResource BadgeTextBrush}"/>
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="FontSize" Value="12"/>
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-    </Style>
+	<Style Selector="TextBlock.step-badge-text">
+		<Setter Property="Foreground" Value="{StaticResource BadgeTextBrush}"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+		<Setter Property="FontSize" Value="12"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+	</Style>
 
-    <Style Selector="TextBlock.year-badge-text">
-        <Setter Property="Foreground" Value="{StaticResource BadgeTextBrush}"/>
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="FontSize" Value="16"/>
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-    </Style>
+	<Style Selector="TextBlock.year-badge-text">
+		<Setter Property="Foreground" Value="{StaticResource BadgeTextBrush}"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+		<Setter Property="FontSize" Value="16"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+	</Style>
 
-    <!-- Delete Button Style -->
-    <Style Selector="Button.delete-button">
-        <Setter Property="Background" Value="{StaticResource DeleteButtonBrush}"/>
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="CornerRadius" Value="4"/>
-        <Setter Property="Padding" Value="8,4"/>
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-        <Setter Property="FontSize" Value="11"/>
-        <Setter Property="Margin" Value="0,12,0,0"/>
-    </Style>
+	<!-- Delete Button Style -->
+	<Style Selector="Button.delete-button">
+		<Setter Property="Background" Value="{StaticResource DeleteButtonBrush}"/>
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="CornerRadius" Value="4"/>
+		<Setter Property="Padding" Value="8,4"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="FontSize" Value="11"/>
+		<Setter Property="Margin" Value="0,12,0,0"/>
+	</Style>
 
-    <!-- Timeline Container Styles -->
-    <Style Selector="Border.timeline-container">
-        <Setter Property="BorderBrush" Value="LightGray"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Padding" Value="10"/>
-        <Setter Property="Margin" Value="0,10"/>
-    </Style>
+	<!-- Timeline Container Styles -->
+	<Style Selector="Border.timeline-container">
+		<Setter Property="BorderBrush" Value="LightGray"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="Padding" Value="10"/>
+		<Setter Property="Margin" Value="0,10"/>
+	</Style>
 
-    <Style Selector="TextBlock.timeline-header">
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Margin" Value="0,0,0,10"/>
-    </Style>
+	<Style Selector="TextBlock.timeline-header">
+		<Setter Property="FontWeight" Value="Bold"/>
+		<Setter Property="FontSize" Value="14"/>
+		<Setter Property="Margin" Value="0,0,0,10"/>
+	</Style>
 
-    <Style Selector="TextBlock.timeline-hint">
-        <Setter Property="FontStyle" Value="Italic"/>
-        <Setter Property="FontSize" Value="11"/>
-        <Setter Property="Foreground" Value="Gray"/>
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-        <Setter Property="Margin" Value="0,8,0,0"/>
-    </Style>
+	<Style Selector="TextBlock.timeline-hint">
+		<Setter Property="FontStyle" Value="Italic"/>
+		<Setter Property="FontSize" Value="11"/>
+		<Setter Property="Foreground" Value="Gray"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="Margin" Value="0,8,0,0"/>
+	</Style>
 
-    <!-- Step Header Styles -->
-    <Style Selector="StackPanel.step-header">
-        <Setter Property="Orientation" Value="Horizontal"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Margin" Value="0,0,0,20"/>
-    </Style>
+	<!-- Step Header Styles -->
+	<Style Selector="StackPanel.step-header">
+		<Setter Property="Orientation" Value="Horizontal"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Margin" Value="0,0,0,20"/>
+	</Style>
 
-    <!-- Empty State Styles -->
-    <Style Selector="StackPanel.empty-state">
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-        <Setter Property="Spacing" Value="20"/>
-        <Setter Property="Margin" Value="40"/>
-    </Style>
+	<!-- Empty State Styles -->
+	<Style Selector="StackPanel.empty-state">
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="Spacing" Value="20"/>
+		<Setter Property="Margin" Value="40"/>
+	</Style>
 
-    <Style Selector="TextBlock.empty-state-title">
-        <Setter Property="FontSize" Value="24"/>
-        <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="Foreground" Value="LightGray"/>
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-    </Style>
+	<Style Selector="TextBlock.empty-state-title">
+		<Setter Property="FontSize" Value="24"/>
+		<Setter Property="FontWeight" Value="SemiBold"/>
+		<Setter Property="Foreground" Value="LightGray"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+	</Style>
 
-    <Style Selector="TextBlock.empty-state-subtitle">
-        <Setter Property="FontSize" Value="16"/>
-        <Setter Property="Foreground" Value="Gray"/>
-        <Setter Property="FontStyle" Value="Italic"/>
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-        <Setter Property="TextWrapping" Value="Wrap"/>
-        <Setter Property="TextAlignment" Value="Center"/>
-        <Setter Property="MaxWidth" Value="400"/>
-    </Style>
+	<Style Selector="TextBlock.empty-state-subtitle">
+		<Setter Property="FontSize" Value="16"/>
+		<Setter Property="Foreground" Value="Gray"/>
+		<Setter Property="FontStyle" Value="Italic"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="TextWrapping" Value="Wrap"/>
+		<Setter Property="TextAlignment" Value="Center"/>
+		<Setter Property="MaxWidth" Value="400"/>
+	</Style>
 
-    <Style Selector="Border.empty-state-tip">
-        <Setter Property="Background" Value="#F0F0F0"/>
-        <Setter Property="CornerRadius" Value="8"/>
-        <Setter Property="Padding" Value="16,12"/>
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-    </Style>
+	<Style Selector="Border.empty-state-tip">
+		<Setter Property="Background" Value="#F0F0F0"/>
+		<Setter Property="CornerRadius" Value="8"/>
+		<Setter Property="Padding" Value="16,12"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+	</Style>
 
-    <!-- Tip Icon Styles -->
-    <Style Selector="Border.tip-icon">
-        <Setter Property="Width" Value="16"/>
-        <Setter Property="Height" Value="16"/>
-        <Setter Property="CornerRadius" Value="8"/>
-        <Setter Property="Background" Value="#4A90E2"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-    </Style>
+	<!-- Tip Icon Styles -->
+	<Style Selector="Border.tip-icon">
+		<Setter Property="Width" Value="16"/>
+		<Setter Property="Height" Value="16"/>
+		<Setter Property="CornerRadius" Value="8"/>
+		<Setter Property="Background" Value="#4A90E2"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+	</Style>
 
-    <Style Selector="TextBlock.tip-icon-text">
-        <Setter Property="Text" Value="i"/>
-        <Setter Property="FontSize" Value="10"/>
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-    </Style>
+	<Style Selector="TextBlock.tip-icon-text">
+		<Setter Property="Text" Value="i"/>
+		<Setter Property="FontSize" Value="10"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+	</Style>
 </Styles>

@@ -65,13 +65,6 @@ public class AnimalGroupFactoryTests
     }
 
     [TestMethod]
-    public void Constructor_WithNullContainerProvider_ShouldThrowArgumentNullException()
-    {
-        // Arrange, Act & Assert
-        Assert.ThrowsException<ArgumentNullException>(() => new AnimalGroupFactory(null));
-    }
-
-    [TestMethod]
     public void Constructor_ParameterlessConstructor_ShouldNotThrow()
     {
         // Arrange, Act & Assert

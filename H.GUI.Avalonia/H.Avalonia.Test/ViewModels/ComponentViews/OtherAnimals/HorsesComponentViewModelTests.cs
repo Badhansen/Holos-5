@@ -65,7 +65,7 @@ namespace H.Avalonia.Test.ViewModels.ComponentViews.OtherAnimals
         public void TestConstructorSettingAnimalType()
         {
             AnimalType expectedAnimalType = AnimalType.Horses;
-            Assert.AreEqual(expectedAnimalType, _viewModel.OtherAnimalType);
+            Assert.AreEqual(expectedAnimalType, _viewModel.AnimalType);
         }
 
         // Below we are testing methods found in OtherAnimalsViewModelBase (abstract) used by all child classes (horses, bison, goats, etc.)

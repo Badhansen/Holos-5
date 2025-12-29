@@ -145,7 +145,7 @@ namespace H.Infrastructure
             return Equals(left, right);
         }
 
-        public static bool operator !=(ModelBase left, ModelBase right)
+        public static bool operator !=(ModelBase? left, ModelBase right)
         {
             return !Equals(left, right);
         }

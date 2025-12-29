@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using DryIoc;
+using H.Core.Enumerations;
 using H.Core.Factories;
 using H.Core.Factories.Animals;
 using H.Core.Models;
@@ -20,21 +21,24 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
     /// <summary>
     /// The selected animal component
     /// </summary>
-    private AnimalComponentBase _selectedAnimalComponent;
+    private AnimalComponentBase? _selectedAnimalComponent;
 
     /// <summary>
     /// The selected management period
     /// </summary>
-    private ManagementPeriod _selectedManagementPeriod;
+    private ManagementPeriod? _selectedManagementPeriod;
 
-    protected IAnimalComponentService AnimalComponentService;
-
-    private ObservableCollection<ManagementPeriodDto> _managementPeriodDtos;
+    private ObservableCollection<ManagementPeriodDto>? _managementPeriodDtos;
 
     /// <summary>
     /// An animal component DTO that is bound to the view and is based on the values from the <see cref="_selectedAnimalComponent"/> model object.
     /// </summary>
-    private IAnimalComponentDto _selectedAnimalComponentDto;
+    private IAnimalComponentDto? _selectedAnimalComponentDto;
+
+    protected IAnimalComponentService? AnimalComponentService;
+    protected IManagementPeriodService? ManagementPeriodService;
+    protected AnimalType _animalType;
+    protected ObservableCollection<AnimalGroup> _animalGroups;
 
     #endregion
 
@@ -51,35 +55,53 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
         IStorageService storageService, 
         IManagementPeriodService managementPeriodService) : base(storageService, logger)
     {
-        if (animalComponentService != null)
-        {
-            AnimalComponentService = animalComponentService; 
-        }
-        else
-        {
-            throw new ArgumentNullException(nameof(animalComponentService));
-        }
+        this.AnimalComponentService = animalComponentService;
+        this.ManagementPeriodService = managementPeriodService;
 
         this.Construct();
+    }
+
+    private void Construct()
+    {
+        ManagementPeriodDtos = new ObservableCollection<ManagementPeriodDto>();
+        Groups = new ObservableCollection<AnimalGroup>();
     }
 
     #endregion
 
     #region Properties
 
-    protected IAnimalComponentDto SelectedAnimalComponentDto
+    protected IAnimalComponentDto? SelectedAnimalComponentDto
     {
         get => _selectedAnimalComponentDto;
         set => SetProperty(ref _selectedAnimalComponentDto, value);
     }
 
     /// <summary>
-    /// An Observable Collection that holds <see cref="ManagementPeriodDto"/> objects, bound to a DataGrid in the view(s).
+    /// An observable collection that holds <see cref="ManagementPeriodDto"/> objects, bound to a DataGrid in the view(s).
     /// </summary>
-    public ObservableCollection<ManagementPeriodDto> ManagementPeriodDtos
+    public ObservableCollection<ManagementPeriodDto>? ManagementPeriodDtos
     {
         get => _managementPeriodDtos;
         set => SetProperty(ref _managementPeriodDtos, value);
+    }
+
+    /// <summary>
+    ///  The <see cref="H.Core.Enumerations.AnimalType"/> a respective component represents, used in the <see cref="Groups"/> collection / Groups data grid in the view(s), value set in child classes.
+    /// </summary>
+    public AnimalType AnimalType
+    {
+        get => _animalType;
+        set => SetProperty(ref _animalType, value);
+    }
+
+    /// <summary>
+    /// An Observable Collection that holds <see cref="AnimalGroup"/> objects, bound to a DataGrid in the view(s).
+    /// </summary>
+    public ObservableCollection<AnimalGroup> Groups
+    {
+        get => _animalGroups;
+        set => SetProperty(ref _animalGroups, value);
     }
 
     #endregion
@@ -119,11 +141,29 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
         this.InitializeAnimalComponent(animalComponentBase);
 
         // Build a DTO to represent the model/domain object
-        var dto = this.AnimalComponentService.TransferToAnimalComponentDto(animalComponentBase);
+        var animalComponentDto = this.AnimalComponentService?.TransferToAnimalComponentDto(animalComponentBase);
 
-        this.SelectedAnimalComponentDto = dto;
+        if (animalComponentDto != null)
+        {
+            this.SelectedAnimalComponentDto = animalComponentDto;
 
-        dto.PropertyChanged += OnAnimalComponentDtoPropertyChanged;
+            animalComponentDto.PropertyChanged += OnAnimalComponentDtoPropertyChanged;
+        }
+    }
+
+    public void AddExistingManagementPeriods()
+    {
+        Farm currentFarm = StorageService.GetActiveFarm();
+        var existingManagementPeriods = currentFarm.GetAllManagementPeriods();
+        foreach (var managementPeriod in existingManagementPeriods)
+        {
+            var newManagementPeriodViewModel = new ManagementPeriodDto();
+            newManagementPeriodViewModel.Name = managementPeriod.GroupName;
+            newManagementPeriodViewModel.Start = managementPeriod.Start;
+            newManagementPeriodViewModel.End = managementPeriod.End;
+            newManagementPeriodViewModel.NumberOfDays = managementPeriod.NumberOfDays;
+            ManagementPeriodDtos.Add(newManagementPeriodViewModel);
+        }
     }
 
     protected void InitializeAnimalComponent(AnimalComponentBase animalComponent)
@@ -137,13 +177,15 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
         _selectedAnimalComponent = animalComponent;
 
         // Build a DTO to represent the model/domain object
-        var animalComponentDto = this.AnimalComponentService.TransferToAnimalComponentDto(_selectedAnimalComponent);
+        var animalComponentDto = this.AnimalComponentService?.TransferToAnimalComponentDto(_selectedAnimalComponent);
+        if (animalComponentDto != null)
+        {
+            // Listen for changes on the DTO
+            animalComponentDto.PropertyChanged += OnAnimalComponentDtoPropertyChanged;
 
-        // Listen for changes on the DTO
-        animalComponentDto.PropertyChanged += OnAnimalComponentDtoPropertyChanged;
-
-        // Assign the DTO to the property bound to the view
-        this.SelectedAnimalComponentDto = animalComponentDto;
+            // Assign the DTO to the property bound to the view
+            this.SelectedAnimalComponentDto = animalComponentDto;
+        }
     }
 
     private void OnAnimalComponentDtoPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -151,7 +193,7 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
         if (sender is IAnimalComponentDto dto)
         {
             // A property on the DTO has been changed by the user, assign the new value to the system object after any unit conversion (if necessary)
-            this.AnimalComponentService.TransferAnimalComponentDtoToSystem((AnimalComponentDto) dto, _selectedAnimalComponent);
+            this.AnimalComponentService?.TransferAnimalComponentDtoToSystem((AnimalComponentDto) dto, _selectedAnimalComponent);
         }
     }
 
@@ -161,28 +203,33 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
 
     #endregion
 
-
-
     #region Event Handlers
 
     /// <summary>
-    ///  bound to a button in the view, adds an item to the <see cref="ManagementPeriodDtos"/> collection / a row to the respective bound DataGrid. Seeded with some default values.
+    /// Bound to a button in the view, adds an item to the <see cref="ManagementPeriodDtos"/> collection / a row to the respective bound DataGrid. Seeded with some default values.
     /// </summary>
     public void HandleAddManagementPeriodEvent()
     {
-        int numPeriods = ManagementPeriodDtos.Count;
-        var newManagementPeriodViewModel = new ManagementPeriodDto { Name = $"Period #{numPeriods}", Start = new DateTime(2024, 01, 01), End = new DateTime(2025, 01, 01), NumberOfDays = 364 };
-        ManagementPeriodDtos.Add(newManagementPeriodViewModel);
+        if (ManagementPeriodDtos != null)
+        {
+            int numPeriods = ManagementPeriodDtos.Count;
+            var newManagementPeriodViewModel = new ManagementPeriodDto { Name = $"Period #{numPeriods}", Start = new DateTime(2024, 01, 01), End = new DateTime(2025, 01, 01), NumberOfDays = 364 };
+            ManagementPeriodDtos.Add(newManagementPeriodViewModel);
+        }
+    }
+
+    /// <summary>
+    /// Bound to a button in the view, adds an item to the <see cref="AnimalComponentViewModelBase.Groups"/> collection / a row to the respective bound DataGrid. Seeded with <see cref="AnimalType"/>.
+    /// </summary>
+    public void HandleAddGroupEvent()
+    {
+        Groups.Add(new AnimalGroup { GroupType = AnimalType });
     }
 
     #endregion
 
     #region Private Methods
 
-    private void Construct()
-    {
-        this.ManagementPeriodDtos = new ObservableCollection<ManagementPeriodDto>();
-    }
-
     #endregion
+
 }

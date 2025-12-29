@@ -63,7 +63,7 @@ namespace H.Avalonia.Test.ViewModels.ComponentViews.OtherAnimals
         public void TestConstructorSettingAnimalType()
         {
             AnimalType expectedAnimalType = AnimalType.Llamas;
-            Assert.AreEqual(expectedAnimalType, _viewModel.OtherAnimalType);
+            Assert.AreEqual(expectedAnimalType, _viewModel.AnimalType);
         }
     }
 }

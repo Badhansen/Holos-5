@@ -77,10 +77,11 @@ public class BoolToScaleTransformConverter : IValueConverter
     {
         if (value is bool isSelected)
         {
-            return isSelected ? "scale(0.98)" : "scale(1.0)";
+            var scaleValue = isSelected ? 0.98 : 1.0;
+            return new ScaleTransform(scaleValue, scaleValue);
         }
         
-        return "scale(1.0)";
+        return new ScaleTransform(1.0, 1.0);
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

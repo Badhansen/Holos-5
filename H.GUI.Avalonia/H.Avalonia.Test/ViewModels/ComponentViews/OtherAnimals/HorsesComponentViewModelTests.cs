@@ -93,7 +93,7 @@ namespace H.Avalonia.Test.ViewModels.ComponentViews.OtherAnimals
         [TestMethod]
         public void TestHandleAddManagementPeriodEvent()
         {
-            string expectedPeriodName = "Period #0";
+            string expectedPeriodName = "Period #1";
             DateTime expectedStart = new DateTime(2024, 01, 01);
             DateTime expectedEnd = new DateTime(2025, 01, 01);
             int expectedDays = 364;

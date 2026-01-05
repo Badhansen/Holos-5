@@ -42,6 +42,8 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
     protected AnimalType _animalType;
     protected ObservableCollection<AnimalGroup> _animalGroups;
 
+    protected ObservableCollection<AnimalGroupDto> _animalGroupDtos;
+
     #endregion
 
     #region Constructors
@@ -67,8 +69,9 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
     {
         Logger?.LogDebug("Initializing collections and commands");
         
-        ManagementPeriodDtos = new ObservableCollection<ManagementPeriodDto>();
-        Groups = new ObservableCollection<AnimalGroup>();
+        this.ManagementPeriodDtos = new ObservableCollection<ManagementPeriodDto>();
+        this.Groups = new ObservableCollection<AnimalGroup>();
+        this.AnimalGroupDtos = new ObservableCollection<AnimalGroupDto>();
         
         // Initialize commands
         AddManagementPeriodCommand = new DelegateCommand(HandleAddManagementPeriodEvent);
@@ -128,6 +131,12 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
         set => SetProperty(ref _animalGroups, value);
     }
 
+    public ObservableCollection<AnimalGroupDto> AnimalGroupDtos
+    {
+        get => _animalGroupDtos;
+        set => SetProperty(ref _animalGroupDtos, value);
+    }
+
     #endregion
 
     #region Public Methods
@@ -141,19 +150,17 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
         if (navigationContext.Parameters.ContainsKey(GuiConstants.ComponentKey))
         {
             var parameter = navigationContext.Parameters[GuiConstants.ComponentKey];
-            Logger?.LogDebug("Found ComponentKey parameter: {ParameterType}", 
-                parameter?.GetType().Name ?? "null");
+            
+            Logger?.LogDebug("Found ComponentKey parameter: {ParameterType}", parameter?.GetType().Name ?? "null");
             
             if (parameter is AnimalComponentBase animalComponent)
             {
-                Logger?.LogInformation("Initializing component: {ComponentName} ({ComponentType})", 
-                    animalComponent.Name ?? "Unknown", animalComponent.GetType().Name);
+                Logger?.LogInformation("Initializing component: {ComponentName} ({ComponentType})", animalComponent.Name ?? "Unknown", animalComponent.GetType().Name);
                 this.InitializeViewModel(animalComponent);
             }
             else
             {
-                Logger?.LogWarning("ComponentKey parameter is not AnimalComponentBase: {ActualType}", 
-                    parameter?.GetType().Name ?? "null");
+                Logger?.LogWarning("ComponentKey parameter is not AnimalComponentBase: {ActualType}", parameter?.GetType().Name ?? "null");
             }
         }
         else

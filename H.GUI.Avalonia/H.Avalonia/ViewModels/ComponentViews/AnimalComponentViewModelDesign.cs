@@ -1,4 +1,5 @@
-﻿using H.Core.Factories;
+﻿using H.Core.Enumerations;
+using H.Core.Factories;
 using H.Core.Factories.Animals;
 using H.Core.Services.StorageService;
 using Microsoft.Extensions.Logging;
@@ -15,7 +16,8 @@ public class AnimalComponentViewModelDesign : AnimalComponentViewModelBase
 
         ViewName = "Bison";
 
-        base.ManagementPeriodDtos.Add(new ManagementPeriodDto() { Name = "Bison Management Period" });
+        base.ManagementPeriodDtos?.Add(new ManagementPeriodDto() { Name = "Bison Management Period" });
+        base.AnimalGroupDtos?.Add(new AnimalGroupDto() {GroupType =  AnimalType.Alpacas});
     }
 
     protected AnimalComponentViewModelDesign(IAnimalComponentService animalComponentService, ILogger logger, IStorageService storageService, IManagementPeriodService managementPeriodService) : base(animalComponentService, logger, storageService, managementPeriodService)

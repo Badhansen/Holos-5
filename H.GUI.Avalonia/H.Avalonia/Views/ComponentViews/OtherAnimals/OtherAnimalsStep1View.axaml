@@ -40,7 +40,7 @@
                               VerticalScrollBarVisibility="Hidden"
                               MaxHeight="250"
                               MinHeight="150">
-                    <ItemsControl ItemsSource="{Binding Path=Groups}">
+                    <ItemsControl ItemsSource="{Binding Path=AnimalGroupDtos}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Horizontal" Spacing="15" />

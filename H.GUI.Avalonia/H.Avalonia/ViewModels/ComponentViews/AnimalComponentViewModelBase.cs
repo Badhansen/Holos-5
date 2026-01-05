@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
@@ -74,8 +75,8 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
         this.AnimalGroupDtos = new ObservableCollection<AnimalGroupDto>();
         
         // Initialize commands
-        AddManagementPeriodCommand = new DelegateCommand(HandleAddManagementPeriodEvent);
-        AddGroupCommand = new DelegateCommand(HandleAddGroupEvent);
+        AddManagementPeriodCommand = new DelegateCommand(OnAddManagementPeriodExecute);
+        AddAnimalGroupDtoCommand = new DelegateCommand(OnAddAnimalGroupDtoCommandExecute);
         
         Logger?.LogDebug("Initialization completed. ManagementPeriodDtos: {ManagementCount}, Groups: {GroupsCount}", ManagementPeriodDtos?.Count ?? 0, Groups?.Count ?? 0);
     }
@@ -92,7 +93,7 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
     /// <summary>
     /// Command to add a new animal group with default values.
     /// </summary>
-    public ICommand AddGroupCommand { get; private set; }
+    public ICommand AddAnimalGroupDtoCommand { get; private set; }
 
     #endregion
 
@@ -136,6 +137,20 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
         get => _animalGroupDtos;
         set => SetProperty(ref _animalGroupDtos, value);
     }
+
+    public ObservableCollection<AnimalType> ValidAnimalTypes { get; set; } = new ObservableCollection<AnimalType>(
+        new[]
+        {
+            AnimalType.NotSelected,
+            AnimalType.Bison,
+            AnimalType.Goats,
+            AnimalType.Alpacas,
+            AnimalType.Deer,
+            AnimalType.Elk,
+            AnimalType.Llamas,
+            AnimalType.Horses,
+            AnimalType.Mules
+        });
 
     #endregion
 
@@ -319,7 +334,7 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
     /// <summary>
     /// Adds an item to the <see cref="ManagementPeriodDtos"/> collection / a row to the respective bound DataGrid. Seeded with some default values.
     /// </summary>
-    public void HandleAddManagementPeriodEvent()
+    public void OnAddManagementPeriodExecute()
     {
         Logger?.LogInformation("Adding new management period");
         
@@ -356,20 +371,31 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
     /// <summary>
     /// Adds an item to the <see cref="AnimalComponentViewModelBase.Groups"/> collection / a row to the respective bound DataGrid. Seeded with <see cref="AnimalType"/>.
     /// </summary>
-    public void HandleAddGroupEvent()
+    public void OnAddAnimalGroupDtoCommandExecute()
     {
-        Logger?.LogInformation("Adding new group. Animal type: {AnimalType}", AnimalType);
+        Logger?.LogInformation("Adding new group DTO. Animal type: {AnimalType}", AnimalType);
         
         try
         {
-            var currentGroupCount = Groups?.Count ?? 0;
-            Logger?.LogDebug("Current group count: {CurrentCount}", currentGroupCount);
+            var currentGroupDtoCount = AnimalGroupDtos?.Count ?? 0;
+            Logger?.LogDebug("Current group DTO count: {CurrentCount}", currentGroupDtoCount);
             
-            var newGroup = new AnimalGroup { GroupType = AnimalType };
-            Groups.Add(newGroup);
+            var newGroup = new AnimalGroupDto() {};
+            newGroup.ValidAnimalTypes = new ObservableCollection<AnimalType>([
+                AnimalType.NotSelected,
+                AnimalType.Bison,
+                AnimalType.Goats,
+                AnimalType.Alpacas,
+                AnimalType.Deer,
+                AnimalType.Elk,
+                AnimalType.Llamas,
+                AnimalType.Horses,
+                AnimalType.Mules
+            ]);
+            newGroup.GroupType = this.ValidAnimalTypes[0];
+            AnimalGroupDtos?.Add(newGroup);
             
-            Logger?.LogInformation("Added group with type: {GroupType}. Total: {TotalCount}", 
-                AnimalType, Groups.Count);
+            Logger?.LogInformation("Added group DTO with animal type: {GroupType}. Total: {TotalCount}", AnimalType, AnimalGroupDtos?.Count);
         }
         catch (Exception ex)
         {

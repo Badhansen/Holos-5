@@ -1,4 +1,5 @@
-﻿using H.Core.Enumerations;
+﻿using System.Collections.ObjectModel;
+using H.Core.Enumerations;
 using H.Core.Factories;
 using H.Core.Factories.Animals;
 using H.Core.Services.StorageService;
@@ -16,8 +17,22 @@ public class AnimalComponentViewModelDesign : AnimalComponentViewModelBase
 
         ViewName = "Bison";
 
+        var validAnimalTypes = new ObservableCollection<AnimalType>([
+                AnimalType.NotSelected,
+                AnimalType.Bison,
+                AnimalType.Goats,
+                AnimalType.Alpacas,
+                AnimalType.Deer,
+                AnimalType.Elk,
+                AnimalType.Llamas,
+                AnimalType.Horses,
+                AnimalType.Mules
+            ]);
+
         base.ManagementPeriodDtos?.Add(new ManagementPeriodDto() { Name = "Bison Management Period" });
-        base.AnimalGroupDtos?.Add(new AnimalGroupDto() {GroupType =  AnimalType.Alpacas});
+        base.AnimalGroupDtos?.Add(new AnimalGroupDto() { ValidAnimalTypes = validAnimalTypes, GroupType =  AnimalType.NotSelected});
+        base.AnimalGroupDtos?.Add(new AnimalGroupDto() {ValidAnimalTypes = validAnimalTypes, GroupType = AnimalType.Bison });
+        base.AnimalGroupDtos?.Add(new AnimalGroupDto() {ValidAnimalTypes = validAnimalTypes, GroupType = AnimalType.Alpacas });
     }
 
     protected AnimalComponentViewModelDesign(IAnimalComponentService animalComponentService, ILogger logger, IStorageService storageService, IManagementPeriodService managementPeriodService) : base(animalComponentService, logger, storageService, managementPeriodService)

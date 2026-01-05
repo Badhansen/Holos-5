@@ -17,7 +17,7 @@
 				<Run Text="{x:Static properties:Resources.LabelStep2Text}"/>
 			</TextBlock>
 
-			<Button Command="{Binding HandleAddManagementPeriodEvent}" Classes="add-management-period" Content="{x:Static properties:Resources.ButtonAddManagementPeriod}"></Button> 
+			<Button Command="{Binding OnAddManagementPeriodExecute}" Classes="add-management-period" Content="{x:Static properties:Resources.ButtonAddManagementPeriod}"></Button> 
 			<StackPanel>
 				<DataGrid ItemsSource="{Binding Path=ManagementPeriodDtos}" AutoGenerateColumns="False" Margin="10,20,0,0" HorizontalAlignment="Left" BorderThickness="1" GridLinesVisibility="All" Height="100">
 					<DataGrid.Columns>

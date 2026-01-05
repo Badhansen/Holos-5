@@ -84,7 +84,7 @@ namespace H.Avalonia.Test.ViewModels.ComponentViews.OtherAnimals
         {
             AnimalType expectedGroupType = AnimalType.Horses;
 
-            _viewModel.HandleAddGroupEvent();
+            _viewModel.OnAddAnimalGroupDtoCommandExecute();
 
             Assert.AreEqual(1, _viewModel.Groups.Count);
             Assert.AreEqual(expectedGroupType, _viewModel.Groups[0].GroupType);
@@ -98,7 +98,7 @@ namespace H.Avalonia.Test.ViewModels.ComponentViews.OtherAnimals
             DateTime expectedEnd = new DateTime(2025, 01, 01);
             int expectedDays = 364;
 
-            _viewModel.HandleAddManagementPeriodEvent();
+            _viewModel.OnAddManagementPeriodExecute();
 
             Assert.AreEqual(1, _viewModel.ManagementPeriodDtos.Count);
             Assert.AreEqual(expectedPeriodName, _viewModel.ManagementPeriodDtos[0].Name);

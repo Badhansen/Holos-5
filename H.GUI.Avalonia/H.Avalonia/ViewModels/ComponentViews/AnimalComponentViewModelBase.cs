@@ -48,7 +48,6 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
 
     protected AnimalComponentViewModelBase()
     {
-        Logger?.LogDebug("Parameterless constructor called");
         this.Construct();
     }
 
@@ -58,9 +57,6 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
         IStorageService storageService, 
         IManagementPeriodService managementPeriodService) : base(storageService, logger)
     {
-        Logger?.LogDebug("Constructor with dependencies. AnimalComponentService: {HasService}, ManagementPeriodService: {HasManagementService}", 
-            animalComponentService != null, managementPeriodService != null);
-        
         this.AnimalComponentService = animalComponentService;
         this.ManagementPeriodService = managementPeriodService;
 
@@ -78,9 +74,22 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
         AddManagementPeriodCommand = new DelegateCommand(HandleAddManagementPeriodEvent);
         AddGroupCommand = new DelegateCommand(HandleAddGroupEvent);
         
-        Logger?.LogDebug("Initialization completed. ManagementPeriodDtos: {ManagementCount}, Groups: {GroupsCount}", 
-            ManagementPeriodDtos?.Count ?? 0, Groups?.Count ?? 0);
+        Logger?.LogDebug("Initialization completed. ManagementPeriodDtos: {ManagementCount}, Groups: {GroupsCount}", ManagementPeriodDtos?.Count ?? 0, Groups?.Count ?? 0);
     }
+
+    #endregion
+
+    #region Commands
+
+    /// <summary>
+    /// Command to add a new management period with default values.
+    /// </summary>
+    public ICommand AddManagementPeriodCommand { get; private set; }
+
+    /// <summary>
+    /// Command to add a new animal group with default values.
+    /// </summary>
+    public ICommand AddGroupCommand { get; private set; }
 
     #endregion
 
@@ -121,26 +130,11 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
 
     #endregion
 
-    #region Commands
-
-    /// <summary>
-    /// Command to add a new management period with default values.
-    /// </summary>
-    public ICommand AddManagementPeriodCommand { get; private set; }
-
-    /// <summary>
-    /// Command to add a new animal group with default values.
-    /// </summary>
-    public ICommand AddGroupCommand { get; private set; }
-
-    #endregion
-
     #region Public Methods
 
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
-        Logger?.LogInformation("Navigation started. Parameters: {ParameterCount}", 
-            navigationContext?.Parameters?.Count ?? 0);
+        Logger?.LogInformation("Navigation started. Parameters: {ParameterCount}", navigationContext?.Parameters?.Count ?? 0);
         
         base.OnNavigatedTo(navigationContext);
 
@@ -175,43 +169,37 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
     /// <param name="component">The <see cref="AnimalComponentBase"/> to display to the user</param>
     public override void InitializeViewModel(ComponentBase component)
     {
-        Logger?.LogInformation("ViewModel initialization started: {ComponentType}", 
-            component?.GetType().Name ?? "null");
+        Logger?.LogInformation("ViewModel initialization started: {ComponentType}", component?.GetType().Name ?? "null");
 
         if (component is not AnimalComponentBase animalComponentBase)
         {
-            Logger?.LogWarning("Component is not AnimalComponentBase: {ComponentType}", 
-                component?.GetType().Name ?? "null");
+            Logger?.LogWarning("Component is not AnimalComponentBase: {ComponentType}", component?.GetType().Name ?? "null");
             return;
         }
 
-        Logger?.LogDebug("Starting base initialization: {ComponentName}", 
-            animalComponentBase.Name ?? "Unknown");
+        Logger?.LogDebug("Starting base initialization: {ComponentName}", animalComponentBase.Name ?? "Unknown");
         base.InitializeViewModel(component);
 
         this.PropertyChanged += OnPropertyChanged;
 
-        Logger?.LogDebug("Calling InitializeAnimalComponent");
+        Logger?.LogDebug($"Calling {nameof(InitializeAnimalComponent)}");
         this.InitializeAnimalComponent(animalComponentBase);
 
         // Build a DTO to represent the model/domain object
-        Logger?.LogDebug("Creating DTO from component. Service available: {HasService}", 
-            AnimalComponentService != null);
+        Logger?.LogDebug($"Creating {nameof(AnimalComponentDto)} from component");
         var animalComponentDto = this.AnimalComponentService?.TransferToAnimalComponentDto(animalComponentBase);
 
         if (animalComponentDto != null)
         {
-            Logger?.LogInformation("DTO created successfully: {DtoType}", 
-                animalComponentDto.GetType().Name);
+            Logger?.LogInformation($"{nameof(AnimalComponentDto)} created successfully: {animalComponentDto.GetType().Name}");
             this.SelectedAnimalComponentDto = animalComponentDto;
 
             animalComponentDto.PropertyChanged += OnAnimalComponentDtoPropertyChanged;
-            Logger?.LogDebug("Property change handler attached to DTO");
+            Logger?.LogDebug($"Property change handler attached to {nameof(AnimalComponentDto)}");
         }
         else
         {
-            Logger?.LogError("Failed to create DTO. Service available: {ServiceAvailable}", 
-                AnimalComponentService != null);
+            Logger?.LogError($"Failed to create {nameof(AnimalComponentDto)}");
         }
     }
 
@@ -222,12 +210,11 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
         try
         {
             Farm currentFarm = StorageService.GetActiveFarm();
-            Logger?.LogDebug("Retrieved active farm: {FarmName}", 
-                currentFarm?.Name ?? "Unknown");
+            Logger?.LogDebug("Retrieved active farm: {FarmName}", currentFarm?.Name ?? "Unknown");
             
             var existingManagementPeriods = currentFarm.GetAllManagementPeriods();
-            Logger?.LogInformation("Found {PeriodCount} existing periods", 
-                existingManagementPeriods?.Count ?? 0);
+            
+            Logger?.LogInformation("Found {PeriodCount} existing management periods", existingManagementPeriods?.Count ?? 0);
 
             int addedCount = 0;
             foreach (var managementPeriod in existingManagementPeriods)
@@ -241,8 +228,8 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
                 ManagementPeriodDtos?.Add(newManagementPeriodViewModel);
                 addedCount++;
                 
-                Logger?.LogDebug("Added period: {PeriodName} ({StartDate} to {EndDate})", 
-                    managementPeriod.GroupName ?? "Unknown", managementPeriod.Start, managementPeriod.End);
+                Logger?.LogDebug("Added period: {ManagementPeriodName} ({StartDate} to {EndDate})", 
+                    managementPeriod.Name ?? "Unknown", managementPeriod.Start, managementPeriod.End);
             }
             
             Logger?.LogInformation("Successfully added {AddedCount} periods", addedCount);
@@ -255,8 +242,7 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
 
     protected void InitializeAnimalComponent(AnimalComponentBase animalComponent)
     {
-        Logger?.LogDebug("Starting component initialization: {ComponentName}", 
-            animalComponent?.Name ?? "null");
+        Logger?.LogDebug("Starting component initialization: {ComponentName}", animalComponent?.Name ?? "null");
 
         if (animalComponent == null)
         {
@@ -269,13 +255,13 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
         Logger?.LogDebug("Component reference set");
 
         // Build a DTO to represent the model/domain object
-        Logger?.LogDebug("Creating DTO using service: {ServiceType}", 
-            AnimalComponentService?.GetType().Name ?? "null");
+        Logger?.LogDebug($"Creating {nameof(AnimalComponentDto)} using service: {AnimalComponentService?.GetType().Name}");
         var animalComponentDto = this.AnimalComponentService?.TransferToAnimalComponentDto(_selectedAnimalComponent);
         
         if (animalComponentDto != null)
         {
-            Logger?.LogDebug("DTO created, attaching event handlers");
+            Logger?.LogDebug($"{nameof(AnimalComponentDto)} created, attaching event handlers");
+
             // Listen for changes on the DTO
             animalComponentDto.PropertyChanged += OnAnimalComponentDtoPropertyChanged;
 
@@ -285,8 +271,7 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
         }
         else
         {
-            Logger?.LogError("Failed to create DTO. Service available: {HasService}", 
-                AnimalComponentService != null);
+            Logger?.LogError($"Failed to create  {nameof(AnimalComponentDto)}");
         }
     }
 

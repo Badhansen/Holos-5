@@ -116,6 +116,7 @@ public partial class MyComponentsViewModelTests
     {
         Assert.IsNotNull(_viewModel);
         Assert.IsNotNull(_viewModel.RemoveComponent);
+        Assert.IsNotNull(_viewModel.RemoveSpecificComponentCommand);
         Assert.IsNotNull(_viewModel.MyComponents);
     }
 
@@ -191,6 +192,39 @@ public partial class MyComponentsViewModelTests
     }
 
     [TestMethod]
+    public void TestRemoveSpecificComponentExecute_WhenValidComponentItem_RemovesComponent()
+    {
+        // Arrange
+        var componentItemToRemove = _viewModel.MyComponentItems.First(x => x.Component == _testComponent1);
+        var initialMyComponentsCount = _viewModel.MyComponents.Count;
+        var initialFarmComponentsCount = _testFarm.Components.Count;
+
+        // Act
+        _viewModel.RemoveSpecificComponentCommand.Execute(componentItemToRemove);
+
+        // Assert
+        Assert.AreEqual(initialMyComponentsCount - 1, _viewModel.MyComponents.Count);
+        Assert.AreEqual(initialFarmComponentsCount - 1, _testFarm.Components.Count);
+        Assert.IsFalse(_viewModel.MyComponents.Contains(_testComponent1));
+        Assert.IsFalse(_testFarm.Components.Contains(_testComponent1));
+    }
+
+    [TestMethod]
+    public void TestRemoveSpecificComponentExecute_WhenRemovedComponentWasSelected_SelectsAnotherComponent()
+    {
+        // Arrange
+        _viewModel.SelectedComponent = _testComponent1;
+        var componentItemToRemove = _viewModel.MyComponentItems.First(x => x.Component == _testComponent1);
+
+        // Act
+        _viewModel.RemoveSpecificComponentCommand.Execute(componentItemToRemove);
+
+        // Assert
+        Assert.AreNotEqual(_testComponent1, _viewModel.SelectedComponent);
+        Assert.AreEqual(_testComponent2, _viewModel.SelectedComponent); // Should select the remaining component
+    }
+
+    [TestMethod]
     public void TestRemoveComponentExecute_AfterRemoval_SelectsLastComponent()
     {
         // Arrange
@@ -236,6 +270,21 @@ public partial class MyComponentsViewModelTests
         // Assert
         Assert.IsFalse(initialCanExecute);
         Assert.IsTrue(finalCanExecute);
+    }
+
+    [TestMethod]
+    public void TestRemoveSpecificComponentExecute_WithInvalidParameter_DoesNothing()
+    {
+        // Arrange
+        var initialCount = _viewModel.MyComponents.Count;
+        var initialFarmCount = _testFarm.Components.Count;
+
+        // Act
+        _viewModel.RemoveSpecificComponentCommand.Execute("invalid parameter");
+
+        // Assert
+        Assert.AreEqual(initialCount, _viewModel.MyComponents.Count);
+        Assert.AreEqual(initialFarmCount, _testFarm.Components.Count);
     }
 
     #endregion

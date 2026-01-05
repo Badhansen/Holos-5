@@ -10,8 +10,8 @@
     <Style Selector="Button">
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="{StaticResource DefaultHighlightBrush}" />
-		<Setter Property="Foreground" Value="White" />
-		<Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Padding" Value="50, 10"/>
     </Style>
     <Style Selector="Button:pointerover.user-prompt-button--confirm /template/ ContentPresenter">
@@ -352,22 +352,29 @@
         <Setter Property="HorizontalAlignment" Value="Center"/>
     </Style>
 
+    <Style Selector="TextBlock.delete-text">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
     <!-- Delete Button Style -->
     <Style Selector="Button.delete-button">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="{StaticResource DeleteButtonBrush}"/>
         <Setter Property="BorderThickness" Value="2"/>
-        <Setter Property="Foreground" Value="{StaticResource DeleteButtonBrush}"/>
+        <Setter Property="Padding" Value="0"/> <!-- Override base/default button padding show text will be visible -->
         <Setter Property="CornerRadius" Value="4"/>
-        <Setter Property="Padding" Value="8,4"/>
+        <Setter Property="Foreground" Value="{StaticResource DeleteButtonBrush}"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="FontSize" Value="11"/>
         <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="Margin" Value="0,12,0,0"/>
-        <Setter Property="MinHeight" Value="28"/>
+        <!--<Setter Property="Margin" Value="0,12,0,0"/>-->
+        <Setter Property="MinHeight" Value="32"/>
         <Setter Property="MinWidth" Value="60"/>
         <Setter Property="Cursor" Value="Hand"/>
     </Style>
@@ -375,7 +382,7 @@
     <!-- Delete Button Hover Effect -->
     <Style Selector="Button.delete-button:pointerover">
         <Setter Property="Background" Value="{StaticResource DeleteButtonBrush}"/>
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Foreground" Value="Black"/>
         <Setter Property="BorderBrush" Value="{StaticResource DeleteButtonBrush}"/>
     </Style>
 

@@ -59,12 +59,31 @@
                                         CommandParameter="{Binding}">
 
                                     <Border Classes="timeline-card">
-                                        <StackPanel Spacing="8">
-                                            <!-- Year Badge -->
-                                            <Border Classes="year-badge">
-                                                <TextBlock Text="{Binding Path=Year}" Classes="year-badge-text" />
-                                            </Border>
-
+                                        <StackPanel Spacing="8" Margin="8">
+                                            <!-- Top row with Year Badge and Delete Button in same DockPanel for perfect alignment -->
+                                            <DockPanel LastChildFill="False">
+                                                <!-- Year Badge -->
+                                                <Border Classes="year-badge" 
+                                                        DockPanel.Dock="Left"
+                                                        VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Path=Year}" 
+                                                               Classes="year-badge-text"
+                                                               VerticalAlignment="Center"
+                                                               HorizontalAlignment="Center" />
+                                                </Border>
+                                                
+                                                <!-- Delete Button -->
+                                                <Button  Classes="delete-button"
+                                                         DockPanel.Dock="Right"
+                                                        VerticalAlignment="Center"
+                                                        Command="{Binding $parent[UserControl].((field:FieldComponentViewModel)DataContext).RemoveSpecificCropCommand}"
+                                                        CommandParameter="{Binding}">
+                                                    <TextBlock Name="DeleteTextBlock" 
+                                                               Classes="delete-text"
+                                                               Text="Delete"/>
+                                                </Button>
+                                            </DockPanel>
+                                            
                                             <!-- Crop Type Section -->
                                             <StackPanel Spacing="4">
                                                 <TextBlock Text="Select crop"
@@ -78,13 +97,6 @@
                                                           MinWidth="140"
                                                           HorizontalAlignment="Stretch" />
                                             </StackPanel>
-
-                                            <!-- Delete Button -->
-                                            <Button Classes="delete-button"
-                                                    Command="{Binding $parent[UserControl].((field:FieldComponentViewModel)DataContext).RemoveSpecificCropCommand}"
-                                                    CommandParameter="{Binding}">
-                                                <TextBlock Text="Delete" />
-                                            </Button>
                                         </StackPanel>
                                     </Border>
                                 </Button>

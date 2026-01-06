@@ -5665,7 +5665,7 @@ Daily emissions estimates are multipled by the total number of production days i
     <value>WFac</value>
   </data>
   <data name="SelectProvince" xml:space="preserve">
-    <value>Select Province</value>
+    <value>Select Your Province</value>
   </data>
   <data name="LabelUseConstantIndoorTemperature" xml:space="preserve">
     <value>Use constant indoor temperature</value>
@@ -6256,7 +6256,7 @@ Please note: emissions related to the deposition or application of livestock man
     <value>Must be a valid Year</value>
   </data>
   <data name="EnumSelectProvince" xml:space="preserve">
-    <value>Select Province</value>
+    <value>Select Your Province</value>
   </data>
   <data name="LabelExport" xml:space="preserve">
     <value>Export</value>
@@ -6423,5 +6423,20 @@ Please note: emissions related to the deposition or application of livestock man
   </data>
   <data name="CoordinateError" xml:space="preserve">
     <value>Coordinate error</value>
+  </data>
+  <data name="SoilDataViewStepOneDesc" xml:space="preserve">
+    <value>Select the province in which the farm is located.</value>
+  </data>
+  <data name="SoilDataViewStepTwoDesc" xml:space="preserve">
+    <value>Enter the address, coordinates, or right-click on the map to set farms location.</value>
+  </data>
+  <data name="SoilDataViewStepThreeDesc" xml:space="preserve">
+    <value>Once you've entered your location, click below to retrieve soil data.</value>
+  </data>
+  <data name="SoilDataViewStepTwo" xml:space="preserve">
+    <value>Enter Your Location</value>
+  </data>
+  <data name="SoilDataViewStepThree" xml:space="preserve">
+    <value>Select Soil Type</value>
   </data>
 </root>

@@ -5472,7 +5472,7 @@
     <value>FacE</value>
   </data>
   <data name="SelectProvince" xml:space="preserve">
-    <value>Select Province</value>
+    <value>Select Your Province</value>
   </data>
   <data name="LabelUseConstantIndoorTemperature" xml:space="preserve">
     <value>utiliser une température intérieure constante</value>
@@ -5871,6 +5871,21 @@ Please note: emissions related to the deposition or application of livestock man
     <value />
   </data>
   <data name="CoordinateError" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="SoilDataViewStepOneDesc" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="SoilDataViewStepTwoDesc" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="SoilDataViewStepThreeDesc" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="SoilDataViewStepTwo" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="SoilDataViewStepThree" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
 </root>

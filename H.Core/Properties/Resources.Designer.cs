@@ -5047,7 +5047,7 @@ namespace H.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select Province.
+        ///   Looks up a localized string similar to Select Your Province.
         /// </summary>
         public static string EnumSelectProvince {
             get {
@@ -15986,7 +15986,7 @@ namespace H.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select Province.
+        ///   Looks up a localized string similar to Select Your Province.
         /// </summary>
         public static string SelectProvince {
             get {
@@ -16099,6 +16099,51 @@ namespace H.Core.Properties {
         public static string SoftWheat {
             get {
                 return ResourceManager.GetString("SoftWheat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the province in which the farm is located..
+        /// </summary>
+        public static string SoilDataViewStepOneDesc {
+            get {
+                return ResourceManager.GetString("SoilDataViewStepOneDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Soil Type.
+        /// </summary>
+        public static string SoilDataViewStepThree {
+            get {
+                return ResourceManager.GetString("SoilDataViewStepThree", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Once you&apos;ve entered your location, click below to retrieve soil data..
+        /// </summary>
+        public static string SoilDataViewStepThreeDesc {
+            get {
+                return ResourceManager.GetString("SoilDataViewStepThreeDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Your Location.
+        /// </summary>
+        public static string SoilDataViewStepTwo {
+            get {
+                return ResourceManager.GetString("SoilDataViewStepTwo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter the address, coordinates, or right-click on the map to set farms location..
+        /// </summary>
+        public static string SoilDataViewStepTwoDesc {
+            get {
+                return ResourceManager.GetString("SoilDataViewStepTwoDesc", resourceCulture);
             }
         }
         

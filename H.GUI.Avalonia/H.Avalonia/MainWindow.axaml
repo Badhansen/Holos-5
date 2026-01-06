@@ -9,6 +9,7 @@
         mc:Ignorable="d" d:DesignWidth="720" d:DesignHeight="480"
         Width="1280" Height="768"
         MinWidth="1024" MinHeight="512"
+        WindowState="Maximized"
         x:Class="H.Avalonia.MainWindow"
         Title="{x:Static properties:Resources.ApplicationTitle}">
     <Grid>
@@ -42,4 +43,3 @@
                         prism:RegionManager.RegionName="{x:Static local:UiRegions.FooterRegion}"/>
     </Grid>
 </Window>
-    

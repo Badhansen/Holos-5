@@ -1,6 +1,4 @@
 ﻿using H.Core.Models.LandManagement.Fields;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace H.Core.Test.Models.LandManagement.Fields
 {

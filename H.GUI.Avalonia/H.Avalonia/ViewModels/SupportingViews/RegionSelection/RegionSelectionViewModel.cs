@@ -1,10 +1,5 @@
-﻿using H.Avalonia.Views;
-using H.Avalonia.Views.SupportingViews.CountrySelection;
-using H.Core.Enumerations;
-using H.Core.Enumerations.LocationEnumerationsCountries;
-using H.Core.Services;
+﻿using H.Avalonia.Views.SupportingViews.CountrySelection;
 using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;

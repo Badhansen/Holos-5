@@ -1,6 +1,5 @@
 ﻿#region Imports
 
-using System;
 using System.ComponentModel;
 
 #endregion

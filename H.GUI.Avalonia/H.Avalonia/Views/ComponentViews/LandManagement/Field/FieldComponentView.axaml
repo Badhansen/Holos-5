@@ -17,10 +17,11 @@
 		<Grid.RowDefinitions>
 			<!-- Title -->
 			<RowDefinition Height="Auto"/>
+			<!-- Advanced Options Toggle -->
+			<RowDefinition Height="Auto"/>
 			<!-- Content -->
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
-
 
 		<StackPanel Grid.Row="0">
 			<!-- Title -->
@@ -28,7 +29,41 @@
 			<Border Classes="title-underline"/>
 		</StackPanel>
 
-		<ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+		<!-- Advanced Options Toggle Section -->
+		<Border Grid.Row="1" 
+		        Background="#F8F9FA" 
+		        CornerRadius="8" 
+		        Padding="16,12" 
+		        BorderBrush="#E9ECEF" 
+		        BorderThickness="1"
+		        Margin="{StaticResource DefaultUserControlMargin}">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				
+				<StackPanel Grid.Column="0" VerticalAlignment="Center">
+					<TextBlock Text="Show Advanced Options" 
+					          FontSize="15" FontWeight="SemiBold" 
+					          Foreground="#495057" Margin="0,0,0,2"/>
+					<TextBlock Text="Display additional configuration options for detailed field management across all steps" 
+					          FontSize="11" Foreground="#6C757D" 
+					          FontStyle="Italic"/>
+				</StackPanel>
+				
+				<ToggleSwitch Grid.Column="1" 
+				            Name="ShowAdvancedOptionsToggle"
+				            VerticalAlignment="Center"
+				            Margin="12,0,0,0"
+				            OffContent="Basic"
+				            OnContent="Advanced"
+				            IsChecked="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
+				            d:IsChecked="True"/>
+			</Grid>
+		</Border>
+
+		<ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
 			<Grid>
 			<Grid.RowDefinitions>
 				<!-- Step 1 row -->
@@ -83,7 +118,7 @@
 					</Style>
 				</Border.Styles>
 				
-				<avalonia:FieldComponentStep2View/>
+				<fieldViews:FieldComponentStep2View/>
 			</Border>
 
 			<!-- End step 2 -->
@@ -102,7 +137,7 @@
 					</Style>
 				</Border.Styles>
 				
-				<avalonia:SelectedCropTabView/>
+				<fieldViews:SelectedCropTabView x:Name="SelectedCropTabViewControl"/>
 			</Border>
 
 			<!-- End step 3 -->

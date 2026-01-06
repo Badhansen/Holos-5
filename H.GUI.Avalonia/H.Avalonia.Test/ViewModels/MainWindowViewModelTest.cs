@@ -1,12 +1,5 @@
 ﻿using H.Avalonia.Services;
-using H.Core.Events;
 using Moq;
-using Prism.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using H.Avalonia.ViewModels;
 
 namespace H.Avalonia.Test.ViewModels

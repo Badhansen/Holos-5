@@ -1,6 +1,5 @@
 ﻿#region Imports
 
-using System;
 using System.ComponentModel;
 using System.Globalization;
 using Avalonia.Data.Converters;
@@ -20,9 +19,9 @@ namespace H.Infrastructure.Controls.ValueConverters
             var fieldInfo = enumObj.GetType()
                                    .GetField(enumObj.ToString());
 
-            var attributes = fieldInfo.GetCustomAttributes(false);
+            var attributes = fieldInfo?.GetCustomAttributes(false);
 
-            if (attributes.Length == 0)
+            if (attributes == null || attributes.Length == 0)
             {
                 return enumObj.ToString();
             }
@@ -52,7 +51,7 @@ namespace H.Infrastructure.Controls.ValueConverters
 
         #region Public Methods
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             if (value is Enum enumeration)
             {
@@ -64,7 +63,7 @@ namespace H.Infrastructure.Controls.ValueConverters
             return string.Empty;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

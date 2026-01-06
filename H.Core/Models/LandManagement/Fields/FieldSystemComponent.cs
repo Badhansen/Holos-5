@@ -1,17 +1,10 @@
 ﻿#region Imports
 
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
 using H.Core.Enumerations;
-using H.Infrastructure;
-using H.Core;
 using H.Core.Models.Animals;
-using H.Core.Models.LandManagement.Rotation;
 using H.Core.Providers.Soil;
 
 #endregion
@@ -24,14 +17,14 @@ namespace H.Core.Models.LandManagement.Fields
     {
         #region Fields
 
-        private string _fieldName;
+        private string? _fieldName;
         private double _fieldArea;
 
         private bool _beginOrderingAtStartYearOfRotation;
         private bool _useFieldLevelSoilData;
 
-        private SoilData _soilData;
-        private ObservableCollection<SoilData> _soilDataAvailableForField;
+        private SoilData? _soilData;
+        private ObservableCollection<SoilData>? _soilDataAvailableForField;
 
         #endregion
 
@@ -62,7 +55,7 @@ namespace H.Core.Models.LandManagement.Fields
 
         #region Properties
 
-        public ObservableCollection<SoilData> SoilDataAvailableForField
+        public ObservableCollection<SoilData>? SoilDataAvailableForField
         {
             get
             {
@@ -91,7 +84,7 @@ namespace H.Core.Models.LandManagement.Fields
         /// <summary>
         /// Allow for field specific soil data (as opposed to one type of soil being used for all fields on the farm)
         /// </summary>
-        public SoilData SoilData
+        public SoilData? SoilData
         {
             get
             {
@@ -120,7 +113,7 @@ namespace H.Core.Models.LandManagement.Fields
         /// TODO: This is no longer used and should be deleted once it is safe to delete properties on farms without resetting all data on user system.
         /// </summary>
         [Obsolete]
-        public string FieldName
+        public string? FieldName
         {
             get { return _fieldName; }
             set { this.SetProperty(ref _fieldName, value); }

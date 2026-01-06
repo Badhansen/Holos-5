@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 
 namespace H.Infrastructure
 {
@@ -8,10 +6,10 @@ namespace H.Infrastructure
     {
         #region Fields
 
-        private string _name;
+        private string? _name;
         private bool _nameIsFromUser;
         private bool _isInitialized;
-        private string _description;
+        private string? _description;
         private bool _isDirty;
 
         private DateTime _dateCreated;
@@ -36,7 +34,7 @@ namespace H.Infrastructure
         /// <summary>
         /// The name of the component used to distinguish between multiples instances of the same type (Field #1, Field #2, etc.)
         /// </summary>
-        public string Name
+        public string? Name
         {
             get { return _name; }
             set { this.SetProperty(ref _name, value); }
@@ -48,7 +46,7 @@ namespace H.Infrastructure
             set { this.SetProperty(ref _nameIsFromUser, value); }
         }
 
-        public string Description
+        public string? Description
         {
             get { return _description; }
             set { this.SetProperty(ref _description, value); }
@@ -147,7 +145,7 @@ namespace H.Infrastructure
             return Equals(left, right);
         }
 
-        public static bool operator !=(ModelBase left, ModelBase right)
+        public static bool operator !=(ModelBase? left, ModelBase right)
         {
             return !Equals(left, right);
         }

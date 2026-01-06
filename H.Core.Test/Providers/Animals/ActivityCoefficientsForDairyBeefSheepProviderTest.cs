@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace H.Core.Test.Providers.Animals
+﻿namespace H.Core.Test.Providers.Animals
 {
     /// <summary>
     /// Summary description for ActivityCoefficientsForDairyBeefSheepDataTest

@@ -1,6 +1,5 @@
 ﻿using H.Core.Calculators.UnitsOfMeasurement;
 using H.Core.Models;
-using H.Core.Models.LandManagement.Fields;
 using Microsoft.Extensions.Logging;
 using Prism.Ioc;
 

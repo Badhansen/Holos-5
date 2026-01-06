@@ -1,6 +1,5 @@
 ﻿using H.Core.Models;
 using H.Core.Providers.Climate;
-using H.Core.Providers.Temperature;
 
 namespace H.Core.Services
 {

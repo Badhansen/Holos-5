@@ -1,7 +1,5 @@
-﻿using System;
-using H.Core.Converters;
+﻿using H.Core.Converters;
 using H.Core.Enumerations;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace H.Core.Test.Converters
 {
@@ -32,10 +30,10 @@ namespace H.Core.Test.Converters
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
         public void ConvertReturnsException()
         {
-            converter.Convert("-");
+            // Arrange, Act & Assert
+            Assert.ThrowsException<Exception>(() => converter.Convert("-"));
         }
 
         [TestMethod]

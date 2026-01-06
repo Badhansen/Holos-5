@@ -12,7 +12,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.OtherAnimals
         public MulesComponentViewModel(ILogger logger, IAnimalComponentService componentService, IStorageService storageService, IManagementPeriodService managementPeriodService) : base(logger, componentService, storageService, managementPeriodService)
         {
             ViewName = "Mules";
-            OtherAnimalType = AnimalType.Mules;
+            AnimalType = AnimalType.Mules;
         }
 
         public MulesComponentViewModel() 

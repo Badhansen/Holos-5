@@ -1,9 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using H.Core.Calculators.Infrastructure;
-using H.Core.Calculators.Tillage;
+﻿using H.Core.Calculators.Infrastructure;
 using H.Core.Emissions.Results;
 using H.Core.Enumerations;
 using H.Core.Models;

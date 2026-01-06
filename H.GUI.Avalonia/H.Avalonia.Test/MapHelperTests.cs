@@ -1,6 +1,5 @@
 ﻿using H.Avalonia.Infrastructure;
 using Mapsui;
-using SharpKml.Dom;
 
 namespace H.Avalonia.Test
 {

@@ -1,6 +1,5 @@
 ﻿#region Imports
 
-using System;
 using System.Globalization;
 using Avalonia.Data.Converters;
 
@@ -26,7 +25,7 @@ namespace H.Infrastructure.Controls.ValueConverters
 
         #region Public Methods
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             if (value != null)
             {
@@ -38,7 +37,7 @@ namespace H.Infrastructure.Controls.ValueConverters
             return null;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

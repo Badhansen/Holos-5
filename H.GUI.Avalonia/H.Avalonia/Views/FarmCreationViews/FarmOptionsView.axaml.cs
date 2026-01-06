@@ -1,7 +1,6 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using H.Avalonia.ViewModels;
 using H.Avalonia.ViewModels.FarmCreationViews;
 
 namespace H.Avalonia.Views.FarmCreationViews

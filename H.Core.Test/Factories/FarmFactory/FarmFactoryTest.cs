@@ -1,13 +1,11 @@
-using H.Core.Factories;
 using H.Core.Factories.FarmFactory;
 using H.Core.Providers.Feed;
 using H.Core.Services.DietService;
 using H.Infrastructure.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Prism.Ioc;
 
-namespace H.Core.Test;
+namespace H.Core.Test.Factories.FarmFactory;
 
 [TestClass]
 public class FarmFactoryTest
@@ -37,7 +35,7 @@ public class FarmFactoryTest
         var mockCacheService = new Mock<ICacheService>();
         var mockLogger = new Mock<ILogger>();
 
-        _sut = new FarmFactory(mockDietService.Object, mockCacheService.Object, mockLogger.Object);
+        _sut = new Core.Factories.FarmFactory.FarmFactory(mockDietService.Object, mockCacheService.Object, mockLogger.Object);
     }
 
     [TestCleanup]
@@ -63,7 +61,7 @@ public class FarmFactoryTest
 
         mockDietService.Setup(x => x.GetDiets()).Returns(mockDiets);
 
-        var sut = new FarmFactory(mockDietService.Object, mockCacheService.Object, mockLogger.Object);
+        var sut = new Core.Factories.FarmFactory.FarmFactory(mockDietService.Object, mockCacheService.Object, mockLogger.Object);
 
         // Act
         var farm = sut.Create();

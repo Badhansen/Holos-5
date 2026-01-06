@@ -1,14 +1,9 @@
 ﻿#region Imports
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using H.Content;
 using H.Core.Converters;
 using H.Infrastructure;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Principal;
 using AutoMapper;
 using H.Core.Enumerations;
 using H.Core.Mappers;

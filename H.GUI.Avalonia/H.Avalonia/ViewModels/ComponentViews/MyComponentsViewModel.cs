@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using H.Avalonia.Events;
 using H.Avalonia.Models;
 using H.Avalonia.Views.ComponentViews;
 using H.Core.Models;
 using H.Core.Services;
-using H.Core.Services.LandManagement.Fields;
 using H.Core.Services.StorageService;
 using Microsoft.Extensions.Logging;
 using Prism.Commands;
@@ -54,9 +52,10 @@ public class MyComponentsViewModel : ViewModelBase
         this.MyComponents = new ObservableCollection<ComponentBase>();
         this.MyComponentItems = new ObservableCollection<ComponentItemViewModel>();
         
-        // Initialize the RemoveComponent command
+        // Initialize commands
         RemoveComponent = new DelegateCommand(OnRemoveComponentExecute, OnRemoveComponentCanExecute);
         SetSelectedComponentCommand = new DelegateCommand<object>(OnSetSelectedComponentExecute);
+        RemoveSpecificComponentCommand = new DelegateCommand<object>(OnRemoveSpecificComponentExecute);
         
         base.EventAggregator.GetEvent<ComponentAddedEvent>().Subscribe(OnComponentAddedEvent);
         base.EventAggregator.GetEvent<EditingComponentsCompletedEvent>().Subscribe(OnEditingComponentsCompletedEvent);
@@ -112,6 +111,7 @@ public class MyComponentsViewModel : ViewModelBase
 
     public DelegateCommand RemoveComponent { get; }
     public DelegateCommand<object> SetSelectedComponentCommand { get; set; }
+    public DelegateCommand<object> RemoveSpecificComponentCommand { get; set; }
 
     #endregion
 
@@ -156,6 +156,44 @@ public class MyComponentsViewModel : ViewModelBase
         if (!IsDisposed && obj is ComponentItemViewModel componentItem)
         {
             this.SelectedComponentItem = componentItem;
+        }
+    }
+
+    /// <summary>
+    /// Removes a specific component when the delete button on a card is clicked
+    /// </summary>
+    /// <param name="obj">The ComponentItemViewModel to remove</param>
+    private void OnRemoveSpecificComponentExecute(object obj)
+    {
+        if (!IsDisposed && obj is ComponentItemViewModel componentItem)
+        {
+            try
+            {
+                var componentToRemove = componentItem.Component;
+
+                // Remove from the local collections
+                this.MyComponents.Remove(componentToRemove);
+                this.MyComponentItems.Remove(componentItem);
+                componentItem.Cleanup(); // Cleanup the wrapper
+                
+                // Remove from the farm's Components collection
+                base.ActiveFarm.Components.Remove(componentToRemove);
+
+                // If the removed component was selected, select another component
+                if (this.SelectedComponent == componentToRemove)
+                {
+                    this.SelectedComponent = this.MyComponents.LastOrDefault();
+                }
+
+                if (this.MyComponents.Any() == false)
+                {
+                    this.ClearActiveView();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(ex, "Failed to remove specific component");
+            }
         }
     }
 

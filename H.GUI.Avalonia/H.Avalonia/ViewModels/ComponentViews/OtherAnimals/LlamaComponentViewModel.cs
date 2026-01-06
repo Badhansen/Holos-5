@@ -12,7 +12,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.OtherAnimals
         public LlamaComponentViewModel(ILogger logger, IAnimalComponentService componentService, IStorageService storageService, IManagementPeriodService managementPeriodService) : base(logger, componentService, storageService, managementPeriodService)
         {
             ViewName = "Llamas";
-            OtherAnimalType = AnimalType.Llamas;
+            AnimalType = AnimalType.Llamas;
         }
 
         public LlamaComponentViewModel()

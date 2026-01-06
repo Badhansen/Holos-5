@@ -35,9 +35,9 @@
 
 		  <!-- Badge Dimensions -->
 		  <CornerRadius x:Key="StepBadgeCornerRadius">4</CornerRadius>
-		  <CornerRadius x:Key="YearBadgeCornerRadius">12</CornerRadius>
+		  <CornerRadius x:Key="YearBadgeCornerRadius">4</CornerRadius>
 		  <Thickness x:Key="StepBadgePadding">12,6</Thickness>
-		  <Thickness x:Key="YearBadgePadding">8,4</Thickness>
+		  <Thickness x:Key="YearBadgePadding">12,6</Thickness>
 
 		  <!-- Selection State Converters -->
 		  <converters:BoolToBackgroundConverter x:Key="BoolToBackgroundConverter"/>

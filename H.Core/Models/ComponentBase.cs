@@ -2,13 +2,9 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
-using System.Security.Cryptography.Pkcs;
 using H.Core.Enumerations;
 using H.Core.Models.Animals;
 using H.Infrastructure;
@@ -29,11 +25,11 @@ namespace H.Core.Models
         private bool _hasErrors;
         private bool _hideComponentInListOfMyComponents;
 
-        private string _componentNameDisplayString;
-        private string _componentDescriptionString;
-        private string _componentSelectionViewSecondaryDisplayString;
-        private string _timelineInformationString;
-        private string _groupPath;
+        private string? _componentNameDisplayString;
+        private string? _componentDescriptionString;
+        private string? _componentSelectionViewSecondaryDisplayString;
+        private string? _timelineInformationString;
+        private string? _groupPath;
 
         #endregion
 
@@ -101,7 +97,7 @@ namespace H.Core.Models
         /// <summary>
         /// Returns the component type string as defined in the resource file or as set in the component constructor.
         /// </summary>
-        public string ComponentNameDisplayString
+        public string? ComponentNameDisplayString
         {
             get { return _componentNameDisplayString; }
             set { this.SetProperty(ref _componentNameDisplayString, value); }
@@ -110,7 +106,7 @@ namespace H.Core.Models
         /// <summary>
         /// Returns a user-friendly string describing what the component does or what the component is.
         /// </summary>
-        public string ComponentDescriptionString
+        public string? ComponentDescriptionString
         {
             get { return _componentDescriptionString; }
             set { this.SetProperty(ref _componentDescriptionString, value); }
@@ -137,7 +133,7 @@ namespace H.Core.Models
         /// <summary>
         /// A property that must be set so that historical/projected components will align with their current component on the timeline view(s). This is currently being set to the <see cref="ModelBase.Name"/> property whenever it is updated.
         /// </summary>
-        public string GroupPath
+        public string? GroupPath
         {
             get { return _groupPath; }
             set { SetProperty(ref _groupPath, value); }
@@ -152,13 +148,13 @@ namespace H.Core.Models
         /// <summary>
         /// A string that contains information for display on a timeline bar.
         /// </summary>
-        public string TimelineInformationString
+        public string? TimelineInformationString
         {
             get { return _timelineInformationString; }
             set { SetProperty(ref _timelineInformationString, value); }
         }
 
-        public string ComponentSelectionViewSecondaryDisplayString
+        public string? ComponentSelectionViewSecondaryDisplayString
         {
             get { return _componentSelectionViewSecondaryDisplayString; }
             set { SetProperty(ref _componentSelectionViewSecondaryDisplayString, value); }

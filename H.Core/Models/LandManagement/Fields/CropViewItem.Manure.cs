@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using H.Infrastructure;
-
-namespace H.Core.Models.LandManagement.Fields
+﻿namespace H.Core.Models.LandManagement.Fields
 {
 	public partial class CropViewItem
 	{

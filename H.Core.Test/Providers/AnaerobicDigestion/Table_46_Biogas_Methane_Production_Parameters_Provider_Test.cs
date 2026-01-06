@@ -1,7 +1,6 @@
 ﻿using H.Core.Enumerations;
 using H.Core.Providers.AnaerobicDigestion;
 using H.Core.Providers.Climate;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace H.Core.Test.Providers.AnaerobicDigestion
 {

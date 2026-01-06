@@ -1,5 +1,4 @@
 using CsvHelper.Configuration;
-using H.Avalonia.Models.Results;
 using H.Avalonia.Infrastructure;
 
 namespace H.Avalonia.Models.ClassMaps

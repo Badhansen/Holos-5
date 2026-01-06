@@ -1,9 +1,6 @@
 ﻿using H.Core.Enumerations;
 using H.Core.Providers.Feed;
 using Microsoft.Extensions.Logging;
-using System.ComponentModel.Design;
-using CsvHelper;
-using static H.Core.Providers.Feed.IDiet;
 
 namespace H.Core.Services.DietService;
 

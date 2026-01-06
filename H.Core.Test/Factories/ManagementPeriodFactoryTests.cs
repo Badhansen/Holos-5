@@ -1,14 +1,11 @@
 using AutoMapper;
-using H.Avalonia.ViewModels.ComponentViews;
 using H.Core.Factories;
+using H.Core.Factories.Animals;
 using H.Core.Mappers;
 using H.Core.Models.Animals;
-using H.Core.Services.Initialization;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prism.Ioc;
-using System;
-using IManagementPeriodDto = H.Core.Factories.IManagementPeriodDto;
+using IManagementPeriodDto = H.Core.Factories.Animals.IManagementPeriodDto;
 
 namespace H.Core.Test.Factories;
 
@@ -62,11 +59,10 @@ public class ManagementPeriodFactoryTests
     #endregion
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void Constructor_WithNullContainerProvider_ThrowsArgumentNullException()
     {
-        // Act
-        var factory = new ManagementPeriodFactory(null);
+        // Arrange, Act & Assert
+        Assert.ThrowsException<ArgumentNullException>(() => new ManagementPeriodFactory(null));
     }
 
     [TestMethod]
@@ -93,7 +89,7 @@ public class ManagementPeriodFactoryTests
         template.NumberOfDays = 366;
 
         // Act
-        var dto = _factory.CreateManagementPeriodDto(template);
+        var dto = _factory.CreateDtoFromDtoTemplate(template);
 
         // Assert
         Assert.IsNotNull(dto);

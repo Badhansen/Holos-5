@@ -1,6 +1,4 @@
-﻿using H.Core.Models;
-
-namespace H.Core.Factories;
+﻿namespace H.Core.Factories.Animals;
 
 public interface IAnimalComponentFactory : IFactory<AnimalComponentDto>
 {

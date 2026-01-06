@@ -1,9 +1,6 @@
 ﻿using H.Core.Enumerations;
 using H.Core.Models.Animals;
 using H.Core.Models.Animals.Swine;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace H.Core.Test.Models.Animals.Swine

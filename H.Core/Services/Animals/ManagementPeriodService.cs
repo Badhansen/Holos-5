@@ -3,6 +3,7 @@ using H.Core.Calculators.UnitsOfMeasurement;
 using H.Core.Converters;
 using H.Core.Enumerations;
 using H.Core.Factories;
+using H.Core.Factories.Animals;
 using H.Core.Mappers;
 using H.Core.Models;
 using H.Core.Models.Animals;
@@ -102,7 +103,7 @@ public class ManagementPeriodService : IManagementPeriodService
     public IManagementPeriodDto TransferManagementPeriodDtoToSystem(IManagementPeriodDto managementPeriodDto, ManagementPeriod managementPeriod)
     {
         // Create a copy of the DTO since we don't want to change values on the original that is still bound to the GUI
-        var copy = _managementPeriodFactory.CreateManagementPeriodDto(managementPeriodDto);
+        var copy = _managementPeriodFactory.CreateDtoFromDtoTemplate(managementPeriodDto);
 
         var propertyConverter = new PropertyConverter<IManagementPeriodDto>(copy);
 

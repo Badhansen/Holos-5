@@ -1,15 +1,7 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Headless;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Moq;
 using Avalonia.Controls.Notifications;
+using H.Avalonia.Events;
 using H.Avalonia.Services;
-using H.Core.Events;
 using Microsoft.Extensions.Logging;
 using Prism.Events;
 

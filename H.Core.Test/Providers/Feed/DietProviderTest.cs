@@ -1,9 +1,6 @@
 ﻿#region Imports
 
-using System.Linq;
-using H.Core.Enumerations;
 using H.Core.Providers.Feed;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 #endregion
 

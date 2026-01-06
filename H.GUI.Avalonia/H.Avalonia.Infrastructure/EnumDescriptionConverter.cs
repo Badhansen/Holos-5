@@ -16,9 +16,9 @@ namespace H.Avalonia.Infrastructure
             var fieldInfo = enumObj.GetType()
                 .GetField(enumObj.ToString());
 
-            var attributes = fieldInfo.GetCustomAttributes(false);
+            var attributes = fieldInfo?.GetCustomAttributes(false);
 
-            if (attributes.Length == 0)
+            if (attributes == null || attributes.Length == 0)
             {
                 return enumObj.ToString();
             }
@@ -36,7 +36,7 @@ namespace H.Avalonia.Infrastructure
 
         #region Public Methods
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             if (value is Enum enumeration)
             {
@@ -48,7 +48,7 @@ namespace H.Avalonia.Infrastructure
             return string.Empty;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             return value;
         }

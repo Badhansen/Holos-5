@@ -1,5 +1,4 @@
-﻿using H.Core.Factories;
-using H.Core.Models;
+﻿using H.Core.Models;
 using H.Core.Models.LandManagement.Fields;
 using H.Core.Providers.Energy;
 using Microsoft.Extensions.Logging;

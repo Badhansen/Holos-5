@@ -1,5 +1,6 @@
 ﻿using H.Core.Enumerations;
 using H.Core.Factories;
+using H.Core.Factories.Animals;
 using H.Core.Models.Animals;
 
 namespace H.Core.Services.Animals;

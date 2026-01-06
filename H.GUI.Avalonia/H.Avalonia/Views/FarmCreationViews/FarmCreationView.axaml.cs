@@ -1,5 +1,4 @@
 using Avalonia.Controls;
-using H.Avalonia.ViewModels;
 using System;
 using H.Avalonia.ViewModels.FarmCreationViews;
 

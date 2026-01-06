@@ -2,7 +2,6 @@
 
 using H.Core.Calculators.Tillage;
 using H.Core.Enumerations;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 #endregion
 

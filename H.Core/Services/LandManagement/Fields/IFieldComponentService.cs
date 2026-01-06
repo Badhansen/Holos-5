@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using H.Core.Factories;
+﻿using H.Core.Factories;
 using H.Core.Factories.Crops;
 using H.Core.Models;
 using H.Core.Models.LandManagement.Fields;
@@ -33,7 +31,7 @@ public interface IFieldComponentService
     /// All years in a collection of crops must be consecutive with no years missing. If a crop is removed, ensure all years are represented from start to finish of collection.
     /// </summary>
     /// <param name="cropDtos">The list of crops and associated years representing the history of the field</param>
-    void ResetAllYears(IEnumerable<ICropDto> cropDtos);
+    void ResetAllYears(IEnumerable<ICropDto>? cropDtos);
 
     /// <summary>
     /// Responsible for transferring user input bound to a <see cref="FieldSystemComponentDto"/> to an internal <see cref="FieldSystemComponent"/> before being stored internally.

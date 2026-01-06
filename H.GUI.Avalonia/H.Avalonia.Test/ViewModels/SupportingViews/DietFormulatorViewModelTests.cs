@@ -3,11 +3,8 @@ using H.Core.Providers.Feed;
 using H.Core.Services.DietService;
 using H.Core.Services.StorageService;
 using H.Core.Enumerations;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prism.Regions;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace H.Avalonia.Test.ViewModels.SupportingViews
 {

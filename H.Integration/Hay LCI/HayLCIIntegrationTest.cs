@@ -1,22 +1,7 @@
-﻿using H.Core.Calculators.Infrastructure;
-using H.Core.Models.Animals.Beef;
-using H.Core.Models;
-using H.Core.Providers.Feed;
+﻿using H.Core.Models;
 using H.Core.Providers;
-using H.Core.Services.Animals;
 using H.Core.Services.LandManagement;
-using H.Core.Services;
-using H.Core;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using Prism.Events;
-using Prism.Regions;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using H.Infrastructure;
 using System.Reflection;
 using H.Content;
 using H.Core.Calculators.Climate;
@@ -70,23 +55,23 @@ namespace H.Integration.Hay_LCI
 
         #region Fields
 
-        private static Defaults _defaults;
-        private static ClimateNormalCalculator _climateNormalCalculator;
-        private static NasaClimateProvider _nasaClimateProvider;
-        private static GeographicDataProvider _geograhicDataProvider;
-        private static FertilizerBlendConverter _fertilizerBlendConverter;
-        private static FieldResultsService _fieldResultsService;
-        private static GlobalSettings _globalSettings;
+        private static Defaults? _defaults;
+        private static ClimateNormalCalculator? _climateNormalCalculator;
+        private static NasaClimateProvider? _nasaClimateProvider;
+        private static GeographicDataProvider? _geograhicDataProvider;
+        private static FertilizerBlendConverter? _fertilizerBlendConverter;
+        private static FieldResultsService? _fieldResultsService;
+        private static GlobalSettings? _globalSettings;
         private static int SimulationStartYear = 2009;
         private static int SimulationEndYear = 2018;
-        private List<Table1Item> _fertilizerRates;
-        private List<Table2Item> _manureRates;
-        private static List<DefaultManureCompositionData> _manureCompositionTypes;
+        private List<Table1Item>? _fertilizerRates;
+        private List<Table2Item>? _manureRates;
+        private static List<DefaultManureCompositionData>? _manureCompositionTypes;
         private Dictionary<Farm, List<CropViewItem>> _nonIrrigatedResultsByFarm = new Dictionary<Farm, List<CropViewItem>>();
         private Dictionary<Farm, List<CropViewItem>> _irrigatedResultsByFarm = new Dictionary<Farm, List<CropViewItem>>();
-        private string _baseOutputDirectory;
+        private string? _baseOutputDirectory;
         private bool _usingIrrigation;
-        private List<Table3Item> _slcList;
+        private List<Table3Item>? _slcList;
 
         #endregion
 

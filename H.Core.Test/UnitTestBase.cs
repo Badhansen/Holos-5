@@ -1,10 +1,7 @@
 ﻿using H.Core.Models;
 using H.Core.Models.Animals;
 using H.Core.Models.Animals.Beef;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text.RegularExpressions;
 using H.Core.Emissions.Results;
 using H.Core.Enumerations;
 using H.Core.Models.Animals.Dairy;

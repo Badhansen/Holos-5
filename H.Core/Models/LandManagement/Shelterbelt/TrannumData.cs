@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using H.Core.Calculators.Shelterbelt;
 using H.Core.Enumerations;
 using H.Infrastructure;

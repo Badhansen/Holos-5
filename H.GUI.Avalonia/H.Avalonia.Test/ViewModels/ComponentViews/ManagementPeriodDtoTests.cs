@@ -1,5 +1,5 @@
-﻿using H.Avalonia.ViewModels.ComponentViews;
-using H.Core.Factories;
+﻿using H.Core.Factories;
+using H.Core.Factories.Animals;
 
 namespace H.Avalonia.Test.ViewModels.ComponentViews
 {

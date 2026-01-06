@@ -1,10 +1,9 @@
 using AutoMapper;
 using H.Core.Mappers;
-using H.Core.Models;
 using H.Core.Models.Animals;
 using Prism.Ioc;
 
-namespace H.Core.Factories;
+namespace H.Core.Factories.Animals;
 
 public class ManagementPeriodFactory : IManagementPeriodFactory
 {
@@ -24,10 +23,12 @@ public class ManagementPeriodFactory : IManagementPeriodFactory
         {
             throw new ArgumentNullException(nameof(containerProvider));
         }
-
-        _managementPeriodDtoToManagementPeriodDtoMapper = containerProvider.Resolve<IMapper>(nameof(ManagementPeriodDtoToManagementPeriodDtoMapper));
-        _managementPeriodToManagementPeriodDtoMapper = containerProvider.Resolve<IMapper>(nameof(ManagementPeriodToManagementPeriodDtoMapper));
-        _managementPeriodDtoToManagementPeriodMapper = containerProvider.Resolve<IMapper>(nameof(ManagementPeriodDtoToManagementPeriodMapper));
+        else
+        {
+            _managementPeriodDtoToManagementPeriodDtoMapper = containerProvider.Resolve<IMapper>(nameof(ManagementPeriodDtoToManagementPeriodDtoMapper));
+            _managementPeriodToManagementPeriodDtoMapper = containerProvider.Resolve<IMapper>(nameof(ManagementPeriodToManagementPeriodDtoMapper));
+            _managementPeriodDtoToManagementPeriodMapper = containerProvider.Resolve<IMapper>(nameof(ManagementPeriodDtoToManagementPeriodMapper));
+        }
     }
 
     #endregion
@@ -45,24 +46,30 @@ public class ManagementPeriodFactory : IManagementPeriodFactory
         return dto;
     }
 
-    public IManagementPeriodDto CreateManagementPeriodDto(IManagementPeriodDto template)
+    public IManagementPeriodDto CreateDtoFromDtoTemplate(IManagementPeriodDto template)
     {
         var dto = new ManagementPeriodDto();
+
         _managementPeriodDtoToManagementPeriodDtoMapper.Map(template, dto);
+
         return dto;
     }
 
     public IManagementPeriodDto CreateManagementPeriodDto(ManagementPeriod managementPeriod)
     {
         var dto = new ManagementPeriodDto();
+
         _managementPeriodToManagementPeriodDtoMapper.Map(managementPeriod, dto);
+
         return dto;
     }
 
     public ManagementPeriod CreateManagementPeriod(IManagementPeriodDto dto)
     {
         var managementPeriod = new ManagementPeriod();
+
         _managementPeriodDtoToManagementPeriodMapper.Map(dto, managementPeriod);
+
         return managementPeriod;
     }
 

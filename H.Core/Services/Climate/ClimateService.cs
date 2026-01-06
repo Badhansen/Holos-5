@@ -1,4 +1,3 @@
-using System;
 using H.Core.Enumerations;
 using H.Core.Factories.Climate;
 using H.Core.Models;

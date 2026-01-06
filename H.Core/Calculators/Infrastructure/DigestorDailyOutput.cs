@@ -1,5 +1,4 @@
-﻿using System;
-using H.Core.Emissions.Results;
+﻿using H.Core.Emissions.Results;
 
 namespace H.Core.Calculators.Infrastructure
 {

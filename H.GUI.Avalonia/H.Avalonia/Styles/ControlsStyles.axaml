@@ -72,19 +72,37 @@
 		<Setter Property="Background" Value="#EDEDED" />
 		<Setter Property="Foreground" Value="Black" />
 	</Style>
-
-	<!-- DataGrid Styles -->
-	<Style Selector="DataGridCell NumericUpDown">
-		<Setter Property="BorderThickness" Value="0"/>
-		<Setter Property="ShowButtonSpinner" Value="False"/>
+	
+	<Style Selector="Button.responsive-button">
+		<Setter Property="Background" Value="{StaticResource DefaultHighlightBrush}" />
+		<Setter Property="Foreground" Value="White" />
+		<Setter Property="FontWeight" Value="SemiBold" />
+		<Setter Property="Padding" Value="15,8"/>
+		<Setter Property="MinWidth" Value="140"/>
 		<Setter Property="HorizontalContentAlignment" Value="Center"/>
-		<Setter Property="Width" Value="{Binding $parent[DataGridCell].Bounds.Width}"></Setter>
+		<Setter Property="Cursor" Value="Hand"/>
+		<Setter Property="FontSize" Value="13"/>
 	</Style>
-	<Style Selector="DataGridColumnHeader">
-		<Setter Property="BorderBrush" Value="Transparent"/>
+
+	<!-- Style for responsive button content to handle text wrapping -->
+	<Style Selector="Button.responsive-button > ContentPresenter > TextBlock">
+		<Setter Property="TextWrapping" Value="Wrap"/>
+		<Setter Property="TextAlignment" Value="Center"/>
+		<Setter Property="MaxWidth" Value="130"/>
 	</Style>
-	<Style Selector="DataGridCell.numericStyle">
-	</Style>
+
+    <!-- DataGrid Styles -->
+    <Style Selector="DataGridCell NumericUpDown">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="ShowButtonSpinner" Value="False"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="Width" Value="{Binding $parent[DataGridCell].Bounds.Width}"></Setter>
+    </Style>
+    <Style Selector="DataGridColumnHeader">
+        <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+    <Style Selector="DataGridCell.numericStyle">
+    </Style>
 
 	<!-- GridSplitter Styles -->
 	<Style Selector="GridSplitter.default-vertical-gridsplitter">
@@ -250,38 +268,78 @@
 		<Setter Property="Background" Value="{StaticResource CardHoverBackgroundBrush}"/>
 	</Style>
 
-	<!-- Component List Card Styles -->
-	<Style Selector="Border.component-card">
-		<Setter Property="Background" Value="{Binding IsSelected, Converter={StaticResource BoolToBackgroundConverter}}"/>
-		<Setter Property="BorderBrush" Value="{Binding IsSelected, Converter={StaticResource BoolToBorderBrushConverter}}"/>
-		<Setter Property="BorderThickness" Value="{Binding IsSelected, Converter={StaticResource BoolToBorderThicknessConverter}}"/>
-		<Setter Property="RenderTransform" Value="{Binding IsSelected, Converter={StaticResource BoolToScaleTransformConverter}}"/>
-		<Setter Property="CornerRadius" Value="{StaticResource CardCornerRadius}"/>
-		<Setter Property="MinHeight" Value="120"/>
-		<Setter Property="HorizontalAlignment" Value="Stretch"/>
-		<Setter Property="Padding" Value="{StaticResource CardPadding}"/>
-	</Style>
+    <!-- Animal Group Card Styles - Static styling without binding -->
+    <Style Selector="Border.timeline-card.animal-group-card">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="LightGray"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="RenderTransform" Value="scale(1.0)"/>
+        <Setter Property="CornerRadius" Value="{StaticResource CardCornerRadius}"/>
+        <Setter Property="MinWidth" Value="180"/>
+        <Setter Property="MaxWidth" Value="200"/>
+        <Setter Property="Padding" Value="{StaticResource CardPadding}"/>
+    </Style>
+
+    <Style Selector="Button:pointerover > Border.timeline-card.animal-group-card">
+        <Setter Property="BorderBrush" Value="DodgerBlue"/>
+        <Setter Property="Background" Value="#F0F8FF"/>
+    </Style>
+
+    <!-- Selected animal group card state - applied via code when needed -->
+    <Style Selector="Border.timeline-card.animal-group-card.selected">
+        <Setter Property="Background" Value="#E3F2FD"/>
+        <Setter Property="BorderBrush" Value="DodgerBlue"/>
+        <Setter Property="BorderThickness" Value="3"/>
+        <Setter Property="RenderTransform" Value="scale(0.98)"/>
+    </Style>
+
+    <Style Selector="Button:pointerover > Border.timeline-card.animal-group-card.selected">
+        <Setter Property="BorderBrush" Value="DodgerBlue"/>
+        <Setter Property="Background" Value="#E3F2FD"/>
+        <Setter Property="RenderTransform" Value="scale(0.98)"/>
+    </Style>
+
+    <!-- Component List Card Styles -->
+    <Style Selector="Border.component-card">
+        <Setter Property="Background" Value="{Binding IsSelected, Converter={StaticResource BoolToBackgroundConverter}}"/>
+        <Setter Property="BorderBrush" Value="{Binding IsSelected, Converter={StaticResource BoolToBorderBrushConverter}}"/>
+        <Setter Property="BorderThickness" Value="{Binding IsSelected, Converter={StaticResource BoolToBorderThicknessConverter}}"/>
+        <Setter Property="RenderTransform" Value="{Binding IsSelected, Converter={StaticResource BoolToScaleTransformConverter}}"/>
+        <Setter Property="CornerRadius" Value="{StaticResource CardCornerRadius}"/>
+        <Setter Property="MinHeight" Value="120"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="Padding" Value="{StaticResource CardPadding}"/>
+    </Style>
 
 	<Style Selector="Button:pointerover > Border.component-card">
 		<Setter Property="BorderBrush" Value="{StaticResource CardSelectedBorderBrush}"/>
 		<Setter Property="Background" Value="{StaticResource CardHoverBackgroundBrush}"/>
 	</Style>
 
-	<!-- Badge Styles -->
-	<Style Selector="Border.step-badge">
-		<Setter Property="Background" Value="{StaticResource BadgeBackgroundBrush}"/>
-		<Setter Property="CornerRadius" Value="{StaticResource StepBadgeCornerRadius}"/>
-		<Setter Property="Padding" Value="{StaticResource StepBadgePadding}"/>
-		<Setter Property="VerticalAlignment" Value="Center"/>
-		<Setter Property="Margin" Value="0,0,12,0"/>
-	</Style>
+    <!-- Badge Styles -->
+    <Style Selector="Border.step-badge">
+        <Setter Property="Background" Value="{StaticResource BadgeBackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="CornerRadius" Value="{StaticResource StepBadgeCornerRadius}"/>
+        <Setter Property="Padding" Value="{StaticResource StepBadgePadding}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,12,0"/>
+        <Setter Property="MinHeight" Value="32"/>
+        <Setter Property="MinWidth" Value="48"/>
+    </Style>
 
-	<Style Selector="Border.year-badge">
-		<Setter Property="Background" Value="{StaticResource BadgeBackgroundBrush}"/>
-		<Setter Property="CornerRadius" Value="{StaticResource YearBadgeCornerRadius}"/>
-		<Setter Property="HorizontalAlignment" Value="Center"/>
-		<Setter Property="Padding" Value="{StaticResource YearBadgePadding}"/>
-	</Style>
+    <Style Selector="Border.year-badge">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BadgeBackgroundBrush}"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="CornerRadius" Value="{StaticResource YearBadgeCornerRadius}"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="{StaticResource YearBadgePadding}"/>
+        <Setter Property="MinHeight" Value="32"/>
+        <Setter Property="MinWidth" Value="48"/>
+    </Style>
 
 	<Style Selector="TextBlock.badge-text">
 		<Setter Property="Foreground" Value="{StaticResource BadgeTextBrush}"/>
@@ -296,23 +354,46 @@
 		<Setter Property="HorizontalAlignment" Value="Center"/>
 	</Style>
 
-	<Style Selector="TextBlock.year-badge-text">
-		<Setter Property="Foreground" Value="{StaticResource BadgeTextBrush}"/>
-		<Setter Property="FontWeight" Value="Bold"/>
-		<Setter Property="FontSize" Value="16"/>
-		<Setter Property="HorizontalAlignment" Value="Center"/>
-	</Style>
+    <Style Selector="TextBlock.year-badge-text">
+        <Setter Property="Foreground" Value="{StaticResource BadgeBackgroundBrush}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
 
-	<!-- Delete Button Style -->
-	<Style Selector="Button.delete-button">
-		<Setter Property="Background" Value="{StaticResource DeleteButtonBrush}"/>
-		<Setter Property="Foreground" Value="White"/>
-		<Setter Property="CornerRadius" Value="4"/>
-		<Setter Property="Padding" Value="8,4"/>
-		<Setter Property="HorizontalAlignment" Value="Center"/>
-		<Setter Property="FontSize" Value="11"/>
-		<Setter Property="Margin" Value="0,12,0,0"/>
-	</Style>
+    <Style Selector="TextBlock.delete-text">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Delete Button Style -->
+    <Style Selector="Button.delete-button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{StaticResource DeleteButtonBrush}"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="Padding" Value="0"/> <!-- Override base/default button padding show text will be visible -->
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Foreground" Value="{StaticResource DeleteButtonBrush}"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <!--<Setter Property="Margin" Value="0,12,0,0"/>-->
+        <Setter Property="MinHeight" Value="32"/>
+        <Setter Property="MinWidth" Value="60"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+
+    <!-- Delete Button Hover Effect -->
+    <Style Selector="Button.delete-button:pointerover">
+        <Setter Property="Background" Value="{StaticResource DeleteButtonBrush}"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="BorderBrush" Value="{StaticResource DeleteButtonBrush}"/>
+    </Style>
 
 	<!-- Timeline Container Styles -->
 	<Style Selector="Border.timeline-container">

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace H.Infrastructure
+﻿namespace H.Infrastructure
 {
     public static class MathHelpers
     {

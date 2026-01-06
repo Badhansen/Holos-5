@@ -1,10 +1,6 @@
-﻿using System;
-using H.Core.Enumerations;
+﻿using H.Core.Enumerations;
 using H.Core.Tools;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using H.Core.Models;
 using H.Infrastructure;
 
 namespace H.Core.Providers.Animals

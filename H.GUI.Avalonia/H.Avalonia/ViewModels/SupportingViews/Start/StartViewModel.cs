@@ -7,7 +7,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using H.Infrastructure;
-using Avalonia;
 using Avalonia.Threading;
 using H.Avalonia.Views.FarmCreationViews;
 using H.Core.Services.StorageService;
@@ -21,11 +20,11 @@ namespace H.Avalonia.ViewModels.SupportingViews.Start
         #region Fields
 
         private bool _isBusy;
-        private string _IsBusyMessage;
+        private string? _IsBusyMessage;
         private int _progressValue;
 
-        GeographicDataProvider _geographicDataProvider;
-        SmallAreaYieldProvider _smallAreaYieldProvider;
+        GeographicDataProvider? _geographicDataProvider;
+        SmallAreaYieldProvider? _smallAreaYieldProvider;
 
         #endregion
 
@@ -78,7 +77,7 @@ namespace H.Avalonia.ViewModels.SupportingViews.Start
             }
         }
 
-        public string IsBusyMessage
+        public string? IsBusyMessage
         {
             get { return _IsBusyMessage; }
             set { this.SetProperty(ref _IsBusyMessage, value); }

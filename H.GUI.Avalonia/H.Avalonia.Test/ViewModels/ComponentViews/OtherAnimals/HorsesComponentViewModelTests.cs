@@ -65,7 +65,7 @@ namespace H.Avalonia.Test.ViewModels.ComponentViews.OtherAnimals
         public void TestConstructorSettingAnimalType()
         {
             AnimalType expectedAnimalType = AnimalType.Horses;
-            Assert.AreEqual(expectedAnimalType, _viewModel.OtherAnimalType);
+            Assert.AreEqual(expectedAnimalType, _viewModel.AnimalType);
         }
 
         // Below we are testing methods found in OtherAnimalsViewModelBase (abstract) used by all child classes (horses, bison, goats, etc.)
@@ -84,7 +84,7 @@ namespace H.Avalonia.Test.ViewModels.ComponentViews.OtherAnimals
         {
             AnimalType expectedGroupType = AnimalType.Horses;
 
-            _viewModel.HandleAddGroupEvent();
+            _viewModel.OnAddAnimalGroupDtoCommandExecute();
 
             Assert.AreEqual(1, _viewModel.Groups.Count);
             Assert.AreEqual(expectedGroupType, _viewModel.Groups[0].GroupType);
@@ -93,12 +93,12 @@ namespace H.Avalonia.Test.ViewModels.ComponentViews.OtherAnimals
         [TestMethod]
         public void TestHandleAddManagementPeriodEvent()
         {
-            string expectedPeriodName = "Period #0";
+            string expectedPeriodName = "Period #1";
             DateTime expectedStart = new DateTime(2024, 01, 01);
             DateTime expectedEnd = new DateTime(2025, 01, 01);
             int expectedDays = 364;
 
-            _viewModel.HandleAddManagementPeriodEvent();
+            _viewModel.OnAddManagementPeriodExecute();
 
             Assert.AreEqual(1, _viewModel.ManagementPeriodDtos.Count);
             Assert.AreEqual(expectedPeriodName, _viewModel.ManagementPeriodDtos[0].Name);

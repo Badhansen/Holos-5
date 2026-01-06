@@ -1,6 +1,6 @@
 using H.Core.Models.Animals;
 
-namespace H.Core.Factories;
+namespace H.Core.Factories.Animals;
 
 public interface IManagementPeriodFactory
 {
@@ -12,7 +12,7 @@ public interface IManagementPeriodFactory
     /// <summary>
     /// Creates a new ManagementPeriodDto from a template ManagementPeriodDto
     /// </summary>
-    IManagementPeriodDto CreateManagementPeriodDto(IManagementPeriodDto template);
+    IManagementPeriodDto CreateDtoFromDtoTemplate(IManagementPeriodDto template);
     
     /// <summary>
     /// Creates a new ManagementPeriodDto from a domain ManagementPeriod

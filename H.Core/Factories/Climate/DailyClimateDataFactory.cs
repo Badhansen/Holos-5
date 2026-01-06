@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using H.Core.Mappers;
 using H.Core.Models;
 using H.Core.Models.Climate;

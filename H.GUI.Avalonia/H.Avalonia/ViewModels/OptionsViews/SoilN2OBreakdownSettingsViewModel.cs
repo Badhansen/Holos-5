@@ -1,18 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Reflection.Metadata;
-using Avalonia.Controls;
-using Avalonia.Controls.Notifications;
-using Avalonia.Media;
-using H.Core.Events;
+using H.Avalonia.Events;
 using H.Avalonia.ViewModels.OptionsViews.DataTransferObjects;
 using H.Core.Enumerations;
 using H.Core.Models;
-using H.Core.Providers.Animals;
 using H.Avalonia.Services;
-using H.Avalonia.ViewModels.Styles;
 using H.Core.Services.StorageService;
-using H.Infrastructure;
 using Prism.Events;
 using Prism.Regions;
 

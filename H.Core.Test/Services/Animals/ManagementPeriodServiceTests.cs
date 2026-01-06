@@ -1,14 +1,12 @@
-using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
 using H.Core.Calculators.UnitsOfMeasurement;
 using H.Core.Enumerations;
 using H.Core.Factories;
+using H.Core.Factories.Animals;
 using H.Core.Mappers;
 using H.Core.Models.Animals;
 using H.Core.Services.Animals;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prism.Ioc;
 
@@ -152,7 +150,7 @@ namespace H.Core.Test.Services.Animals
             };
             var managementPeriod = new ManagementPeriod();
 
-            _mockManagementPeriodFactory.Setup(x => x.CreateManagementPeriodDto(It.IsAny<IManagementPeriodDto>()))
+            _mockManagementPeriodFactory.Setup(x => x.CreateDtoFromDtoTemplate(It.IsAny<IManagementPeriodDto>()))
                 .Returns(dto);
 
             // Act

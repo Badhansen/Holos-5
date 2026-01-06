@@ -1,6 +1,5 @@
 ﻿using H.Core.Enumerations;
 using H.Core.Providers.Plants;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace H.Core.Test.Providers.Plants
 {

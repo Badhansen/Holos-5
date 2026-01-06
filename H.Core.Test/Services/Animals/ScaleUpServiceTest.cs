@@ -3,7 +3,6 @@ using H.Core.Enumerations;
 using H.Core.Models;
 using H.Core.Providers.Animals.Table_28;
 using H.Core.Services.Animals;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace H.Core.Test.Services.Animals
 {

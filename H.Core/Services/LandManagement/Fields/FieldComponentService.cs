@@ -1,14 +1,9 @@
-﻿using AutoMapper;
-using H.Core.Calculators.UnitsOfMeasurement;
-using H.Core.Converters;
-using H.Core.Factories;
+﻿using H.Core.Factories;
 using H.Core.Factories.Crops;
-using H.Core.Mappers;
 using H.Core.Models;
 using H.Core.Models.LandManagement.Fields;
 using H.Core.Services.Animals;
 using Microsoft.Extensions.Logging;
-using Prism.Ioc;
 
 namespace H.Core.Services.LandManagement.Fields;
 
@@ -213,7 +208,7 @@ public class FieldComponentService : ComponentServiceBase, IFieldComponentServic
     /// Re-numbers crop years so that they are consecutive, descending from the maximum year.
     /// </summary>
     /// <param name="cropDtos">The collection of crops to normalize.</param>
-    public void ResetAllYears(IEnumerable<ICropDto> cropDtos)
+    public void ResetAllYears(IEnumerable<ICropDto>? cropDtos)
     {
         var dtos = cropDtos.ToList();
         if (dtos.Any())

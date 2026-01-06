@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Castle.Components.DictionaryAdapter;
-using H.Core.Emissions.Results;
+﻿using H.Core.Emissions.Results;
 using H.Core.Enumerations;
 using H.Core.Models;
 using H.Core.Models.Animals;
@@ -10,7 +6,6 @@ using H.Core.Models.Animals.Beef;
 using H.Core.Models.LandManagement.Fields;
 using H.Core.Providers.Animals;
 using H.Core.Services.Animals;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace H.Core.Test.Services

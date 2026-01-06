@@ -1,13 +1,7 @@
-﻿using AutoMapper;
-using H.Core.Calculators.UnitsOfMeasurement;
-using H.Core.Converters;
-using H.Core.Factories;
-using H.Core.Mappers;
-using H.Core.Models;
+﻿using H.Core.Factories;
+using H.Core.Factories.Animals;
 using H.Core.Models.Animals;
-using H.Core.Models.LandManagement.Fields;
 using Microsoft.Extensions.Logging;
-using Prism.Ioc;
 
 namespace H.Core.Services.Animals;
 

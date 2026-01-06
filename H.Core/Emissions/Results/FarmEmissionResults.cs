@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
+﻿using System.Collections.ObjectModel;
 using H.Core.Calculators.Infrastructure;
 using H.Core.Converters;
 using H.Core.Enumerations;
 using H.Core.Models;
 using H.Core.Models.LandManagement.Fields;
 using H.Core.Models.Results;
-using H.Core.Providers.Climate;
 
 namespace H.Core.Emissions.Results
 {

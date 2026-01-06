@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing.Design;
-using System.Linq;
+﻿using System.Diagnostics;
 using H.Content;
 using H.Core.Enumerations;
 using H.Core.Models;
-using H.Core.Models.Animals;
-using H.Core.Providers.Animals.Table_69;
 using H.Infrastructure;
 using CsvResourceNames = H.Content.CsvResourceNames;
 

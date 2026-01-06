@@ -1,6 +1,4 @@
-﻿using H.Avalonia.Models;
-using H.Avalonia.Views;
-using Prism.Commands;
+﻿using Prism.Commands;
 
 namespace H.Avalonia.ViewModels;
 

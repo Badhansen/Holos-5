@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using H.Core.Enumerations;
 using H.Core.Providers.Evapotranspiration;
 using H.Core.Providers.Precipitation;

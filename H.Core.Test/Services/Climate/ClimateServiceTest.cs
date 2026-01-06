@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using H.Core.Factories.Climate;
 using H.Core.Models.Climate;
 using H.Core.Providers.Climate;
 using H.Core.Services.Climate;
 using H.Core.Services.Animals;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace H.Core.Test.Services.Climate

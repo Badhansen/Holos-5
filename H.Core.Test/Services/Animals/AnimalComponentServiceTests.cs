@@ -1,17 +1,11 @@
 using AutoMapper;
-using H.Core.Calculators.Infrastructure;
-using H.Core.Calculators.UnitsOfMeasurement;
-using H.Core.Emissions.Results;
-using H.Core.Enumerations;
 using H.Core.Factories;
+using H.Core.Factories.Animals;
 using H.Core.Mappers;
 using H.Core.Models;
 using H.Core.Models.Animals;
-using H.Core.Models.Infrastructure;
-using H.Core.Models.LandManagement.Fields;
 using H.Core.Services.Animals;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prism.Ioc;
 

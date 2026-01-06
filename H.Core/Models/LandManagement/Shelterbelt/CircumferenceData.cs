@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using H.Core.Calculators.Shelterbelt;
+﻿using H.Core.Calculators.Shelterbelt;
 using H.Infrastructure;
 
 namespace H.Core.Models.LandManagement.Shelterbelt
@@ -11,7 +8,7 @@ namespace H.Core.Models.LandManagement.Shelterbelt
     {
         #region Fields
 
-        private ShelterbeltCalculator ShelterbeltCalculator = new ShelterbeltCalculator();
+        private readonly ShelterbeltCalculator ShelterbeltCalculator = new ShelterbeltCalculator();
 
         private bool _circumferenceGenerationOverriden;
         private double _userCircumference;

@@ -13,8 +13,8 @@ namespace H.CLI.FileAndDirectoryAccessors
     public class ExcelInitializer
     {
         #region Fields
-        private KeyConverter.KeyConverter _converter = new KeyConverter.KeyConverter();
-        private UnitsOfMeasurementCalculator unitsOfMeasurementCalculator = new UnitsOfMeasurementCalculator();
+        private readonly KeyConverter.KeyConverter _converter = new KeyConverter.KeyConverter();
+        private readonly UnitsOfMeasurementCalculator unitsOfMeasurementCalculator = new UnitsOfMeasurementCalculator();
         #endregion
 
         #region Constructors

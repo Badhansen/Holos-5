@@ -3,12 +3,7 @@ using H.Core.Enumerations;
 using H.Core.Models;
 using H.Core.Models.LandManagement.Fields;
 using H.Core.Providers.Animals;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using H.Core.Providers.Soil;
 using NitrogenFertilizerType = H.Core.Enumerations.NitrogenFertilizerType;
 
 namespace H.Core.Test.Calculators.Nitrogen

@@ -1,7 +1,4 @@
 using AutoMapper;
-using Avalonia.Controls;
-using DryIoc;
-using H.Avalonia.Infrastructure;
 using H.Avalonia.Infrastructure.Dialogs;
 using H.Avalonia.Infrastructure.MapperServices;
 using H.Avalonia.Services;
@@ -40,7 +37,6 @@ using H.Avalonia.Views.ComponentViews.Swine;
 using H.Avalonia.Views.FarmCreationViews;
 using H.Avalonia.Views.OptionsViews;
 using H.Avalonia.Views.OptionsViews.FileMenuViews;
-using H.Avalonia.Views.ResultViews;
 using H.Avalonia.Views.SupportingViews;
 using H.Avalonia.Views.SupportingViews.CountrySelection;
 using H.Avalonia.Views.SupportingViews.Disclaimer;
@@ -50,6 +46,7 @@ using H.Avalonia.Views.SupportingViews.Start;
 using H.Core;
 using H.Core.Calculators.UnitsOfMeasurement;
 using H.Core.Factories;
+using H.Core.Factories.Animals;
 using H.Core.Factories.Climate;
 using H.Core.Factories.Crops;
 using H.Core.Factories.FarmFactory;
@@ -70,13 +67,11 @@ using H.Core.Services.Initialization;
 using H.Core.Services.LandManagement.Fields;
 using H.Core.Services.Provinces;
 using H.Core.Services.StorageService;
-using H.Infrastructure;
 using H.Infrastructure.Services;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Prism.Ioc;
 using ClimateResultsView = H.Avalonia.Views.ResultViews.ClimateResultsView;
-using KmlHelpers = H.Avalonia.Infrastructure.KmlHelpers;
 using SoilResultsView = H.Avalonia.Views.ResultViews.SoilResultsView;
 
 namespace H.Avalonia.Infrastructure.DependencyInjection
@@ -397,6 +392,7 @@ namespace H.Avalonia.Infrastructure.DependencyInjection
             containerRegistry.Register(typeof(ICropFactory), typeof(CropFactory));
             containerRegistry.Register(typeof(IFieldFactory), typeof(FieldFactory));
             containerRegistry.RegisterSingleton<IAnimalComponentFactory, AnimalComponentFactory>();
+            containerRegistry.RegisterSingleton<IAnimalGroupFactory, AnimalGroupFactory>();
             
             _logger.LogInformation("Successfully registered factory services");
         }

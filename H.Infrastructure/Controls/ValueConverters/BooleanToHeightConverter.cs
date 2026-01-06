@@ -1,6 +1,5 @@
 ﻿#region Imports
 
-using System;
 using System.Globalization;
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
@@ -13,9 +12,9 @@ namespace H.Infrastructure.Controls.ValueConverters
     /// </summary>
     public class BooleanToHeightConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            var param = bool.Parse(value.ToString());
+            var param = value is bool b && b;
             if (param)
             {
                 return new GridLength(1, GridUnitType.Star);
@@ -23,7 +22,7 @@ namespace H.Infrastructure.Controls.ValueConverters
             return new GridLength(1, GridUnitType.Auto);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

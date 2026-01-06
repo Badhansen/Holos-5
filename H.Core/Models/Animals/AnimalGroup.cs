@@ -1,15 +1,10 @@
 ﻿#region Imports
 
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using H.Core.Enumerations;
-using H.Core.Models.LandManagement.Fields;
-using H.Core.Models.LandManagement.Rotation;
 using H.Core.Tools;
 using H.Infrastructure;
 

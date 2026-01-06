@@ -115,15 +115,6 @@ namespace H.Avalonia.ViewModels
         }
 
         /// <summary>
-        /// A bool that indicates whether to show SLC polygons on the map displayed to the user.
-        /// </summary>
-        public bool ShowPolygonsOnMap
-        {
-            get => _showPolygonsOnMap;
-            set => SetProperty(ref _showPolygonsOnMap, value);
-        }
-
-        /// <summary>
         /// A collection of provinces for which SLC polygon data is available.
         /// </summary>
         public ObservableCollection<Province> Provinces 
@@ -531,7 +522,6 @@ namespace H.Avalonia.ViewModels
                     return;
                 }
                 // Load province polygon and set coordinates.
-                ShowPolygonsOnMap = true;
                 SelectedProvince = (Province)province;
                 Logger.LogInformation($"Coordinate acquired from address in {nameof(SoilDataViewModel)}.{nameof(OnGetAddress)}");
                 Latitude = point.latitude;

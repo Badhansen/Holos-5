@@ -124,30 +124,14 @@ namespace H.Avalonia.Views
                         AddPointToMap();
                         break;
                     }
-                case nameof(_viewModel.ShowPolygonsOnMap):
-                    {
-                        _viewModel.SelectedProvince = Province.SelectProvince;
-                        
-                        break;
-                    }
                 case nameof(_viewModel.SelectedProvince):
                     {
-                        if (_viewModel.ShowPolygonsOnMap)
+                        if (_polygonLayer != null) SoilTabMap.Map.Layers.Remove(_polygonLayer);
+                        if (_viewModel.SelectedProvince != Province.SelectProvince)
                         {
-                            if (_polygonLayer != null) SoilTabMap.Map.Layers.Remove(_polygonLayer);
-                            if (_viewModel.SelectedProvince != Province.SelectProvince)
-                            {
-                                _polygonLayer = new RasterizingTileLayer(CreateLayer(_viewModel.SelectedProvince), minTiles: 400, maxTiles: 800, renderFormat: RenderFormat.WebP);
-                                SoilTabMap.Map.Layers.Add(_polygonLayer);
-                                SetCoordinatesOnProvinceSelected(_viewModel.SelectedProvince);
-                            }
-                        }
-                        else
-                        {
-                            if (_polygonLayer != null)
-                            {
-                                SoilTabMap.Map.Layers.Remove(_polygonLayer);
-                            }
+                            _polygonLayer = new RasterizingTileLayer(CreateLayer(_viewModel.SelectedProvince), minTiles: 400, maxTiles: 800, renderFormat: RenderFormat.WebP);
+                            SoilTabMap.Map.Layers.Add(_polygonLayer);
+                            SetCoordinatesOnProvinceSelected(_viewModel.SelectedProvince);
                         }
                         break;
                     }

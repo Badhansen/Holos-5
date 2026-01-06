@@ -108,8 +108,7 @@
                                    FontWeight="Bold"/>
 							<NumericUpDown Value="{Binding Latitude}"
                                            Maximum="90"
-                                           Minimum="-90"
-                                           Width="{Binding $parent[4].Bounds.Width}"/>
+                                           Minimum="-90"/>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal">
 							<Label Content="{x:Static properties:Resources.LabelLongitude}"
@@ -118,7 +117,6 @@
 							<NumericUpDown Value="{Binding Longitude}"
                                            Maximum="180"
                                            Minimum="-180"
-                                           Width="{Binding $parent[4].Bounds.Width}"
                                            Margin="0,10,0,0"/>
 						</StackPanel>
 						<Button Classes="generic-button"

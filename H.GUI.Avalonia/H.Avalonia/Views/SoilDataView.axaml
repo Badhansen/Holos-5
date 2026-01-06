@@ -37,8 +37,7 @@
 	</UserControl.Resources>
 	<TabControl>
 		<!-- Single coordinate tab -->
-		<TabItem Name="SingleCoordinateTab"
-                 Header="{x:Static properties:Resources.LabelSingleCoordinate}">
+		<TabItem Name="SingleCoordinateTab" Header="{x:Static properties:Resources.LabelSingleCoordinate}" IsSelected="True" IsVisible="False">
 			<Grid>
 				<StackPanel HorizontalAlignment="Center"
                             VerticalAlignment="Center">
@@ -58,7 +57,7 @@
                                 HorizontalAlignment="Stretch"
                                 Margin="20,0,20,0">
 						<!-- Step 1: Select Province -->
-                        <Grid ColumnDefinitions="Auto, Auto ,Auto" Margin="0,15,0,0">
+                        <Grid ColumnDefinitions="Auto, Auto ,Auto" Margin="0,30,0,0">
                             <TextBlock Grid.Column="0" Text="{x:Static propertiesCore:Resources.StepOneText}" Classes="step-title-textblock"/>
                             <TextBlock Grid.Column="1" Text="." Classes="step-title-textblock"/>
                             <TextBlock Grid.Column="2" Text="{x:Static propertiesCore:Resources.EnumProvinceNotSelected}" Classes="step-title-textblock" Margin="5,0,0,0"/>
@@ -155,7 +154,8 @@
 		<!-- End of single coordinate tab -->
 		<!-- Multiple coordinates tab -->
 		<TabItem Name="MultiCoordinateTab"
-                 Header="{x:Static properties:Resources.LabelMultipleCoordinates}">
+                 Header="{x:Static properties:Resources.LabelMultipleCoordinates}"
+                 IsVisible="False">
 			<Grid RowDefinitions="Auto, Auto, *, Auto, Auto">
 				<StackPanel Grid.Row="0"
                             Orientation="Horizontal">

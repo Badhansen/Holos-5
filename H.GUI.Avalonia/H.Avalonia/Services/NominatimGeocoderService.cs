@@ -2,9 +2,11 @@
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Path = System.IO.Path;
 
@@ -59,6 +61,7 @@ namespace H.Avalonia.Services
         /// <returns>Longitude and latitude coordinates.</returns>
         public async Task<(double latitude, double longitude)> GetCoordinates(string address)
         {
+            address = PrepareAddressStringForAPI(address);
             // If no cached data, get data from Nominatim API and cache it.
             string content = this.GetCachedData(address);
             if (string.IsNullOrWhiteSpace(content))
@@ -85,6 +88,7 @@ namespace H.Avalonia.Services
         /// <returns>Province enum of where the address is located.</returns>
         public async Task<Province?> GetProvince(string address)
         {
+            address = PrepareAddressStringForAPI(address);
             string content = this.GetCachedData(address);
             // If no cached data, get data from Nominatim API and cache it.
             if (string.IsNullOrWhiteSpace(content))
@@ -107,6 +111,35 @@ namespace H.Avalonia.Services
         #endregion
 
         #region Private Methods
+
+        private string PrepareAddressStringForAPI(string address)
+        {
+            // Dictionary containing directions that can be converted to their abbreviated counterpart
+            // Nominatim requires street name direction suffix be abbreviated
+            // Ex. "South Parkside Drive South" returns invalid, "South Parkside Drive S" or "S Parkside Drive S" returns valid coordinates
+            var directions = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                {"northwest", "NW"},
+                {"northeast", "NE"},
+                {"southwest", "SW"},
+                {"southeast", "SE"},
+                {"north", "N"},
+                {"south", "S"},
+                {"east", "E"},
+                {"west", "W"}
+            };
+            // Only match pattern when word is isolated by space or punctuation. 
+            // Ex. "StreetName South, Alberta" becomes "Streetname S, Alberta". "Southstreet Avenue, Alberta" remains the same.
+            var pattern = @"\b(" + string.Join("|", directions.Keys.OrderByDescending(k => k.Length)) + @")\b";
+            var regex = new Regex(pattern, RegexOptions.IgnoreCase);
+
+            string convertedAddress = regex.Replace(address, match =>
+            {
+                var key = match.Value.ToLower();
+                return directions.ContainsKey(key) ? directions[key] : match.Value;
+            });
+            return convertedAddress;
+        }
 
         /// <summary>
         /// Gets the correct Nominatim API URL for the given address.
@@ -259,9 +292,14 @@ namespace H.Avalonia.Services
             JObject jObject = JArray.Parse(content).FirstOrDefault() as JObject;
             // Access province from the JObject
             var provinceString = jObject["address"]?["state"]?.ToString().Replace(" ", ""); // Remove spaces for enum parsing.
+            // Handle Newfoundland and Labrador special case
+            if (provinceString == "NewfoundlandandLabrador")
+                provinceString = "Newfoundland";
             // Convert province string to Province enum
-            Province provinceEnum = (Province)Enum.Parse(typeof(Province), provinceString);
-            return provinceEnum;
+            if (Enum.IsDefined(typeof(Province), provinceString))
+                return (Province)Enum.Parse(typeof(Province), provinceString);
+            
+            return Province.SelectProvince;
         }
 
         #endregion

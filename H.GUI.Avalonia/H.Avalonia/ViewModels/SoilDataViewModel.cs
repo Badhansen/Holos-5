@@ -57,7 +57,6 @@ namespace H.Avalonia.ViewModels
 
         public readonly Dictionary<Province, List<Polygon>> WktPolygonMap = new();
         private bool _isDataProcessing;
-        private bool _showPolygonsOnMap;
         private Province _selectedProvince;
         private ICountrySettings _countrySettings;
 

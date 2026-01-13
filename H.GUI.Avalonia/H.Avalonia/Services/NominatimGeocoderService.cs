@@ -286,20 +286,27 @@ namespace H.Avalonia.Services
         /// </summary>
         /// <param name="content">The content from the API call to be parsed for provincial data.</param>
         /// <returns>Province enum based off of the given API data.</returns>
-        private Province ParseNominatimApiContentForProvince(string content)
+        private Province? ParseNominatimApiContentForProvince(string content)
         {
             // Initially read as JArray since Nominatim returns an array of one JSON object.
             JObject jObject = JArray.Parse(content).FirstOrDefault() as JObject;
+
             // Access province from the JObject
-            var provinceString = jObject["address"]?["state"]?.ToString().Replace(" ", ""); // Remove spaces for enum parsing.
-            // Handle Newfoundland and Labrador special case
+            var provinceString = jObject["address"]?["province"]?.ToString().Replace(" ", ""); // Ontario returns as province type from Nominatim/OpenStreetMap
+            if (provinceString == null)
+            {
+                provinceString = jObject["address"]?["state"]?.ToString().Replace(" ", ""); // All other provinces/territories return as state type
+            }
+
+            // Correct province string to match Province enum name
             if (provinceString == "NewfoundlandandLabrador")
                 provinceString = "Newfoundland";
+
             // Convert province string to Province enum
             if (Enum.IsDefined(typeof(Province), provinceString))
                 return (Province)Enum.Parse(typeof(Province), provinceString);
-            
-            return Province.SelectProvince;
+            else
+                return null;
         }
 
         #endregion

@@ -9,6 +9,7 @@ using Moq;
 using Prism.Ioc;
 using System.Collections.ObjectModel;
 using H.Core.Factories.Crops;
+using H.Core.Factories.Fields;
 using Microsoft.Extensions.Logging;
 using H.Core.Models;
 

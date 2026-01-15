@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using H.Core.Factories;
 using H.Core.Factories.Crops;
+using H.Core.Factories.Fields;
 using H.Core.Models;
 using H.Core.Models.LandManagement.Rotation;
 using H.Core.Services.LandManagement.Fields;

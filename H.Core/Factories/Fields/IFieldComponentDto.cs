@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using H.Core.Factories.Crops;
 
-namespace H.Core.Factories;
+namespace H.Core.Factories.Fields;
 
 public interface IFieldComponentDto : IDto
 {

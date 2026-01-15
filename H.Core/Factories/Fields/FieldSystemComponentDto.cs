@@ -5,7 +5,7 @@ using H.Core.Enumerations;
 using H.Core.Factories.Crops;
 using H.Core.Models.LandManagement.Fields;
 
-namespace H.Core.Factories;
+namespace H.Core.Factories.Fields;
 
 /// <summary>
 /// A class used to validate input as it relates to a <see cref="FieldSystemComponent"/>. This class is used to valid input before any input

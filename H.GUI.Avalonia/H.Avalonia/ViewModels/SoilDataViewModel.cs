@@ -41,6 +41,9 @@ namespace H.Avalonia.ViewModels
         private double _longitude;
         private double _latitude;
         private string _address = string.Empty;
+        private string _streetAddress = string.Empty;
+        private string _city = string.Empty;
+        private string _postalCode = string.Empty;
         private MPoint _navigationPoint;
         private ImportHelpers _importHelper;
         private SoilViewItemMap _soilViewItemMap;
@@ -85,6 +88,33 @@ namespace H.Avalonia.ViewModels
         {
             get => _address;
             set => SetProperty(ref _address, value);
+        }
+
+        /// <summary>
+        /// The street address entered by the user.
+        /// </summary>
+        public string StreetAddress
+        {
+            get => _streetAddress;
+            set => SetProperty(ref _streetAddress, value);
+        }
+
+        /// <summary>
+        /// The city entered by the user.
+        /// </summary>
+        public string City
+        {
+            get => _city;
+            set => SetProperty(ref _city, value);
+        }
+
+        /// <summary>
+        /// The postal code entered by the user.
+        /// </summary>
+        public string PostalCode
+        {
+            get => _postalCode;
+            set => SetProperty(ref _postalCode, value);
         }
 
         /// <summary>
@@ -488,7 +518,7 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private async void OnGetCoordinates()
         {
-            if (string.IsNullOrEmpty(Address))
+            if (string.IsNullOrEmpty(StreetAddress))
             {
                 Logger.LogDebug($@"Cannot find location as an empty address was entered.");
                 NotificationManager.ShowToast(H.Core.Properties.Resources.AddressFieldEmpty, Core.Properties.Resources.MessageEmptyAddress, NotificationType.Information);
@@ -498,7 +528,7 @@ namespace H.Avalonia.ViewModels
             {
                 // Call the geocoding service to get coordinates from the address, return early if problem encountered.
                 Logger.LogInformation($"Attempting coordinate acquisition from address in {nameof(SoilDataViewModel)}.{nameof(OnGetAddress)}");
-                var point = await _defaultGeocoderService.GetCoordinates(Address);
+                var point = await _defaultGeocoderService.GetCoordinates(StreetAddress,City, SelectedProvince, "Canada", PostalCode);
                 if (point.latitude == 0 || point.longitude == 0)
                 {
                     Logger.LogDebug($@"Cannot find the coordinate from the address entered.");
@@ -506,7 +536,7 @@ namespace H.Avalonia.ViewModels
                     return;
                 }
                 // Call the geocoding service to get province from the address, return early if problem encountered.
-                var province = await _defaultGeocoderService.GetProvince(Address);
+                var province = await _defaultGeocoderService.GetProvince(StreetAddress, City, SelectedProvince, "Canada", PostalCode);
                 if (province == null)
                 {
                     Logger.LogDebug($@"Cannot find the province from the address entered.");
@@ -539,7 +569,6 @@ namespace H.Avalonia.ViewModels
                 NotificationManager.ShowToast(H.Core.Properties.Resources.IncorrectCoordinate, Core.Properties.Resources.MessageInValidCoordinateEntered, NotificationType.Information);
                 return;
             }
-
             Address = address;
             NavigationPoint = GetNavigationPoint();
         }

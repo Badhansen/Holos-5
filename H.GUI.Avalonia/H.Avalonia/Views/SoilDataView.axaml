@@ -85,18 +85,21 @@
                                    TextWrapping="Wrap"
                                    Margin="0,5,0,10"
                                    FontSize="14"/>
-
-						<StackPanel HorizontalAlignment="Stretch">
-							<Label Content="{x:Static properties:Resources.LabelAddress}"
-                                   FontWeight="Bold"/>
-							<TextBox Text="{Binding Address}"
-                                     Margin="0,0,0,5"/>
-							<Button Classes="generic-button"
-                                    Content="Get Coordinates"
-                                    Margin="0, 5, 0, 0"
-                                    Command="{Binding GetCoordinatesFromAddressCommand}"/>
-						</StackPanel>
-
+                            <Grid Margin="0,0,0,5" RowDefinitions="Auto,Auto" ColumnDefinitions="*,*">
+                                <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                         Watermark="House Number / Street Name"
+                                         Text="{Binding StreetAddress, Mode=TwoWay}" />
+                                <TextBox Grid.Row="1" Grid.Column="0"
+                                         Watermark="City/Town"
+                                         Text="{Binding City, Mode=TwoWay}" Margin="0,5,5,0"/>
+                                <TextBox Grid.Row="1" Grid.Column="1"
+                                         Watermark="Postal Code"
+                                         Text="{Binding PostalCode, Mode=TwoWay}" Margin="5,5,0,0"/>
+                            </Grid>
+                        <Button Classes="generic-button"
+                                Content="Get Coordinates"
+                                Margin="0, 5, 0, 0"
+                                Command="{Binding GetCoordinatesFromAddressCommand}"/>
 						<TextBlock Text="OR"
                                    TextAlignment="Center"
                                    Margin="0,10,0,10"/>

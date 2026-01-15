@@ -82,12 +82,12 @@ namespace H.Avalonia.Test.ViewModels.ComponentViews.OtherAnimals
         [TestMethod]
         public void TestHandleAddGroupEvent()
         {
-            AnimalType expectedGroupType = AnimalType.Horses;
+            AnimalType expectedGroupType = AnimalType.NotSelected;
 
             _viewModel.OnAddAnimalGroupDtoCommandExecute();
 
-            Assert.AreEqual(1, _viewModel.Groups.Count);
-            Assert.AreEqual(expectedGroupType, _viewModel.Groups[0].GroupType);
+            Assert.AreEqual(1, _viewModel.AnimalGroupDtos.Count);
+            Assert.AreEqual(expectedGroupType, _viewModel.AnimalGroupDtos[0].GroupType);
         }
 
         [TestMethod]

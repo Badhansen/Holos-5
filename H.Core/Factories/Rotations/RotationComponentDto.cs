@@ -9,5 +9,22 @@ namespace H.Core.Factories.Rotations;
 /// </summary>
 public class RotationComponentDto : DtoBase, IRotationComponentDto
 {
-    
+    #region Fields
+
+    private double _fieldArea;
+
+    #endregion
+
+    #region MyRegion
+
+    /// <summary>
+    /// All fields that belong to this rotation must have the same area. This property defines that area.
+    /// </summary>
+    public double FieldArea
+    {
+        get => _fieldArea;
+        set => SetProperty(ref _fieldArea, value);
+    } 
+
+    #endregion
 }

@@ -8,11 +8,10 @@ namespace H.Core.Services.LandManagement.Fields;
 
 public class RotationComponentService : ComponentServiceBase, IRotationComponentService
 {
-    private IFieldFactory _fieldFactory;
-    private ICropFactory _cropFactory;
-
     #region Fields
 
+    private IFieldFactory _fieldFactory;
+    private ICropFactory _cropFactory;
 
     #endregion
 

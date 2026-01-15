@@ -21,6 +21,7 @@ public class RotationComponentViewModelTests
     private Mock<IEventAggregator> _mockEventAggregator;
     private Mock<IStorageService> _mockStorageService;
     private Mock<IFieldComponentService> _mockFieldComponentService;
+    private Mock<IRotationComponentService> _mockRotationComponentService;
     private Mock<ILogger> _mockLogger;
     private Mock<ICropFactory> _mockCropFactory;
     private Farm _testFarm;
@@ -55,6 +56,7 @@ public class RotationComponentViewModelTests
         _mockFieldComponentService = new Mock<IFieldComponentService>();
         _mockLogger = new Mock<ILogger>();
         _mockCropFactory = new Mock<ICropFactory>();
+        _mockRotationComponentService = new Mock<IRotationComponentService>();
 
         // Setup storage service mock
         _mockStorageService.Setup(x => x.Storage).Returns(new H.Core.Storage()
@@ -72,6 +74,7 @@ public class RotationComponentViewModelTests
             _mockEventAggregator.Object,
             _mockStorageService.Object,
             _mockFieldComponentService.Object,
+            _mockRotationComponentService.Object,
             _mockLogger.Object,
             _mockCropFactory.Object);
     }
@@ -104,6 +107,7 @@ public class RotationComponentViewModelTests
             _mockEventAggregator.Object,
             _mockStorageService.Object,
             _mockFieldComponentService.Object,
+            _mockRotationComponentService.Object,
             _mockLogger.Object,
             _mockCropFactory.Object);
     }
@@ -118,6 +122,7 @@ public class RotationComponentViewModelTests
             null,
             _mockStorageService.Object,
             _mockFieldComponentService.Object,
+            _mockRotationComponentService.Object,
             _mockLogger.Object,
             _mockCropFactory.Object);
     }
@@ -132,6 +137,7 @@ public class RotationComponentViewModelTests
             _mockEventAggregator.Object,
             null,
             _mockFieldComponentService.Object,
+            _mockRotationComponentService.Object,
             _mockLogger.Object,
             _mockCropFactory.Object);
     }
@@ -146,6 +152,7 @@ public class RotationComponentViewModelTests
             _mockEventAggregator.Object,
             _mockStorageService.Object,
             null,
+            _mockRotationComponentService.Object,
             _mockLogger.Object,
             _mockCropFactory.Object);
     }
@@ -160,6 +167,7 @@ public class RotationComponentViewModelTests
             _mockEventAggregator.Object,
             _mockStorageService.Object,
             _mockFieldComponentService.Object,
+            _mockRotationComponentService.Object,
             null,
             _mockCropFactory.Object);
     }
@@ -174,6 +182,7 @@ public class RotationComponentViewModelTests
             _mockEventAggregator.Object,
             _mockStorageService.Object,
             _mockFieldComponentService.Object,
+            _mockRotationComponentService.Object,
             _mockLogger.Object,
             null);
     }
@@ -237,6 +246,7 @@ public class RotationComponentViewModelTests
             _mockEventAggregator.Object,
             _mockStorageService.Object,
             _mockFieldComponentService.Object,
+            _mockRotationComponentService.Object,
             _mockLogger.Object,
             _mockCropFactory.Object);
 

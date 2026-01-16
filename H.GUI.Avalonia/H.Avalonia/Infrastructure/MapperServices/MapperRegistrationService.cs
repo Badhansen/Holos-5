@@ -20,6 +20,9 @@ public class MapperRegistrationService
 
         // Field mappers
         RegisterFieldMappers(containerRegistry);
+        
+        // Rotation mappers
+        RegisterRotationMappers(containerRegistry);
 
         // Feed ingredient mappers
         RegisterFeedIngredientMappers(containerRegistry);
@@ -76,6 +79,22 @@ public class MapperRegistrationService
         containerRegistry.RegisterInstance(fieldComponentToFieldDtoConfiguration.CreateMapper(), nameof(FieldComponentToDtoMapper));
         containerRegistry.RegisterInstance(fieldDtoToFieldComponentConfiguration.CreateMapper(), nameof(FieldDtoToFieldComponentMapper));
         containerRegistry.RegisterInstance(fieldDtoToFieldDtoConfiguration.CreateMapper(), nameof(FieldDtoToFieldDtoMapper));
+    }
+
+    private void RegisterRotationMappers(IContainerRegistry containerRegistry)
+    {
+        var rotationComponentToRotationComponentDtoConfiguration = new MapperConfiguration(expression =>
+        {
+            expression.AddProfile<RotationComponentToRotationComponentDtoMapper>();
+        });
+
+        var rotationComponentDtoToRotationComponentConfiguration = new MapperConfiguration(expression =>
+        {
+            expression.AddProfile<RotationComponentDtoToRotationComponentMapper>();
+        });
+
+        containerRegistry.RegisterInstance(rotationComponentToRotationComponentDtoConfiguration.CreateMapper(), nameof(RotationComponentToRotationComponentDtoMapper));
+        containerRegistry.RegisterInstance(rotationComponentDtoToRotationComponentConfiguration.CreateMapper(), nameof(RotationComponentDtoToRotationComponentMapper));
     }
 
     private void RegisterFeedIngredientMappers(IContainerRegistry containerRegistry)

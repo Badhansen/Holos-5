@@ -51,10 +51,12 @@ using H.Core.Factories.Climate;
 using H.Core.Factories.Crops;
 using H.Core.Factories.FarmFactory;
 using H.Core.Factories.Fields;
+using H.Core.Factories.Rotations;
 using H.Core.Mappers;
 using H.Core.Models.Animals;
 using H.Core.Models.Climate;
 using H.Core.Models.LandManagement.Fields;
+using H.Core.Models.LandManagement.Rotation;
 using H.Core.Providers;
 using H.Core.Providers.Climate;
 using H.Core.Providers.Energy;
@@ -387,6 +389,7 @@ namespace H.Avalonia.Infrastructure.DependencyInjection
 
             containerRegistry.Register(typeof(IFactory<CropDto>), typeof(CropFactory));
             containerRegistry.Register(typeof(IFactory<FieldSystemComponentDto>), typeof(FieldFactory));
+            containerRegistry.Register(typeof(IFactory<RotationComponentDto>), typeof(RotationComponentFactory));
             containerRegistry.Register(typeof(IFactory<AnimalComponentDto>), typeof(AnimalComponentFactory));
             containerRegistry.Register(typeof(IFactory<DailyClimateDto>), typeof(DailyClimateDataFactory));
 
@@ -469,6 +472,7 @@ namespace H.Avalonia.Infrastructure.DependencyInjection
             RegisterDailyClimateTransferService(containerRegistry);
             RegisterCropTransferService(containerRegistry);
             RegisterFieldTransferService(containerRegistry);
+            RegisterRotationTransferService(containerRegistry);
             RegisterAnimalTransferService(containerRegistry);
             
             _logger.LogInformation("Successfully registered transfer services");
@@ -537,6 +541,29 @@ namespace H.Avalonia.Infrastructure.DependencyInjection
                 return new TransferService<FieldSystemComponent, FieldSystemComponentDto>(
                     unitsOfMeasurementCalculator: unitsCalculator,
                     dtoFactory: fieldDtoFactory,
+                    dtoToModelMapper: dtoToModelMapper,
+                    modelToDtoMapper: modelToDtoMapper
+                );
+            });
+        }
+
+        /// <summary>
+        /// Register TransferService for RotationComponent and RotationComponentDto
+        /// </summary>
+        private void RegisterRotationTransferService(IContainerRegistry containerRegistry)
+        {
+            _logger.LogDebug("Registering Rotation transfer service");
+            
+            containerRegistry.Register<ITransferService<RotationComponent, RotationComponentDto>>(() =>
+            {
+                var unitsCalculator = _containerProvider.Resolve<IUnitsOfMeasurementCalculator>();
+                var rotationDtoFactory = _containerProvider.Resolve<IFactory<RotationComponentDto>>();
+                var dtoToModelMapper = _containerProvider.Resolve<IMapper>(nameof(RotationComponentDtoToRotationComponentMapper));
+                var modelToDtoMapper = _containerProvider.Resolve<IMapper>(nameof(RotationComponentToRotationComponentDtoMapper));
+
+                return new TransferService<RotationComponent, RotationComponentDto>(
+                    unitsOfMeasurementCalculator: unitsCalculator,
+                    dtoFactory: rotationDtoFactory,
                     dtoToModelMapper: dtoToModelMapper,
                     modelToDtoMapper: modelToDtoMapper
                 );

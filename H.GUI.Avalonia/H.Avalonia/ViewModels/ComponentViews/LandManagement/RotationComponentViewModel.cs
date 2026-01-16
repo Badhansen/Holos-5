@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using H.Core.Factories;
 using H.Core.Factories.Crops;
 using H.Core.Factories.Fields;
+using H.Core.Factories.Rotations;
 using H.Core.Models;
 using H.Core.Models.LandManagement.Rotation;
 using H.Core.Services.LandManagement.Fields;
@@ -21,6 +22,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement
         private readonly IRotationComponentService _rotationComponentService;
         private readonly ICropFactory _cropFactory;
         private RotationComponent _selectedRotationComponent;
+        private IRotationComponentDto _rotationComponentDto;
         private ObservableCollection<IFieldComponentDto> _fieldComponentDtos;
         private ObservableCollection<ICropDto> _cropDtos;
 
@@ -86,15 +88,6 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement
         }
 
         /// <summary>
-        /// The selected rotation component
-        /// </summary>
-        public RotationComponent SelectedRotationComponent
-        {
-            get => _selectedRotationComponent;
-            set => SetProperty(ref _selectedRotationComponent, value);
-        }
-
-        /// <summary>
         /// The user adds crops to the rotation, this collection holds the crop dtos for each crop in the rotation. For each crop dto in this collection
         /// there is a corresponding field component dto in the <see cref="FieldComponentDtos"/> collection.
         /// </summary>
@@ -102,6 +95,12 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement
         {
             get => _cropDtos;
             set => SetProperty(ref _cropDtos, value);
+        }
+
+        public IRotationComponentDto RotationComponentDto
+        {
+            get => _rotationComponentDto;
+            set => SetProperty(ref _rotationComponentDto, value);
         }
 
         #endregion
@@ -126,7 +125,10 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement
             }
 
             // Hold a reference to the selected field system object
-            SelectedRotationComponent = rotationComponent;
+            _selectedRotationComponent = rotationComponent;
+
+            // Build a DTO to represent the model/domain object
+            //var rotationComponetDto = _rotationComponentService.tra
         }
 
         #endregion

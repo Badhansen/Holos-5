@@ -23,6 +23,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using FastExpressionCompiler.LightExpression;
 using H.Avalonia.Services;
 using H.Core.Services;
 using H.Core.Services.StorageService;
@@ -42,7 +43,7 @@ namespace H.Avalonia.ViewModels
         private double _latitude;
         private string _address = string.Empty;
         private string _streetAddress = string.Empty;
-        private string _city = string.Empty;
+        private string _municipality = string.Empty;
         private string _postalCode = string.Empty;
         private MPoint _navigationPoint;
         private ImportHelpers _importHelper;
@@ -100,12 +101,12 @@ namespace H.Avalonia.ViewModels
         }
 
         /// <summary>
-        /// The city entered by the user.
+        /// The municipality entered by the user.
         /// </summary>
-        public string City
+        public string Municipality
         {
-            get => _city;
-            set => SetProperty(ref _city, value);
+            get => _municipality;
+            set => SetProperty(ref _municipality, value);
         }
 
         /// <summary>
@@ -518,33 +519,42 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private async void OnGetCoordinates()
         {
-            if (string.IsNullOrEmpty(StreetAddress))
+            if (string.IsNullOrEmpty(StreetAddress) || string.IsNullOrWhiteSpace(Municipality) || Enum.IsDefined(SelectedProvince) || string.IsNullOrWhiteSpace(PostalCode))
             {
-                Logger.LogDebug($@"Cannot find location as an empty address was entered.");
-                NotificationManager.ShowToast(H.Core.Properties.Resources.AddressFieldEmpty, Core.Properties.Resources.MessageEmptyAddress, NotificationType.Information);
+                // Draw toasts for each field missing data.
+                if (SelectedProvince == Province.SelectProvince)
+                {
+                    Logger.LogDebug(@"Cannot find location as no province was selected.");
+                    NotificationManager.ShowToast("No province selected.", "Please select a province from the dropdown and try again.", NotificationType.Warning);
+                }
+                if (string.IsNullOrEmpty(StreetAddress))
+                {
+                    Logger.LogDebug(@"Cannot find location as no street address was entered.");
+                    NotificationManager.ShowToast("Street name field empty.", "Please enter house number and street name to try again.", NotificationType.Warning);
+                }
+                if (string.IsNullOrWhiteSpace(Municipality))
+                {
+                    Logger.LogDebug(@"Cannot find location as no municipality was entered.");
+                    NotificationManager.ShowToast("Municipality field empty.", "Please enter a municipality and try again.", NotificationType.Warning);
+                }
+                if (string.IsNullOrWhiteSpace(PostalCode))
+                {
+                    Logger.LogDebug(@"Cannot find location as an empty postal code was entered.");
+                    NotificationManager.ShowToast("Postal code field empty.", "Please enter a postal code and try again.", NotificationType.Warning);
+                }
                 return;
             }
             try
             {
                 // Call the geocoding service to get coordinates from the address, return early if problem encountered.
                 Logger.LogInformation($"Attempting coordinate acquisition from address in {nameof(SoilDataViewModel)}.{nameof(OnGetAddress)}");
-                var point = await _defaultGeocoderService.GetCoordinates(StreetAddress,City, SelectedProvince, "Canada", PostalCode);
+                var point = await _defaultGeocoderService.GetCoordinates(StreetAddress, Municipality, SelectedProvince, "Canada", PostalCode);
                 if (point.latitude == 0 || point.longitude == 0)
                 {
                     Logger.LogDebug($@"Cannot find the coordinate from the address entered.");
                     NotificationManager.ShowToast(H.Core.Properties.Resources.CoordinateError, H.Core.Properties.Resources.CantFindCoordinate, NotificationType.Error);
                     return;
                 }
-                // Call the geocoding service to get province from the address, return early if problem encountered.
-                var province = await _defaultGeocoderService.GetProvince(StreetAddress, City, SelectedProvince, "Canada", PostalCode);
-                if (province == null)
-                {
-                    Logger.LogDebug($@"Cannot find the province from the address entered.");
-                    NotificationManager.ShowToast(H.Core.Properties.Resources.InvalidAddress, H.Core.Properties.Resources.CantFindAddress, NotificationType.Error);
-                    return;
-                }
-                // Load province polygon and set coordinates.
-                SelectedProvince = (Province)province;
                 Logger.LogInformation($"Coordinate acquired from address in {nameof(SoilDataViewModel)}.{nameof(OnGetAddress)}");
                 Latitude = point.latitude;
                 Longitude = point.longitude;

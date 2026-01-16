@@ -91,7 +91,7 @@
                                          Text="{Binding StreetAddress, Mode=TwoWay}" />
                                 <TextBox Grid.Row="1" Grid.Column="0"
                                          Watermark="City/Town"
-                                         Text="{Binding City, Mode=TwoWay}" Margin="0,5,5,0"/>
+                                         Text="{Binding Municipality, Mode=TwoWay}" Margin="0,5,5,0"/>
                                 <TextBox Grid.Row="1" Grid.Column="1"
                                          Watermark="Postal Code"
                                          Text="{Binding PostalCode, Mode=TwoWay}" Margin="5,5,0,0"/>

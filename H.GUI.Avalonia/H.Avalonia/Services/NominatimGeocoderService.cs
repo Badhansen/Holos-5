@@ -47,24 +47,32 @@ namespace H.Avalonia.Services
         /// <summary>
         /// Checks if the address is already cached.
         /// </summary>
-        /// <param name="address">The address to check if a cache exists.</param>
-        /// <returns></returns>
-        public bool IsCached(string address)
+        /// <param name="street">The street address to check if geocode data is cached</param>
+        /// <param name="municipality">The municipality of the address to check if geocode data is cached</param>
+        /// <param name="province">The province of the address to check if geocode data is cached</param>
+        /// <param name="country">The country of the address to check if geocode data is cached</param>
+        /// <param name="postalCode">The postal code of the address to check if geocode data is cached</param>
+        /// <returns>True if cached file exists for this address, false otherwise</returns>
+        public bool IsCached(string street, string municipality, Province province, string country, string postalCode)
         {
-            var path = this.GetCachePath(address);
+            var path = this.GetCachePath(street, municipality, province, country, postalCode);
             return File.Exists(path);
         }
 
         /// <summary>
         /// Returns the latitude and longitude for the given address.
         /// </summary>
-        /// <param name="address">The address to geocode and get coordinates for.</param>
-        /// <returns>Longitude and latitude coordinates.</returns>
+        /// <param name="street">The street address to geocode and get coordinates for</param>
+        /// <param name="municipality">The municipality of the address to geocode and get coordinates for</param>
+        /// <param name="province">The province of the address to geocode and get coordinates for</param>
+        /// <param name="country">The country of the address to geocode and get coordinates for</param>
+        /// <param name="postalCode">The postal code of the address to geocode and get coordinates for</param>
+        /// <returns>Longitude and latitude coordinates</returns>
         public async Task<(double latitude, double longitude)> GetCoordinates(string street, string municipality, Province province, string country, string postalCode)
         {
             street = PrepareStreetStringForAPI(street);
             // If no cached data, get data from Nominatim API and cache it.
-            string content = this.GetCachedData(street + municipality + province.ToString() + country + postalCode);
+            string content = this.GetCachedData(street, municipality, province, country, postalCode);
             if (string.IsNullOrWhiteSpace(content))
             {
                 content = await GetAndCacheNominatimData(street, municipality, province, country, postalCode);
@@ -83,37 +91,36 @@ namespace H.Avalonia.Services
         }
 
         /// <summary>
-        /// Returns the province for the given address.
+        /// Returns a JObject of all the data returned from the Nominatim API for the given address
         /// </summary>
-        /// <param name="address">The address to geocode and get the province for.</param>
-        /// <returns>Province enum of where the address is located.</returns>
-        public async Task<Province?> GetProvince(string street, string municipality, Province province, string country, string postalCode)
+        /// <param name="street">The street address to geocode and get coordinates for</param>
+        /// <param name="municipality">The municipality of the address to geocode and get coordinates for</param>
+        /// <param name="province">The province of the address to geocode and get coordinates for</param>
+        /// <param name="country">The country of the address to geocode and get coordinates for</param>
+        /// <param name="postalCode">The postal code of the address to geocode and get coordinates for</param>
+        /// <returns>JObject containing all the data returned from the Nominatim API for the given address</returns>
+        public async Task <JObject> GetApiContent(string street, string municipality, Province province, string country, string postalCode)
         {
             street = PrepareStreetStringForAPI(street);
-            string content = this.GetCachedData(street + municipality + province.ToString() + country + postalCode);
             // If no cached data, get data from Nominatim API and cache it.
+            string content = this.GetCachedData(street, municipality, province, country, postalCode);
             if (string.IsNullOrWhiteSpace(content))
             {
-               content = await GetAndCacheNominatimData(street, municipality, province, country, postalCode);
+                content = await GetAndCacheNominatimData(street, municipality, province, country, postalCode);
             }
-            // If cached data or API data was available, parse it and return coordinates.
-            if (!string.IsNullOrWhiteSpace(content))
-            {
-                return ParseNominatimApiContentForProvince(content);
-            }
-            // Hit if there was an error downloading data from the API and no cached data available.
-            else
-            {
-                _logger.LogError($"{nameof(NominatimGeocoderService)}: there was an error while trying to download Nominatim coordinates data,");
-                return (null);
-            }
+            return JArray.Parse(content).FirstOrDefault() as JObject;
         }
 
         #endregion
 
         #region Private Methods
 
-        private string PrepareStreetStringForAPI(string address)
+        /// <summary>
+        /// Prepares the street address string for styling that works better with Nominatim 
+        /// </summary>
+        /// <param name="street">The street address string to reformat to a preferable format</param>
+        /// <returns></returns>
+        private string PrepareStreetStringForAPI(string street)
         {
             // Dictionary containing directions that can be converted to their abbreviated counterpart
             // Nominatim requires street name direction suffix be abbreviated
@@ -134,7 +141,7 @@ namespace H.Avalonia.Services
             var pattern = @"\b(" + string.Join("|", directions.Keys.OrderByDescending(k => k.Length)) + @")\b";
             var regex = new Regex(pattern, RegexOptions.IgnoreCase);
 
-            string convertedAddress = regex.Replace(address, match =>
+            string convertedAddress = regex.Replace(street, match =>
             {
                 var key = match.Value.ToLower();
                 return directions.ContainsKey(key) ? directions[key] : match.Value;
@@ -145,20 +152,11 @@ namespace H.Avalonia.Services
         /// <summary>
         /// Gets the correct Nominatim API URL for the given address.
         /// </summary>
-        /// <param name="address">The address to format for a Nominatim API call.</param>
-        /// <returns>Returns the url needed to access the API for the given address.</returns>
-        private string GetCorrectApiUrl(string address)
-        {
-            address = Uri.EscapeDataString(address);
-            var format = "json";
-            var Url = $"https://nominatim.openstreetmap.org/search?q={address}&format={format}&addressdetails=1&limit=1";
-            return Url;
-        }
-
-        /// <summary>
-        /// Gets the correct Nominatim API URL for the given address.
-        /// </summary>
-        /// <param name="address">The address to format for a Nominatim API call.</param>
+        /// <param name="street">The street address used in the api call</param>
+        /// <param name="municipality">The municipality used in the api call</param>
+        /// <param name="province">The province used in the api call</param>
+        /// <param name="country">The country used in the api call</param>
+        /// <param name="postalCode">The postal code used in the api call</param>
         /// <returns>Returns the url needed to access the API for the given address.</returns>
         private string GetCorrectApiUrl(string street, string municipality, Province province, string country, string postalCode)
         {
@@ -168,14 +166,18 @@ namespace H.Avalonia.Services
             country = Uri.EscapeDataString(country);
             postalCode = Uri.EscapeDataString(postalCode);
             var format = "json";
-            var Url = $"https://nominatim.openstreetmap.org/search?street={street}&city{municipality}&state={provinceString}&postalcode={postalCode}&format={format}&addressdetails=1&limit=1&countrycodes=ca";
+            var Url = $"https://nominatim.openstreetmap.org/search?street={street}&city={municipality}&state={provinceString}&country={country}&postalcode={postalCode}&format={format}&addressdetails=1&limit=1";
             return Url;
         }
 
         /// <summary>
         /// Returns geocoding data for the specified address from the Nominatim API and caches the result.
         /// </summary>
-        /// <param name="address">The address to geocode. Must be a non-empty string representing a valid location.</param>
+        /// <param name="street">The street address used in the api call</param>
+        /// <param name="municipality">The municipality used in the api call</param>
+        /// <param name="province">The province used in the api call</param>
+        /// <param name="country">The country used in the api call</param>
+        /// <param name="postalCode">The postal code used in the api call</param>
         /// <returns>A JSON string containing the geocoding data for the specified address if the API call is successful;
         /// otherwise, returns null.</returns>
         private async Task<string> GetAndCacheNominatimData(string street, string municipality, Province province, string country, string postalCode)
@@ -197,56 +199,13 @@ namespace H.Avalonia.Services
                             _logger.LogError($"{nameof(NominatimGeocoderService)}.{nameof(DownloadNominatimApiData)}: API content empty. Address not valid.");
                             return null;
                         }
-                        CacheData(street + municipality + province + country + postalCode, content);
+                        CacheData(street, municipality, province, country, postalCode, content);
                     }
                     else
                     {
                         _logger.LogError($"{nameof(NominatimGeocoderService)}.{nameof(GetCoordinates)}, Nominatim API Task Status: {getNominatimApi.Status}");
                         throw new Exception("Nominatim API couldn't be reached or connection timed out.");
                     }
-            }
-            catch (Exception e)
-            {
-                _logger.LogInformation($"Could not load data from Nominatim API. Exception thrown.");
-                _logger.LogError($"Exception occurred in {nameof(NominatimGeocoderService)}.{nameof(GetCoordinates)}. Exception message: {e.Message}");
-                _logger.LogError($"Inner Exception message: {e.InnerException}");
-                _logger.LogInformation($"Returning null Data.");
-            }
-            return content;
-        }
-
-        /// <summary>
-        /// Returns geocoding data for the specified address from the Nominatim API and caches the result.
-        /// </summary>
-        /// <param name="address">The address to geocode. Must be a non-empty string representing a valid location.</param>
-        /// <returns>A JSON string containing the geocoding data for the specified address if the API call is successful;
-        /// otherwise, returns null.</returns>
-        private async Task<string> GetAndCacheNominatimData(string address)
-        {
-            string apiUrl = GetCorrectApiUrl(address);
-            string content = null;
-            try
-            {
-                // Run a task that forces the Nominatim API to timeout if the timeout property isn't able to gracefully time out the API call. If the API
-                // does not respond within this time (slow internet connection or API issues), we return null.
-                var getNominatimApi = Task.Run(() => DownloadNominatimApiData(apiUrl));
-                if (getNominatimApi.Wait(TimeSpan.FromSeconds(Timeout)))
-                {
-                    _logger.LogInformation($"{nameof(NominatimGeocoderService)}.{nameof(GetCoordinates)}, Nominatim API Task Status: {getNominatimApi.Status}");
-                    content = getNominatimApi.Result;
-                    // Check if content returned by API is empty, if so do not return
-                    if (content == "[]")
-                    {
-                        _logger.LogError($"{nameof(NominatimGeocoderService)}.{nameof(DownloadNominatimApiData)}: API content empty. Address not valid.");
-                        return null;
-                    }
-                    CacheData(address, content);
-                }
-                else
-                {
-                    _logger.LogError($"{nameof(NominatimGeocoderService)}.{nameof(GetCoordinates)}, Nominatim API Task Status: {getNominatimApi.Status}");
-                    throw new Exception("Nominatim API couldn't be reached or connection timed out.");
-                }
             }
             catch (Exception e)
             {
@@ -286,13 +245,18 @@ namespace H.Avalonia.Services
         /// <summary>
         /// Based off the address, returns the cache path for the address.
         /// </summary>
-        /// <param name="address">The address the path will be based off of.</param>
+        /// <param name="street">The street address used in the naming of the cache file</param>
+        /// <param name="municipality">The municipality used in the naming of the cache file</param>
+        /// <param name="province">The province used in the naming of the cache file</param>
+        /// <param name="country">The country used in the naming of the cache file</param>
+        /// <param name="postalCode">The postal code used in the naming of the cache file</param>
         /// <returns>The path based off of the given address.</returns>
-        private string GetCachePath(string address)
+        private string GetCachePath(string street, string municipality, Province province, string country, string postalCode)
         {
+            var joinedAddress = street+"_"+municipality+"_"+province+"_"+country+"_"+postalCode;
             // Sanitize address for file name, replace common address characters with underscores.
             var invalidCharacters = Path.GetInvalidFileNameChars();
-            var cleanedFileName = invalidCharacters.Aggregate(address, (current, c) => current.Replace(c, '_')).Replace(" ", "_").Replace(",", "");
+            var cleanedFileName = invalidCharacters.Aggregate(joinedAddress, (current, c) => current.Replace(c, '_')).Replace(" ", "_").Replace(",", "");
             var filename = $"nominatim_geocoder_data_address_{cleanedFileName}";
 
             var path = Path.GetTempPath();
@@ -302,14 +266,18 @@ namespace H.Avalonia.Services
         /// <summary>
         /// Retrieves cached data for the given address if it exists.
         /// </summary>
-        /// <param name="address">The address tied to the cached file.</param>
+        /// <param name="street">The street address used in the naming of the cache file to be retrieved</param>
+        /// <param name="municipality">The municipality used in the naming of the cache file to be retrieved</param>
+        /// <param name="province">The province used in the naming of the cache file to be retrieved</param>
+        /// <param name="country">The country used in the naming of the cache file to be retrieved</param>
+        /// <param name="postalCode">The postal code used in the naming of the cache file to be retrieved</param>
         /// <returns>Returns JSON array in string format from a previous Nominatim API call.</returns>
-        private string GetCachedData(string address)
+        private string GetCachedData(string street, string municipality, Province province, string country, string postalCode)
         {
-            var path = GetCachePath(address);
+            var path = GetCachePath(street, municipality, province, country, postalCode);
             if (File.Exists(path))
             {
-                _logger.LogInformation($"Loading cached Nominatim Geocoder data for address: {address}");
+                _logger.LogInformation($"Loading cached Nominatim Geocoder data for address: {street} {municipality}, {province.ToString()}, {country}, {postalCode}");
                 return File.ReadAllText(path);
             }
             return null;
@@ -318,12 +286,15 @@ namespace H.Avalonia.Services
         /// <summary>
         /// Caches the Nominatim API data for the given address.
         /// </summary>
-        /// <param name="address">The address tied to the cached file.</param>
-        /// <param name="content">The content returned from the API call tied to the address.</param>
-        private void CacheData(string address, string content)
+        /// <param name="street">The street address used in the naming of the cache file to be retrieved</param>
+        /// <param name="municipality">The municipality used in the naming of the cache file to be retrieved</param>
+        /// <param name="province">The province used in the naming of the cache file to be retrieved</param>
+        /// <param name="country">The country used in the naming of the cache file to be retrieved</param>
+        /// <param name="postalCode">The postal code used in the naming of the cache file to be retrieved</param>
+        private void CacheData(string street, string municipality, Province province, string country, string postalCode, string content)
         {
-            _logger.LogInformation($"Caching Nominatim Geocoder data for address: {address}");
-            var path = GetCachePath(address);
+            _logger.LogInformation($"Caching Nominatim Geocoder data for address: {street} {municipality}, {province}, {country}, {postalCode}");
+            var path = GetCachePath(street, municipality, province, country, postalCode);
             File.WriteAllText(path, content);
         }
 
@@ -341,35 +312,6 @@ namespace H.Avalonia.Services
             var lon = double.Parse(jObject["lon"]?.ToString());
             return (latitude: lat, longitude: lon);
         }
-
-        /// <summary>
-        /// Parses the Nominatim API content for province information.
-        /// </summary>
-        /// <param name="content">The content from the API call to be parsed for provincial data.</param>
-        /// <returns>Province enum based off of the given API data.</returns>
-        private Province? ParseNominatimApiContentForProvince(string content)
-        {
-            // Initially read as JArray since Nominatim returns an array of one JSON object.
-            JObject jObject = JArray.Parse(content).FirstOrDefault() as JObject;
-
-            // Access province from the JObject
-            var provinceString = jObject["address"]?["province"]?.ToString().Replace(" ", ""); // Ontario returns as province type from Nominatim/OpenStreetMap
-            if (provinceString == null)
-            {
-                provinceString = jObject["address"]?["state"]?.ToString().Replace(" ", ""); // All other provinces/territories return as state type
-            }
-
-            // Correct province string to match Province enum name
-            if (provinceString == "NewfoundlandandLabrador")
-                provinceString = "Newfoundland";
-
-            // Convert province string to Province enum
-            if (Enum.IsDefined(typeof(Province), provinceString))
-                return (Province)Enum.Parse(typeof(Province), provinceString);
-            else
-                return null;
-        }
-
         #endregion
     }
 }

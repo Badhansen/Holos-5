@@ -88,7 +88,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement
         }
 
         /// <summary>
-        /// The user adds crops to the rotation, this collection holds the crop dtos for each crop in the rotation. For each crop dto in this collection
+        /// The user adds crops to the rotation, this collection holds the crop DTOs for each crop in the rotation. For each crop dto in this collection
         /// there is a corresponding field component dto in the <see cref="FieldComponentDtos"/> collection.
         /// </summary>
         public ObservableCollection<ICropDto> CropDtos
@@ -128,7 +128,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement
             _selectedRotationComponent = rotationComponent;
 
             // Build a DTO to represent the model/domain object
-            //var rotationComponetDto = _rotationComponentService.tra
+            var rotationComponentDto = _rotationComponentService.TransferToRotationComponentDto(rotationComponent);
         }
 
         #endregion

@@ -72,9 +72,16 @@ public class RotationComponentService : ComponentServiceBase, IRotationComponent
         base.InitializeComponent(farm, rotationComponent);
     }
 
+    /// <summary>
+    /// Creates a new <see cref="IRotationComponentDto"/> from a <see cref="RotationComponent"/> for UI binding.
+    /// </summary>
+    /// <param name="template">The source rotation component.</param>
+    /// <returns>A DTO suitable for binding in the view.</returns>
     public IRotationComponentDto TransferToRotationComponentDto(RotationComponent template)
     {
-        throw new NotImplementedException();
+        var rotationComponentDto = _rotationTransferService.TransferDomainObjectToDto(template);
+
+        return rotationComponentDto;
     }
 
     #endregion

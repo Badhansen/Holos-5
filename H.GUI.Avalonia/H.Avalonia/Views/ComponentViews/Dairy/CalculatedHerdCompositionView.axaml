@@ -1,0 +1,82 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="900"
+             x:Class="H.Avalonia.Views.ComponentViews.Dairy.CalculatedHerdCompositionView">
+  
+  <!-- Calculated Herd Composition Panel -->
+  <Border Background="#E8F5E9" BorderBrush="#43A047" BorderThickness="2" 
+         CornerRadius="8" Padding="20">
+    <StackPanel>
+      <Grid ColumnDefinitions="Auto,*">
+        <TextBlock Grid.Column="0" Text="[OK]" FontSize="16" FontWeight="Bold" Foreground="#43A047" 
+                  Margin="0,0,12,0" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="1" Text="Calculated Herd Composition" 
+                  FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
+      </Grid>
+      
+      <TextBlock Text="Based on your inputs, here's your calculated herd structure:" 
+                FontSize="13" Foreground="#666" Margin="0,8,0,16"/>
+      
+      <Grid ColumnDefinitions="*,*,*,*">
+        <!-- Calves -->
+        <Border Grid.Column="0" Background="White" CornerRadius="6" Padding="16" Margin="4">
+          <StackPanel>
+            <TextBlock Text="CALF" FontSize="16" FontWeight="Bold" Foreground="#1976D2" 
+                      HorizontalAlignment="Center" Margin="0,8,0,8"/>
+            <TextBlock Text="Calves" FontSize="14" FontWeight="SemiBold" 
+                      HorizontalAlignment="Center" Margin="0,0,0,4"/>
+            <TextBlock Text="95 animals" FontSize="20" FontWeight="Bold" 
+                      Foreground="#1976D2" HorizontalAlignment="Center"/>
+            <TextBlock Text="Birth to 4 months" FontSize="11" Foreground="#666" 
+                      HorizontalAlignment="Center" Margin="0,4,0,0"/>
+          </StackPanel>
+        </Border>
+        
+        <!-- Heifers -->
+        <Border Grid.Column="1" Background="White" CornerRadius="6" Padding="16" Margin="4">
+          <StackPanel>
+            <TextBlock Text="HEIFER" FontSize="16" FontWeight="Bold" Foreground="#7B1FA2" 
+                      HorizontalAlignment="Center" Margin="0,8,0,8"/>
+            <TextBlock Text="Heifers" FontSize="14" FontWeight="SemiBold" 
+                      HorizontalAlignment="Center" Margin="0,0,0,4"/>
+            <TextBlock Text="30 animals" FontSize="20" FontWeight="Bold" 
+                      Foreground="#7B1FA2" HorizontalAlignment="Center"/>
+            <TextBlock Text="Replacement stock" FontSize="11" Foreground="#666" 
+                      HorizontalAlignment="Center" Margin="0,4,0,0"/>
+          </StackPanel>
+        </Border>
+        
+        <!-- Lactating -->
+        <Border Grid.Column="2" Background="White" CornerRadius="6" Padding="16" Margin="4">
+          <StackPanel>
+            <TextBlock Text="LACTATING" FontSize="16" FontWeight="Bold" Foreground="#388E3C" 
+                      HorizontalAlignment="Center" Margin="0,8,0,8"/>
+            <TextBlock Text="Lactating" FontSize="14" FontWeight="SemiBold" 
+                      HorizontalAlignment="Center" Margin="0,0,0,4"/>
+            <TextBlock Text="86 animals" FontSize="20" FontWeight="Bold" 
+                      Foreground="#388E3C" HorizontalAlignment="Center"/>
+            <TextBlock Text="Producing milk" FontSize="11" Foreground="#666" 
+                      HorizontalAlignment="Center" Margin="0,4,0,0"/>
+          </StackPanel>
+        </Border>
+        
+        <!-- Dry -->
+        <Border Grid.Column="3" Background="White" CornerRadius="6" Padding="16" Margin="4">
+          <StackPanel>
+            <TextBlock Text="DRY" FontSize="16" FontWeight="Bold" Foreground="#F57C00" 
+                      HorizontalAlignment="Center" Margin="0,8,0,8"/>
+            <TextBlock Text="Dry Cows" FontSize="14" FontWeight="SemiBold" 
+                      HorizontalAlignment="Center" Margin="0,0,0,4"/>
+            <TextBlock Text="14 animals" FontSize="20" FontWeight="Bold" 
+                      Foreground="#F57C00" HorizontalAlignment="Center"/>
+            <TextBlock Text="Pre-calving rest" FontSize="11" Foreground="#666" 
+                      HorizontalAlignment="Center" Margin="0,4,0,0"/>
+          </StackPanel>
+        </Border>
+      </Grid>
+    </StackPanel>
+  </Border>
+  
+</UserControl>

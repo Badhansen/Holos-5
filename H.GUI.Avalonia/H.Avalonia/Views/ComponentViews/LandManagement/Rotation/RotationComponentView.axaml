@@ -1,8 +1,30 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationComponentView">
-  This is a rotation
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:field="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Field"
+			 xmlns:rotation="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationComponentView">
+
+	<Design.DataContext>
+		<rotation:RotationComponentViewModelDesign/>
+	</Design.DataContext>
+
+	<Grid>
+        <Grid.RowDefinitions>
+            <!-- Title -->
+            <RowDefinition Height="Auto"/>
+            <!-- Advanced Options Toggle -->
+            <RowDefinition Height="Auto"/>
+            <!-- Content -->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <!-- Title -->
+            <TextBox Classes="view-title" Text="{Binding Path=SelectedRotationComponentDto.Name}"/>
+            <Border Classes="title-underline"/>
+        </StackPanel>
+	</Grid>
 </UserControl>

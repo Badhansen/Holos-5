@@ -21,7 +21,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         private readonly IRotationComponentService _rotationComponentService;
         private readonly ICropFactory _cropFactory;
         private RotationComponent _selectedRotationComponent;
-        private IRotationComponentDto _rotationComponentDto;
+        private IRotationComponentDto _selectedRotationComponentDto;
         private ObservableCollection<IFieldComponentDto> _fieldComponentDtos;
         private ObservableCollection<ICropDto> _cropDtos;
 
@@ -96,10 +96,10 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
             set => SetProperty(ref _cropDtos, value);
         }
 
-        public IRotationComponentDto RotationComponentDto
+        public IRotationComponentDto SelectedRotationComponentDto
         {
-            get => _rotationComponentDto;
-            set => SetProperty(ref _rotationComponentDto, value);
+            get => _selectedRotationComponentDto;
+            set => SetProperty(ref _selectedRotationComponentDto, value);
         }
 
         #endregion

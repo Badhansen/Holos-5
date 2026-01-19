@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace H.Avalonia.Views.ComponentViews.LandManagement;
+namespace H.Avalonia.Views.ComponentViews.LandManagement.Rotation;
 
 public partial class RotationComponentView : UserControl
 {

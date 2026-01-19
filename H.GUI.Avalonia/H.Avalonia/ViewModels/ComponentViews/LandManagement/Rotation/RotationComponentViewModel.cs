@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using H.Core.Factories;
 using H.Core.Factories.Crops;
 using H.Core.Factories.Fields;
 using H.Core.Factories.Rotations;
@@ -12,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using Prism.Events;
 using Prism.Regions;
 
-namespace H.Avalonia.ViewModels.ComponentViews.LandManagement
+namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
 {
     public class RotationComponentViewModel : ViewModelBase
     {

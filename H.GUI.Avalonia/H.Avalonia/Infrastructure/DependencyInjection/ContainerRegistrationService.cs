@@ -9,6 +9,7 @@ using H.Avalonia.ViewModels.ComponentViews.Dairy;
 using H.Avalonia.ViewModels.ComponentViews.Infrastructure;
 using H.Avalonia.ViewModels.ComponentViews.LandManagement;
 using H.Avalonia.ViewModels.ComponentViews.LandManagement.Field;
+using H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation;
 using H.Avalonia.ViewModels.ComponentViews.OtherAnimals;
 using H.Avalonia.ViewModels.ComponentViews.Poultry;
 using H.Avalonia.ViewModels.ComponentViews.Sheep;
@@ -75,6 +76,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Prism.Ioc;
 using ClimateResultsView = H.Avalonia.Views.ResultViews.ClimateResultsView;
+using RotationComponentView = H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationComponentView;
 using SoilResultsView = H.Avalonia.Views.ResultViews.SoilResultsView;
 
 namespace H.Avalonia.Infrastructure.DependencyInjection

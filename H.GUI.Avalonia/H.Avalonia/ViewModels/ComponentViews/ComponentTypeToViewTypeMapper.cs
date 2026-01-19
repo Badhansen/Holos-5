@@ -1,4 +1,5 @@
 using H.Avalonia.Views.ComponentViews.LandManagement.Field;
+using H.Avalonia.Views.ComponentViews.LandManagement.Rotation;
 using H.Core.Models;
 
 namespace H.Avalonia.ViewModels.ComponentViews;
@@ -18,7 +19,7 @@ public class ComponentTypeToViewTypeMapper
 
         if (component.ComponentType == ComponentType.Rotation)
         {
-            return nameof(Views.ComponentViews.LandManagement.RotationComponentView);
+            return nameof(RotationComponentView);
         }
         if (component.ComponentType == ComponentType.Shelterbelt)
         {

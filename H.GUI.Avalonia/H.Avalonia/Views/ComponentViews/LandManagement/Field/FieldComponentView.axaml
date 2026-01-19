@@ -58,8 +58,7 @@
 				            Margin="12,0,0,0"
 				            OffContent="Basic"
 				            OnContent="Advanced"
-				            IsChecked="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
-				            d:IsChecked="True"/>
+				            IsChecked="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"/>
 			</Grid>
 		</Border>
 

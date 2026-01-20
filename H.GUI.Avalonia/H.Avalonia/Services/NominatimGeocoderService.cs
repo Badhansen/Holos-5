@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Avalonia.Controls.Notifications;
 using Path = System.IO.Path;
 
 namespace H.Avalonia.Services
@@ -17,8 +18,13 @@ namespace H.Avalonia.Services
     {
         #region Fields
 
-        private const int Timeout = 60;
         private ILogger _logger;
+        private INotificationManagerService _notificationManagerService;
+
+        private const int ApiTimeout = 60;
+        private const int ApiLockoutSeconds = 5;
+
+        private DateTime _lastApiRequestTime = DateTime.MinValue;
 
         #endregion
 
@@ -28,7 +34,7 @@ namespace H.Avalonia.Services
 
         #region Constructors
 
-        public NominatimGeocoderService(ILogger logger)
+        public NominatimGeocoderService(ILogger logger, INotificationManagerService notificationManagerService)
         {
             if (logger != null)
             {
@@ -37,6 +43,15 @@ namespace H.Avalonia.Services
             else
             {
                 throw new ArgumentNullException(nameof(logger));
+            }
+
+            if (notificationManagerService != null)
+            {
+                _notificationManagerService = notificationManagerService;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(notificationManagerService));
             }
         }
 
@@ -182,6 +197,15 @@ namespace H.Avalonia.Services
         /// otherwise, returns null.</returns>
         private async Task<string> GetAndCacheNominatimData(string street, string municipality, Province province, string country, string postalCode)
         {
+            // Check if request is locked out due to previous request being made too recently
+            if (IsRequestLocked())
+            {
+                _notificationManagerService.ShowToast("Too many requests made.", $"Please wait {ApiLockoutSeconds - (DateTime.Now - _lastApiRequestTime).TotalSeconds:F0} seconds before looking up another address.");
+                _logger.LogWarning($"{nameof(NominatimGeocoderService)}: API request blocked due to lockout timer.");
+                return null;
+            }
+            _lastApiRequestTime = DateTime.Now;
+
             string apiUrl = GetCorrectApiUrl(street, municipality, province, country, postalCode);
             string content = null;
             try 
@@ -189,7 +213,7 @@ namespace H.Avalonia.Services
                     // Run a task that forces the Nominatim API to timeout if the timeout property isn't able to gracefully time out the API call. If the API
                     // does not respond within this time (slow internet connection or API issues), we return null.
                     var getNominatimApi = Task.Run(() => DownloadNominatimApiData(apiUrl));
-                    if (getNominatimApi.Wait(TimeSpan.FromSeconds(Timeout)))
+                    if (getNominatimApi.Wait(TimeSpan.FromSeconds(ApiTimeout)))
                     {
                         _logger.LogInformation($"{nameof(NominatimGeocoderService)}.{nameof(GetCoordinates)}, Nominatim API Task Status: {getNominatimApi.Status}");
                         content = getNominatimApi.Result;
@@ -197,6 +221,7 @@ namespace H.Avalonia.Services
                         if (content == "[]")
                         {
                             _logger.LogError($"{nameof(NominatimGeocoderService)}.{nameof(DownloadNominatimApiData)}: API content empty. Address not valid.");
+                            _notificationManagerService.ShowToast(H.Core.Properties.Resources.CoordinateError, H.Core.Properties.Resources.CantFindCoordinate, NotificationType.Error);
                             return null;
                         }
                         CacheData(street, municipality, province, country, postalCode, content);
@@ -311,6 +336,15 @@ namespace H.Avalonia.Services
             var lat = double.Parse(jObject["lat"]?.ToString());
             var lon = double.Parse(jObject["lon"]?.ToString());
             return (latitude: lat, longitude: lon);
+        }
+
+        /// <summary>
+        /// Returns boolean on if the API request is locked out due to previous request being made too recently.
+        /// </summary>
+        /// <returns>False if an API call can be made, true if an API call can be made.</returns>
+        private bool IsRequestLocked()
+        {
+            return (DateTime.Now - _lastApiRequestTime).TotalSeconds < ApiLockoutSeconds;
         }
         #endregion
     }

@@ -84,5 +84,10 @@ public class RotationComponentService : ComponentServiceBase, IRotationComponent
         return rotationComponentDto;
     }
 
+    public RotationComponent TransferRotationDtoToSystem(RotationComponentDto rotationDto, RotationComponent rotationComponent)
+    {
+        return _rotationTransferService.TransferDtoToDomainObject(rotationDto, rotationComponent);
+    }
+
     #endregion
 }

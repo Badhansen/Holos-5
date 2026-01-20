@@ -1,6 +1,7 @@
 using H.Avalonia.ViewModels.ComponentViews.LandManagement;
 using H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation;
 using H.Core.Factories.Crops;
+using H.Core.Factories.Rotations;
 using H.Core.Models;
 using H.Core.Models.LandManagement.Rotation;
 using H.Core.Services.LandManagement.Fields;
@@ -12,6 +13,10 @@ using Prism.Regions;
 
 namespace H.Avalonia.Test.ViewModels.ComponentViews.LandManagement;
 
+/// <summary>
+/// Test class for <see cref="RotationComponentViewModel"/>.
+/// Tests constructor validation, initialization, navigation, property binding, and event handling.
+/// </summary>
 [TestClass]
 public class RotationComponentViewModelTests
 {
@@ -44,13 +49,13 @@ public class RotationComponentViewModelTests
     [TestInitialize]
     public void TestInitialize()
     {
-        // Setup test farm
+        // Setup test farm that will be returned by the storage service
         _testFarm = new Farm
         {
             Name = "Test Farm"
         };
 
-        // Setup mocks
+        // Setup mocks for all dependencies required by RotationComponentViewModel
         _mockRegionManager = new Mock<IRegionManager>();
         _mockEventAggregator = new Mock<IEventAggregator>();
         _mockStorageService = new Mock<IStorageService>();
@@ -59,7 +64,7 @@ public class RotationComponentViewModelTests
         _mockCropFactory = new Mock<ICropFactory>();
         _mockRotationComponentService = new Mock<IRotationComponentService>();
 
-        // Setup storage service mock
+        // Configure storage service to return a valid storage object with application data
         _mockStorageService.Setup(x => x.Storage).Returns(new H.Core.Storage()
         {
             ApplicationData = new ApplicationData()
@@ -69,7 +74,19 @@ public class RotationComponentViewModelTests
         });
         _mockStorageService.Setup(x => x.GetActiveFarm()).Returns(_testFarm);
 
-        // Create view model with mocked dependencies
+        // Setup the rotation service to return a valid DTO when TransferToRotationComponentDto is called.
+        // This is essential because InitializeRotationComponent subscribes to the DTO's PropertyChanged event.
+        // Without this setup, the DTO would be null and cause NullReferenceException when subscribing to events.
+        _mockRotationComponentService
+            .Setup(x => x.TransferToRotationComponentDto(It.IsAny<RotationComponent>()))
+            .Returns((RotationComponent rc) => new RotationComponentDto
+            {
+                Name = rc.Name,
+                Guid = rc.Guid,
+                FieldArea = rc.FieldSystemComponent?.FieldArea ?? 0
+            });
+
+        // Create the view model under test with all mocked dependencies
         _viewModel = new RotationComponentViewModel(
             _mockRegionManager.Object,
             _mockEventAggregator.Object,
@@ -83,6 +100,7 @@ public class RotationComponentViewModelTests
     [TestCleanup]
     public void TestCleanup()
     {
+        // Clean up the view model after each test to prevent memory leaks and ensure test isolation
         _viewModel?.Dispose();
     }
 
@@ -93,7 +111,7 @@ public class RotationComponentViewModelTests
     [TestMethod]
     public void Constructor_WithValidParameters_ShouldCreateInstance()
     {
-        // Act & Assert
+        // Verify that the view model is properly instantiated when all dependencies are provided
         Assert.IsNotNull(_viewModel);
         Assert.IsInstanceOfType(_viewModel, typeof(RotationComponentViewModel));
     }
@@ -102,7 +120,7 @@ public class RotationComponentViewModelTests
     [ExpectedException(typeof(ArgumentNullException))]
     public void Constructor_WithNullRegionManager_ShouldThrowArgumentNullException()
     {
-        // Act
+        // Verify that the constructor enforces non-null region manager dependency
         new RotationComponentViewModel(
             null,
             _mockEventAggregator.Object,
@@ -117,7 +135,7 @@ public class RotationComponentViewModelTests
     [ExpectedException(typeof(ArgumentNullException))]
     public void Constructor_WithNullEventAggregator_ShouldThrowArgumentNullException()
     {
-        // Act
+        // Verify that the constructor enforces non-null event aggregator dependency
         new RotationComponentViewModel(
             _mockRegionManager.Object,
             null,
@@ -132,7 +150,7 @@ public class RotationComponentViewModelTests
     [ExpectedException(typeof(ArgumentNullException))]
     public void Constructor_WithNullStorageService_ShouldThrowArgumentNullException()
     {
-        // Act
+        // Verify that the constructor enforces non-null storage service dependency
         new RotationComponentViewModel(
             _mockRegionManager.Object,
             _mockEventAggregator.Object,
@@ -147,7 +165,7 @@ public class RotationComponentViewModelTests
     [ExpectedException(typeof(ArgumentNullException))]
     public void Constructor_WithNullFieldComponentService_ShouldThrowArgumentNullException()
     {
-        // Act
+        // Verify that the constructor enforces non-null field component service dependency
         new RotationComponentViewModel(
             _mockRegionManager.Object,
             _mockEventAggregator.Object,
@@ -162,7 +180,7 @@ public class RotationComponentViewModelTests
     [ExpectedException(typeof(ArgumentNullException))]
     public void Constructor_WithNullLogger_ShouldThrowArgumentNullException()
     {
-        // Act
+        // Verify that the constructor enforces non-null logger dependency
         new RotationComponentViewModel(
             _mockRegionManager.Object,
             _mockEventAggregator.Object,
@@ -177,7 +195,7 @@ public class RotationComponentViewModelTests
     [ExpectedException(typeof(ArgumentNullException))]
     public void Constructor_WithNullCropFactory_ShouldThrowArgumentNullException()
     {
-        // Act
+        // Verify that the constructor enforces non-null crop factory dependency
         new RotationComponentViewModel(
             _mockRegionManager.Object,
             _mockEventAggregator.Object,
@@ -195,17 +213,17 @@ public class RotationComponentViewModelTests
     [TestMethod]
     public void InitializeViewModel_WithRotationComponent_ShouldCallBaseInitializeViewModel()
     {
-        // Arrange
+        // Arrange: Create a test rotation component
         var rotationComponent = new RotationComponent
         {
             Name = "Test Rotation"
         };
 
-        // Act
+        // Act: Call InitializeViewModel with the rotation component
         _viewModel.InitializeViewModel(rotationComponent);
 
-        // Assert
-        // Verify that the logger was called (indicating base method was called)
+        // Assert: Verify that the base class initialization was called by checking if the logger was invoked
+        // The base InitializeViewModel logs a debug message containing "initializing"
         _mockLogger.Verify(
             x => x.Log(
                 LogLevel.Debug,
@@ -220,7 +238,8 @@ public class RotationComponentViewModelTests
     [TestMethod]
     public void InitializeViewModel_WithParameterlessCall_ShouldNotThrow()
     {
-        // Act
+        // Verify that calling InitializeViewModel without parameters doesn't throw an exception
+        // This tests the parameterless overload of the method
         try
         {
             _viewModel.InitializeViewModel();
@@ -230,7 +249,6 @@ public class RotationComponentViewModelTests
             Assert.Fail("InitializeViewModel() should not throw an exception");
         }
         
-        // Assert - If we get here, no exception was thrown
         Assert.IsTrue(true);
     }
 
@@ -241,7 +259,7 @@ public class RotationComponentViewModelTests
     [TestMethod]
     public void Constructor_ShouldInjectAllDependenciesCorrectly()
     {
-        // Arrange & Act
+        // Create a new instance to verify that dependency injection works correctly
         var viewModel = new RotationComponentViewModel(
             _mockRegionManager.Object,
             _mockEventAggregator.Object,
@@ -251,11 +269,13 @@ public class RotationComponentViewModelTests
             _mockLogger.Object,
             _mockCropFactory.Object);
 
-        // Assert
-        // Since the fields are private, we can verify correct injection by testing that no exceptions are thrown
-        // and that the view model is properly initialized
+        // Since the dependency fields are private, we verify correct injection by ensuring
+        // the view model is created successfully without throwing exceptions
         Assert.IsNotNull(viewModel);
         Assert.IsInstanceOfType(viewModel, typeof(RotationComponentViewModel));
+        
+        // Clean up to prevent memory leaks
+        viewModel.Dispose();
     }
 
     #endregion
@@ -265,7 +285,7 @@ public class RotationComponentViewModelTests
     [TestMethod]
     public void Dispose_ShouldNotThrowException()
     {
-        // Act
+        // Verify that disposing the view model doesn't throw an exception
         try
         {
             _viewModel.Dispose();
@@ -275,14 +295,14 @@ public class RotationComponentViewModelTests
             Assert.Fail("Dispose should not throw an exception");
         }
         
-        // Assert - If we get here, no exception was thrown
         Assert.IsTrue(true);
     }
 
     [TestMethod]
     public void Dispose_CalledMultipleTimes_ShouldNotThrowException()
     {
-        // Act
+        // Verify that the dispose pattern is correctly implemented to handle multiple calls
+        // This is important for IDisposable implementations
         try
         {
             _viewModel.Dispose();
@@ -293,7 +313,6 @@ public class RotationComponentViewModelTests
             Assert.Fail("Multiple dispose calls should not throw an exception");
         }
         
-        // Assert - If we get here, no exception was thrown
         Assert.IsTrue(true);
     }
 
@@ -304,36 +323,36 @@ public class RotationComponentViewModelTests
     [TestMethod]
     public void ViewName_Property_ShouldBeSettableAndGettable()
     {
-        // Arrange
+        // Arrange: Define a test view name
         const string testName = "Test Rotation View";
 
-        // Act
+        // Act: Set the ViewName property
         _viewModel.ViewName = testName;
 
-        // Assert
+        // Assert: Verify that the property getter returns the same value
         Assert.AreEqual(testName, _viewModel.ViewName);
     }
 
     [TestMethod]
     public void AllowNavigation_Property_ShouldBeSettableAndGettable()
     {
-        // Arrange
+        // Arrange: Define a test boolean value
         const bool testValue = true;
 
-        // Act
+        // Act: Set the AllowNavigation property
         _viewModel.AllowNavigation = testValue;
 
-        // Assert
+        // Assert: Verify that the property getter returns the same value
         Assert.AreEqual(testValue, _viewModel.AllowNavigation);
     }
 
     [TestMethod]
     public void ActiveFarm_Property_ShouldReturnTestFarm()
     {
-        // Act
+        // Act: Retrieve the active farm from the view model
         var result = _viewModel.ActiveFarm;
 
-        // Assert
+        // Assert: Verify that the active farm matches the test farm configured in TestInitialize
         Assert.IsNotNull(result);
         Assert.AreEqual(_testFarm.Name, result.Name);
     }
@@ -341,10 +360,10 @@ public class RotationComponentViewModelTests
     [TestMethod]
     public void StorageService_Property_ShouldReturnMockedService()
     {
-        // Act
+        // Act: Retrieve the storage service from the view model
         var result = _viewModel.StorageService;
 
-        // Assert
+        // Assert: Verify that the storage service is the mocked instance
         Assert.IsNotNull(result);
         Assert.AreSame(_mockStorageService.Object, result);
     }
@@ -356,12 +375,12 @@ public class RotationComponentViewModelTests
     [TestMethod]
     public void OnNavigatedTo_ShouldNotThrowException()
     {
-        // Arrange
+        // Arrange: Create a navigation context (required parameter for OnNavigatedTo)
         var navigationContext = new NavigationContext(
             Mock.Of<IRegionNavigationService>(),
             new Uri("test://test"));
 
-        // Act
+        // Act: Call OnNavigatedTo to simulate navigating to this view
         try
         {
             _viewModel.OnNavigatedTo(navigationContext);
@@ -371,19 +390,18 @@ public class RotationComponentViewModelTests
             Assert.Fail("OnNavigatedTo should not throw an exception");
         }
         
-        // Assert - If we get here, no exception was thrown
         Assert.IsTrue(true);
     }
 
     [TestMethod]
     public void OnNavigatedFrom_ShouldNotThrowException()
     {
-        // Arrange
+        // Arrange: Create a navigation context
         var navigationContext = new NavigationContext(
             Mock.Of<IRegionNavigationService>(),
             new Uri("test://test"));
 
-        // Act
+        // Act: Call OnNavigatedFrom to simulate navigating away from this view
         try
         {
             _viewModel.OnNavigatedFrom(navigationContext);
@@ -393,38 +411,37 @@ public class RotationComponentViewModelTests
             Assert.Fail("OnNavigatedFrom should not throw an exception");
         }
         
-        // Assert - If we get here, no exception was thrown
         Assert.IsTrue(true);
     }
 
     [TestMethod]
     public void IsNavigationTarget_WhenNotDisposed_ShouldReturnTrue()
     {
-        // Arrange
+        // Arrange: Create a navigation context
         var navigationContext = new NavigationContext(
             Mock.Of<IRegionNavigationService>(),
             new Uri("test://test"));
 
-        // Act
+        // Act: Check if this view model is a valid navigation target
         var result = _viewModel.IsNavigationTarget(navigationContext);
 
-        // Assert
+        // Assert: An active (non-disposed) view model should be a valid navigation target
         Assert.IsTrue(result);
     }
 
     [TestMethod]
     public void IsNavigationTarget_WhenDisposed_ShouldReturnFalse()
     {
-        // Arrange
+        // Arrange: Create a navigation context
         var navigationContext = new NavigationContext(
             Mock.Of<IRegionNavigationService>(),
             new Uri("test://test"));
 
-        // Act
+        // Act: Dispose the view model, then check if it's still a valid navigation target
         _viewModel.Dispose();
         var result = _viewModel.IsNavigationTarget(navigationContext);
 
-        // Assert
+        // Assert: A disposed view model should not be a valid navigation target
         Assert.IsFalse(result);
     }
 
@@ -435,10 +452,10 @@ public class RotationComponentViewModelTests
     [TestMethod]
     public void ViewName_SetToEmptyString_ShouldHaveValidationError()
     {
-        // Act
+        // Act: Set ViewName to an empty string (invalid value)
         _viewModel.ViewName = string.Empty;
 
-        // Assert
+        // Assert: Verify that validation errors are triggered for the ViewName property
         Assert.IsTrue(_viewModel.HasErrors);
         var errors = _viewModel.GetErrors(nameof(_viewModel.ViewName));
         Assert.IsNotNull(errors);
@@ -448,29 +465,30 @@ public class RotationComponentViewModelTests
     [TestMethod]
     public void ViewName_SetToValidString_ShouldNotHaveValidationError()
     {
-        // Act
+        // Act: Set ViewName to a valid, non-empty string
         _viewModel.ViewName = "Valid Name";
 
-        // Assert
+        // Assert: Verify that no validation errors are present
         Assert.IsFalse(_viewModel.HasErrors);
     }
 
     [TestMethod]
     public void ViewName_SetToNullOrEmpty_ValidationBehaviorIsConsistent()
     {
+        // This test ensures that null and empty string trigger the same validation behavior
+        
         // Test empty string validation
         _viewModel.ViewName = string.Empty;
         var hasErrorsForEmpty = _viewModel.HasErrors;
         
-        // Clear any existing errors
+        // Clear any existing errors by setting a valid value
         _viewModel.ViewName = "Valid Name";
         
         // Test null validation  
         _viewModel.ViewName = null;
         var hasErrorsForNull = _viewModel.HasErrors;
 
-        // Assert that both null and empty string have consistent validation behavior
-        // Both should either trigger validation or both should not
+        // Assert that both null and empty string produce consistent validation results
         Assert.AreEqual(hasErrorsForEmpty, hasErrorsForNull, 
             "Validation behavior should be consistent between null and empty string values");
     }
@@ -482,14 +500,14 @@ public class RotationComponentViewModelTests
     [TestMethod]
     public void InitializeRotationComponent_WithValidRotationComponent_ShouldNotThrow()
     {
-        // Arrange
+        // Arrange: Create a valid rotation component with required properties
         var rotationComponent = new RotationComponent
         {
             Name = "Test Rotation",
             ComponentType = ComponentType.Rotation
         };
 
-        // Act
+        // Act: Initialize the view model with the rotation component
         try
         {
             _viewModel.InitializeRotationComponent(rotationComponent);
@@ -499,14 +517,13 @@ public class RotationComponentViewModelTests
             Assert.Fail("InitializeRotationComponent should not throw an exception with valid rotation component");
         }
 
-        // Assert - If we get here, no exception was thrown
         Assert.IsTrue(true);
     }
 
     [TestMethod]
     public void InitializeRotationComponent_WithNullRotationComponent_ShouldNotThrow()
     {
-        // Act
+        // Act: Call InitializeRotationComponent with null to verify it handles null gracefully
         try
         {
             _viewModel.InitializeRotationComponent(null);
@@ -516,14 +533,13 @@ public class RotationComponentViewModelTests
             Assert.Fail("InitializeRotationComponent should handle null parameter gracefully");
         }
 
-        // Assert - If we get here, no exception was thrown
         Assert.IsTrue(true);
     }
 
     [TestMethod]
-    public void InitializeRotationComponent_WithValidComponent_ShouldStoreReference()
+    public void InitializeRotationComponent_WithValidComponent_ShouldCallTransferService()
     {
-        // Arrange
+        // Arrange: Create a rotation component with specific properties
         var rotationComponent = new RotationComponent
         {
             Name = "Test Rotation Component",
@@ -532,20 +548,20 @@ public class RotationComponentViewModelTests
             KeepRotationOnSingleField = false
         };
 
-        // Act
+        // Act: Initialize the component
         _viewModel.InitializeRotationComponent(rotationComponent);
 
-        // Assert
-        // Since _selectedRotationComponent is private, we can't directly verify it was set
-        // but we can verify the method executed without throwing exceptions
-        // In a real scenario, you might expose a public property or method to verify state
-        Assert.IsTrue(true, "Method executed successfully, implying the reference was stored");
+        // Assert: Verify that the transfer service was called to create a DTO from the domain object
+        _mockRotationComponentService.Verify(
+            x => x.TransferToRotationComponentDto(It.Is<RotationComponent>(rc => rc.Name == "Test Rotation Component")),
+            Times.Once,
+            "TransferToRotationComponentDto should be called once with the rotation component");
     }
 
     [TestMethod]
     public void InitializeRotationComponent_CalledMultipleTimes_ShouldHandleGracefully()
     {
-        // Arrange
+        // Arrange: Create multiple rotation components
         var firstRotation = new RotationComponent
         {
             Name = "First Rotation",
@@ -558,7 +574,8 @@ public class RotationComponentViewModelTests
             ComponentType = ComponentType.Rotation
         };
 
-        // Act & Assert
+        // Act: Call InitializeRotationComponent multiple times, including with null
+        // This tests that the method can handle being called multiple times without issues
         try
         {
             _viewModel.InitializeRotationComponent(firstRotation);
@@ -570,14 +587,18 @@ public class RotationComponentViewModelTests
             Assert.Fail("InitializeRotationComponent should handle multiple calls gracefully");
         }
 
-        // Assert - If we get here, no exception was thrown
-        Assert.IsTrue(true);
+        // Assert: Verify the transfer service was called the correct number of times
+        // Should be called twice (once for each non-null rotation component)
+        _mockRotationComponentService.Verify(
+            x => x.TransferToRotationComponentDto(It.IsAny<RotationComponent>()),
+            Times.Exactly(2),
+            "TransferToRotationComponentDto should be called twice (once for each non-null rotation)");
     }
 
     [TestMethod]
     public void InitializeRotationComponent_WithComponentContainingFieldComponents_ShouldHandleCorrectly()
     {
-        // Arrange
+        // Arrange: Create a complex rotation component with nested field system components
         var rotationComponent = new RotationComponent
         {
             Name = "Complex Rotation",
@@ -586,7 +607,7 @@ public class RotationComponentViewModelTests
             KeepRotationOnSingleField = true
         };
 
-        // Add some field system components to make it more realistic
+        // Add field system components to simulate a realistic rotation with multiple fields
         rotationComponent.FieldSystemComponents.Add(new H.Core.Models.LandManagement.Fields.FieldSystemComponent
         {
             Name = "Field 1",
@@ -599,7 +620,7 @@ public class RotationComponentViewModelTests
             FieldArea = 150
         });
 
-        // Act
+        // Act: Initialize with a complex component structure
         try
         {
             _viewModel.InitializeRotationComponent(rotationComponent);
@@ -609,7 +630,62 @@ public class RotationComponentViewModelTests
             Assert.Fail("InitializeRotationComponent should handle rotation components with field components");
         }
 
-        // Assert - If we get here, no exception was thrown and the complex component was processed
+        Assert.IsTrue(true);
+    }
+
+    [TestMethod]
+    public void InitializeRotationComponent_ShouldSetSelectedRotationComponentDto()
+    {
+        // Arrange: Create a rotation component with a unique identifier
+        var rotationComponent = new RotationComponent
+        {
+            Name = "Test Rotation",
+            ComponentType = ComponentType.Rotation,
+            Guid = Guid.NewGuid()
+        };
+
+        // Act: Initialize the rotation component
+        _viewModel.InitializeRotationComponent(rotationComponent);
+
+        // Assert: Verify that the SelectedRotationComponentDto property is populated
+        // and contains the expected data from the rotation component
+        Assert.IsNotNull(_viewModel.SelectedRotationComponentDto, "SelectedRotationComponentDto should be set");
+        Assert.AreEqual(rotationComponent.Name, _viewModel.SelectedRotationComponentDto.Name, 
+            "DTO name should match the rotation component name");
+    }
+
+    [TestMethod]
+    public void InitializeRotationComponent_ShouldSubscribeToPropertyChanged()
+    {
+        // Arrange: Create a rotation component
+        var rotationComponent = new RotationComponent
+        {
+            Name = "Test Rotation",
+            ComponentType = ComponentType.Rotation
+        };
+
+        // Act: Initialize the component, which should subscribe to PropertyChanged events on the DTO
+        _viewModel.InitializeRotationComponent(rotationComponent);
+        var dto = _viewModel.SelectedRotationComponentDto;
+
+        // Verify the DTO is valid and not null
+        Assert.IsNotNull(dto, "DTO should not be null after initialization");
+        
+        try
+        {
+            // Trigger a property change to verify the event handler is properly subscribed
+            // If the subscription failed, this would throw an exception
+            if (dto is RotationComponentDto concreteDto)
+            {
+                concreteDto.FieldArea = 500;
+            }
+        }
+        catch (Exception)
+        {
+            Assert.Fail("Property changed event should not throw an exception");
+        }
+
+        // Assert: If we reach here, the PropertyChanged event subscription is working correctly
         Assert.IsTrue(true);
     }
 

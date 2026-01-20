@@ -250,7 +250,7 @@ public class FieldComponentViewModel : ViewModelBase
         // Build a DTO to represent the model/domain object
         var fieldComponentDto = _fieldComponentService.TransferToFieldComponentDto(_selectedFieldSystemComponent);
 
-        // Listen for changes on the DTO
+        // Listen for changes on the DTO so we can validate user input before assigning values to the model
         fieldComponentDto.PropertyChanged += FieldSystemComponentDtoOnPropertyChanged;
 
         // Assign the DTO to the property that is bound to the view
@@ -336,7 +336,10 @@ public class FieldComponentViewModel : ViewModelBase
     /// </summary>
     private void FieldSystemComponentDtoOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (IsDisposed) return;
+        if (IsDisposed)
+        {
+            return;
+        }
 
         if (sender is FieldSystemComponentDto fieldSystemComponentDto)
         {
@@ -352,9 +355,9 @@ public class FieldComponentViewModel : ViewModelBase
                     // A property on the DTO has been changed by the user, assign the new value to the system object after any unit conversion (if necessary)
                     _fieldComponentService.TransferFieldDtoToSystem(fieldSystemComponentDto, _selectedFieldSystemComponent);
                 }
-                catch (Exception ex)
+                catch (Exception exception)
                 {
-                    _logger?.LogError(ex, "Failed to transfer field DTO to system");
+                    _logger?.LogError(exception, "Failed to transfer field component DTO to domain object");
                 }
             }
         }

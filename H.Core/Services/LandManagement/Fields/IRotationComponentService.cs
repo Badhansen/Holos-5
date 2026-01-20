@@ -10,4 +10,7 @@ public interface IRotationComponentService
 {
     void InitializeComponent(Farm farm, RotationComponent rotationComponent);
     IRotationComponentDto TransferToRotationComponentDto(RotationComponent template);
+
+    RotationComponent TransferRotationDtoToSystem(RotationComponentDto rotationDto,
+        RotationComponent rotationComponent);
 }

@@ -2,8 +2,9 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:field="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Field"
 			 xmlns:rotation="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation"
+			 xmlns:shared="clr-namespace:H.Avalonia.Views.ComponentViews.Shared"
+			 xmlns:properties="clr-namespace:H.Avalonia.Infrastructure.Properties;assembly=H.Avalonia.Infrastructure"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationComponentView">
 
@@ -26,5 +27,14 @@
             <TextBox Classes="view-title" Text="{Binding Path=SelectedRotationComponentDto.Name}"/>
             <Border Classes="title-underline"/>
         </StackPanel>
+
+		<!-- Advanced Options Toggle Section -->
+		<shared:AdvancedOptionsToggleView Grid.Row="1"
+		                                  Margin="{StaticResource DefaultUserControlMargin}"
+		                                  Title="Show Advanced Options"
+		                                  Description="Display additional configuration options for detailed rotation management"
+		                                  IsChecked="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"/>
+
+		<!-- TODO: Add rotation component content here in Grid.Row="2" -->
 	</Grid>
 </UserControl>

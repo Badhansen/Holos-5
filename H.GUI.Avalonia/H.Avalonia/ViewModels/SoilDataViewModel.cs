@@ -27,6 +27,7 @@ using FastExpressionCompiler.LightExpression;
 using H.Avalonia.Services;
 using H.Core.Services;
 using H.Core.Services.StorageService;
+using H.Infrastructure.Controls.ValueConverters;
 using Microsoft.Extensions.Logging;
 using SoilResultsView = H.Avalonia.Views.ResultViews.SoilResultsView;
 
@@ -519,27 +520,28 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private async void OnGetCoordinates()
         {
-            if (string.IsNullOrEmpty(StreetAddress) || string.IsNullOrWhiteSpace(Municipality) || Enum.IsDefined(SelectedProvince) || string.IsNullOrWhiteSpace(PostalCode))
+            // Check if user has provided all required fields.
+            if (string.IsNullOrEmpty(StreetAddress) || string.IsNullOrWhiteSpace(Municipality) || SelectedProvince == Province.SelectProvince || string.IsNullOrWhiteSpace(PostalCode))
             {
                 // Draw toasts for each field missing data.
                 if (SelectedProvince == Province.SelectProvince)
                 {
-                    Logger.LogDebug(@"Cannot find location as no province was selected.");
+                    Logger.LogDebug($@"Cannot find location as no province was selected in {nameof(SoilDataViewModel)}.");
                     NotificationManager.ShowToast("No province selected.", "Please select a province from the dropdown and try again.", NotificationType.Warning);
                 }
                 if (string.IsNullOrEmpty(StreetAddress))
                 {
-                    Logger.LogDebug(@"Cannot find location as no street address was entered.");
+                    Logger.LogDebug($@"Cannot find location as no street address was entered in {nameof(SoilDataViewModel)}.");
                     NotificationManager.ShowToast("Street name field empty.", "Please enter house number and street name to try again.", NotificationType.Warning);
                 }
                 if (string.IsNullOrWhiteSpace(Municipality))
                 {
-                    Logger.LogDebug(@"Cannot find location as no municipality was entered.");
+                    Logger.LogDebug($@"Cannot find location as no municipality was entered in {nameof(SoilDataViewModel)}.");
                     NotificationManager.ShowToast("Municipality field empty.", "Please enter a municipality and try again.", NotificationType.Warning);
                 }
                 if (string.IsNullOrWhiteSpace(PostalCode))
                 {
-                    Logger.LogDebug(@"Cannot find location as an empty postal code was entered.");
+                    Logger.LogDebug($@"Cannot find location as an empty postal code was entered in {nameof(SoilDataViewModel)}.");
                     NotificationManager.ShowToast("Postal code field empty.", "Please enter a postal code and try again.", NotificationType.Warning);
                 }
                 return;
@@ -552,7 +554,6 @@ namespace H.Avalonia.ViewModels
                 if (point.latitude == 0 || point.longitude == 0)
                 {
                     Logger.LogDebug($@"Cannot find the coordinate from the address entered.");
-                    NotificationManager.ShowToast(H.Core.Properties.Resources.CoordinateError, H.Core.Properties.Resources.CantFindCoordinate, NotificationType.Error);
                     return;
                 }
                 Logger.LogInformation($"Coordinate acquired from address in {nameof(SoilDataViewModel)}.{nameof(OnGetAddress)}");
@@ -611,7 +612,6 @@ namespace H.Avalonia.ViewModels
                 return;
             }
             Address = address;
-
         }
 
         /// <summary>

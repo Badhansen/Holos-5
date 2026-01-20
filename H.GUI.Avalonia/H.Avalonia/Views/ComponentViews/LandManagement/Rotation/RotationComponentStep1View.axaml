@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:field="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Field"
              xmlns:rotation="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation"
+             xmlns:rotationViews="clr-namespace:H.Avalonia.Views.ComponentViews.LandManagement.Rotation"
              mc:Ignorable="d"
              x:Class="H.Avalonia.RotationComponentStep1View">
 
@@ -12,28 +13,54 @@
     </Design.DataContext>
 
     <StackPanel>
-        <StackPanel Classes="step-header">
+        <!-- Step Header with Vertical Layout -->
+        <StackPanel Margin="0,0,0,20">
             <!-- Step Badge -->
-            <Border Classes="step-badge">
+            <Border Classes="step-badge" HorizontalAlignment="Left">
                 <TextBlock Text="Step 1" Classes="step-badge-text"/>
             </Border>
             
-            <!-- Step Description -->
+            <!-- Step Description below badge -->
             <TextBlock Text="Enter basic information for this crop rotation"
                        Classes="step-number-description"
-                       VerticalAlignment="Center"/>
+                       Margin="0,8,0,0"/>
         </StackPanel>
 
-        <Grid HorizontalAlignment="Left">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="120"/>
-                <ColumnDefinition MinWidth="120"/>
-                <ColumnDefinition MinWidth="100"/>
-            </Grid.ColumnDefinitions>
-
-            <Label Grid.Column="0" Classes="input-label" Content="Field size (all fields in rotation must have an equal size):"/>
-            <NumericUpDown Grid.Column="1" Minimum="0" Value="{Binding Path=SelectedRotationComponentDto.FieldArea}"></NumericUpDown>
-            <Label Grid.Column="2" Classes="unit-label" Content="{Binding Path=StorageService.Storage.ApplicationData.DisplayUnitStrings.HectaresString}" VerticalContentAlignment="Center"/>
-        </Grid>
+        <!-- Field Size Input Card -->
+        <Border Classes="input-card">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="120"/>
+                    <ColumnDefinition Width="Auto" MinWidth="120"/>
+                    <ColumnDefinition Width="Auto" MinWidth="100"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Input row -->
+                <TextBlock Grid.Column="0" Grid.Row="0" 
+                           Text="Field size:" 
+                           FontWeight="Medium" 
+                           Foreground="RoyalBlue"
+                           VerticalAlignment="Center"
+                           MinWidth="220"/>
+                <NumericUpDown Grid.Column="1" Grid.Row="0" 
+                               Minimum="0" 
+                               Value="{Binding Path=SelectedRotationComponentDto.FieldArea}"
+                               Margin="8,0"/>
+                <Label Grid.Column="2" Grid.Row="0" 
+                       Classes="unit-label" 
+                       Content="{Binding Path=StorageService.Storage.ApplicationData.DisplayUnitStrings.HectaresString}" 
+                       VerticalContentAlignment="Center"/>
+                
+                <!-- Hint text - only visible when ShowAdvancedOptions is true -->
+                <TextBlock Grid.Row="1" Grid.ColumnSpan="3" 
+                           Classes="input-hint"
+                           Text="All fields in rotation must have an equal size" 
+                           IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType=rotationViews:RotationComponentView}}"/>
+            </Grid>
+        </Border>
     </StackPanel>
 </UserControl>

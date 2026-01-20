@@ -58,63 +58,29 @@
 			</Grid.RowDefinitions>
 
 		<!-- Begin step 1 -->
-
 		<Border Grid.Row="0"
-		       Background="White" 
-		       BorderBrush="LightGray" 
-		       BorderThickness="1" 
-		       CornerRadius="8" 
-		       Padding="20"
-		       Margin="{StaticResource DefaultUserControlMargin}">
-				<Border.Styles>
-					<Style Selector="Border">
-						<Setter Property="BoxShadow" Value="0 2 8 0 #1A000000"/>
-					</Style>
-				</Border.Styles>
-				
-				<fieldViews:FieldComponentStep1View/>
-			</Border>
-
-			<!-- End step 1 -->
+		        Classes="step-container"
+		        Margin="{StaticResource DefaultUserControlMargin}">
+			<fieldViews:FieldComponentStep1View/>
+		</Border>
+		<!-- End step 1 -->
 
 		<!-- Begin step 2 -->
-
 		<Border Grid.Row="2"
-		       Background="White" 
-		       BorderBrush="LightGray" 
-		       BorderThickness="1" 
-		       CornerRadius="8" 
-		       Padding="20"
-		       Margin="{StaticResource DefaultUserControlMargin}">
-				<Border.Styles>
-					<Style Selector="Border">
-						<Setter Property="BoxShadow" Value="0 2 8 0 #1A000000"/>
-					</Style>
-				</Border.Styles>
-				
-				<fieldViews:FieldComponentStep2View/>
-			</Border>
-
-			<!-- End step 2 -->
+		        Classes="step-container"
+		        Margin="{StaticResource DefaultUserControlMargin}">
+			<fieldViews:FieldComponentStep2View/>
+		</Border>
+		<!-- End step 2 -->
 
 		<!-- Begin step 3 -->
 		<Border Grid.Row="4"
-		       Background="White" 
-		       BorderBrush="LightGray" 
-		       BorderThickness="1" 
-		       CornerRadius="8" 
-		       Padding="20"
-		       Margin="{StaticResource DefaultUserControlMargin}">
-				<Border.Styles>
-					<Style Selector="Border">
-						<Setter Property="BoxShadow" Value="0 2 8 0 #1A000000"/>
-					</Style>
-				</Border.Styles>
-				
-				<fieldViews:SelectedCropTabView x:Name="SelectedCropTabViewControl"/>
-			</Border>
+		        Classes="step-container"
+		        Margin="{StaticResource DefaultUserControlMargin}">
+			<fieldViews:SelectedCropTabView x:Name="SelectedCropTabViewControl"/>
+		</Border>
+		<!-- End step 3 -->
 
-			<!-- End step 3 -->
 			</Grid>
 		</ScrollViewer>
 	</Grid>

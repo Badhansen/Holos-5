@@ -1,4 +1,6 @@
-﻿using H.Core.Models.LandManagement.Fields;
+﻿using H.Core.CustomAttributes;
+using H.Core.Enumerations;
+using H.Core.Models.LandManagement.Fields;
 using H.Core.Models.LandManagement.Rotation;
 
 namespace H.Core.Factories.Rotations;
@@ -18,8 +20,11 @@ public class RotationComponentDto : DtoBase, IRotationComponentDto
     #region MyRegion
 
     /// <summary>
-    /// All fields that belong to this rotation must have the same area. This property defines that area.
+    /// All fields that belong to this rotation must have the same area. This property defines that area
+    ///
+    /// (ha)
     /// </summary>
+    [Units(MetricUnitsOfMeasurement.Hectares)]
     public double FieldArea
     {
         get => _fieldArea;

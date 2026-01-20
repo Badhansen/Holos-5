@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:field="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Field"
              xmlns:rotation="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d"
              x:Class="H.Avalonia.RotationComponentStep1View">
 
     <Design.DataContext>
@@ -23,5 +23,17 @@
                        Classes="step-number-description"
                        VerticalAlignment="Center"/>
         </StackPanel>
+
+        <Grid HorizontalAlignment="Left">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="120"/>
+                <ColumnDefinition MinWidth="120"/>
+                <ColumnDefinition MinWidth="100"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" Classes="input-label" Content="Field size (all fields in rotation must have an equal size):"/>
+            <NumericUpDown Grid.Column="1" Minimum="0" Value="{Binding Path=SelectedRotationComponentDto.FieldArea}"></NumericUpDown>
+            <Label Grid.Column="2" Classes="unit-label" Content="{Binding Path=StorageService.Storage.ApplicationData.DisplayUnitStrings.HectaresString}" VerticalContentAlignment="Center"/>
+        </Grid>
     </StackPanel>
 </UserControl>

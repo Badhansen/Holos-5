@@ -251,6 +251,17 @@
 		<Setter Property="BoxShadow" Value="0 2 8 0 #1A000000"/>
 	</Style>
 
+	<!-- Step Container Border Style -->
+	<!-- Shared style for step content containers used in Field and Rotation component views -->
+	<Style Selector="Border.step-container">
+		<Setter Property="Background" Value="White"/>
+		<Setter Property="BorderBrush" Value="LightGray"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="CornerRadius" Value="8"/>
+		<Setter Property="Padding" Value="20"/>
+		<Setter Property="BoxShadow" Value="0 2 8 0 #1A000000"/>
+	</Style>
+
 	<!-- Timeline Card Styles -->
 	<Style Selector="Border.timeline-card">
 		<Setter Property="Background" Value="{Binding IsSelected, Converter={StaticResource BoolToBackgroundConverter}}"/>

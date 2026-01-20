@@ -17,6 +17,8 @@ public class FieldSystemComponentDto : DtoBase, IFieldComponentDto
 
     private double _fieldArea;
 
+    private int _startYear;
+
     private ObservableCollection<ICropDto>? _cropDtoModels;
 
     #endregion
@@ -54,6 +56,12 @@ public class FieldSystemComponentDto : DtoBase, IFieldComponentDto
     {
         get => _fieldArea;
         set => SetProperty(ref _fieldArea, value);
+    }
+
+    public int StartYear
+    {
+        get => _startYear;
+        set => SetProperty(ref _startYear, value);
     }
 
     #endregion

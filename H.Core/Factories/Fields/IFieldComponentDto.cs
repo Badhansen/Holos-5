@@ -12,7 +12,12 @@ public interface IFieldComponentDto : IDto
     /// <summary>
     /// The total size of the field
     /// </summary>
-    double FieldArea { get; set; } 
+    double FieldArea { get; set; }
+
+    /// <summary>
+    /// The start year for the field component that defines when the first crop in the <see cref="CropDtos"/> collection is planted
+    /// </summary>
+    int StartYear { get; set; }
 
     #endregion
 }

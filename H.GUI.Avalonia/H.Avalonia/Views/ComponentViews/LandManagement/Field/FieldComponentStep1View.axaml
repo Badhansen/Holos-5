@@ -11,7 +11,7 @@
 		<field:FieldComponentViewModelDesign/>
 	</Design.DataContext>
 
-	<StackPanel>
+	<StackPanel Grid.IsSharedSizeScope="True">
         <!-- Step Header with Vertical Layout -->
         <StackPanel Margin="0,0,0,20">
             <!-- Step Badge -->
@@ -33,9 +33,9 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" MinWidth="120"/>
-                    <ColumnDefinition Width="Auto" MinWidth="120"/>
-                    <ColumnDefinition Width="Auto" MinWidth="100"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+                    <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
                 </Grid.ColumnDefinitions>
                 
                 <!-- Input row -->
@@ -44,20 +44,60 @@
                            FontWeight="Medium" 
                            Foreground="RoyalBlue"
                            VerticalAlignment="Center"
-                           MinWidth="220"/>
+                           Margin="0,0,8,0"/>
                 <NumericUpDown Grid.Column="1" Grid.Row="0" 
                                Minimum="0" 
                                Value="{Binding Path=SelectedFieldSystemComponentDto.FieldArea}"
-                               Margin="8,0"/>
+                               Margin="8,0"
+                               HorizontalAlignment="Stretch"/>
                 <Label Grid.Column="2" Grid.Row="0" 
                        Classes="unit-label" 
                        Content="{Binding Path=StorageService.Storage.ApplicationData.DisplayUnitStrings.HectaresString}" 
-                       VerticalContentAlignment="Center"/>
+                       VerticalContentAlignment="Center"
+                       Margin="8,0,0,0"/>
                 
                 <!-- Hint text - only visible when ShowAdvancedOptions is true -->
                 <TextBlock Grid.Row="1" Grid.ColumnSpan="3" 
                            Classes="input-hint"
                            Text="Specify the total area of this field" 
+                           IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType=fieldViews:FieldComponentView}}"/>
+            </Grid>
+        </Border>
+
+        <!-- Start Year Input Card -->
+        <Border Classes="input-card">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+                    <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Input row -->
+                <TextBlock Grid.Column="0" Grid.Row="0" 
+                           Text="Start year:" 
+                           FontWeight="Medium" 
+                           Foreground="RoyalBlue"
+                           VerticalAlignment="Center"
+                           Margin="0,0,8,0"/>
+                <NumericUpDown Grid.Column="1" Grid.Row="0" 
+                               Minimum="0" 
+                               Value="{Binding Path=SelectedFieldSystemComponentDto.StartYear}"
+                               Margin="8,0"
+                               HorizontalAlignment="Stretch"/>
+                <TextBlock Grid.Column="2" Grid.Row="0" 
+                           Text="" 
+                           VerticalAlignment="Center"
+                           Margin="8,0,0,0"/>
+                
+                <!-- Hint text - only visible when ShowAdvancedOptions is true -->
+                <TextBlock Grid.Row="1" Grid.ColumnSpan="3" 
+                           Classes="input-hint"
+                           Text="The year that defines the field history" 
                            IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType=fieldViews:FieldComponentView}}"/>
             </Grid>
         </Border>

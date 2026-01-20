@@ -40,7 +40,7 @@
                 </Grid.ColumnDefinitions>
                 
                 <!-- Input row -->
-                <TextBlock Grid.Column="0" Grid.Row="0" 
+                <TextBlock Grid.Column="0" Grid.Row="0"
                            Text="Field size:" 
                            FontWeight="Medium" 
                            Foreground="RoyalBlue"

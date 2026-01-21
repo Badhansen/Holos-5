@@ -20,6 +20,7 @@ public class FieldComponentViewModelDesign : FieldComponentViewModel
         base.SelectedFieldSystemComponentDto.Name = "A Field";
         this.SelectedFieldSystemComponentDto.FieldArea = 23.55;
         this.SelectedFieldSystemComponentDto.StartYear = 1980;
+        this.SelectedFieldSystemComponentDto.EndYear = 2050;
 
         base.SelectedFieldSystemComponentDto.CropDtos = new ObservableCollection<ICropDto>()
         {

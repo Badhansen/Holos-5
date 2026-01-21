@@ -174,6 +174,9 @@ public class FieldComponentService : ComponentServiceBase, IFieldComponentServic
     public void InitializeComponent(Farm farm, FieldSystemComponent fieldSystemComponent)
     {
         base.InitializeComponent(farm, fieldSystemComponent);
+
+        fieldSystemComponent.EndYear = DateTime.Now.Year;
+        fieldSystemComponent.StartYear = fieldSystemComponent.EndYear - 10;
     }
 
     /// <summary>

@@ -19,5 +19,10 @@ public interface IFieldComponentDto : IDto
     /// </summary>
     int StartYear { get; set; }
 
+    /// <summary>
+    /// The end year for the field component that defines when the last crop in the <see cref="CropDtos"/> collection is planted
+    /// </summary>
+    int EndYear { get; set; }
+
     #endregion
 }

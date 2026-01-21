@@ -11,5 +11,15 @@ public interface IRotationComponentDto : IDto
     /// </summary>
     double FieldArea { get; set; }
 
+    /// <summary>
+    /// The start year for the rotation component that defines when the first crop is planted
+    /// </summary>
+    int StartYear { get; set; }
+
+    /// <summary>
+    /// The end year for the rotation component that defines when the last crop is planted
+    /// </summary>
+    int EndYear { get; set; }
+
     #endregion
 }

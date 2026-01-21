@@ -104,7 +104,7 @@
             </Grid>
         </Border>
 
-                <!-- End Year Input Card -->
+        <!-- End Year Input Card -->
         <Border Classes="input-card">
             <Grid>
                 <Grid.RowDefinitions>

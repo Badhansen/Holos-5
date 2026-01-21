@@ -70,6 +70,14 @@ public class RotationComponentService : ComponentServiceBase, IRotationComponent
     public void InitializeComponent(Farm farm, RotationComponent rotationComponent)
     {
         base.InitializeComponent(farm, rotationComponent);
+
+        if (rotationComponent == null)
+        {
+            return;
+        }
+
+        rotationComponent.EndYear = DateTime.Now.Year;
+        rotationComponent.StartYear = rotationComponent.EndYear - 10;
     }
 
     /// <summary>

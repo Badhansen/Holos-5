@@ -100,6 +100,29 @@ public class FieldSystemComponentDto : DtoBase, IFieldComponentDto
         }
     }
 
+    /// <summary>
+    /// Ensure that the start year is within a valid range (greater than 1900 and less than 100 years into the future)
+    /// </summary>
+    private void ValidateStartYear()
+    {
+        var key = nameof(StartYear);
+        var currentYear = DateTime.Now.Year;
+        var maxYear = currentYear + 100;
+
+        if (this.StartYear <= 1900)
+        {
+            AddError(key, "Start year must be greater than 1900");
+        }
+        else if (this.StartYear > maxYear)
+        {
+            AddError(key, $"Start year cannot be more than 100 years in the future (maximum: {maxYear})");
+        }
+        else
+        {
+            RemoveError(key);
+        }
+    }
+
     private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName.Equals(nameof(Name)))
@@ -111,6 +134,11 @@ public class FieldSystemComponentDto : DtoBase, IFieldComponentDto
         {
             // Ensure the area of the field is valid
             ValidateFieldArea();
+        }
+        else if (e.PropertyName.Equals(nameof(StartYear)))
+        {
+            // Ensure the start year is valid
+            ValidateStartYear();
         }
     }
 

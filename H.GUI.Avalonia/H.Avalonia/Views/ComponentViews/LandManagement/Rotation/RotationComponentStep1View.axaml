@@ -55,7 +55,9 @@
                        VerticalContentAlignment="Center"/>
                 
                 <!-- Hint text - only visible when ShowAdvancedOptions is true -->
-                <TextBlock Grid.Row="1" Grid.ColumnSpan="3" 
+                <TextBlock Grid.Column="0" 
+                           Grid.Row="1" 
+                           Grid.ColumnSpan="3" 
                            Classes="input-hint"
                            Text="All fields in rotation must have an equal size" 
                            IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType=rotationViews:RotationComponentView}}"/>
@@ -95,7 +97,9 @@
                            Margin="8,0,0,0"/>
                 
                 <!-- Hint text - only visible when ShowAdvancedOptions is true -->
-                <TextBlock Grid.Row="1" Grid.ColumnSpan="3" 
+                <TextBlock Grid.Column="0" 
+                           Grid.Row="1" 
+                           Grid.ColumnSpan="3" 
                            Classes="input-hint"
                            Text="The year that defines the start of the field history" 
                            IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType=rotationViews:RotationComponentView}}"/>
@@ -135,7 +139,9 @@
                            Margin="8,0,0,0"/>
                 
                 <!-- Hint text - only visible when ShowAdvancedOptions is true -->
-                <TextBlock Grid.Row="1" Grid.ColumnSpan="3" 
+                <TextBlock Grid.Row="1" 
+                           Grid.Column="0" 
+                           Grid.ColumnSpan="3" 
                            Classes="input-hint"
                            Text="The year that defines the end of the field history" 
                            IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType=rotationViews:RotationComponentView}}"/>

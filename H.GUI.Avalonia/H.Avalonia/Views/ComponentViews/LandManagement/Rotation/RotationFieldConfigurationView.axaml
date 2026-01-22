@@ -1,0 +1,57 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:rotation="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation"
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="250"
+             x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationFieldConfigurationView">
+
+    <Design.DataContext>
+        <rotation:RotationComponentViewModelDesign/>
+    </Design.DataContext>
+
+    <!-- Field Configuration Section -->
+    <Border Classes="input-card">
+        <StackPanel>
+            <TextBlock Text="?? Field Configuration" FontWeight="Bold" Margin="0,0,0,12"/>
+            
+            <!-- Number of Fields -->
+            <Grid Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Fields:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <NumericUpDown Grid.Column="1" 
+                               Minimum="1" 
+                               Maximum="20"
+                               FormatString="0"
+                               Increment="1"
+                               Value="{Binding NumberOfFields}"/>
+            </Grid>
+
+            <!-- Field Area -->
+            <Grid Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Area:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <NumericUpDown Grid.Column="1" 
+                               Minimum="0.1"
+                               Value="{Binding Path=SelectedRotationComponentDto.FieldArea}"/>
+                <Label Grid.Column="2" 
+                       Classes="unit-label"
+                       Content="{Binding Path=StorageService.Storage.ApplicationData.DisplayUnitStrings.HectaresString}"
+                       VerticalContentAlignment="Center"
+                       Margin="4,0,0,0"/>
+            </Grid>
+
+            <!-- Shift Rotation Checkbox -->
+            <CheckBox Content="Shift rotation across fields each year"
+                      IsChecked="{Binding ShiftRotationEnabled}"
+                      ToolTip.Tip="When enabled, crops rotate to different fields each year (e.g., Field 1 ? Field 2 ? Field 3)"/>
+        </StackPanel>
+    </Border>
+</UserControl>

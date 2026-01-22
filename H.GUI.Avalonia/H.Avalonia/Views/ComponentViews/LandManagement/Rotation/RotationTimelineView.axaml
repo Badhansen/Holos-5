@@ -1,0 +1,140 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:rotation="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="500"
+             x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationTimelineView">
+
+    <Design.DataContext>
+        <rotation:RotationComponentViewModelDesign/>
+    </Design.DataContext>
+
+    <!-- Step 2: Build Rotation Timeline -->
+    <Border Classes="step-container">
+        <StackPanel>
+            <!-- Step Header -->
+            <StackPanel Margin="0,0,0,20">
+                <Border Classes="step-badge" HorizontalAlignment="Left">
+                    <TextBlock Text="Step 2" Classes="step-badge-text"/>
+                </Border>
+                <TextBlock Text="Build Your Rotation Sequence"
+                           Classes="step-number-description"
+                           Margin="0,8,0,0"/>
+                <TextBlock Text="Add crops to create your rotation timeline. Each crop represents one year in the sequence."
+                           Foreground="Gray"
+                           FontSize="12"
+                           Margin="0,4,0,0"/>
+            </StackPanel>
+
+            <!-- Timeline Controls -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                <Button Content="+ Add Crop" 
+                        Command="{Binding AddCropToRotationCommand}"
+                        Margin="0,0,8,0"/>
+                <Button Content="Remove Selected" 
+                        Command="{Binding RemoveSelectedCropCommand}"
+                        Margin="0,0,8,0"/>
+                <TextBlock Text="Crops in sequence:" 
+                           VerticalAlignment="Center"
+                           Margin="8,0,8,0"/>
+                <TextBlock Text="{Binding CropsInRotation.Count}"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Horizontal Timeline Scroll View -->
+            <Border BorderBrush="LightGray" 
+                    BorderThickness="1" 
+                    CornerRadius="4"
+                    Background="White"
+                    MinHeight="180">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                              VerticalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding CropsInRotation}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="12"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <!-- Individual Crop Card in Timeline -->
+                                <Border Width="160"
+                                        Margin="0,0,12,0"
+                                        BorderThickness="2"
+                                        CornerRadius="8"
+                                        Padding="12"
+                                        Background="{Binding IsSelected, Converter={StaticResource BoolToBackgroundConverter}}"
+                                        BorderBrush="{Binding IsSelected, Converter={StaticResource BoolToBorderBrushConverter}}"
+                                        PointerPressed="OnCropCardPressed">
+                                    <Border.RenderTransform>
+                                        <ScaleTransform ScaleX="{Binding IsSelected, Converter={StaticResource BoolToScaleTransformConverter}}" 
+                                                        ScaleY="{Binding IsSelected, Converter={StaticResource BoolToScaleTransformConverter}}"/>
+                                    </Border.RenderTransform>
+                                    <StackPanel>
+                                        <!-- Year Label -->
+                                        <TextBlock Text="{Binding YearLabel}"
+                                                   FontSize="14"
+                                                   FontWeight="Bold"
+                                                   Foreground="DodgerBlue"
+                                                   Margin="0,0,0,8"/>
+                                        
+                                        <!-- Crop Icon/Rectangle -->
+                                        <Border Height="60"
+                                                Background="{Binding CropColorBrush}"
+                                                CornerRadius="4"
+                                                Margin="0,0,0,8">
+                                            <TextBlock Text="{Binding CropIcon}"
+                                                       FontSize="32"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+
+                                        <!-- Crop Name -->
+                                        <TextBlock Text="{Binding CropTypeName}"
+                                                   FontWeight="SemiBold"
+                                                   TextWrapping="Wrap"
+                                                   TextAlignment="Center"
+                                                   Margin="0,0,0,4"/>
+
+                                        <!-- Crop Category -->
+                                        <TextBlock Text="{Binding CropCategory}"
+                                                   FontSize="11"
+                                                   Foreground="Gray"
+                                                   TextAlignment="Center"/>
+
+                                        <!-- Edit Button -->
+                                        <Button Content="Edit"
+                                                Command="{Binding EditCropCommand}"
+                                                HorizontalAlignment="Stretch"
+                                                Margin="0,8,0,0"
+                                                FontSize="11"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+
+            <!-- Empty State Message -->
+            <Border IsVisible="{Binding HasNoCrops}"
+                    Background="#FFF3E0"
+                    BorderBrush="#FF9800"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="16"
+                    Margin="0,12,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="?" 
+                               FontSize="20"
+                               Margin="0,0,12,0"
+                               VerticalAlignment="Center"/>
+                    <TextBlock Text="Add at least one crop to create your rotation"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Border>
+</UserControl>

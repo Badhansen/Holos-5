@@ -1,0 +1,148 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:rotation="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationPreviewView">
+
+    <Design.DataContext>
+        <rotation:RotationComponentViewModelDesign/>
+    </Design.DataContext>
+
+    <!-- Step 3: Preview Field Assignment -->
+    <Border Classes="step-container"
+            Margin="{StaticResource DefaultUserControlMargin}">
+        <StackPanel>
+            <!-- Step Header -->
+            <StackPanel Margin="0,0,0,20">
+                <Border Classes="step-badge" HorizontalAlignment="Left">
+                    <TextBlock Text="Step 3" Classes="step-badge-text"/>
+                </Border>
+                <TextBlock Text="Preview Field Assignments"
+                           Classes="step-number-description"
+                           Margin="0,8,0,0"/>
+                <TextBlock Text="Review how crops will be distributed across fields over time. Each row represents a field, each column represents a year."
+                           Foreground="Gray"
+                           FontSize="12"
+                           Margin="0,4,0,0"/>
+            </StackPanel>
+
+            <!-- Preview Grid -->
+            <Border BorderBrush="LightGray"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Background="White">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                    <Grid Margin="12">
+                        <!-- Placeholder message -->
+                        <TextBlock Text="Field assignment preview will appear here once you've added crops to the rotation"
+                                   Foreground="Gray"
+                                   FontStyle="Italic"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Margin="40"
+                                   IsVisible="{Binding HasNoCrops}"/>
+
+                        <!-- DataGrid for Field Assignments -->
+                        <DataGrid ItemsSource="{Binding FieldAssignmentPreview}"
+                                  IsVisible="{Binding !HasNoCrops}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  GridLinesVisibility="All"
+                                  CanUserReorderColumns="False"
+                                  CanUserResizeColumns="True"
+                                  CanUserSortColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="Field" Width="150">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#F5F5F5" Padding="8">
+                                                <TextBlock Text="{Binding FieldName}" FontWeight="SemiBold"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="2020" Width="120">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{Binding Year2020Background}" Padding="8">
+                                                <TextBlock Text="{Binding Year2020}" TextAlignment="Center"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="2021" Width="120">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{Binding Year2021Background}" Padding="8">
+                                                <TextBlock Text="{Binding Year2021}" TextAlignment="Center"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="2022" Width="120">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{Binding Year2022Background}" Padding="8">
+                                                <TextBlock Text="{Binding Year2022}" TextAlignment="Center"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="2023" Width="120">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{Binding Year2023Background}" Padding="8">
+                                                <TextBlock Text="{Binding Year2023}" TextAlignment="Center"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="2024" Width="120">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{Binding Year2024Background}" Padding="8">
+                                                <TextBlock Text="{Binding Year2024}" TextAlignment="Center"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="2025" Width="120">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{Binding Year2025Background}" Padding="8">
+                                                <TextBlock Text="{Binding Year2025}" TextAlignment="Center"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </ScrollViewer>
+            </Border>
+
+            <!-- Helpful Note -->
+            <Border Background="#E8F5E9"
+                    BorderBrush="#4CAF50"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="12"
+                    Margin="0,12,0,0"
+                    IsVisible="{Binding ShiftRotationEnabled}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="ℹ"
+                               FontSize="18"
+                               Margin="0,0,12,0"
+                               VerticalAlignment="Top"/>
+                    <TextBlock TextWrapping="Wrap">
+                        <Run Text="Rotation shifting is enabled. "/>
+                        <Run Text="Each field will grow a different sequence of crops, starting at different points in the rotation. "/>
+                        <Run Text="This diversifies operational risk and distributes workload across the growing season."/>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Border>
+</UserControl>

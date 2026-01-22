@@ -13,7 +13,7 @@
     <!-- Field Configuration Section -->
     <Border Classes="input-card">
         <StackPanel>
-            <TextBlock Text="?? Field Configuration" FontWeight="Bold" Margin="0,0,0,12"/>
+            <TextBlock Text="Field Configuration" FontWeight="Bold" Margin="0,0,0,12"/>
             
             <!-- Number of Fields -->
             <Grid Margin="0,0,0,8">
@@ -51,7 +51,7 @@
             <!-- Shift Rotation Checkbox -->
             <CheckBox Content="Shift rotation across fields each year"
                       IsChecked="{Binding ShiftRotationEnabled}"
-                      ToolTip.Tip="When enabled, crops rotate to different fields each year (e.g., Field 1 ? Field 2 ? Field 3)"/>
+                      ToolTip.Tip="When enabled, crops rotate to different fields each year (e.g., Field 1 -> Field 2 -> Field 3)"/>
         </StackPanel>
     </Border>
 </UserControl>

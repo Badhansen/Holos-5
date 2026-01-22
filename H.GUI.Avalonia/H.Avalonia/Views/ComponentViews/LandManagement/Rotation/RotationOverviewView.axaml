@@ -35,7 +35,7 @@
                 <!-- Time Period Section -->
                 <Border Grid.Column="0" Classes="input-card" Margin="0,0,8,0">
                     <StackPanel>
-                        <TextBlock Text="? Time Period" FontWeight="Bold" Margin="0,0,0,12"/>
+                        <TextBlock Text="Time Period" FontWeight="Bold" Margin="0,0,0,12"/>
                         
                         <!-- Start Year -->
                         <Grid Margin="0,0,0,8">
@@ -90,7 +90,7 @@
                 <!-- Rotation Summary Section -->
                 <Border Grid.Column="2" Classes="input-card" Background="#E3F2FD">
                     <StackPanel>
-                        <TextBlock Text="?? Rotation Summary" FontWeight="Bold" Margin="0,0,0,12"/>
+                        <TextBlock Text="Rotation Summary" FontWeight="Bold" Margin="0,0,0,12"/>
                         
                         <Grid>
                             <Grid.ColumnDefinitions>

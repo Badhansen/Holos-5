@@ -46,6 +46,7 @@ namespace H.Avalonia.ViewModels
         private string _streetAddress = string.Empty;
         private string _municipality = string.Empty;
         private string _postalCode = string.Empty;
+        private bool _allAddressDataEntered = false;
         private MPoint _navigationPoint;
         private ImportHelpers _importHelper;
         private SoilViewItemMap _soilViewItemMap;
@@ -98,7 +99,13 @@ namespace H.Avalonia.ViewModels
         public string StreetAddress
         {
             get => _streetAddress;
-            set => SetProperty(ref _streetAddress, value);
+            set
+            {
+                if (SetProperty(ref _streetAddress, value))
+                {
+                    RaisePropertyChanged(nameof(AllAddressDataEntered));
+                }
+            }
         }
 
         /// <summary>
@@ -107,7 +114,13 @@ namespace H.Avalonia.ViewModels
         public string Municipality
         {
             get => _municipality;
-            set => SetProperty(ref _municipality, value);
+            set
+            {
+                if (SetProperty(ref _municipality, value))
+                {
+                    RaisePropertyChanged(nameof(AllAddressDataEntered));
+                }
+            }
         }
 
         /// <summary>
@@ -116,7 +129,22 @@ namespace H.Avalonia.ViewModels
         public string PostalCode
         {
             get => _postalCode;
-            set => SetProperty(ref _postalCode, value);
+            set
+            {
+                if (SetProperty(ref _postalCode, value))
+                {
+                    RaisePropertyChanged(nameof(AllAddressDataEntered));
+                }
+            }
+        }
+
+        public bool AllAddressDataEntered
+        {
+            get =>
+                SelectedProvince != Province.SelectProvince &&
+                !string.IsNullOrWhiteSpace(StreetAddress) &&
+                !string.IsNullOrWhiteSpace(Municipality) &&
+                !string.IsNullOrWhiteSpace(PostalCode);
         }
 
         /// <summary>
@@ -250,7 +278,13 @@ namespace H.Avalonia.ViewModels
         public Province SelectedProvince
         {
             get => _selectedProvince;
-            set => SetProperty(ref _selectedProvince, value);
+            set
+            {
+                if (SetProperty(ref _selectedProvince, value))
+                {
+                    RaisePropertyChanged(nameof(AllAddressDataEntered));
+                }
+            }
         }
 
         /// <summary>
@@ -520,32 +554,6 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private async void OnGetCoordinates()
         {
-            // Check if user has provided all required fields.
-            if (string.IsNullOrEmpty(StreetAddress) || string.IsNullOrWhiteSpace(Municipality) || SelectedProvince == Province.SelectProvince || string.IsNullOrWhiteSpace(PostalCode))
-            {
-                // Draw toasts for each field missing data.
-                if (SelectedProvince == Province.SelectProvince)
-                {
-                    Logger.LogDebug($@"Cannot find location as no province was selected in {nameof(SoilDataViewModel)}.");
-                    NotificationManager.ShowToast(H.Core.Properties.Resources.NoProvinceSelected, H.Core.Properties.Resources.DescriptionNoProvinceSelected, NotificationType.Warning);
-                }
-                if (string.IsNullOrEmpty(StreetAddress))
-                {
-                    Logger.LogDebug($@"Cannot find location as no street address was entered in {nameof(SoilDataViewModel)}.");
-                    NotificationManager.ShowToast(H.Core.Properties.Resources.EmptyStreetNameField, H.Core.Properties.Resources.DescriptionEmptyStreetNameField, NotificationType.Warning);
-                }
-                if (string.IsNullOrWhiteSpace(Municipality))
-                {
-                    Logger.LogDebug($@"Cannot find location as no municipality was entered in {nameof(SoilDataViewModel)}.");
-                    NotificationManager.ShowToast(H.Core.Properties.Resources.EmptyMunicipalityField, H.Core.Properties.Resources.DescriptionEmptyMunicipalityField, NotificationType.Warning);
-                }
-                if (string.IsNullOrWhiteSpace(PostalCode))
-                {
-                    Logger.LogDebug($@"Cannot find location as an empty postal code was entered in {nameof(SoilDataViewModel)}.");
-                    NotificationManager.ShowToast(H.Core.Properties.Resources.EmptyPostalCodeField, H.Core.Properties.Resources.DescriptionPostalCodeField, NotificationType.Warning);
-                }
-                return;
-            }
             try
             {
                 // Call the geocoding service to get coordinates from the address, return early if problem encountered.

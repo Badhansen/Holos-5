@@ -5888,4 +5888,10 @@ Please note: emissions related to the deposition or application of livestock man
   <data name="SoilDataViewStepThree" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="TooManyAddressSearches" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="DescriptionTooManyAddressSearches" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
 </root>

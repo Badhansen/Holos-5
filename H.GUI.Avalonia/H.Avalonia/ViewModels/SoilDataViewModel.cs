@@ -29,6 +29,7 @@ using H.Core.Services;
 using H.Core.Services.StorageService;
 using H.Infrastructure.Controls.ValueConverters;
 using Microsoft.Extensions.Logging;
+using SharpKml.Dom.Xal;
 using SoilResultsView = H.Avalonia.Views.ResultViews.SoilResultsView;
 
 namespace H.Avalonia.ViewModels
@@ -47,6 +48,8 @@ namespace H.Avalonia.ViewModels
         private string _municipality = string.Empty;
         private string _postalCode = string.Empty;
         private bool _allAddressDataEntered = false;
+        private int _searchAttempsMade = 0;
+        private int _searchAttemptsLimit = 3;
         private MPoint _navigationPoint;
         private ImportHelpers _importHelper;
         private SoilViewItemMap _soilViewItemMap;
@@ -103,7 +106,7 @@ namespace H.Avalonia.ViewModels
             {
                 if (SetProperty(ref _streetAddress, value))
                 {
-                    RaisePropertyChanged(nameof(AllAddressDataEntered));
+                    RaisePropertyChanged(nameof(IsAddressSearchedEnabled));
                 }
             }
         }
@@ -118,7 +121,7 @@ namespace H.Avalonia.ViewModels
             {
                 if (SetProperty(ref _municipality, value))
                 {
-                    RaisePropertyChanged(nameof(AllAddressDataEntered));
+                    RaisePropertyChanged(nameof(IsAddressSearchedEnabled));
                 }
             }
         }
@@ -133,21 +136,36 @@ namespace H.Avalonia.ViewModels
             {
                 if (SetProperty(ref _postalCode, value))
                 {
-                    RaisePropertyChanged(nameof(AllAddressDataEntered));
+                    RaisePropertyChanged(nameof(IsAddressSearchedEnabled));
                 }
             }
         }
 
         /// <summary>
-        /// Boolean that indicates if all address data has been entered by the user.
+        /// Boolean that indicates if all address data has been entered by the user or if user exceeded failed search attempts.
         /// </summary>
-        public bool AllAddressDataEntered
+        public bool IsAddressSearchedEnabled
         {
             get =>
-                SelectedProvince != Province.SelectProvince &&
+                (SelectedProvince != Province.SelectProvince &&
                 !string.IsNullOrWhiteSpace(StreetAddress) &&
                 !string.IsNullOrWhiteSpace(Municipality) &&
-                !string.IsNullOrWhiteSpace(PostalCode);
+                !string.IsNullOrWhiteSpace(PostalCode)) && _searchAttempsMade < _searchAttemptsLimit;
+        }
+
+        /// <summary>
+        /// Counter for the amount of search attempts made by the user when attempting to get coordinates from an address.
+        /// </summary>
+        public int SearchAttemptsMade
+        {
+            get => _searchAttempsMade;
+            set
+            {
+                if (SetProperty(ref _searchAttempsMade, value))
+                {
+                    RaisePropertyChanged(nameof(IsAddressSearchedEnabled));
+                }
+            }
         }
 
         /// <summary>
@@ -285,7 +303,7 @@ namespace H.Avalonia.ViewModels
             {
                 if (SetProperty(ref _selectedProvince, value))
                 {
-                    RaisePropertyChanged(nameof(AllAddressDataEntered));
+                    RaisePropertyChanged(nameof(IsAddressSearchedEnabled));
                 }
             }
         }
@@ -557,16 +575,24 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private async void OnGetCoordinates()
         {
+            if (_searchAttempsMade <= _searchAttemptsLimit)
+            {
+                NotificationManager.ShowToast(H.Core.Properties.Resources.TooManyAddressSearches, H.Core.Properties.Resources.DescriptionTooManyAddressSearches, NotificationType.Warning);
+            }
             try
             {
                 // Call the geocoding service to get coordinates from the address, return early if problem encountered.
                 Logger.LogInformation($"Attempting coordinate acquisition from address in {nameof(SoilDataViewModel)}.{nameof(OnGetAddress)}");
-                var point = await _defaultGeocoderService.GetCoordinates(StreetAddress, Municipality, SelectedProvince, "Canada", PostalCode);
+                var point = await _defaultGeocoderService.GetCoordinates(StreetAddress, Municipality, SelectedProvince, PostalCode);
                 if (point.latitude == 0 || point.longitude == 0)
                 {
+                    SearchAttemptsMade += 1;
                     Logger.LogDebug($@"Cannot find the coordinate from the address entered.");
+                    NotificationManager.ShowToast(H.Core.Properties.Resources.InvalidAddress, Core.Properties.Resources.MessageIncorrectAddress, NotificationType.Error);
                     return;
                 }
+
+                SearchAttemptsMade = 0; // Reset the search attempts since we were successful.
                 Logger.LogInformation($"Coordinate acquired from address in {nameof(SoilDataViewModel)}.{nameof(OnGetAddress)}");
                 Latitude = point.latitude;
                 Longitude = point.longitude;
@@ -574,6 +600,7 @@ namespace H.Avalonia.ViewModels
             }
             catch (ArgumentOutOfRangeException e)
             {
+                SearchAttemptsMade += 1;
                 Logger.LogError($@"{e.Message}. Exception thrown in {nameof(OnGetCoordinates)} by class {nameof(SoilDataViewModel)}");
                 NotificationManager.ShowToast(H.Core.Properties.Resources.InvalidAddress, Core.Properties.Resources.MessageIncorrectAddress, NotificationType.Error);
             }

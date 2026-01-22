@@ -68,7 +68,7 @@ namespace H.Avalonia.Services
         /// <param name="country">The country of the address to check if geocode data is cached</param>
         /// <param name="postalCode">The postal code of the address to check if geocode data is cached</param>
         /// <returns>True if cached file exists for this address, false otherwise</returns>
-        public bool IsCached(string street, string municipality, Province province, string country, string postalCode)
+        public bool IsCached(string street, string municipality, Province province, string postalCode, string country = "Canada")
         {
             var path = this.GetCachePath(street, municipality, province, country, postalCode);
             return File.Exists(path);
@@ -83,7 +83,7 @@ namespace H.Avalonia.Services
         /// <param name="country">The country of the address to geocode and get coordinates for</param>
         /// <param name="postalCode">The postal code of the address to geocode and get coordinates for</param>
         /// <returns>Longitude and latitude coordinates</returns>
-        public async Task<(double latitude, double longitude)> GetCoordinates(string street, string municipality, Province province, string country, string postalCode)
+        public async Task<(double latitude, double longitude)> GetCoordinates(string street, string municipality, Province province, string postalCode, string country = "Canada")
         {
             street = PrepareStreetStringForAPI(street);
             // If no cached data, get data from Nominatim API and cache it.
@@ -114,7 +114,7 @@ namespace H.Avalonia.Services
         /// <param name="country">The country of the address to geocode and get coordinates for</param>
         /// <param name="postalCode">The postal code of the address to geocode and get coordinates for</param>
         /// <returns>JObject containing all the data returned from the Nominatim API for the given address</returns>
-        public async Task <JObject> GetApiContent(string street, string municipality, Province province, string country, string postalCode)
+        public async Task <JObject> GetApiContent(string street, string municipality, Province province, string postalCode, string country = "Canada")
         {
             street = PrepareStreetStringForAPI(street);
             // If no cached data, get data from Nominatim API and cache it.

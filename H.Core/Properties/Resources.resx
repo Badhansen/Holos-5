@@ -6439,4 +6439,10 @@ Please note: emissions related to the deposition or application of livestock man
   <data name="SoilDataViewStepThree" xml:space="preserve">
     <value>Select Soil Type</value>
   </data>
+  <data name="TooManyAddressSearches" xml:space="preserve">
+    <value>Too many address searches made.</value>
+  </data>
+  <data name="DescriptionTooManyAddressSearches" xml:space="preserve">
+    <value>Please find the farm location by selected a province and right clicking the location on the map or by entering the coordinates directly.</value>
+  </data>
 </root>

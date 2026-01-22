@@ -1231,6 +1231,15 @@ namespace H.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please find the farm location by selected a province and right clicking the location on the map or by entering the coordinates directly..
+        /// </summary>
+        public static string DescriptionTooManyAddressSearches {
+            get {
+                return ResourceManager.GetString("DescriptionTooManyAddressSearches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
         public static string DescriptorSoilTypeForFarm {
@@ -18478,6 +18487,15 @@ namespace H.Core.Properties {
         public static string ToolTipUpstreamEmissions {
             get {
                 return ResourceManager.GetString("ToolTipUpstreamEmissions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Too many address searches made..
+        /// </summary>
+        public static string TooManyAddressSearches {
+            get {
+                return ResourceManager.GetString("TooManyAddressSearches", resourceCulture);
             }
         }
         

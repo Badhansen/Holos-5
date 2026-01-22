@@ -138,6 +138,9 @@ namespace H.Avalonia.ViewModels
             }
         }
 
+        /// <summary>
+        /// Boolean that indicates if all address data has been entered by the user.
+        /// </summary>
         public bool AllAddressDataEntered
         {
             get =>

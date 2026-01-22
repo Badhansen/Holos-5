@@ -6439,4 +6439,28 @@ Please note: emissions related to the deposition or application of livestock man
   <data name="SoilDataViewStepThree" xml:space="preserve">
     <value>Select Soil Type</value>
   </data>
+  <data name="NoProvinceSelected" xml:space="preserve">
+    <value>No province selected.</value>
+  </data>
+  <data name="DescriptionNoProvinceSelected" xml:space="preserve">
+    <value>Please select a province from the dropdown and try again.</value>
+  </data>
+  <data name="EmptyStreetNameField" xml:space="preserve">
+    <value>Street name field empty.</value>
+  </data>
+  <data name="DescriptionEmptyStreetNameField" xml:space="preserve">
+    <value>Please enter house number and street name to try again.</value>
+  </data>
+  <data name="EmptyMunicipalityField" xml:space="preserve">
+    <value>Municipality field empty.</value>
+  </data>
+  <data name="DescriptionEmptyMunicipalityField" xml:space="preserve">
+    <value>Please enter a municipality and try again.</value>
+  </data>
+  <data name="EmptyPostalCodeField" xml:space="preserve">
+    <value>Postal code field empty.</value>
+  </data>
+  <data name="DescriptionPostalCodeField" xml:space="preserve">
+    <value>Please enter a postal code and try again.</value>
+  </data>
 </root>

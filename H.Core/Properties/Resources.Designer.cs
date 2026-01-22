@@ -1195,6 +1195,33 @@ namespace H.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter a municipality and try again..
+        /// </summary>
+        public static string DescriptionEmptyMunicipalityField {
+            get {
+                return ResourceManager.GetString("DescriptionEmptyMunicipalityField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter house number and street name to try again..
+        /// </summary>
+        public static string DescriptionEmptyStreetNameField {
+            get {
+                return ResourceManager.GetString("DescriptionEmptyStreetNameField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select a province from the dropdown and try again..
+        /// </summary>
+        public static string DescriptionNoProvinceSelected {
+            get {
+                return ResourceManager.GetString("DescriptionNoProvinceSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The monthly emissions distribution for the year. This distribution can be adjusted based on your farm&apos;s results. Please note that the addition of all montly percentages.
         /// </summary>
         public static string DescriptionOptionSoilN2OBreakdown {
@@ -1209,6 +1236,15 @@ namespace H.Core.Properties {
         public static string DescriptionOptionSoilView {
             get {
                 return ResourceManager.GetString("DescriptionOptionSoilView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter a postal code and try again..
+        /// </summary>
+        public static string DescriptionPostalCodeField {
+            get {
+                return ResourceManager.GetString("DescriptionPostalCodeField", resourceCulture);
             }
         }
         
@@ -1407,6 +1443,33 @@ namespace H.Core.Properties {
         public static string Economics {
             get {
                 return ResourceManager.GetString("Economics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Municipality field empty..
+        /// </summary>
+        public static string EmptyMunicipalityField {
+            get {
+                return ResourceManager.GetString("EmptyMunicipalityField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Postal code field empty..
+        /// </summary>
+        public static string EmptyPostalCodeField {
+            get {
+                return ResourceManager.GetString("EmptyPostalCodeField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Street name field empty..
+        /// </summary>
+        public static string EmptyStreetNameField {
+            get {
+                return ResourceManager.GetString("EmptyStreetNameField", resourceCulture);
             }
         }
         
@@ -14668,6 +14731,15 @@ namespace H.Core.Properties {
         public static string NoneToReduced {
             get {
                 return ResourceManager.GetString("NoneToReduced", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No province selected..
+        /// </summary>
+        public static string NoProvinceSelected {
+            get {
+                return ResourceManager.GetString("NoProvinceSelected", resourceCulture);
             }
         }
         

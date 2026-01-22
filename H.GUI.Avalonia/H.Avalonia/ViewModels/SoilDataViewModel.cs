@@ -527,22 +527,22 @@ namespace H.Avalonia.ViewModels
                 if (SelectedProvince == Province.SelectProvince)
                 {
                     Logger.LogDebug($@"Cannot find location as no province was selected in {nameof(SoilDataViewModel)}.");
-                    NotificationManager.ShowToast("No province selected.", "Please select a province from the dropdown and try again.", NotificationType.Warning);
+                    NotificationManager.ShowToast(H.Core.Properties.Resources.NoProvinceSelected, H.Core.Properties.Resources.DescriptionNoProvinceSelected, NotificationType.Warning);
                 }
                 if (string.IsNullOrEmpty(StreetAddress))
                 {
                     Logger.LogDebug($@"Cannot find location as no street address was entered in {nameof(SoilDataViewModel)}.");
-                    NotificationManager.ShowToast("Street name field empty.", "Please enter house number and street name to try again.", NotificationType.Warning);
+                    NotificationManager.ShowToast(H.Core.Properties.Resources.EmptyStreetNameField, H.Core.Properties.Resources.DescriptionEmptyStreetNameField, NotificationType.Warning);
                 }
                 if (string.IsNullOrWhiteSpace(Municipality))
                 {
                     Logger.LogDebug($@"Cannot find location as no municipality was entered in {nameof(SoilDataViewModel)}.");
-                    NotificationManager.ShowToast("Municipality field empty.", "Please enter a municipality and try again.", NotificationType.Warning);
+                    NotificationManager.ShowToast(H.Core.Properties.Resources.EmptyMunicipalityField, H.Core.Properties.Resources.DescriptionEmptyMunicipalityField, NotificationType.Warning);
                 }
                 if (string.IsNullOrWhiteSpace(PostalCode))
                 {
                     Logger.LogDebug($@"Cannot find location as an empty postal code was entered in {nameof(SoilDataViewModel)}.");
-                    NotificationManager.ShowToast("Postal code field empty.", "Please enter a postal code and try again.", NotificationType.Warning);
+                    NotificationManager.ShowToast(H.Core.Properties.Resources.EmptyPostalCodeField, H.Core.Properties.Resources.DescriptionPostalCodeField, NotificationType.Warning);
                 }
                 return;
             }

@@ -12,6 +12,8 @@ namespace H.Avalonia.Test.Services
         private static NominatimGeocoderService _nominatimGeocoderService;
         private Mock<ILogger> _mockLogger;
         private ILogger _loggerMock;
+        private Mock<INotificationManagerService> _mockNotificationManagerService;
+        private INotificationManagerService _notificationManagerServiceMock;
         private string _address = "5403 1 Ave S, Lethbridge, AB T1J 4B1";
         private string _streetAddress = "5403 1 Ave South";
         private string _municipality = "Lethbridge";
@@ -44,6 +46,9 @@ namespace H.Avalonia.Test.Services
         {
             _mockLogger = new Mock<ILogger>();
             _loggerMock = _mockLogger.Object;
+
+            _mockNotificationManagerService = new Mock<INotificationManagerService>();
+            _notificationManagerServiceMock = _mockNotificationManagerService.Object;
         }
 
         [TestCleanup]
@@ -54,21 +59,27 @@ namespace H.Avalonia.Test.Services
         [TestMethod]
         public void TestConstructorValidParameters()
         {
-            _nominatimGeocoderService = new NominatimGeocoderService(_loggerMock);
+            _nominatimGeocoderService = new NominatimGeocoderService(_loggerMock, _notificationManagerServiceMock);
             Assert.IsNotNull(_nominatimGeocoderService);
         }
 
         [TestMethod]
         public void TestConstructorNullLogger()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new NominatimGeocoderService(null));
+            Assert.ThrowsException<ArgumentNullException>(() => new NominatimGeocoderService(null, _notificationManagerServiceMock));
+        }
+
+        [TestMethod]
+        public void TestConstructorNullNotificationManager()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => new NominatimGeocoderService(_loggerMock, null));
         }
 
         [TestMethod]
         public async Task TestGeocoderLongLat()
         {
-            _nominatimGeocoderService = new NominatimGeocoderService(_loggerMock);
-            var latitudeAndLongitude = await _nominatimGeocoderService.GetCoordinates(_streetAddress, _municipality, _province, _country, _postalCode);
+            _nominatimGeocoderService = new NominatimGeocoderService(_loggerMock, _notificationManagerServiceMock);
+            var latitudeAndLongitude = await _nominatimGeocoderService.GetCoordinates(_streetAddress, _municipality, _province, _postalCode);
             Assert.AreEqual(latitudeAndLongitude.latitude, 49.697, 0.01);
             Assert.AreEqual(latitudeAndLongitude.longitude, -112.848, 0.01);
         }
@@ -77,9 +88,9 @@ namespace H.Avalonia.Test.Services
         public async Task TestCachingOfGeocodedData()
         {
             // Test that after geocoding an address, it is cached
-            _nominatimGeocoderService = new NominatimGeocoderService(_loggerMock);
-            var latitudeAndLongitude = await _nominatimGeocoderService.GetCoordinates(_streetAddress, _municipality, _province, _country, _postalCode);
-            Assert.IsTrue(_nominatimGeocoderService.IsCached(_streetAddress, _municipality, _province, _country, _postalCode));
+            _nominatimGeocoderService = new NominatimGeocoderService(_loggerMock, _notificationManagerServiceMock);
+            var latitudeAndLongitude = await _nominatimGeocoderService.GetCoordinates(_streetAddress, _municipality, _province, _postalCode);
+            Assert.IsTrue(_nominatimGeocoderService.IsCached(_streetAddress, _municipality, _province, _postalCode));
         }
     }
 }

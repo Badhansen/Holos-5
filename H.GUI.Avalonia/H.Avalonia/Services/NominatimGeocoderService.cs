@@ -70,6 +70,7 @@ namespace H.Avalonia.Services
         /// <returns>True if cached file exists for this address, false otherwise</returns>
         public bool IsCached(string street, string municipality, Province province, string postalCode, string country = "Canada")
         {
+            street = PrepareStreetStringForAPI(street);
             var path = this.GetCachePath(street, municipality, province, country, postalCode);
             return File.Exists(path);
         }

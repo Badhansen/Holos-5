@@ -106,7 +106,7 @@ namespace H.Avalonia.ViewModels
             {
                 if (SetProperty(ref _streetAddress, value))
                 {
-                    RaisePropertyChanged(nameof(IsAddressSearchedEnabled));
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
                 }
             }
         }
@@ -121,7 +121,7 @@ namespace H.Avalonia.ViewModels
             {
                 if (SetProperty(ref _municipality, value))
                 {
-                    RaisePropertyChanged(nameof(IsAddressSearchedEnabled));
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
                 }
             }
         }
@@ -136,7 +136,7 @@ namespace H.Avalonia.ViewModels
             {
                 if (SetProperty(ref _postalCode, value))
                 {
-                    RaisePropertyChanged(nameof(IsAddressSearchedEnabled));
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
                 }
             }
         }
@@ -144,7 +144,7 @@ namespace H.Avalonia.ViewModels
         /// <summary>
         /// Boolean that indicates if all address data has been entered by the user or if user exceeded failed search attempts.
         /// </summary>
-        public bool IsAddressSearchedEnabled
+        public bool IsAddressSearchEnabled
         {
             get =>
                 (SelectedProvince != Province.SelectProvince &&
@@ -163,7 +163,7 @@ namespace H.Avalonia.ViewModels
             {
                 if (SetProperty(ref _searchAttempsMade, value))
                 {
-                    RaisePropertyChanged(nameof(IsAddressSearchedEnabled));
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
                 }
             }
         }
@@ -303,7 +303,7 @@ namespace H.Avalonia.ViewModels
             {
                 if (SetProperty(ref _selectedProvince, value))
                 {
-                    RaisePropertyChanged(nameof(IsAddressSearchedEnabled));
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
                 }
             }
         }

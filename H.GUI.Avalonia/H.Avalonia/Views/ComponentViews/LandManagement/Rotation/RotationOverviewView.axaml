@@ -24,78 +24,110 @@
                            Margin="0,8,0,0"/>
             </StackPanel>
 
-            <!-- Overview Content -->
-            <Grid Grid.IsSharedSizeScope="True">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <!-- Overview Content - Changed to StackPanel with Horizontal Orientation -->
+            <StackPanel Orientation="Horizontal" 
+                        HorizontalAlignment="Left"
+                        Grid.IsSharedSizeScope="True">
 
                 <!-- Time Period Section -->
-                <Border Grid.Column="0" Classes="input-card" Margin="0,0,8,0">
+                <Border Classes="input-card" Margin="0,0,8,0">
                     <StackPanel>
                         <TextBlock Text="Time Period" FontWeight="Bold" Margin="0,0,0,12"/>
                         
                         <!-- Start Year -->
                         <Grid Margin="0,0,0,8">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+                                <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Start:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Grid.Column="0" 
+                                       Text="Start:" 
+                                       FontWeight="Medium" 
+                                       Foreground="RoyalBlue"
+                                       VerticalAlignment="Center" 
+                                       Margin="0,0,8,0"/>
                             <NumericUpDown Grid.Column="1" 
                                            Minimum="1900" 
                                            Maximum="2200"
                                            FormatString="0"
                                            Increment="1"
-                                           Value="{Binding Path=SelectedRotationComponentDto.StartYear}"/>
+                                           Value="{Binding Path=SelectedRotationComponentDto.StartYear}"
+                                           Margin="8,0"
+                                           HorizontalAlignment="Stretch"/>
+                            <TextBlock Grid.Column="2" 
+                                       Text="" 
+                                       VerticalAlignment="Center"
+                                       Margin="8,0,0,0"/>
                         </Grid>
 
                         <!-- End Year -->
                         <Grid Margin="0,0,0,8">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+                                <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="End:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Grid.Column="0" 
+                                       Text="End:" 
+                                       FontWeight="Medium" 
+                                       Foreground="RoyalBlue"
+                                       VerticalAlignment="Center" 
+                                       Margin="0,0,8,0"/>
                             <NumericUpDown Grid.Column="1" 
                                            Minimum="1900" 
                                            Maximum="2200"
                                            FormatString="0"
                                            Increment="1"
-                                           Value="{Binding Path=SelectedRotationComponentDto.EndYear}"/>
+                                           Value="{Binding Path=SelectedRotationComponentDto.EndYear}"
+                                           Margin="8,0"
+                                           HorizontalAlignment="Stretch"/>
+                            <TextBlock Grid.Column="2" 
+                                       Text="" 
+                                       VerticalAlignment="Center"
+                                       Margin="8,0,0,0"/>
                         </Grid>
 
                         <!-- Length (calculated) -->
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+                                <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Length:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Grid.Column="0" 
+                                       Text="Length:" 
+                                       FontWeight="Medium" 
+                                       Foreground="RoyalBlue"
+                                       VerticalAlignment="Center" 
+                                       Margin="0,0,8,0"/>
                             <TextBlock Grid.Column="1" 
-                                       Text="{Binding RotationLength}"
+                                       Text="{Binding Path=SelectedRotationComponentDto.RotationLength}"
                                        VerticalAlignment="Center"
-                                       FontWeight="SemiBold"/>
+                                       FontWeight="SemiBold"
+                                       Margin="8,0"/>
+                            <TextBlock Grid.Column="2" 
+                                       Text="years" 
+                                       VerticalAlignment="Center"
+                                       FontStyle="Italic"
+                                       Margin="8,0,0,0"/>
                         </Grid>
                     </StackPanel>
                 </Border>
 
                 <!-- Field Configuration Section -->
-                <rotationViews:RotationFieldConfigurationView Grid.Column="1" 
-                                                              Margin="0,0,8,0"
+                <rotationViews:RotationFieldConfigurationView Margin="0,0,8,0"
                                                               DataContext="{Binding}"/>
 
                 <!-- Rotation Summary Section -->
-                <Border Grid.Column="2" Classes="input-card" Background="#E3F2FD">
+                <Border Classes="input-card" Background="#E3F2FD">
                     <StackPanel>
                         <TextBlock Text="Rotation Summary" FontWeight="Bold" Margin="0,0,0,12"/>
                         
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -123,7 +155,7 @@
                             <!-- Years per Field -->
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="Years/field:" Margin="0,0,8,4"/>
                             <TextBlock Grid.Row="2" Grid.Column="1" 
-                                       Text="{Binding RotationLength}"
+                                       Text="{Binding Path=SelectedRotationComponentDto.RotationLength}"
                                        FontWeight="SemiBold"
                                        HorizontalAlignment="Right"
                                        Margin="0,0,0,4"/>
@@ -137,7 +169,7 @@
                         </Grid>
                     </StackPanel>
                 </Border>
-            </Grid>
+            </StackPanel>
         </StackPanel>
     </Border>
 </UserControl>

@@ -18,6 +18,7 @@ public class RotationComponentDto : DtoBase, IRotationComponentDto
 
     private int _startYear;
     private int _endYear;
+    private int _numberOfFields;
 
     #endregion
 
@@ -54,6 +55,28 @@ public class RotationComponentDto : DtoBase, IRotationComponentDto
     {
         get => _endYear;
         set => SetProperty(ref _endYear, value);
+    }
+
+    public int NumberOfFields
+    {
+        get => _numberOfFields;
+        set => SetProperty(ref _numberOfFields, value);
+    }
+
+    /// <summary>
+    /// Calculated property that returns the length of the rotation in years (EndYear - StartYear).
+    /// Returns 0 if either StartYear or EndYear is not set or if EndYear is less than or equal to StartYear.
+    /// </summary>
+    public int RotationLength
+    {
+        get
+        {
+            if (this.StartYear > 0 && this.EndYear > 0 && this.EndYear > this.StartYear)
+            {
+                return this.EndYear - this.StartYear;
+            }
+            return 0;
+        }
     }
 
     #endregion
@@ -166,6 +189,8 @@ public class RotationComponentDto : DtoBase, IRotationComponentDto
             ValidateStartYear();
             // Re-validate end year in case it was previously invalid due to start year
             ValidateEndYear();
+            // Notify that RotationLength has changed
+            RaisePropertyChanged(nameof(RotationLength));
         }
         else if (e.PropertyName.Equals(nameof(EndYear)))
         {
@@ -173,6 +198,8 @@ public class RotationComponentDto : DtoBase, IRotationComponentDto
             ValidateEndYear();
             // Re-validate start year in case it was previously invalid due to end year
             ValidateStartYear();
+            // Notify that RotationLength has changed
+            RaisePropertyChanged(nameof(RotationLength));
         }
     }
 

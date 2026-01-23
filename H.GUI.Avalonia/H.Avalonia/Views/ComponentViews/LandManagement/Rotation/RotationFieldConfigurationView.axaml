@@ -11,47 +11,67 @@
     </Design.DataContext>
 
     <!-- Field Configuration Section -->
-    <Border Classes="input-card">
+    <Border Classes="input-card" Grid.IsSharedSizeScope="True">
         <StackPanel>
             <TextBlock Text="Field Configuration" FontWeight="Bold" Margin="0,0,0,12"/>
             
             <!-- Number of Fields -->
             <Grid Margin="0,0,0,8">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+                    <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Fields:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBlock Grid.Column="0" 
+                           Text="Fields:" 
+                           FontWeight="Medium" 
+                           Foreground="RoyalBlue"
+                           VerticalAlignment="Center" 
+                           Margin="0,0,8,0"/>
                 <NumericUpDown Grid.Column="1" 
                                Minimum="1" 
                                Maximum="20"
                                FormatString="0"
                                Increment="1"
-                               Value="{Binding NumberOfFields}"/>
+                               Value="{Binding SelectedRotationComponentDto.NumberOfFields}"
+                               Margin="8,0"
+                               HorizontalAlignment="Stretch"/>
+                <TextBlock Grid.Column="2" 
+                           Text="" 
+                           VerticalAlignment="Center"
+                           Margin="8,0,0,0"/>
             </Grid>
 
             <!-- Field Area -->
             <Grid Margin="0,0,0,8">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+                    <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Area:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBlock Grid.Column="0" 
+                           Text="Area:" 
+                           FontWeight="Medium" 
+                           Foreground="RoyalBlue"
+                           VerticalAlignment="Center" 
+                           Margin="0,0,8,0"/>
                 <NumericUpDown Grid.Column="1" 
                                Minimum="0.1"
-                               Value="{Binding Path=SelectedRotationComponentDto.FieldArea}"/>
+                               Value="{Binding Path=SelectedRotationComponentDto.FieldArea}"
+                               Margin="8,0"
+                               HorizontalAlignment="Stretch"/>
                 <Label Grid.Column="2" 
                        Classes="unit-label"
                        Content="{Binding Path=StorageService.Storage.ApplicationData.DisplayUnitStrings.HectaresString}"
                        VerticalContentAlignment="Center"
-                       Margin="4,0,0,0"/>
+                       Margin="8,0,0,0"/>
             </Grid>
 
             <!-- Shift Rotation Checkbox -->
             <CheckBox Content="Shift rotation across fields each year"
                       IsChecked="{Binding ShiftRotationEnabled}"
-                      ToolTip.Tip="When enabled, crops rotate to different fields each year (e.g., Field 1 -> Field 2 -> Field 3)"/>
+                      ToolTip.Tip="When enabled, crops rotate to different fields each year (e.g., Field 1 -> Field 2 -> Field 3)"
+                      Margin="0,4,0,0"/>
         </StackPanel>
     </Border>
 </UserControl>

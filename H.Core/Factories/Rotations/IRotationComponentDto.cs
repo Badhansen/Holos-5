@@ -21,5 +21,15 @@ public interface IRotationComponentDto : IDto
     /// </summary>
     int EndYear { get; set; }
 
+    /// <summary>
+    /// Total number of fields in this rotation component
+    /// </summary>
+    int NumberOfFields { get; set; }
+
+    /// <summary>
+    /// The length of the rotation in years (EndYear - StartYear).
+    /// </summary>
+    int RotationLength { get; }
+
     #endregion
 }

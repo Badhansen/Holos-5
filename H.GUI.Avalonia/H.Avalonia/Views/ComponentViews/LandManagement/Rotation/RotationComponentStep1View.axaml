@@ -6,7 +6,7 @@
              xmlns:rotation="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation"
              xmlns:rotationViews="clr-namespace:H.Avalonia.Views.ComponentViews.LandManagement.Rotation"
              mc:Ignorable="d"
-             x:Class="H.Avalonia.RotationComponentStep1View">
+             x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationComponentStep1View">
 
     <Design.DataContext>
         <rotation:RotationComponentViewModelDesign/>

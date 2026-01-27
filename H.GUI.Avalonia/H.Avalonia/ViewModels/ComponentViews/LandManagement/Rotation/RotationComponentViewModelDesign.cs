@@ -17,7 +17,8 @@ public class RotationComponentViewModelDesign : RotationComponentViewModel
             Name = "Western Canadian Prairie Rotation",
             StartYear = 2020,
             EndYear = 2025,
-            FieldArea = 100.0
+            FieldArea = 100.0,
+            NumberOfFields = 12,
         };
 
         // Set up sample rotation parameters

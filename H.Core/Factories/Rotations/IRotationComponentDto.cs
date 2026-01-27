@@ -31,5 +31,17 @@ public interface IRotationComponentDto : IDto
     /// </summary>
     int RotationLength { get; }
 
+    /// <summary>
+    /// The total area of all fields in the rotation (FieldArea * NumberOfFields).
+    /// (ha)
+    /// </summary>
+    double TotalRotationArea { get; }
+
+    /// <summary>
+    /// The total number of crop-years in the rotation (NumberOfFields * RotationLength).
+    /// This represents the total number of individual crop instances across all fields and all years.
+    /// </summary>
+    int TotalCropYears { get; }
+
     #endregion
 }

@@ -79,6 +79,32 @@ public class RotationComponentDto : DtoBase, IRotationComponentDto
         }
     }
 
+    /// <summary>
+    /// Calculated property that returns the total area of all fields in the rotation (FieldArea * NumberOfFields).
+    /// 
+    /// (ha)
+    /// </summary>
+    public double TotalRotationArea
+    {
+        get
+        {
+            return this.FieldArea * this.NumberOfFields;
+        }
+    }
+
+    /// <summary>
+    /// Calculated property that returns the total number of crop-years in the rotation (NumberOfFields * RotationLength).
+    /// This represents the total number of individual crop instances across all fields and all years in the rotation.
+    /// For example, if you have 3 fields and a 5-year rotation, you have 15 crop-years total.
+    /// </summary>
+    public int TotalCropYears
+    {
+        get
+        {
+            return this.NumberOfFields * this.RotationLength;
+        }
+    }
+
     #endregion
 
     #region Event Handlers
@@ -182,6 +208,14 @@ public class RotationComponentDto : DtoBase, IRotationComponentDto
         {
             // Ensure the area of the field is valid
             ValidateFieldArea();
+            // Notify that TotalRotationArea has changed
+            RaisePropertyChanged(nameof(TotalRotationArea));
+        }
+        else if (e.PropertyName.Equals(nameof(NumberOfFields)))
+        {
+            // Notify that TotalRotationArea and TotalCropYears have changed
+            RaisePropertyChanged(nameof(TotalRotationArea));
+            RaisePropertyChanged(nameof(TotalCropYears));
         }
         else if (e.PropertyName.Equals(nameof(StartYear)))
         {
@@ -189,8 +223,9 @@ public class RotationComponentDto : DtoBase, IRotationComponentDto
             ValidateStartYear();
             // Re-validate end year in case it was previously invalid due to start year
             ValidateEndYear();
-            // Notify that RotationLength has changed
+            // Notify that RotationLength and TotalCropYears have changed
             RaisePropertyChanged(nameof(RotationLength));
+            RaisePropertyChanged(nameof(TotalCropYears));
         }
         else if (e.PropertyName.Equals(nameof(EndYear)))
         {
@@ -198,8 +233,9 @@ public class RotationComponentDto : DtoBase, IRotationComponentDto
             ValidateEndYear();
             // Re-validate start year in case it was previously invalid due to end year
             ValidateStartYear();
-            // Notify that RotationLength has changed
+            // Notify that RotationLength and TotalCropYears have changed
             RaisePropertyChanged(nameof(RotationLength));
+            RaisePropertyChanged(nameof(TotalCropYears));
         }
     }
 

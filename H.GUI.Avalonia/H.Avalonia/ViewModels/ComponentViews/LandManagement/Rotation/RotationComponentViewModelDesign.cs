@@ -19,19 +19,20 @@ public class RotationComponentViewModelDesign : RotationComponentViewModel
         // Initialize the DTO with sample data
         base.SelectedRotationComponentDto = new RotationComponentDto
         {
-            Name = "Western Canadian Prairie Rotation",
+            Name = "Diverse Crop Rotation Showcase",
             StartYear = 2020,
-            EndYear = 2025,
+            EndYear = 2035,
             FieldArea = 100.0,
-            NumberOfFields = 3,
+            NumberOfFields = 4,
         };
 
         // Set up sample rotation parameters
         base.ShiftRotationEnabled = true;
 
-        // Create sample crops for the CropDtos collection
+        // Create sample crops for the CropDtos collection showcasing all color categories
         base.CropDtos = new ObservableCollection<ICropDto>
         {
+            // Cereals - Orange (#FFF3E0)
             new CropDto
             {
                 Year = 2020,
@@ -43,6 +44,31 @@ public class RotationComponentViewModelDesign : RotationComponentViewModel
             new CropDto
             {
                 Year = 2021,
+                CropType = CropType.Barley,
+                WetYield = 4000,
+                AmountOfIrrigation = 0,
+                IsSelected = false
+            },
+            new CropDto
+            {
+                Year = 2022,
+                CropType = CropType.Oats,
+                WetYield = 3800,
+                AmountOfIrrigation = 0,
+                IsSelected = false
+            },
+            new CropDto
+            {
+                Year = 2023,
+                CropType = CropType.Corn,
+                WetYield = 9500,
+                AmountOfIrrigation = 50,
+                IsSelected = false
+            },
+            // Oilseeds - Green (#E8F5E9)
+            new CropDto
+            {
+                Year = 2024,
                 CropType = CropType.Canola,
                 WetYield = 2200,
                 AmountOfIrrigation = 0,
@@ -50,7 +76,32 @@ public class RotationComponentViewModelDesign : RotationComponentViewModel
             },
             new CropDto
             {
-                Year = 2022,
+                Year = 2025,
+                CropType = CropType.Flax,
+                WetYield = 1800,
+                AmountOfIrrigation = 0,
+                IsSelected = false
+            },
+            new CropDto
+            {
+                Year = 2026,
+                CropType = CropType.Sunflower,
+                WetYield = 2400,
+                AmountOfIrrigation = 0,
+                IsSelected = false
+            },
+            new CropDto
+            {
+                Year = 2027,
+                CropType = CropType.Soybeans,
+                WetYield = 3200,
+                AmountOfIrrigation = 0,
+                IsSelected = true
+            },
+            // Pulses - Blue (#E3F2FD)
+            new CropDto
+            {
+                Year = 2028,
                 CropType = CropType.Peas,
                 WetYield = 2800,
                 AmountOfIrrigation = 0,
@@ -58,15 +109,32 @@ public class RotationComponentViewModelDesign : RotationComponentViewModel
             },
             new CropDto
             {
-                Year = 2023,
-                CropType = CropType.Barley,
-                WetYield = 4000,
+                Year = 2029,
+                CropType = CropType.Lentils,
+                WetYield = 2100,
                 AmountOfIrrigation = 0,
-                IsSelected = true
+                IsSelected = false
             },
             new CropDto
             {
-                Year = 2024,
+                Year = 2030,
+                CropType = CropType.Chickpeas,
+                WetYield = 2400,
+                AmountOfIrrigation = 0,
+                IsSelected = false
+            },
+            new CropDto
+            {
+                Year = 2031,
+                CropType = CropType.FabaBeans,
+                WetYield = 3500,
+                AmountOfIrrigation = 0,
+                IsSelected = false
+            },
+            // Forages - Purple (#F3E5F5)
+            new CropDto
+            {
+                Year = 2032,
                 CropType = CropType.AlfalfaMedicagoSativaL,
                 WetYield = 8000,
                 AmountOfIrrigation = 100,
@@ -74,7 +142,24 @@ public class RotationComponentViewModelDesign : RotationComponentViewModel
             },
             new CropDto
             {
-                Year = 2025,
+                Year = 2033,
+                CropType = CropType.TameGrass,
+                WetYield = 6000,
+                AmountOfIrrigation = 50,
+                IsSelected = false
+            },
+            new CropDto
+            {
+                Year = 2034,
+                CropType = CropType.GrassHay,
+                WetYield = 5500,
+                AmountOfIrrigation = 30,
+                IsSelected = false
+            },
+            // Fallow - Gray (#FAFAFA)
+            new CropDto
+            {
+                Year = 2035,
                 CropType = CropType.Fallow,
                 WetYield = 0,
                 AmountOfIrrigation = 0,

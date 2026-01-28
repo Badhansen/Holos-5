@@ -27,7 +27,57 @@ public partial class CropDto : DtoBase, ICropDto
 
     public CropDto()
     {
-        this.ValidCropTypes = new ObservableCollection<CropType>() { CropType.NotSelected, CropType.Oats, CropType.Wheat, CropType.Barley };
+        // Initialize with diverse crop types representing all color categories
+        this.ValidCropTypes = new ObservableCollection<CropType>() 
+        { 
+            CropType.NotSelected,
+            
+            // Cereals - Orange
+            CropType.Wheat,
+            CropType.Barley,
+            CropType.Oats,
+            CropType.Rye,
+            CropType.Corn,
+            CropType.GrainCorn,
+            CropType.SilageCorn,
+            CropType.Triticale,
+            CropType.Durum,
+            
+            // Oilseeds - Green
+            CropType.Canola,
+            CropType.Flax,
+            CropType.FlaxSeed,
+            CropType.Sunflower,
+            CropType.SunflowerSeed,
+            CropType.Soybeans,
+            CropType.Mustard,
+            CropType.MustardSeed,
+            
+            // Pulses - Blue
+            CropType.Peas,
+            CropType.DryPeas,
+            CropType.FieldPeas,
+            CropType.Lentils,
+            CropType.Chickpeas,
+            CropType.FabaBeans,
+            CropType.Beans,
+            CropType.DryBean,
+            
+            // Forages - Purple
+            CropType.AlfalfaMedicagoSativaL,
+            CropType.AlfalfaHay,
+            CropType.TameGrass,
+            CropType.TameLegume,
+            CropType.TameMixed,
+            CropType.GrassHay,
+            CropType.PerennialForages,
+            CropType.Forage,
+            
+            // Fallow - Gray
+            CropType.Fallow,
+            CropType.SummerFallow
+        };
+        
         this.CropType = this.ValidCropTypes.ElementAt(0);
         this.Year = DateTime.Now.Year;
         this.AmountOfIrrigation = 0;

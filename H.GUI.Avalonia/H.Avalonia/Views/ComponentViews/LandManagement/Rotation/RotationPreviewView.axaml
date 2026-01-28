@@ -82,10 +82,10 @@
                                                 </ItemsControl.ItemsPanel>
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
-                                                        <!-- Each year/crop cell -->
+                                                        <!-- Each year/crop cell with fixed width -->
                                                         <Border Background="{Binding CropBackground}"
-                                                                Padding="12,8"
-                                                                MinWidth="120"
+                                                                Padding="8,8"
+                                                                Width="120"
                                                                 CornerRadius="4"
                                                                 BorderBrush="#E0E0E0"
                                                                 BorderThickness="1">
@@ -96,11 +96,14 @@
                                                                            FontWeight="SemiBold"
                                                                            Foreground="#666666"
                                                                            TextAlignment="Center"/>
-                                                                <!-- Crop name with icon -->
+                                                                <!-- Crop name with icon - with text trimming -->
                                                                 <TextBlock Text="{Binding CropDisplay}" 
                                                                            TextAlignment="Center"
                                                                            TextWrapping="Wrap"
-                                                                           FontWeight="Medium"/>
+                                                                           TextTrimming="CharacterEllipsis"
+                                                                           MaxLines="2"
+                                                                           FontWeight="Medium"
+                                                                           ToolTip.Tip="{Binding CropDisplay}"/>
                                                             </StackPanel>
                                                         </Border>
                                                     </DataTemplate>

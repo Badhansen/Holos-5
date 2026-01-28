@@ -18,6 +18,7 @@
         <converters:BoolToBorderBrushConverter x:Key="BoolToBorderBrushConverter"/>
         <converters:BoolToBorderThicknessConverter x:Key="BoolToBorderThicknessConverter"/>
         <converters:BoolToScaleTransformConverter x:Key="BoolToScaleTransformConverter"/>
+        <converters:CropTypeToColorConverter x:Key="CropTypeToColorConverter"/>
     </UserControl.Resources>
 
     <!-- Step 2: Build Rotation Timeline -->
@@ -85,7 +86,8 @@
                                             Command="{Binding $parent[UserControl].((rotation:RotationComponentViewModel)DataContext).SetSelectedCropCommand}"
                                             CommandParameter="{Binding}">
 
-                                        <Border Classes="timeline-card">
+                                        <Border Classes="timeline-card"
+                                                Background="{Binding CropType, Converter={StaticResource CropTypeToColorConverter}}">
                                             <StackPanel Spacing="8" Margin="8">
                                                 <!-- Top row with Year Badge and Delete Button in same DockPanel for perfect alignment -->
                                                 <DockPanel LastChildFill="False">

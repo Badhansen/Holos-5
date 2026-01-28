@@ -45,10 +45,6 @@
                         Content="+ Add Crop" 
                         Command="{Binding AddCropToRotationCommand}"
                         Margin="0,0,8,0"/>
-                <Button x:Name="RemoveSelectedCropButton"
-                        Content="Remove Selected" 
-                        Command="{Binding RemoveSelectedCropCommand}"
-                        Margin="0,0,8,0"/>
                 <TextBlock x:Name="CropsInSequenceLabelTextBlock"
                            Text="Crops in sequence:" 
                            VerticalAlignment="Center"

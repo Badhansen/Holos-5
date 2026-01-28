@@ -114,11 +114,6 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         public ICommand AddCropToRotationCommand { get; private set; }
 
         /// <summary>
-        /// Command to remove the selected crop from the rotation
-        /// </summary>
-        public ICommand RemoveSelectedCropCommand { get; private set; }
-
-        /// <summary>
         /// Command to set the selected crop when a timeline card is clicked
         /// </summary>
         public ICommand SetSelectedCropCommand { get; private set; }
@@ -192,8 +187,6 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
 
             // Initialize commands
             this.AddCropToRotationCommand = new DelegateCommand(OnAddCropToRotation);
-            this.RemoveSelectedCropCommand = new DelegateCommand(OnRemoveSelectedCrop, CanRemoveSelectedCrop)
-                .ObservesProperty(() => this.CropDtos);
             this.SetSelectedCropCommand = new DelegateCommand<object>(OnSetSelectedCropExecute);
             this.RemoveSpecificCropCommand = new DelegateCommand<object>(OnRemoveSpecificCropExecute);
         }
@@ -219,16 +212,36 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         {
             if (!IsDisposed && obj is ICropDto cropDto)
             {
-                if (this.CropDtos != null && this.CropDtos.Contains(cropDto))
+                try
                 {
-                    this.CropDtos.Remove(cropDto);
-                    
-                    // Select the last crop if any remain
-                    if (this.CropDtos.Any())
+                    // Remove the specific crop from the collection
+                    if (this.CropDtos != null && this.CropDtos.Contains(cropDto))
                     {
-                        var newSelectedCrop = this.CropDtos.Last();
-                        UpdateCropSelectionStates(newSelectedCrop);
+                        this.CropDtos.Remove(cropDto);
+
+                        // Ensure consecutive ordering (by year) of all crops now that one has been removed
+                        if (this.CropDtos != null && this.CropDtos.Any())
+                        {
+                            _fieldComponentService.ResetAllYears(this.CropDtos);
+                        }
+
+                        // If the removed crop was selected, select another crop
+                        var wasSelected = cropDto.IsSelected;
+                        if (wasSelected && this.CropDtos.Any())
+                        {
+                            var newSelectedCrop = this.CropDtos.Last();
+                            UpdateCropSelectionStates(newSelectedCrop);
+                        }
+                        else if (!this.CropDtos.Any())
+                        {
+                            // Clear selection if no crops remain
+                            UpdateCropSelectionStates(null);
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Logger?.LogError(ex, "Failed to remove specific crop from rotation");
                 }
             }
         }
@@ -236,14 +249,14 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         /// <summary>
         /// Updates the IsSelected property on all crops based on the currently selected crop
         /// </summary>
-        /// <param name="selectedCrop">The currently selected crop DTO</param>
+        /// <param name="selectedCrop">The currently selected crop DTO (can be null to clear all selections)</param>
         private void UpdateCropSelectionStates(ICropDto selectedCrop)
         {
             if (this.CropDtos != null)
             {
                 foreach (var crop in this.CropDtos)
                 {
-                    crop.IsSelected = crop == selectedCrop;
+                    crop.IsSelected = selectedCrop != null && crop == selectedCrop;
                 }
             }
         }
@@ -291,50 +304,6 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
             
             // Select the newly added crop
             UpdateCropSelectionStates(newCropDto);
-        }
-
-        /// <summary>
-        /// Removes the selected crop DTO from the rotation
-        /// </summary>
-        private void OnRemoveSelectedCrop()
-        {
-            if (this.CropDtos == null || !this.CropDtos.Any())
-            {
-                return;
-            }
-
-            // Find the first selected crop
-            var selectedCrop = this.CropDtos.FirstOrDefault(c => c.IsSelected);
-
-            if (selectedCrop != null)
-            {
-                this.CropDtos.Remove(selectedCrop);
-                
-                // Select the last crop if any remain
-                if (this.CropDtos.Any())
-                {
-                    var newSelectedCrop = this.CropDtos.Last();
-                    UpdateCropSelectionStates(newSelectedCrop);
-                }
-            }
-            else
-            {
-                // If no crop is selected, remove the last crop
-                var lastCrop = this.CropDtos.LastOrDefault();
-                if (lastCrop != null)
-                {
-                    this.CropDtos.Remove(lastCrop);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Determines whether a crop can be removed from the rotation
-        /// </summary>
-        /// <returns>True if there are crops in the collection; otherwise false</returns>
-        private bool CanRemoveSelectedCrop()
-        {
-            return this.CropDtos != null && this.CropDtos.Any();
         }
 
         #endregion

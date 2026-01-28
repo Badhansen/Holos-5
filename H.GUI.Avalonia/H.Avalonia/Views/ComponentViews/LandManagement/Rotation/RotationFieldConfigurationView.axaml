@@ -1,4 +1,5 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl x:Name="RotationFieldConfigurationRootControl"
+             xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,24 +12,26 @@
     </Design.DataContext>
 
     <!-- Field Configuration Section -->
-    <Border Classes="input-card" Grid.IsSharedSizeScope="True">
+    <Border x:Name="FieldConfigurationCardBorder" Classes="input-card" Grid.IsSharedSizeScope="True">
         <StackPanel>
-            <TextBlock Text="Field Configuration" FontWeight="Bold" Margin="0,0,0,12"/>
+            <TextBlock x:Name="FieldConfigurationTitleTextBlock" Text="Field Configuration" FontWeight="Bold" Margin="0,0,0,12"/>
             
             <!-- Number of Fields -->
-            <Grid Margin="0,0,0,8">
+            <Grid x:Name="NumberOfFieldsRowGrid" Margin="0,0,0,8">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
                     <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" 
+                <TextBlock x:Name="NumberOfFieldsLabelTextBlock"
+                           Grid.Column="0" 
                            Text="Fields:" 
                            FontWeight="Medium" 
                            Foreground="RoyalBlue"
                            VerticalAlignment="Center" 
                            Margin="0,0,8,0"/>
-                <NumericUpDown Grid.Column="1" 
+                <NumericUpDown x:Name="NumberOfFieldsInputNumericUpDown"
+                               Grid.Column="1" 
                                Minimum="1" 
                                Maximum="20"
                                FormatString="0"
@@ -36,31 +39,35 @@
                                Value="{Binding SelectedRotationComponentDto.NumberOfFields}"
                                Margin="8,0"
                                HorizontalAlignment="Stretch"/>
-                <TextBlock Grid.Column="2" 
+                <TextBlock x:Name="NumberOfFieldsUnitTextBlock"
+                           Grid.Column="2" 
                            Text="" 
                            VerticalAlignment="Center"
                            Margin="8,0,0,0"/>
             </Grid>
 
             <!-- Field Area -->
-            <Grid Margin="0,0,0,8">
+            <Grid x:Name="FieldAreaRowGrid" Margin="0,0,0,8">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
                     <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" 
+                <TextBlock x:Name="FieldAreaLabelTextBlock"
+                           Grid.Column="0" 
                            Text="Area:" 
                            FontWeight="Medium" 
                            Foreground="RoyalBlue"
                            VerticalAlignment="Center" 
                            Margin="0,0,8,0"/>
-                <NumericUpDown Grid.Column="1" 
+                <NumericUpDown x:Name="FieldAreaInputNumericUpDown"
+                               Grid.Column="1" 
                                Minimum="0.1"
                                Value="{Binding Path=SelectedRotationComponentDto.FieldArea}"
                                Margin="8,0"
                                HorizontalAlignment="Stretch"/>
-                <Label Grid.Column="2" 
+                <Label x:Name="FieldAreaUnitLabel"
+                       Grid.Column="2" 
                        Classes="unit-label"
                        Content="{Binding Path=StorageService.Storage.ApplicationData.DisplayUnitStrings.HectaresString}"
                        VerticalContentAlignment="Center"
@@ -68,7 +75,8 @@
             </Grid>
 
             <!-- Shift Rotation Checkbox -->
-            <CheckBox Content="Shift rotation across fields each year"
+            <CheckBox x:Name="ShiftRotationCheckBox"
+                      Content="Shift rotation across fields each year"
                       IsChecked="{Binding ShiftRotationEnabled}"
                       ToolTip.Tip="When enabled, crops rotate to different fields each year (e.g., Field 1 -> Field 2 -> Field 3)"
                       Margin="0,4,0,0"/>

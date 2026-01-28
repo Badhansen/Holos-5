@@ -12,7 +12,10 @@ using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
+using System.Windows.Input;
 using H.Avalonia.Views.ComponentViews;
+using Prism.Commands;
 
 namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
 {
@@ -105,6 +108,16 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
             set => SetProperty(ref _selectedRotationComponentDto, value);
         }
 
+        /// <summary>
+        /// Command to add a new crop to the rotation
+        /// </summary>
+        public ICommand AddCropToRotationCommand { get; private set; }
+
+        /// <summary>
+        /// Command to remove the selected crop from the rotation
+        /// </summary>
+        public ICommand RemoveSelectedCropCommand { get; private set; }
+
         #endregion
 
         #region Public Methods
@@ -165,6 +178,91 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         private void Construct()
         {
             this.FieldComponentDtos = new ObservableCollection<IFieldComponentDto>();
+            this.CropDtos = new ObservableCollection<ICropDto>();
+
+            // Initialize commands
+            this.AddCropToRotationCommand = new DelegateCommand(OnAddCropToRotation);
+            this.RemoveSelectedCropCommand = new DelegateCommand(OnRemoveSelectedCrop, CanRemoveSelectedCrop)
+                .ObservesProperty(() => this.CropDtos);
+        }
+
+        /// <summary>
+        /// Adds a new crop DTO to the rotation
+        /// </summary>
+        private void OnAddCropToRotation()
+        {
+            if (_cropFactory == null)
+            {
+                return;
+            }
+
+            // Get the active farm
+            var farm = this.ActiveFarm;
+            if (farm == null)
+            {
+                return;
+            }
+
+            // Create a new crop DTO using the factory with farm initialization
+            var newCropDto = _cropFactory.CreateDto(farm);
+
+            // Set the year based on existing crops or rotation start year
+            if (this.CropDtos != null && this.CropDtos.Any())
+            {
+                // Set year to be one year after the last crop
+                var lastCrop = this.CropDtos.LastOrDefault();
+                newCropDto.Year = lastCrop != null ? lastCrop.Year + 1 : DateTime.Now.Year;
+            }
+            else if (this.SelectedRotationComponentDto != null && this.SelectedRotationComponentDto.StartYear > 0)
+            {
+                // Use rotation start year if available
+                newCropDto.Year = this.SelectedRotationComponentDto.StartYear;
+            }
+            else
+            {
+                // Default to current year
+                newCropDto.Year = DateTime.Now.Year;
+            }
+
+            // Add to collection
+            this.CropDtos?.Add(newCropDto);
+        }
+
+        /// <summary>
+        /// Removes the selected crop DTO from the rotation
+        /// </summary>
+        private void OnRemoveSelectedCrop()
+        {
+            if (this.CropDtos == null || !this.CropDtos.Any())
+            {
+                return;
+            }
+
+            // Find the first selected crop
+            var selectedCrop = this.CropDtos.FirstOrDefault(c => c.IsSelected);
+
+            if (selectedCrop != null)
+            {
+                this.CropDtos.Remove(selectedCrop);
+            }
+            else
+            {
+                // If no crop is selected, remove the last crop
+                var lastCrop = this.CropDtos.LastOrDefault();
+                if (lastCrop != null)
+                {
+                    this.CropDtos.Remove(lastCrop);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Determines whether a crop can be removed from the rotation
+        /// </summary>
+        /// <returns>True if there are crops in the collection; otherwise false</returns>
+        private bool CanRemoveSelectedCrop()
+        {
+            return this.CropDtos != null && this.CropDtos.Any();
         }
 
         #endregion

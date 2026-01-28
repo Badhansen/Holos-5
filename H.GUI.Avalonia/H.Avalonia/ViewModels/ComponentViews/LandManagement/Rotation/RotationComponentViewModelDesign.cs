@@ -25,73 +25,55 @@ public class RotationComponentViewModelDesign : RotationComponentViewModel
         NumberOfFields = 3;
         ShiftRotationEnabled = true;
 
-        // Create sample crops for the timeline (6-year rotation: Wheat → Canola → Peas → Barley → Alfalfa → Fallow)
-        CropsInRotation = new ObservableCollection<CropTimelineItemDesign>
+        // Create sample crops for the CropDtos collection
+        base.CropDtos = new ObservableCollection<ICropDto>
         {
-            new CropTimelineItemDesign
+            new CropDto
             {
                 Year = 2020,
-                YearLabel = "2020",
                 CropType = CropType.Wheat,
-                CropTypeName = "Wheat",
-                CropCategory = "Cereal",
-                CropIcon = "🌾",
-                CropColorBrush = Brush.Parse("#FFF3E0"), // Orange for cereals
+                WetYield = 3500,
+                AmountOfIrrigation = 0,
                 IsSelected = false
             },
-            new CropTimelineItemDesign
+            new CropDto
             {
                 Year = 2021,
-                YearLabel = "2021",
                 CropType = CropType.Canola,
-                CropTypeName = "Canola",
-                CropCategory = "Oilseed",
-                CropIcon = "🌻",
-                CropColorBrush = Brush.Parse("#E8F5E9"), // Green for oilseeds
+                WetYield = 2200,
+                AmountOfIrrigation = 0,
                 IsSelected = false
             },
-            new CropTimelineItemDesign
+            new CropDto
             {
                 Year = 2022,
-                YearLabel = "2022",
                 CropType = CropType.Peas,
-                CropTypeName = "Field Peas",
-                CropCategory = "Pulse",
-                CropIcon = "🫘",
-                CropColorBrush = Brush.Parse("#E3F2FD"), // Blue for pulses
+                WetYield = 2800,
+                AmountOfIrrigation = 0,
                 IsSelected = false
             },
-            new CropTimelineItemDesign
+            new CropDto
             {
                 Year = 2023,
-                YearLabel = "2023",
                 CropType = CropType.Barley,
-                CropTypeName = "Barley",
-                CropCategory = "Cereal",
-                CropIcon = "🌾",
-                CropColorBrush = Brush.Parse("#FFF3E0"), // Orange for cereals
-                IsSelected = true // Selected for demonstration
+                WetYield = 4000,
+                AmountOfIrrigation = 0,
+                IsSelected = true
             },
-            new CropTimelineItemDesign
+            new CropDto
             {
                 Year = 2024,
-                YearLabel = "2024",
                 CropType = CropType.AlfalfaMedicagoSativaL,
-                CropTypeName = "Alfalfa",
-                CropCategory = "Forage",
-                CropIcon = "🍀",
-                CropColorBrush = Brush.Parse("#F3E5F5"), // Purple for forages
+                WetYield = 8000,
+                AmountOfIrrigation = 100,
                 IsSelected = false
             },
-            new CropTimelineItemDesign
+            new CropDto
             {
                 Year = 2025,
-                YearLabel = "2025",
                 CropType = CropType.Fallow,
-                CropTypeName = "Fallow",
-                CropCategory = "Fallow",
-                CropIcon = "⬜",
-                CropColorBrush = Brush.Parse("#FAFAFA"), // Gray for fallow
+                WetYield = 0,
+                AmountOfIrrigation = 0,
                 IsSelected = false
             }
         };
@@ -157,7 +139,6 @@ public class RotationComponentViewModelDesign : RotationComponentViewModel
     // Design-time properties
     public int NumberOfFields { get; set; }
     public bool ShiftRotationEnabled { get; set; }
-    public ObservableCollection<CropTimelineItemDesign> CropsInRotation { get; set; }
     public ObservableCollection<FieldAssignmentRowDesign> FieldAssignmentPreview { get; set; }
     public bool ShowValidationMessage { get; set; }
     public string ValidationMessage { get; set; }
@@ -171,23 +152,6 @@ public class RotationComponentViewModelDesign : RotationComponentViewModel
         : 0;
 
     public int TotalCropYears => NumberOfFields * RotationLength;
-
-    public bool HasNoCrops => CropsInRotation == null || CropsInRotation.Count == 0;
-}
-
-/// <summary>
-/// Design-time model for a crop timeline item
-/// </summary>
-public class CropTimelineItemDesign
-{
-    public int Year { get; set; }
-    public string YearLabel { get; set; }
-    public CropType CropType { get; set; }
-    public string CropTypeName { get; set; }
-    public string CropCategory { get; set; }
-    public string CropIcon { get; set; }
-    public IBrush CropColorBrush { get; set; }
-    public bool IsSelected { get; set; }
 }
 
 /// <summary>

@@ -45,7 +45,7 @@
                            VerticalAlignment="Center"
                            Margin="8,0,8,0"/>
                 <TextBlock x:Name="CropsCountTextBlock"
-                           Text="{Binding CropsInRotation.Count}"
+                           Text="{Binding CropDtos.Count}"
                            FontWeight="Bold"
                            VerticalAlignment="Center"/>
             </StackPanel>
@@ -60,7 +60,7 @@
                 <ScrollViewer x:Name="TimelineScrollViewer"
                               HorizontalScrollBarVisibility="Auto" 
                               VerticalScrollBarVisibility="Disabled">
-                    <ItemsControl x:Name="CropsTimelineItemsControl" ItemsSource="{Binding CropsInRotation}">
+                    <ItemsControl x:Name="CropsTimelineItemsControl" ItemsSource="{Binding CropDtos}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Horizontal" Margin="12"/>
@@ -75,57 +75,48 @@
                                         BorderThickness="2"
                                         CornerRadius="8"
                                         Padding="12"
-                                        Background="{Binding IsSelected, Converter={StaticResource BoolToBackgroundConverter}}"
-                                        BorderBrush="{Binding IsSelected, Converter={StaticResource BoolToBorderBrushConverter}}"
+                                        Background="White"
+                                        BorderBrush="LightGray"
                                         PointerPressed="OnCropCardPressed">
-                                    <Border.RenderTransform>
-                                        <ScaleTransform ScaleX="{Binding IsSelected, Converter={StaticResource BoolToScaleTransformConverter}}" 
-                                                        ScaleY="{Binding IsSelected, Converter={StaticResource BoolToScaleTransformConverter}}"/>
-                                    </Border.RenderTransform>
                                     <StackPanel>
                                         <!-- Year Label -->
                                         <TextBlock x:Name="CropYearTextBlock"
-                                                   Text="{Binding YearLabel}"
+                                                   Text="{Binding Year}"
                                                    FontSize="14"
                                                    FontWeight="Bold"
                                                    Foreground="DodgerBlue"
                                                    Margin="0,0,0,8"/>
                                         
-                                        <!-- Crop Icon/Rectangle -->
+                                        <!-- Crop Type Display -->
                                         <Border x:Name="CropIconBorder"
                                                 Height="60"
-                                                Background="{Binding CropColorBrush}"
+                                                Background="#E8F5E9"
                                                 CornerRadius="4"
                                                 Margin="0,0,0,8">
                                             <TextBlock x:Name="CropIconTextBlock"
-                                                       Text="{Binding CropIcon}"
-                                                       FontSize="32"
+                                                       Text="{Binding CropType}"
+                                                       FontSize="12"
                                                        HorizontalAlignment="Center"
-                                                       VerticalAlignment="Center"/>
+                                                       VerticalAlignment="Center"
+                                                       TextWrapping="Wrap"
+                                                       TextAlignment="Center"
+                                                       Padding="4"/>
                                         </Border>
 
-                                        <!-- Crop Name -->
+                                        <!-- Crop Type Name -->
                                         <TextBlock x:Name="CropNameTextBlock"
-                                                   Text="{Binding CropTypeName}"
+                                                   Text="{Binding CropType}"
                                                    FontWeight="SemiBold"
                                                    TextWrapping="Wrap"
                                                    TextAlignment="Center"
                                                    Margin="0,0,0,4"/>
 
-                                        <!-- Crop Category -->
-                                        <TextBlock x:Name="CropCategoryTextBlock"
-                                                   Text="{Binding CropCategory}"
+                                        <!-- Wet Yield -->
+                                        <TextBlock x:Name="CropYieldTextBlock"
+                                                   Text="{Binding WetYield, StringFormat='Yield: {0:F0} kg/ha'}"
                                                    FontSize="11"
                                                    Foreground="Gray"
                                                    TextAlignment="Center"/>
-
-                                        <!-- Edit Button -->
-                                        <Button x:Name="EditCropButton"
-                                                Content="Edit"
-                                                Command="{Binding EditCropCommand}"
-                                                HorizontalAlignment="Stretch"
-                                                Margin="0,8,0,0"
-                                                FontSize="11"/>
                                     </StackPanel>
                                 </Border>
                             </DataTemplate>
@@ -136,7 +127,7 @@
 
             <!-- Empty State Message -->
             <Border x:Name="EmptyStateMessageBorder"
-                    IsVisible="{Binding HasNoCrops}"
+                    IsVisible="{Binding !CropDtos.Count}"
                     Background="#FFF3E0"
                     BorderBrush="#FF9800"
                     BorderThickness="1"

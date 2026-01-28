@@ -1,15 +1,21 @@
-<UserControl x:Name="RotationFieldConfigurationRootControl"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:rotation="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation"
-             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="250"
-             x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationFieldConfigurationView">
+﻿<UserControl x:Name="RotationFieldConfigurationRootControl"
+         xmlns="https://github.com/avaloniaui"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:rotation="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation"
+         xmlns:enums="clr-namespace:H.Core.Enumerations;assembly=H.Core"
+         xmlns:converters="clr-namespace:H.Avalonia.Converters"
+         mc:Ignorable="d"
+         x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationFieldConfigurationView">
 
-    <Design.DataContext>
-        <rotation:RotationComponentViewModelDesign/>
-    </Design.DataContext>
+<Design.DataContext>
+    <rotation:RotationComponentViewModelDesign/>
+</Design.DataContext>
+
+<UserControl.Resources>
+    <converters:EnumToBoolConverter x:Key="EnumToBoolConverter"/>
+</UserControl.Resources>
 
     <!-- Field Configuration Section -->
     <Border x:Name="FieldConfigurationCardBorder" Classes="input-card" Grid.IsSharedSizeScope="True">
@@ -74,12 +80,43 @@
                        Margin="8,0,0,0"/>
             </Grid>
 
-            <!-- Shift Rotation Checkbox -->
-            <CheckBox x:Name="ShiftRotationCheckBox"
-                      Content="Shift rotation across fields each year"
-                      IsChecked="{Binding ShiftRotationEnabled}"
-                      ToolTip.Tip="When enabled, crops rotate to different fields each year (e.g., Field 1 -> Field 2 -> Field 3)"
-                      Margin="0,4,0,0"/>
+            <!-- Rotation Shift Direction -->
+            <StackPanel Margin="0,12,0,0">
+                <TextBlock Text="Rotation shift direction:" 
+                           FontWeight="Medium" 
+                           Foreground="RoyalBlue"
+                           Margin="0,0,0,8"/>
+                
+                <!-- Radio Button Group -->
+                <StackPanel Spacing="6">
+                    <!-- No Shift Option -->
+                    <RadioButton GroupName="ShiftDirection"
+                                 IsChecked="{Binding ShiftDirection, 
+                                             Converter={StaticResource EnumToBoolConverter}, 
+                                             ConverterParameter={x:Static enums:RotationShiftDirection.None}}">
+                        <TextBlock Text="No Shift" 
+                                   FontWeight="SemiBold"/>
+                    </RadioButton>
+
+                    <!-- Right Shift Option (Traditional) -->
+                    <RadioButton GroupName="ShiftDirection"
+                                 IsChecked="{Binding ShiftDirection, 
+                                             Converter={StaticResource EnumToBoolConverter}, 
+                                             ConverterParameter={x:Static enums:RotationShiftDirection.RightShift}}">
+                        <TextBlock Text="Right Shift →" 
+                                   FontWeight="SemiBold"/>
+                    </RadioButton>
+
+                    <!-- Left Shift Option (Reverse) -->
+                    <RadioButton GroupName="ShiftDirection"
+                                 IsChecked="{Binding ShiftDirection, 
+                                             Converter={StaticResource EnumToBoolConverter}, 
+                                             ConverterParameter={x:Static enums:RotationShiftDirection.LeftShift}}">
+                        <TextBlock Text="← Left Shift" 
+                                   FontWeight="SemiBold"/>
+                    </RadioButton>
+                </StackPanel>
+            </StackPanel>
         </StackPanel>
     </Border>
 </UserControl>

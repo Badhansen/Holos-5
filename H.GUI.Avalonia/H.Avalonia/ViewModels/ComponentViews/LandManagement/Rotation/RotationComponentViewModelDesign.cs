@@ -27,7 +27,7 @@ public class RotationComponentViewModelDesign : RotationComponentViewModel
         };
 
         // Set up sample rotation parameters
-        base.ShiftRotationEnabled = true;
+        base.ShiftDirection = RotationShiftDirection.RightShift;
 
         // Create sample crops for the CropDtos collection showcasing all color categories
         base.CropDtos = new ObservableCollection<ICropDto>

@@ -23,9 +23,11 @@ public interface ICropColorService
     string GetCropColorHex(CropType cropType);
 
     /// <summary>
-    /// Gets the display name with emoji icon for a crop type.
+    /// Gets the display name for a crop type.
+    /// Returns a clean, human-readable name without icons or emojis.
+    /// The colored cell backgrounds provide visual distinction between crop categories.
     /// </summary>
     /// <param name="cropType">The crop type to get the display name for</param>
-    /// <returns>Display name with emoji (e.g., "Wheat ??")</returns>
+    /// <returns>Display name (e.g., "Wheat", "Canola", "Alfalfa")</returns>
     string GetCropDisplayName(CropType cropType);
 }

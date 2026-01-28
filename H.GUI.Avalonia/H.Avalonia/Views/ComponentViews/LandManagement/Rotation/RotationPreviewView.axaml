@@ -132,7 +132,7 @@
                     CornerRadius="4"
                     Padding="12"
                     Margin="0,12,0,0"
-                    IsVisible="{Binding ShiftRotationEnabled}">
+                    IsVisible="{Binding IsShiftEnabled}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="ℹ"
                                FontSize="18"

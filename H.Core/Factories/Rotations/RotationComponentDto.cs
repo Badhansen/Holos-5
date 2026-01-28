@@ -19,6 +19,7 @@ public class RotationComponentDto : DtoBase, IRotationComponentDto
     private int _startYear;
     private int _endYear;
     private int _numberOfFields;
+    private bool _isSelected;
 
     #endregion
 
@@ -61,6 +62,15 @@ public class RotationComponentDto : DtoBase, IRotationComponentDto
     {
         get => _numberOfFields;
         set => SetProperty(ref _numberOfFields, value);
+    }
+
+    /// <summary>
+    /// Indicates whether this rotation component is currently selected in the UI
+    /// </summary>
+    public bool IsSelected
+    {
+        get => _isSelected;
+        set => SetProperty(ref _isSelected, value);
     }
 
     /// <summary>

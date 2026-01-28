@@ -43,5 +43,10 @@ public interface IRotationComponentDto : IDto
     /// </summary>
     int TotalCropYears { get; }
 
+    /// <summary>
+    /// Indicates whether this rotation component is currently selected in the UI
+    /// </summary>
+    bool IsSelected { get; set; }
+
     #endregion
 }

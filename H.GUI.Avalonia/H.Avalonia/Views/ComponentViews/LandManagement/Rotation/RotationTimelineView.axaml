@@ -4,12 +4,21 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:rotation="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation"
+             xmlns:converters="clr-namespace:H.Avalonia.Converters"
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="500"
              x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationTimelineView">
 
     <Design.DataContext>
         <rotation:RotationComponentViewModelDesign/>
     </Design.DataContext>
+
+    <UserControl.Resources>
+        <!-- Add converters for selection styling -->
+        <converters:BoolToBackgroundConverter x:Key="BoolToBackgroundConverter"/>
+        <converters:BoolToBorderBrushConverter x:Key="BoolToBorderBrushConverter"/>
+        <converters:BoolToBorderThicknessConverter x:Key="BoolToBorderThicknessConverter"/>
+        <converters:BoolToScaleTransformConverter x:Key="BoolToScaleTransformConverter"/>
+    </UserControl.Resources>
 
     <!-- Step 2: Build Rotation Timeline -->
     <Border x:Name="StepContainerBorder" Classes="step-container">
@@ -50,79 +59,87 @@
                            VerticalAlignment="Center"/>
             </StackPanel>
 
-            <!-- Horizontal Timeline Scroll View -->
-            <Border x:Name="TimelineScrollBorder"
-                    BorderBrush="LightGray" 
-                    BorderThickness="1" 
-                    CornerRadius="4"
-                    Background="White"
-                    MinHeight="180">
-                <ScrollViewer x:Name="TimelineScrollViewer"
-                              HorizontalScrollBarVisibility="Auto" 
-                              VerticalScrollBarVisibility="Disabled">
-                    <ItemsControl x:Name="CropsTimelineItemsControl" ItemsSource="{Binding CropDtos}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal" Margin="12"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <!-- Individual Crop Card in Timeline -->
-                                <Border x:Name="CropCardBorder"
-                                        Width="160"
-                                        Margin="0,0,12,0"
-                                        BorderThickness="2"
-                                        CornerRadius="8"
-                                        Padding="12"
-                                        Background="White"
-                                        BorderBrush="LightGray"
-                                        PointerPressed="OnCropCardPressed">
-                                    <StackPanel>
-                                        <!-- Year Label -->
-                                        <TextBlock x:Name="CropYearTextBlock"
-                                                   Text="{Binding Year}"
-                                                   FontSize="14"
-                                                   FontWeight="Bold"
-                                                   Foreground="DodgerBlue"
-                                                   Margin="0,0,0,8"/>
-                                        
-                                        <!-- Crop Type Display -->
-                                        <Border x:Name="CropIconBorder"
-                                                Height="60"
-                                                Background="#E8F5E9"
-                                                CornerRadius="4"
-                                                Margin="0,0,0,8">
-                                            <TextBlock x:Name="CropIconTextBlock"
-                                                       Text="{Binding CropType}"
-                                                       FontSize="12"
-                                                       HorizontalAlignment="Center"
-                                                       VerticalAlignment="Center"
-                                                       TextWrapping="Wrap"
-                                                       TextAlignment="Center"
-                                                       Padding="4"/>
+            <!-- Timeline Container -->
+            <Border Classes="timeline-container">
+                <StackPanel>
+                    <!-- Timeline Header -->
+                    <TextBlock Text="Rotation Timeline" Classes="timeline-header" />
+
+                    <!-- Timeline Scrollable Area -->
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Hidden"
+                                  MaxHeight="250"
+                                  MinHeight="150">
+                        <ItemsControl ItemsSource="{Binding CropDtos}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="15" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <!-- Timeline Card -->
+                                    <Button Background="Transparent"
+                                            BorderThickness="0"
+                                            Padding="0"
+                                            Margin="5"
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalContentAlignment="Stretch"
+                                            Command="{Binding $parent[UserControl].((rotation:RotationComponentViewModel)DataContext).SetSelectedCropCommand}"
+                                            CommandParameter="{Binding}">
+
+                                        <Border Classes="timeline-card">
+                                            <StackPanel Spacing="8" Margin="8">
+                                                <!-- Top row with Year Badge and Delete Button in same DockPanel for perfect alignment -->
+                                                <DockPanel LastChildFill="False">
+                                                    <!-- Year Badge -->
+                                                    <Border Classes="year-badge" 
+                                                            DockPanel.Dock="Left"
+                                                            VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Year}" 
+                                                                   Classes="year-badge-text"
+                                                                   VerticalAlignment="Center"
+                                                                   HorizontalAlignment="Center" />
+                                                    </Border>
+                                                    
+                                                    <!-- Delete Button -->
+                                                    <Button Classes="delete-button"
+                                                            DockPanel.Dock="Right"
+                                                            VerticalAlignment="Center"
+                                                            Command="{Binding $parent[UserControl].((rotation:RotationComponentViewModel)DataContext).RemoveSpecificCropCommand}"
+                                                            CommandParameter="{Binding}">
+                                                        <TextBlock Name="DeleteTextBlock" 
+                                                                   Classes="delete-text"
+                                                                   Text="Delete"/>
+                                                    </Button>
+                                                </DockPanel>
+                                                
+                                                <!-- Crop Type Section -->
+                                                <StackPanel Spacing="4">
+                                                    <TextBlock Text="Select crop"
+                                                               FontSize="11"
+                                                               Foreground="Gray"
+                                                               FontWeight="SemiBold"
+                                                               HorizontalAlignment="Left" />
+
+                                                    <ComboBox ItemsSource="{Binding ValidCropTypes}"
+                                                              SelectedItem="{Binding CropType}"
+                                                              MinWidth="140"
+                                                              HorizontalAlignment="Stretch" />
+                                                </StackPanel>
+                                            </StackPanel>
                                         </Border>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
 
-                                        <!-- Crop Type Name -->
-                                        <TextBlock x:Name="CropNameTextBlock"
-                                                   Text="{Binding CropType}"
-                                                   FontWeight="SemiBold"
-                                                   TextWrapping="Wrap"
-                                                   TextAlignment="Center"
-                                                   Margin="0,0,0,4"/>
-
-                                        <!-- Wet Yield -->
-                                        <TextBlock x:Name="CropYieldTextBlock"
-                                                   Text="{Binding WetYield, StringFormat='Yield: {0:F0} kg/ha'}"
-                                                   FontSize="11"
-                                                   Foreground="Gray"
-                                                   TextAlignment="Center"/>
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                    <!-- Timeline Navigation Hint -->
+                    <TextBlock Text="Tip: Scroll horizontally to view all crops, selected crop will be highlighted"
+                               Classes="timeline-hint" />
+                </StackPanel>
             </Border>
 
             <!-- Empty State Message -->

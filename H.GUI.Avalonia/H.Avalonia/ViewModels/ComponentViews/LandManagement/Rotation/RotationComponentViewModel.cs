@@ -6,6 +6,7 @@ using H.Core.Models.LandManagement.Fields;
 using H.Core.Models.LandManagement.Rotation;
 using H.Core.Services.LandManagement.Fields;
 using H.Core.Services.StorageService;
+using H.Core.Services.CropColorService;
 using Microsoft.Extensions.Logging;
 using Prism.Events;
 using Prism.Regions;
@@ -29,6 +30,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         private readonly IFieldComponentService _fieldComponentService;
         private readonly IRotationComponentService _rotationComponentService;
         private readonly ICropFactory _cropFactory;
+        private readonly ICropColorService _cropColorService;
         private RotationComponent _selectedRotationComponent;
         private IRotationComponentDto _selectedRotationComponentDto;
         private ObservableCollection<IFieldComponentDto> _fieldComponentDtos;
@@ -52,7 +54,8 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
             IFieldComponentService fieldComponentService, 
             IRotationComponentService rotationComponentService,
             ILogger logger, 
-            ICropFactory cropFactory) : base(regionManager, eventAggregator, storageService, logger)
+            ICropFactory cropFactory,
+            ICropColorService cropColorService) : base(regionManager, eventAggregator, storageService, logger)
         {
             if (cropFactory != null)
             {
@@ -79,6 +82,15 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
             else
             {
                 throw new ArgumentNullException(nameof(rotationComponentService));
+            }
+
+            if (cropColorService != null)
+            {
+                _cropColorService = cropColorService;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(cropColorService));
             }
 
             this.Construct();
@@ -336,8 +348,10 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
                     var assignment = new YearCropAssignment
                     {
                         Year = year.ToString(),
-                        CropDisplay = GetCropDisplayName(crop.CropType),
-                        CropBackground = GetCropColor(crop.CropType)
+                        CropDisplay = _cropColorService?.GetCropDisplayName(crop.CropType) ?? crop.CropType.ToString(),
+                        CropBackground = _cropColorService != null 
+                            ? Brush.Parse(_cropColorService.GetCropColorHex(crop.CropType))
+                            : Brush.Parse("#F5F5F5")
                     };
 
                     row.YearAssignments.Add(assignment);
@@ -347,72 +361,6 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
             }
 
             RaisePropertyChanged(nameof(HasNoCrops));
-        }
-
-        /// <summary>
-        /// Gets the display name with icon for a crop type
-        /// </summary>
-        protected virtual string GetCropDisplayName(CropType cropType)
-        {
-            return cropType switch
-            {
-                CropType.Wheat => "Wheat 🌾",
-                CropType.Barley => "Barley 🌾",
-                CropType.Oats => "Oats 🌾",
-                CropType.Canola => "Canola 🌻",
-                CropType.Peas => "Peas 🫘",
-                CropType.Lentils => "Lentils 🫘",
-                CropType.AlfalfaMedicagoSativaL => "Alfalfa 🍀",
-                CropType.Fallow => "Fallow ⬜",
-                _ => cropType.ToString()
-            };
-        }
-
-        /// <summary>
-        /// Gets the background color for a crop type based on its category
-        /// </summary>
-        protected virtual IBrush GetCropColor(CropType cropType)
-        {
-            // Cereals - Orange
-            if (cropType == CropType.Wheat || cropType == CropType.Barley || cropType == CropType.Oats ||
-                cropType == CropType.Rye || cropType == CropType.Triticale || cropType == CropType.GrainCorn ||
-                cropType == CropType.SpringWheat || cropType == CropType.WinterWheat || cropType == CropType.Durum)
-            {
-                return Brush.Parse("#FFF3E0");
-            }
-
-            // Oilseeds - Green
-            if (cropType == CropType.Canola || cropType == CropType.Flax || cropType == CropType.Sunflower ||
-                cropType == CropType.Soybeans || cropType == CropType.Mustard || cropType == CropType.FlaxSeed ||
-                cropType == CropType.SunflowerSeed)
-            {
-                return Brush.Parse("#E8F5E9");
-            }
-
-            // Pulses - Blue
-            if (cropType == CropType.Peas || cropType == CropType.Lentils || cropType == CropType.Beans ||
-                cropType == CropType.Chickpeas || cropType == CropType.FabaBeans || cropType == CropType.DryPeas ||
-                cropType == CropType.FieldPeas || cropType == CropType.DryBean)
-            {
-                return Brush.Parse("#E3F2FD");
-            }
-
-            // Forages - Purple
-            if (cropType == CropType.AlfalfaMedicagoSativaL || cropType == CropType.TameLegume ||
-                cropType == CropType.TameGrass || cropType == CropType.TameMixed || cropType == CropType.Forage ||
-                cropType == CropType.GrassHay || cropType == CropType.AlfalfaHay)
-            {
-                return Brush.Parse("#F3E5F5");
-            }
-
-            // Fallow - Gray
-            if (cropType == CropType.Fallow || cropType == CropType.SummerFallow)
-            {
-                return Brush.Parse("#FAFAFA");
-            }
-
-            // Default - Light gray
-            return Brush.Parse("#F5F5F5");
         }
 
         /// <summary>

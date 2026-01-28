@@ -6,6 +6,8 @@ using H.Core.Models;
 using H.Core.Models.LandManagement.Rotation;
 using H.Core.Services.LandManagement.Fields;
 using H.Core.Services.StorageService;
+using H.Core.Services.CropColorService;
+using H.Core.Enumerations;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Prism.Events;
@@ -30,6 +32,7 @@ public class RotationComponentViewModelTests
     private Mock<IRotationComponentService> _mockRotationComponentService;
     private Mock<ILogger> _mockLogger;
     private Mock<ICropFactory> _mockCropFactory;
+    private Mock<ICropColorService> _mockCropColorService;
     private Farm _testFarm;
 
     #endregion
@@ -63,6 +66,7 @@ public class RotationComponentViewModelTests
         _mockLogger = new Mock<ILogger>();
         _mockCropFactory = new Mock<ICropFactory>();
         _mockRotationComponentService = new Mock<IRotationComponentService>();
+        _mockCropColorService = new Mock<ICropColorService>();
 
         // Configure storage service to return a valid storage object with application data
         _mockStorageService.Setup(x => x.Storage).Returns(new H.Core.Storage()
@@ -86,6 +90,14 @@ public class RotationComponentViewModelTests
                 FieldArea = rc.FieldSystemComponent?.FieldArea ?? 0
             });
 
+        // Setup crop color service to return default values
+        _mockCropColorService
+            .Setup(x => x.GetCropColorHex(It.IsAny<CropType>()))
+            .Returns("#F5F5F5");
+        _mockCropColorService
+            .Setup(x => x.GetCropDisplayName(It.IsAny<CropType>()))
+            .Returns((CropType ct) => ct.ToString());
+
         // Create the view model under test with all mocked dependencies
         _viewModel = new RotationComponentViewModel(
             _mockRegionManager.Object,
@@ -94,7 +106,8 @@ public class RotationComponentViewModelTests
             _mockFieldComponentService.Object,
             _mockRotationComponentService.Object,
             _mockLogger.Object,
-            _mockCropFactory.Object);
+            _mockCropFactory.Object,
+            _mockCropColorService.Object);
     }
 
     [TestCleanup]
@@ -128,7 +141,8 @@ public class RotationComponentViewModelTests
             _mockFieldComponentService.Object,
             _mockRotationComponentService.Object,
             _mockLogger.Object,
-            _mockCropFactory.Object);
+            _mockCropFactory.Object,
+            _mockCropColorService.Object);
     }
 
     [TestMethod]
@@ -143,7 +157,8 @@ public class RotationComponentViewModelTests
             _mockFieldComponentService.Object,
             _mockRotationComponentService.Object,
             _mockLogger.Object,
-            _mockCropFactory.Object);
+            _mockCropFactory.Object,
+            _mockCropColorService.Object);
     }
 
     [TestMethod]
@@ -158,7 +173,8 @@ public class RotationComponentViewModelTests
             _mockFieldComponentService.Object,
             _mockRotationComponentService.Object,
             _mockLogger.Object,
-            _mockCropFactory.Object);
+            _mockCropFactory.Object,
+            _mockCropColorService.Object);
     }
 
     [TestMethod]
@@ -173,7 +189,8 @@ public class RotationComponentViewModelTests
             null,
             _mockRotationComponentService.Object,
             _mockLogger.Object,
-            _mockCropFactory.Object);
+            _mockCropFactory.Object,
+            _mockCropColorService.Object);
     }
 
     [TestMethod]
@@ -188,7 +205,8 @@ public class RotationComponentViewModelTests
             _mockFieldComponentService.Object,
             _mockRotationComponentService.Object,
             null,
-            _mockCropFactory.Object);
+            _mockCropFactory.Object,
+            _mockCropColorService.Object);
     }
 
     [TestMethod]
@@ -203,6 +221,23 @@ public class RotationComponentViewModelTests
             _mockFieldComponentService.Object,
             _mockRotationComponentService.Object,
             _mockLogger.Object,
+            null,
+            _mockCropColorService.Object);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void Constructor_WithNullCropColorService_ShouldThrowArgumentNullException()
+    {
+        // Verify that the constructor enforces non-null crop color service dependency
+        new RotationComponentViewModel(
+            _mockRegionManager.Object,
+            _mockEventAggregator.Object,
+            _mockStorageService.Object,
+            _mockFieldComponentService.Object,
+            _mockRotationComponentService.Object,
+            _mockLogger.Object,
+            _mockCropFactory.Object,
             null);
     }
 
@@ -267,7 +302,8 @@ public class RotationComponentViewModelTests
             _mockFieldComponentService.Object,
             _mockRotationComponentService.Object,
             _mockLogger.Object,
-            _mockCropFactory.Object);
+            _mockCropFactory.Object,
+            _mockCropColorService.Object);
 
         // Since the dependency fields are private, we verify correct injection by ensuring
         // the view model is created successfully without throwing exceptions

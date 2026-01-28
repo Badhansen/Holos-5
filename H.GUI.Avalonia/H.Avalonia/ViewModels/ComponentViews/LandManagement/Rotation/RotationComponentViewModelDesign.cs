@@ -4,14 +4,18 @@ using Avalonia.Media;
 using H.Core.Enumerations;
 using H.Core.Factories.Crops;
 using H.Core.Factories.Rotations;
+using H.Core.Services.CropColorService;
 using System.Linq;
 
 namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation;
 
 public class RotationComponentViewModelDesign : RotationComponentViewModel
 {
-    public RotationComponentViewModelDesign()
+    public RotationComponentViewModelDesign() : base()
     {
+        // Create an instance of the crop color service for design-time use
+        var cropColorService = new CropColorService();
+
         // Initialize the DTO with sample data
         base.SelectedRotationComponentDto = new RotationComponentDto
         {

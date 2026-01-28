@@ -71,6 +71,7 @@ using H.Core.Services.Initialization;
 using H.Core.Services.LandManagement.Fields;
 using H.Core.Services.Provinces;
 using H.Core.Services.StorageService;
+using H.Core.Services.CropColorService;
 using H.Infrastructure.Services;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -366,6 +367,7 @@ namespace H.Avalonia.Infrastructure.DependencyInjection
             containerRegistry.RegisterSingleton<IErrorHandlerService, ErrorHandlerService>();
             containerRegistry.RegisterSingleton<INotificationManagerService, NotificationManagerService>();
             containerRegistry.RegisterSingleton<IDefaultGeocoderService, NominatimGeocoderService>();
+            containerRegistry.RegisterSingleton<ICropColorService, CropColorService>();
 
             // Unit conversion
             containerRegistry.RegisterSingleton<IUnitsOfMeasurementCalculator, UnitsOfMeasurementCalculator>();

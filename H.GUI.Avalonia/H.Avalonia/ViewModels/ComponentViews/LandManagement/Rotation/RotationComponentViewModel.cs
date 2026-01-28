@@ -11,11 +11,14 @@ using Prism.Events;
 using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using H.Avalonia.Views.ComponentViews;
 using Prism.Commands;
+using Avalonia.Media;
+using H.Core.Enumerations;
 
 namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
 {
@@ -30,6 +33,8 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         private IRotationComponentDto _selectedRotationComponentDto;
         private ObservableCollection<IFieldComponentDto> _fieldComponentDtos;
         private ObservableCollection<ICropDto> _cropDtos;
+        private ObservableCollection<FieldAssignmentRow> _fieldAssignmentRows;
+        private bool _shiftRotationEnabled = true;
 
         #endregion
 
@@ -99,14 +104,95 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         public ObservableCollection<ICropDto> CropDtos
         {
             get => _cropDtos;
-            set => SetProperty(ref _cropDtos, value);
+            set
+            {
+                // Unsubscribe from old collection if it exists
+                if (_cropDtos != null)
+                {
+                    _cropDtos.CollectionChanged -= OnCropDtosCollectionChanged;
+                    // Unsubscribe from all existing crop property changes
+                    foreach (var crop in _cropDtos)
+                    {
+                        if (crop is INotifyPropertyChanged notifyPropertyChanged)
+                        {
+                            notifyPropertyChanged.PropertyChanged -= OnCropDtoPropertyChanged;
+                        }
+                    }
+                }
+
+                SetProperty(ref _cropDtos, value);
+
+                // Subscribe to new collection
+                if (_cropDtos != null)
+                {
+                    _cropDtos.CollectionChanged += OnCropDtosCollectionChanged;
+                    // Subscribe to all crop property changes
+                    foreach (var crop in _cropDtos)
+                    {
+                        if (crop is INotifyPropertyChanged notifyPropertyChanged)
+                        {
+                            notifyPropertyChanged.PropertyChanged += OnCropDtoPropertyChanged;
+                        }
+                    }
+                }
+
+                // Regenerate field assignments when collection changes
+                GenerateFieldAssignmentRows();
+            }
         }
 
         public IRotationComponentDto SelectedRotationComponentDto
         {
             get => _selectedRotationComponentDto;
-            set => SetProperty(ref _selectedRotationComponentDto, value);
+            set
+            {
+                // Unsubscribe from old DTO if it exists
+                if (_selectedRotationComponentDto != null)
+                {
+                    _selectedRotationComponentDto.PropertyChanged -= OnRotationDtoPropertyChanged;
+                }
+
+                SetProperty(ref _selectedRotationComponentDto, value);
+
+                // Subscribe to new DTO
+                if (_selectedRotationComponentDto != null)
+                {
+                    _selectedRotationComponentDto.PropertyChanged += OnRotationDtoPropertyChanged;
+                }
+
+                // Regenerate field assignments when DTO changes
+                GenerateFieldAssignmentRows();
+            }
         }
+
+        /// <summary>
+        /// Whether rotation shifting is enabled (crops rotate across fields)
+        /// </summary>
+        public bool ShiftRotationEnabled
+        {
+            get => _shiftRotationEnabled;
+            set
+            {
+                if (SetProperty(ref _shiftRotationEnabled, value))
+                {
+                    GenerateFieldAssignmentRows();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Dynamic collection of field assignment rows for the preview grid
+        /// </summary>
+        public ObservableCollection<FieldAssignmentRow> FieldAssignmentRows
+        {
+            get => _fieldAssignmentRows;
+            set => SetProperty(ref _fieldAssignmentRows, value);
+        }
+
+        /// <summary>
+        /// Whether there are no crops in the rotation
+        /// </summary>
+        public bool HasNoCrops => CropDtos == null || !CropDtos.Any();
 
         /// <summary>
         /// Command to add a new crop to the rotation
@@ -184,11 +270,149 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         {
             this.FieldComponentDtos = new ObservableCollection<IFieldComponentDto>();
             this.CropDtos = new ObservableCollection<ICropDto>();
+            this.FieldAssignmentRows = new ObservableCollection<FieldAssignmentRow>();
 
             // Initialize commands
             this.AddCropToRotationCommand = new DelegateCommand(OnAddCropToRotation);
             this.SetSelectedCropCommand = new DelegateCommand<object>(OnSetSelectedCropExecute);
             this.RemoveSpecificCropCommand = new DelegateCommand<object>(OnRemoveSpecificCropExecute);
+        }
+
+        /// <summary>
+        /// Generates field assignment rows dynamically based on rotation parameters
+        /// </summary>
+        protected virtual void GenerateFieldAssignmentRows()
+        {
+            if (FieldAssignmentRows == null)
+            {
+                FieldAssignmentRows = new ObservableCollection<FieldAssignmentRow>();
+            }
+            else
+            {
+                FieldAssignmentRows.Clear();
+            }
+
+            if (CropDtos == null || !CropDtos.Any() || SelectedRotationComponentDto == null)
+            {
+                RaisePropertyChanged(nameof(HasNoCrops));
+                return;
+            }
+
+            var crops = CropDtos.ToList();
+            var rotationLength = crops.Count;
+            var startYear = SelectedRotationComponentDto.StartYear;
+            var endYear = SelectedRotationComponentDto.EndYear;
+            var fieldArea = SelectedRotationComponentDto.FieldArea;
+            var numberOfFields = SelectedRotationComponentDto.NumberOfFields;
+
+            if (startYear <= 0 || endYear <= 0 || endYear <= startYear)
+            {
+                RaisePropertyChanged(nameof(HasNoCrops));
+                return;
+            }
+
+            var totalYears = endYear - startYear + 1;
+
+            for (int fieldIndex = 0; fieldIndex < numberOfFields; fieldIndex++)
+            {
+                var row = new FieldAssignmentRow
+                {
+                    FieldName = $"Field {fieldIndex + 1} ({fieldArea:F0} ha)",
+                    YearAssignments = new ObservableCollection<YearCropAssignment>()
+                };
+
+                // Calculate the shift offset for this field
+                int shiftOffset = ShiftRotationEnabled ? fieldIndex : 0;
+
+                // Generate year assignments for this field
+                for (int yearIndex = 0; yearIndex < totalYears; yearIndex++)
+                {
+                    int year = startYear + yearIndex;
+
+                    // Apply rotation shift: wrap around if we go past the end
+                    int cropIndex = (yearIndex + shiftOffset) % rotationLength;
+                    var crop = crops[cropIndex];
+
+                    var assignment = new YearCropAssignment
+                    {
+                        Year = year.ToString(),
+                        CropDisplay = GetCropDisplayName(crop.CropType),
+                        CropBackground = GetCropColor(crop.CropType)
+                    };
+
+                    row.YearAssignments.Add(assignment);
+                }
+
+                FieldAssignmentRows.Add(row);
+            }
+
+            RaisePropertyChanged(nameof(HasNoCrops));
+        }
+
+        /// <summary>
+        /// Gets the display name with icon for a crop type
+        /// </summary>
+        protected virtual string GetCropDisplayName(CropType cropType)
+        {
+            return cropType switch
+            {
+                CropType.Wheat => "Wheat 🌾",
+                CropType.Barley => "Barley 🌾",
+                CropType.Oats => "Oats 🌾",
+                CropType.Canola => "Canola 🌻",
+                CropType.Peas => "Peas 🫘",
+                CropType.Lentils => "Lentils 🫘",
+                CropType.AlfalfaMedicagoSativaL => "Alfalfa 🍀",
+                CropType.Fallow => "Fallow ⬜",
+                _ => cropType.ToString()
+            };
+        }
+
+        /// <summary>
+        /// Gets the background color for a crop type based on its category
+        /// </summary>
+        protected virtual IBrush GetCropColor(CropType cropType)
+        {
+            // Cereals - Orange
+            if (cropType == CropType.Wheat || cropType == CropType.Barley || cropType == CropType.Oats ||
+                cropType == CropType.Rye || cropType == CropType.Triticale || cropType == CropType.GrainCorn ||
+                cropType == CropType.SpringWheat || cropType == CropType.WinterWheat || cropType == CropType.Durum)
+            {
+                return Brush.Parse("#FFF3E0");
+            }
+
+            // Oilseeds - Green
+            if (cropType == CropType.Canola || cropType == CropType.Flax || cropType == CropType.Sunflower ||
+                cropType == CropType.Soybeans || cropType == CropType.Mustard || cropType == CropType.FlaxSeed ||
+                cropType == CropType.SunflowerSeed)
+            {
+                return Brush.Parse("#E8F5E9");
+            }
+
+            // Pulses - Blue
+            if (cropType == CropType.Peas || cropType == CropType.Lentils || cropType == CropType.Beans ||
+                cropType == CropType.Chickpeas || cropType == CropType.FabaBeans || cropType == CropType.DryPeas ||
+                cropType == CropType.FieldPeas || cropType == CropType.DryBean)
+            {
+                return Brush.Parse("#E3F2FD");
+            }
+
+            // Forages - Purple
+            if (cropType == CropType.AlfalfaMedicagoSativaL || cropType == CropType.TameLegume ||
+                cropType == CropType.TameGrass || cropType == CropType.TameMixed || cropType == CropType.Forage ||
+                cropType == CropType.GrassHay || cropType == CropType.AlfalfaHay)
+            {
+                return Brush.Parse("#F3E5F5");
+            }
+
+            // Fallow - Gray
+            if (cropType == CropType.Fallow || cropType == CropType.SummerFallow)
+            {
+                return Brush.Parse("#FAFAFA");
+            }
+
+            // Default - Light gray
+            return Brush.Parse("#F5F5F5");
         }
 
         /// <summary>
@@ -311,6 +535,65 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         #region Event Handlers
 
         /// <summary>
+        /// Handles changes to the CropDtos collection (add/remove)
+        /// </summary>
+        private void OnCropDtosCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            // Subscribe to property changes on newly added items
+            if (e.NewItems != null)
+            {
+                foreach (var item in e.NewItems)
+                {
+                    if (item is INotifyPropertyChanged notifyPropertyChanged)
+                    {
+                        notifyPropertyChanged.PropertyChanged += OnCropDtoPropertyChanged;
+                    }
+                }
+            }
+
+            // Unsubscribe from property changes on removed items
+            if (e.OldItems != null)
+            {
+                foreach (var item in e.OldItems)
+                {
+                    if (item is INotifyPropertyChanged notifyPropertyChanged)
+                    {
+                        notifyPropertyChanged.PropertyChanged -= OnCropDtoPropertyChanged;
+                    }
+                }
+            }
+
+            GenerateFieldAssignmentRows();
+        }
+
+        /// <summary>
+        /// Handles property changes on individual crop DTOs
+        /// </summary>
+        private void OnCropDtoPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // Regenerate field assignments when CropType changes
+            if (e.PropertyName == nameof(ICropDto.CropType))
+            {
+                GenerateFieldAssignmentRows();
+            }
+        }
+
+        /// <summary>
+        /// Handles property changes on the RotationComponentDto
+        /// </summary>
+        private void OnRotationDtoPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // Regenerate field assignments if relevant properties change
+            if (e.PropertyName == nameof(IRotationComponentDto.StartYear) ||
+                e.PropertyName == nameof(IRotationComponentDto.EndYear) ||
+                e.PropertyName == nameof(IRotationComponentDto.FieldArea) ||
+                e.PropertyName == nameof(IRotationComponentDto.NumberOfFields))
+            {
+                GenerateFieldAssignmentRows();
+            }
+        }
+
+        /// <summary>
         /// Some property on the <see cref="SelectedRotationComponentDto"/> has changed. Check if we need to validate any user
         /// input before assigning the value on to the associated <see cref="RotationComponent"/> domain object.
         /// </summary>
@@ -346,4 +629,27 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
 
         #endregion
     }
+
+    #region Helper Classes
+
+    /// <summary>
+    /// Represents a row in the field assignment preview showing one field's crop assignments across years
+    /// </summary>
+    public class FieldAssignmentRow
+    {
+        public string FieldName { get; set; }
+        public ObservableCollection<YearCropAssignment> YearAssignments { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a single year/crop assignment cell in the preview grid
+    /// </summary>
+    public class YearCropAssignment
+    {
+        public string Year { get; set; }
+        public string CropDisplay { get; set; }
+        public IBrush CropBackground { get; set; }
+    }
+
+    #endregion
 }

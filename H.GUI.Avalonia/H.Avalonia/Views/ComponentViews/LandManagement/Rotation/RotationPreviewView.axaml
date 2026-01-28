@@ -35,7 +35,7 @@
                     Background="White">
                 <ScrollViewer HorizontalScrollBarVisibility="Auto">
                     <Grid Margin="12">
-                        <!-- Placeholder message -->
+                        <!-- Placeholder message when no crops are added -->
                         <TextBlock Text="Field assignment preview will appear here once you've added crops to the rotation"
                                    Foreground="Gray"
                                    FontStyle="Italic"
@@ -44,81 +44,73 @@
                                    Margin="40"
                                    IsVisible="{Binding HasNoCrops}"/>
 
-                        <!-- DataGrid for Field Assignments -->
-                        <DataGrid ItemsSource="{Binding FieldAssignmentPreview}"
-                                  IsVisible="{Binding !HasNoCrops}"
-                                  AutoGenerateColumns="False"
-                                  IsReadOnly="True"
-                                  GridLinesVisibility="All"
-                                  CanUserReorderColumns="False"
-                                  CanUserResizeColumns="True"
-                                  CanUserSortColumns="False">
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn Header="Field" Width="150">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Border Background="#F5F5F5" Padding="8">
-                                                <TextBlock Text="{Binding FieldName}" FontWeight="SemiBold"/>
+                        <!-- Dynamic ItemsControl to display field rows -->
+                        <ItemsControl ItemsSource="{Binding FieldAssignmentRows}"
+                                      IsVisible="{Binding !HasNoCrops}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <!-- Each row showing one field's crop assignments across years -->
+                                    <Border BorderBrush="#E0E0E0" 
+                                            BorderThickness="0,0,0,1"
+                                            Padding="8,12">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <!-- Field name column -->
+                                                <ColumnDefinition Width="150"/>
+                                                <!-- Remaining space for year columns -->
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Field Name -->
+                                            <Border Grid.Column="0"
+                                                    Background="#F5F5F5" 
+                                                    Padding="12,8"
+                                                    Margin="0,0,8,0"
+                                                    CornerRadius="4">
+                                                <TextBlock Text="{Binding FieldName}" 
+                                                           FontWeight="SemiBold"
+                                                           VerticalAlignment="Center"/>
                                             </Border>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="2020" Width="120">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Border Background="{Binding Year2020Background}" Padding="8">
-                                                <TextBlock Text="{Binding Year2020}" TextAlignment="Center"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="2021" Width="120">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Border Background="{Binding Year2021Background}" Padding="8">
-                                                <TextBlock Text="{Binding Year2021}" TextAlignment="Center"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="2022" Width="120">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Border Background="{Binding Year2022Background}" Padding="8">
-                                                <TextBlock Text="{Binding Year2022}" TextAlignment="Center"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="2023" Width="120">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Border Background="{Binding Year2023Background}" Padding="8">
-                                                <TextBlock Text="{Binding Year2023}" TextAlignment="Center"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="2024" Width="120">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Border Background="{Binding Year2024Background}" Padding="8">
-                                                <TextBlock Text="{Binding Year2024}" TextAlignment="Center"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="2025" Width="120">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Border Background="{Binding Year2025Background}" Padding="8">
-                                                <TextBlock Text="{Binding Year2025}" TextAlignment="Center"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
+
+                                            <!-- Year/Crop Assignments -->
+                                            <ItemsControl Grid.Column="1"
+                                                          ItemsSource="{Binding YearAssignments}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Horizontal" Spacing="8"/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <!-- Each year/crop cell -->
+                                                        <Border Background="{Binding CropBackground}"
+                                                                Padding="12,8"
+                                                                MinWidth="120"
+                                                                CornerRadius="4"
+                                                                BorderBrush="#E0E0E0"
+                                                                BorderThickness="1">
+                                                            <StackPanel Spacing="4">
+                                                                <!-- Year label -->
+                                                                <TextBlock Text="{Binding Year}" 
+                                                                           FontSize="11"
+                                                                           FontWeight="SemiBold"
+                                                                           Foreground="#666666"
+                                                                           TextAlignment="Center"/>
+                                                                <!-- Crop name with icon -->
+                                                                <TextBlock Text="{Binding CropDisplay}" 
+                                                                           TextAlignment="Center"
+                                                                           TextWrapping="Wrap"
+                                                                           FontWeight="Medium"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </Grid>
                 </ScrollViewer>
             </Border>

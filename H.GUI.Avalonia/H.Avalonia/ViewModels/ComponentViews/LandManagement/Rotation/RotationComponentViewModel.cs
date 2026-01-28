@@ -348,10 +348,12 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
                     var assignment = new YearCropAssignment
                     {
                         Year = year.ToString(),
+                        CropType = crop.CropType, // Store crop type for selection matching
                         CropDisplay = _cropColorService?.GetCropDisplayName(crop.CropType) ?? crop.CropType.ToString(),
                         CropBackground = _cropColorService != null 
                             ? Brush.Parse(_cropColorService.GetCropColorHex(crop.CropType))
-                            : Brush.Parse("#F5F5F5")
+                            : Brush.Parse("#F5F5F5"),
+                        IsSelected = false // Initialize to not selected
                     };
 
                     row.YearAssignments.Add(assignment);
@@ -373,6 +375,9 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
             {
                 // Update IsSelected property on all crops
                 UpdateCropSelectionStates(cropDto);
+                
+                // Update IsSelected property on all cells in the preview grid
+                UpdatePreviewCellSelection(cropDto);
             }
         }
 
@@ -429,6 +434,34 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
                 foreach (var crop in this.CropDtos)
                 {
                     crop.IsSelected = selectedCrop != null && crop == selectedCrop;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates the IsSelected property on all preview grid cells based on the currently selected crop
+        /// </summary>
+        /// <param name="selectedCrop">The currently selected crop DTO (can be null to clear all selections)</param>
+        private void UpdatePreviewCellSelection(ICropDto selectedCrop)
+        {
+            if (this.FieldAssignmentRows == null)
+            {
+                return;
+            }
+
+            var selectedCropType = selectedCrop?.CropType;
+
+            // Update IsSelected on all cells across all fields
+            foreach (var row in this.FieldAssignmentRows)
+            {
+                if (row.YearAssignments != null)
+                {
+                    foreach (var assignment in row.YearAssignments)
+                    {
+                        // Cell is selected if it has the same crop type as the selected card
+                        assignment.IsSelected = selectedCropType.HasValue && 
+                                                assignment.CropType == selectedCropType.Value;
+                    }
                 }
             }
         }
@@ -592,11 +625,23 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
     /// <summary>
     /// Represents a single year/crop assignment cell in the preview grid
     /// </summary>
-    public class YearCropAssignment
+    public class YearCropAssignment : Prism.Mvvm.BindableBase
     {
+        private bool _isSelected;
+
         public string Year { get; set; }
         public string CropDisplay { get; set; }
         public IBrush CropBackground { get; set; }
+        public CropType CropType { get; set; } // Store the crop type for selection matching
+        
+        /// <summary>
+        /// Indicates whether this cell represents the currently selected crop type
+        /// </summary>
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set => SetProperty(ref _isSelected, value);
+        }
     }
 
     #endregion

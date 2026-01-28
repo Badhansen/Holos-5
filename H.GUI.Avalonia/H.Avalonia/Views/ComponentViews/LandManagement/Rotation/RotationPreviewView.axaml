@@ -1,14 +1,21 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:rotation="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
-             x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationPreviewView">
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:rotation="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation"
+         xmlns:converters="clr-namespace:H.Avalonia.Converters"
+         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+         x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationPreviewView">
 
-    <Design.DataContext>
-        <rotation:RotationComponentViewModelDesign/>
-    </Design.DataContext>
+<Design.DataContext>
+    <rotation:RotationComponentViewModelDesign/>
+</Design.DataContext>
+
+<UserControl.Resources>
+    <!-- Add converters for selection styling -->
+    <converters:BoolToSelectionBorderThicknessConverter x:Key="BoolToSelectionBorderThicknessConverter"/>
+    <converters:BoolToSelectionBorderBrushConverter x:Key="BoolToSelectionBorderBrushConverter"/>
+</UserControl.Resources>
 
     <!-- Step 3: Preview Field Assignment -->
     <Border Classes="step-container"
@@ -82,13 +89,13 @@
                                                 </ItemsControl.ItemsPanel>
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
-                                                        <!-- Each year/crop cell with fixed width -->
+                                                        <!-- Each year/crop cell with fixed width and selection highlighting -->
                                                         <Border Background="{Binding CropBackground}"
                                                                 Padding="8,8"
                                                                 Width="120"
                                                                 CornerRadius="4"
-                                                                BorderBrush="#E0E0E0"
-                                                                BorderThickness="1">
+                                                                BorderBrush="{Binding IsSelected, Converter={StaticResource BoolToSelectionBorderBrushConverter}}"
+                                                                BorderThickness="{Binding IsSelected, Converter={StaticResource BoolToSelectionBorderThicknessConverter}}">
                                                             <StackPanel Spacing="4">
                                                                 <!-- Year label -->
                                                                 <TextBlock Text="{Binding Year}" 

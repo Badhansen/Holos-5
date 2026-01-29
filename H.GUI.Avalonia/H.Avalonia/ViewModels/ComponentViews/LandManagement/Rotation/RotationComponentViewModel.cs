@@ -779,9 +779,8 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
             // Add to collection
             this.CropDtos?.Add(newCropDto);
             
-            // Select the newly added crop
-            UpdateCropSelectionStates(newCropDto);
-            this.SelectedCropDto = newCropDto;
+            // DO NOT auto-select the newly added crop
+            // Let the user explicitly click a cell in the preview grid to edit details
         }
 
         #endregion

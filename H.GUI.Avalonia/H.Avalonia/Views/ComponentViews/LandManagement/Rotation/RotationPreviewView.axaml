@@ -84,14 +84,28 @@
                                                         <Button Background="Transparent"
                                                                 BorderThickness="0"
                                                                 Padding="0"
+                                                                Cursor="Hand"
                                                                 Command="{Binding $parent[UserControl].((rotation:RotationComponentViewModel)DataContext).SetSelectedCropFromCellCommand}"
                                                                 CommandParameter="{Binding}">
+                                                            <Button.Styles>
+                                                                <Style Selector="Button:pointerover">
+                                                                    <Setter Property="Background" Value="Transparent"/>
+                                                                </Style>
+                                                                <Style Selector="Button:pressed">
+                                                                    <Setter Property="Background" Value="Transparent"/>
+                                                                </Style>
+                                                            </Button.Styles>
                                                             <Border Background="{Binding CropBackground}"
                                                                     Padding="8,8"
                                                                     Width="120"
                                                                     CornerRadius="4"
                                                                     BorderBrush="{Binding IsSelected, Converter={StaticResource BoolToSelectionBorderBrushConverter}}"
                                                                     BorderThickness="{Binding IsSelected, Converter={StaticResource BoolToSelectionBorderThicknessConverter}}">
+                                                                <Border.Styles>
+                                                                    <Style Selector="Border:pointerover">
+                                                                        <Setter Property="Opacity" Value="0.85"/>
+                                                                    </Style>
+                                                                </Border.Styles>
                                                                 <StackPanel Spacing="4">
                                                                     <!-- Year label -->
                                                                     <TextBlock Text="{Binding Year}" 
@@ -106,6 +120,7 @@
                                                                                TextTrimming="CharacterEllipsis"
                                                                                MaxLines="2"
                                                                                FontWeight="Medium"
+                                                                               Foreground="{DynamicResource TextControlForeground}"
                                                                                ToolTip.Tip="{Binding CropDisplay}"/>
                                                                 </StackPanel>
                                                             </Border>
@@ -115,7 +130,7 @@
                                             </ItemsControl>
                                         </Grid>
                                     </Border>
-                                </DataTemplate>
+                                                </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </Grid>
@@ -160,6 +175,27 @@
                         <Run Text="Rotation shifting is enabled. "/>
                         <Run Text="Each field will grow a different sequence of crops, starting at different points in the rotation. "/>
                         <Run Text="This diversifies operational risk and distributes workload across the growing season."/>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+
+            <!-- Next Step Guidance -->
+            <Border Background="#FFF3E0"
+                    BorderBrush="#FF9800"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="12"
+                    Margin="0,12,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="→"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Margin="0,0,12,0"
+                               VerticalAlignment="Top"/>
+                    <TextBlock TextWrapping="Wrap">
+                        <Run Text="Next step: "/>
+                        <Run Text="Click any cell in the preview grid to edit crop-specific details (yield, irrigation, etc.) for that field and year."
+                             FontWeight="SemiBold"/>
                     </TextBlock>
                 </StackPanel>
             </Border>

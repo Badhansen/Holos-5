@@ -5,6 +5,7 @@ namespace H.Core.Services.CropColorService;
 /// <summary>
 /// Default implementation of <see cref="ICropColorService"/>.
 /// Provides consistent color coding and display names for crop types across the application.
+/// Uses the CropTypeExtensions class to determine crop categories.
 /// </summary>
 public class CropColorService : ICropColorService
 {
@@ -12,39 +13,52 @@ public class CropColorService : ICropColorService
 
     /// <summary>
     /// Gets the hexadecimal color code for a given crop type based on its category.
+    /// Uses CropTypeExtensions methods to determine the crop category.
     /// </summary>
     /// <param name="cropType">The crop type to get the color for</param>
     /// <returns>Hexadecimal color string (e.g., "#FFF3E0")</returns>
     public string GetCropColorHex(CropType cropType)
     {
-        // Cereals - Orange
-        if (IsCereal(cropType))
+        // Fallow - Gray (check first as it's most specific)
+        if (cropType.IsFallow())
+        {
+            return "#FAFAFA";
+        }
+
+        // Cereals/Small Grains - Orange
+        if (cropType.IsSmallGrains())
         {
             return "#FFF3E0";
         }
 
         // Oilseeds - Green
-        if (IsOilseed(cropType))
+        if (cropType.IsOilSeed())
         {
             return "#E8F5E9";
         }
 
         // Pulses - Blue
-        if (IsPulse(cropType))
+        if (cropType.IsPulseCrop())
         {
             return "#E3F2FD";
         }
 
-        // Forages - Purple
-        if (IsForage(cropType))
+        // Forages/Perennials - Purple
+        if (cropType.IsPerennial())
         {
             return "#F3E5F5";
         }
 
-        // Fallow - Gray
-        if (IsFallow(cropType))
+        // Root crops - Light Brown
+        if (cropType.IsRootCrop())
         {
-            return "#FAFAFA";
+            return "#EFEBE9";
+        }
+
+        // Silage crops - Light Yellow
+        if (cropType.IsSilageCrop())
+        {
+            return "#FFFDE7";
         }
 
         // Default - Light gray
@@ -113,110 +127,6 @@ public class CropColorService : ICropColorService
             // Default fallback
             _ => cropType.ToString()
         };
-    }
-
-    #endregion
-
-    #region Private Helper Methods
-
-    /// <summary>
-    /// Determines if a crop type is a cereal.
-    /// </summary>
-    private bool IsCereal(CropType cropType)
-    {
-        return cropType == CropType.Wheat ||
-               cropType == CropType.Barley ||
-               cropType == CropType.Oats ||
-               cropType == CropType.Rye ||
-               cropType == CropType.Triticale ||
-               cropType == CropType.GrainCorn ||
-               cropType == CropType.SpringWheat ||
-               cropType == CropType.WinterWheat ||
-               cropType == CropType.Durum ||
-               cropType == CropType.Corn ||
-               cropType == CropType.FodderCorn ||
-               cropType == CropType.SilageCorn ||
-               cropType == CropType.CornSilage ||
-               cropType == CropType.MaltBarley ||
-               cropType == CropType.BarleySilage ||
-               cropType == CropType.OatSilage ||
-               cropType == CropType.FallRye ||
-               cropType == CropType.SpringRye ||
-               cropType == CropType.SmallGrainCereals ||
-               cropType == CropType.MixedGrains ||
-               cropType == CropType.Millet;
-    }
-
-    /// <summary>
-    /// Determines if a crop type is an oilseed.
-    /// </summary>
-    private bool IsOilseed(CropType cropType)
-    {
-        return cropType == CropType.Canola ||
-               cropType == CropType.Flax ||
-               cropType == CropType.FlaxSeed ||
-               cropType == CropType.Sunflower ||
-               cropType == CropType.SunflowerSeed ||
-               cropType == CropType.Soybeans ||
-               cropType == CropType.Mustard ||
-               cropType == CropType.MustardSeed ||
-               cropType == CropType.Safflower ||
-               cropType == CropType.CanarySeed ||
-               cropType == CropType.Oilseeds ||
-               cropType == CropType.Linola ||
-               cropType == CropType.Hyola;
-    }
-
-    /// <summary>
-    /// Determines if a crop type is a pulse.
-    /// </summary>
-    private bool IsPulse(CropType cropType)
-    {
-        return cropType == CropType.Peas ||
-               cropType == CropType.DryPeas ||
-               cropType == CropType.FieldPeas ||
-               cropType == CropType.Lentils ||
-               cropType == CropType.Beans ||
-               cropType == CropType.DryBean ||
-               cropType == CropType.BeansDryField ||
-               cropType == CropType.Chickpeas ||
-               cropType == CropType.FabaBeans ||
-               cropType == CropType.ColouredWhiteFabaBeans ||
-               cropType == CropType.PulseCrops;
-    }
-
-    /// <summary>
-    /// Determines if a crop type is a forage.
-    /// </summary>
-    private bool IsForage(CropType cropType)
-    {
-        return cropType == CropType.AlfalfaMedicagoSativaL ||
-               cropType == CropType.AlfalfaHay ||
-               cropType == CropType.AlfalfaSeed ||
-               cropType == CropType.TameLegume ||
-               cropType == CropType.TameGrass ||
-               cropType == CropType.TameMixed ||
-               cropType == CropType.Forage ||
-               cropType == CropType.ForageForSeed ||
-               cropType == CropType.GrassHay ||
-               cropType == CropType.PerennialForages ||
-               cropType == CropType.SeededGrassland ||
-               cropType == CropType.RangelandNative ||
-               cropType == CropType.TamePasture ||
-               cropType == CropType.NativePasture ||
-               cropType == CropType.BromeHay ||
-               cropType == CropType.TimothyHay ||
-               cropType == CropType.GrassSeed ||
-               cropType == CropType.HayAndForageSeed;
-    }
-
-    /// <summary>
-    /// Determines if a crop type is fallow.
-    /// </summary>
-    private bool IsFallow(CropType cropType)
-    {
-        return cropType == CropType.Fallow ||
-               cropType == CropType.SummerFallow;
     }
 
     #endregion

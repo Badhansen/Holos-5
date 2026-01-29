@@ -299,6 +299,11 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         public ICommand SetSelectedCropCommand { get; private set; }
 
         /// <summary>
+        /// Command to set the selected crop when a preview grid cell is clicked
+        /// </summary>
+        public ICommand SetSelectedCropFromCellCommand { get; private set; }
+
+        /// <summary>
         /// Command to remove a specific crop from the rotation
         /// </summary>
         public ICommand RemoveSpecificCropCommand { get; private set; }
@@ -380,6 +385,9 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
             
             // Initialize command for selecting a crop card (used in Step 2 timeline)
             this.SetSelectedCropCommand = new DelegateCommand<object>(OnSetSelectedCropExecute);
+            
+            // Initialize command for selecting a crop from preview grid cell (used in Step 3)
+            this.SetSelectedCropFromCellCommand = new DelegateCommand<object>(OnSetSelectedCropFromCellExecute);
             
             // Initialize command for removing a crop from the rotation
             this.RemoveSpecificCropCommand = new DelegateCommand<object>(OnRemoveSpecificCropExecute);
@@ -473,16 +481,38 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
                     // Calculation of crop from sequence for the current year
                     int rawIndex = (yearIndex + shiftOffset) % rotationLength;
                     int cropIndex = (rawIndex + rotationLength) % rotationLength;  // Ensure positive result
-                    var crop = crops[cropIndex];
+                    var sourceCrop = crops[cropIndex];
+
+                    // Create a unique crop DTO instance for this specific cell
+                    // This ensures each cell has its own independent data that can be edited separately
+                    ICropDto cellCropDto = null;
+                    
+                    if (_cropFactory != null && base.ActiveFarm != null)
+                    {
+                        cellCropDto = _cropFactory.CreateDto(base.ActiveFarm);
+                        
+                        // Copy properties from the source crop
+                        cellCropDto.CropType = sourceCrop.CropType;
+                        cellCropDto.Year = year;
+                        cellCropDto.WetYield = sourceCrop.WetYield;
+                        cellCropDto.AmountOfIrrigation = sourceCrop.AmountOfIrrigation;
+                        cellCropDto.ValidCropTypes = sourceCrop.ValidCropTypes;
+                    }
+                    else
+                    {
+                        // Fallback to using the source crop if factory is not available
+                        cellCropDto = sourceCrop;
+                    }
 
                     // Create the cell data for this year/field combination
                     var assignment = new YearCropAssignment
                     {
                         Year = year.ToString(),
-                        CropType = crop.CropType, // Store crop type for selection matching in Step 3
-                        CropDisplay = _cropColorService?.GetCropDisplayName(crop.CropType) ?? crop.CropType.ToString(),
+                        CropType = sourceCrop.CropType, // Store crop type for selection matching in Step 3
+                        CropDto = cellCropDto, // Store reference to the unique crop DTO for this cell
+                        CropDisplay = _cropColorService?.GetCropDisplayName(sourceCrop.CropType) ?? sourceCrop.CropType.ToString(),
                         CropBackground = _cropColorService != null 
-                            ? Brush.Parse(_cropColorService.GetCropColorHex(crop.CropType))
+                            ? Brush.Parse(_cropColorService.GetCropColorHex(sourceCrop.CropType))
                             : Brush.Parse("#F5F5F5"),
                         IsSelected = false // Initialize to not selected (updated when user clicks timeline card)
                     };
@@ -526,6 +556,29 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
 
                 // Set the selected crop for editing in Step 3
                 this.SelectedCropDto = cropDto;
+            }
+        }
+
+        /// <summary>
+        /// Handles the selection of a crop from a preview grid cell (Step 3).
+        /// 
+        /// This method updates only the clicked cell's selection state without affecting other cells.
+        /// When a cell is clicked, it becomes the selected crop for editing in Step 4.
+        /// </summary>
+        /// <param name="obj">The YearCropAssignment representing the clicked cell in the preview grid</param>
+        private void OnSetSelectedCropFromCellExecute(object obj)
+        {
+            // Validate that the view model is not disposed and the parameter is a YearCropAssignment
+            if (!IsDisposed && obj is YearCropAssignment assignment)
+            {
+                // Clear all previous selections in the preview grid
+                ClearAllCellSelections();
+                
+                // Set the selected crop for editing in Step 4
+                this.SelectedCropDto = assignment.CropDto;
+                
+                // Select only the specific clicked cell
+                assignment.IsSelected = true;
             }
         }
 
@@ -658,6 +711,28 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
                         // The converter will apply blue border and 3px thickness when IsSelected = true
                         assignment.IsSelected = selectedCropType.HasValue && 
                                                 assignment.CropType == selectedCropType.Value;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Clears the selection state of all cells in the preview grid.
+        /// </summary>
+        private void ClearAllCellSelections()
+        {
+            if (this.FieldAssignmentRows == null)
+            {
+                return;
+            }
+
+            foreach (var row in this.FieldAssignmentRows)
+            {
+                if (row.YearAssignments != null)
+                {
+                    foreach (var assignment in row.YearAssignments)
+                    {
+                        assignment.IsSelected = false;
                     }
                 }
             }
@@ -931,6 +1006,12 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         /// will have IsSelected set to true, triggering the blue border highlight.
         /// </summary>
         public CropType CropType { get; set; }
+        
+        /// <summary>
+        /// Reference to the actual crop DTO from the rotation sequence.
+        /// This allows the cell to provide the crop data for editing when clicked.
+        /// </summary>
+        public ICropDto CropDto { get; set; }
         
         /// <summary>
         /// Indicates whether this cell represents the currently selected crop type from the timeline.

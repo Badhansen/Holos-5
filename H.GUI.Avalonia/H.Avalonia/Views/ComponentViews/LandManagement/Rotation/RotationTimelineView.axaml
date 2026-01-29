@@ -160,6 +160,83 @@
                                VerticalAlignment="Center"/>
                 </StackPanel>
             </Border>
+
+            <!-- Crop Details Editing Section -->
+            <Border IsVisible="{Binding SelectedCropDto, Converter={x:Static ObjectConverters.IsNotNull}}"
+                    Background="#F8F9FA"
+                    BorderBrush="#E9ECEF"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="20"
+                    Margin="0,20,0,0">
+                <StackPanel>
+                    <!-- Section Header -->
+                    <StackPanel Margin="0,0,0,20">
+                        <TextBlock Text="Crop Details" 
+                                  FontSize="18" 
+                                  FontWeight="Bold" 
+                                  Foreground="#2C3E50" 
+                                  Margin="0,0,0,4"/>
+                        <TextBlock Text="Configure yield and irrigation for the selected crop" 
+                                  FontSize="12" 
+                                  Foreground="Gray" 
+                                  FontStyle="Italic"/>
+                    </StackPanel>
+                    
+                    <!-- Crop editing fields -->
+                    <ContentControl Content="{Binding SelectedCropDto}">
+                        <ContentControl.ContentTemplate>
+                            <DataTemplate>
+                                <Grid VerticalAlignment="Top" HorizontalAlignment="Left">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition MinWidth="160"/>
+                                        <ColumnDefinition MinWidth="120"/>
+                                        <ColumnDefinition MinWidth="120"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Yield Row -->
+                                    <Label Grid.Row="0" 
+                                           Grid.Column="0" 
+                                           Content="Yield (wet weight):"  
+                                           Classes="input-label" />
+
+                                    <NumericUpDown Name="YieldNumericUpDown" 
+                                                   Grid.Row="0" 
+                                                   Grid.Column="1" 
+                                                   Minimum="0" 
+                                                   Value="{Binding WetYield}"/>
+
+                                    <Label Grid.Row="0"
+                                           Grid.Column="2"
+                                           Content="kg/ha"
+                                           Classes="unit-label"/>
+
+                                    <!-- Irrigation Row -->
+                                    <Label Grid.Row="1" 
+                                           Grid.Column="0" 
+                                           Content="Amount of irrigation:" 
+                                           Classes="input-label" />
+
+                                    <NumericUpDown Name="IrrigationNumericUpDown" 
+                                                   Grid.Row="1" 
+                                                   Grid.Column="1" 
+                                                   Minimum="0" 
+                                                   Value="{Binding AmountOfIrrigation}"/>
+
+                                    <Label Grid.Row="1"
+                                           Grid.Column="2"
+                                           Content="mm"
+                                           Classes="unit-label"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ContentControl.ContentTemplate>
+                    </ContentControl>
+                </StackPanel>
+            </Border>
         </StackPanel>
     </Border>
 </UserControl>

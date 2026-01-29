@@ -200,41 +200,17 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         public ObservableCollection<ICropDto> CropDtos
         {
             get => _cropDtos;
-            set
-            {
-                // Unsubscribe from old collection if it exists
-                if (_cropDtos != null)
-                {
-                    _cropDtos.CollectionChanged -= OnCropDtosCollectionChanged;
-                    // Unsubscribe from all existing crop property changes
-                    foreach (var crop in _cropDtos)
-                    {
-                        if (crop is INotifyPropertyChanged notifyPropertyChanged)
-                        {
-                            notifyPropertyChanged.PropertyChanged -= OnCropDtoPropertyChanged;
-                        }
-                    }
-                }
+            set => SetProperty(ref _cropDtos, value);
+        }
 
-                SetProperty(ref _cropDtos, value);
-
-                // Subscribe to new collection
-                if (_cropDtos != null)
-                {
-                    _cropDtos.CollectionChanged += OnCropDtosCollectionChanged;
-                    // Subscribe to all crop property changes
-                    foreach (var crop in _cropDtos)
-                    {
-                        if (crop is INotifyPropertyChanged notifyPropertyChanged)
-                        {
-                            notifyPropertyChanged.PropertyChanged += OnCropDtoPropertyChanged;
-                        }
-                    }
-                }
-
-                // Regenerate field assignments when collection changes
-                GenerateFieldAssignmentRows();
-            }
+        /// <summary>
+        /// The currently selected crop DTO that is being edited in Step 3
+        /// </summary>
+        private ICropDto _selectedCropDto;
+        public ICropDto SelectedCropDto
+        {
+            get => _selectedCropDto;
+            set => SetProperty(ref _selectedCropDto, value);
         }
 
         public IRotationComponentDto SelectedRotationComponentDto
@@ -388,6 +364,9 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
             this.FieldComponentDtos = new ObservableCollection<IFieldComponentDto>();
             this.CropDtos = new ObservableCollection<ICropDto>();
             this.FieldAssignmentRows = new ObservableCollection<FieldAssignmentRow>();
+
+            // Subscribe to collection changed events to regenerate preview when crops are added/removed
+            this.CropDtos.CollectionChanged += OnCropDtosCollectionChanged;
 
             // Initialize command for adding a new crop to the rotation sequence
             this.AddCropToRotationCommand = new DelegateCommand(OnAddCropToRotation);
@@ -545,6 +524,9 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
                 // Update the selection state on all cells in the preview grid (Step 3)
                 // All cells with matching crop type will have IsSelected = true
                 UpdatePreviewCellSelection(cropDto);
+
+                // Set the selected crop for editing in Step 3
+                this.SelectedCropDto = cropDto;
             }
         }
 
@@ -628,9 +610,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
                 // Iterate through all crops in the timeline
                 foreach (var crop in this.CropDtos)
                 {
-                    // Set IsSelected = true only for the selected crop
-                    // All other crops will have IsSelected = false
-                    // If selectedCrop is null, all crops will be deselected
+                    // Set IsSelected = true for the selected crop, false for all others
                     crop.IsSelected = selectedCrop != null && crop == selectedCrop;
                 }
             }
@@ -727,6 +707,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
             
             // Select the newly added crop
             UpdateCropSelectionStates(newCropDto);
+            this.SelectedCropDto = newCropDto;
         }
 
         #endregion
@@ -762,7 +743,11 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
                 }
             }
 
+            // Regenerate the preview grid when crops are added or removed
             GenerateFieldAssignmentRows();
+            
+            // Notify UI that HasNoCrops may have changed
+            RaisePropertyChanged(nameof(HasNoCrops));
         }
 
         /// <summary>

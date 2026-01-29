@@ -41,7 +41,7 @@ x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationCompone
 		<ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
 			<StackPanel Margin="0,0,0,40">
 				
-				<!-- Step 1: Rotation Overview - Now using extracted view -->
+				<!-- Step 1: Rotation Overview -->
 				<rotationViews:RotationOverviewView Margin="{StaticResource DefaultUserControlMargin}"
 				                                    DataContext="{Binding}"/>
 
@@ -51,7 +51,7 @@ x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationCompone
 							  HorizontalAlignment="Stretch"
 							  Margin="{StaticResource DefaultUserControlMargin}"/>
 
-				<!-- Step 2: Build Rotation Timeline - Now using extracted view -->
+				<!-- Step 2: Build Rotation Timeline (includes crop editing) -->
 				<rotationViews:RotationTimelineView Margin="{StaticResource DefaultUserControlMargin}"
 				                                    DataContext="{Binding}"/>
 
@@ -61,7 +61,7 @@ x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationCompone
 							  HorizontalAlignment="Stretch"
 							  Margin="{StaticResource DefaultUserControlMargin}"/>
 
-				<!-- Step 3: Preview (extracted to separate view) -->
+				<!-- Step 3: Preview Field Assignments -->
 				<rotationViews:RotationPreviewView DataContext="{Binding}"/>
 
 				<!-- Step Divider -->
@@ -70,7 +70,7 @@ x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationCompone
 							  HorizontalAlignment="Stretch"
 							  Margin="{StaticResource DefaultUserControlMargin}"/>
 
-				<!-- Step 4: Finalize (extracted to separate view) -->
+				<!-- Step 4: Finalize -->
 				<rotationViews:RotationFinalizeView DataContext="{Binding}"/>
 
 			</StackPanel>

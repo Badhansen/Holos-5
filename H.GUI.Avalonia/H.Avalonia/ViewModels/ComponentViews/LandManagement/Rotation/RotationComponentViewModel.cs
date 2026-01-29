@@ -100,6 +100,12 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         /// </summary>
         private RotationShiftDirection _shiftDirection = RotationShiftDirection.RightShift;
 
+        /// <summary>
+        /// Flag to track if the crop selection came from clicking a preview grid cell
+        /// This is used to determine if auto-scrolling should occur
+        /// </summary>
+        private bool _selectionFromGridCell = false;
+
         #endregion
 
         #region Constructors
@@ -211,6 +217,17 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         {
             get => _selectedCropDto;
             set => SetProperty(ref _selectedCropDto, value);
+        }
+
+        /// <summary>
+        /// Indicates whether the current crop selection came from clicking a grid cell
+        /// Used by the view to determine if auto-scrolling should occur
+        /// </summary>
+        private bool _shouldTriggerAutoScroll = false;
+        public bool ShouldTriggerAutoScroll
+        {
+            get => _shouldTriggerAutoScroll;
+            set => SetProperty(ref _shouldTriggerAutoScroll, value);
         }
 
         public IRotationComponentDto SelectedRotationComponentDto
@@ -554,6 +571,9 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
                 // All cells with matching crop type will have IsSelected = true
                 UpdatePreviewCellSelection(cropDto);
 
+                // Set the flag to false - timeline selection should NOT trigger auto-scroll
+                this.ShouldTriggerAutoScroll = false;
+                
                 // Set the selected crop for editing in Step 3
                 this.SelectedCropDto = cropDto;
             }
@@ -573,6 +593,9 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
             {
                 // Clear all previous selections in the preview grid
                 ClearAllCellSelections();
+                
+                // Set the flag to true - grid cell selection SHOULD trigger auto-scroll
+                this.ShouldTriggerAutoScroll = true;
                 
                 // Set the selected crop for editing in Step 4
                 this.SelectedCropDto = assignment.CropDto;

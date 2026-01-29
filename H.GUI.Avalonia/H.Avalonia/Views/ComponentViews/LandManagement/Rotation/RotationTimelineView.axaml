@@ -154,7 +154,7 @@
                     Margin="0,12,0,0">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock x:Name="EmptyStateIconTextBlock"
-                               Text="?" 
+                               Text="" 
                                FontSize="20"
                                Margin="0,0,12,0"
                                VerticalAlignment="Center"/>

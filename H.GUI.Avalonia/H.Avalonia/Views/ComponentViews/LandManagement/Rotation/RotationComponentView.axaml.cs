@@ -57,16 +57,24 @@ public partial class RotationComponentView : UserControl
 
     private void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        // When SelectedCropDto changes, scroll to make Step 4 visible
+        // When SelectedCropDto changes, check if we should scroll
         if (e.PropertyName == nameof(RotationComponentViewModel.SelectedCropDto))
         {
             var viewModel = sender as RotationComponentViewModel;
-            if (viewModel?.SelectedCropDto != null)
+            
+            // Only scroll if the selection came from a grid cell (ShouldTriggerAutoScroll is true)
+            if (viewModel?.SelectedCropDto != null && viewModel.ShouldTriggerAutoScroll)
             {
                 // Use dispatcher to ensure layout has updated before scrolling
                 Dispatcher.UIThread.Post(() =>
                 {
                     ScrollToBottom();
+                    
+                    // Reset the flag after scrolling
+                    if (viewModel != null)
+                    {
+                        viewModel.ShouldTriggerAutoScroll = false;
+                    }
                 }, DispatcherPriority.Background);
             }
         }

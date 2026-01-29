@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:rotation="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation"
              xmlns:converters="clr-namespace:H.Avalonia.Converters"
-             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="500"
+             mc:Ignorable="d"
              x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationTimelineView">
 
     <Design.DataContext>

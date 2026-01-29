@@ -167,6 +167,8 @@ public class RotationComponentViewModelDesign : RotationComponentViewModel
             }
         };
 
+        this.SelectedCropDto = this.CropDtos.FirstOrDefault();
+
         // Field assignment rows will be generated automatically by the base class
         // when CropDtos is set
 

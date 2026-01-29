@@ -49,15 +49,18 @@
                 <TextBlock x:Name="CropsInSequenceLabelTextBlock"
                            Text="Crops in sequence:" 
                            VerticalAlignment="Center"
-                           Margin="8,0,8,0"/>
+                           Margin="8,0,8,0"
+                           IsVisible="{Binding CropDtos.Count}"/>
                 <TextBlock x:Name="CropsCountTextBlock"
                            Text="{Binding CropDtos.Count}"
                            FontWeight="Bold"
-                           VerticalAlignment="Center"/>
+                           VerticalAlignment="Center"
+                           IsVisible="{Binding CropDtos.Count}"/>
             </StackPanel>
 
-            <!-- Timeline Container -->
-            <Border Classes="timeline-container">
+            <!-- Timeline Container - Only visible when crops exist -->
+            <Border Classes="timeline-container"
+                    IsVisible="{Binding CropDtos.Count}">
                 <StackPanel>
                     <!-- Timeline Header -->
                     <TextBlock Text="Rotation Timeline" Classes="timeline-header" />

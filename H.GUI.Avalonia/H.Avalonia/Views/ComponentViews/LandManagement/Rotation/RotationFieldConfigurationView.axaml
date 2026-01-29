@@ -4,6 +4,7 @@
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
          xmlns:rotation="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation"
+         xmlns:rotationViews="clr-namespace:H.Avalonia.Views.ComponentViews.LandManagement.Rotation"
          xmlns:enums="clr-namespace:H.Core.Enumerations;assembly=H.Core"
          xmlns:converters="clr-namespace:H.Avalonia.Converters"
          mc:Ignorable="d"
@@ -80,8 +81,9 @@
                        Margin="8,0,0,0"/>
             </Grid>
 
-            <!-- Rotation Shift Direction -->
-            <StackPanel Margin="0,12,0,0">
+            <!-- Rotation Shift Direction (Advanced Option) -->
+            <StackPanel Margin="0,12,0,0"
+                        IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource FindAncestor, AncestorType=rotationViews:RotationComponentView}, FallbackValue=False}">
                 <TextBlock Text="Rotation shift direction:" 
                            FontWeight="Medium" 
                            Foreground="RoyalBlue"

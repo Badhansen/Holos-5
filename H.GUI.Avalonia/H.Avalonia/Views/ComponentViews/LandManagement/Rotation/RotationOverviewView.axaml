@@ -96,34 +96,6 @@
                                        VerticalAlignment="Center"
                                        Margin="8,0,0,0"/>
                         </Grid>
-
-                        <!-- Length (calculated) -->
-                        <Grid x:Name="LengthRowGrid">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
-                                <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock x:Name="LengthLabelTextBlock"
-                                       Grid.Column="0" 
-                                       Text="Length:" 
-                                       FontWeight="Medium" 
-                                       Foreground="RoyalBlue"
-                                       VerticalAlignment="Center" 
-                                       Margin="0,0,8,0"/>
-                            <TextBlock x:Name="LengthValueTextBlock"
-                                       Grid.Column="1" 
-                                       Text="{Binding Path=SelectedRotationComponentDto.RotationLength}"
-                                       VerticalAlignment="Center"
-                                       FontWeight="SemiBold"
-                                       Margin="8,0"/>
-                            <TextBlock x:Name="LengthUnitTextBlock"
-                                       Grid.Column="2" 
-                                       Text="years" 
-                                       VerticalAlignment="Center"
-                                       FontStyle="Italic"
-                                       Margin="8,0,0,0"/>
-                        </Grid>
                     </StackPanel>
                 </Border>
 
@@ -132,8 +104,11 @@
                                                               Margin="0,0,8,0"
                                                               DataContext="{Binding}"/>
 
-                <!-- Rotation Summary Section -->
-                <Border x:Name="RotationSummaryCardBorder" Classes="input-card" Background="#E3F2FD">
+                <!-- Rotation Summary Section (Advanced Option) -->
+                <Border x:Name="RotationSummaryCardBorder" 
+                        Classes="input-card" 
+                        Background="#E3F2FD"
+                        IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource FindAncestor, AncestorType=rotationViews:RotationComponentView}, FallbackValue=False}">
                     <StackPanel>
                         <TextBlock x:Name="SummaryTitleTextBlock" Text="Rotation Summary" FontWeight="Bold" Margin="0,0,0,12"/>
                         

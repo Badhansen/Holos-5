@@ -282,6 +282,13 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         public bool HasNoCrops => CropDtos == null || !CropDtos.Any();
 
         /// <summary>
+        /// Whether the preview should be shown - both crops and fields must be configured
+        /// </summary>
+        public bool ShouldShowPreview => SelectedRotationComponentDto != null && 
+                                          SelectedRotationComponentDto.NumberOfFields > 0 && 
+                                          !HasNoCrops;
+
+        /// <summary>
         /// Command to add a new crop to the rotation
         /// </summary>
         public ICommand AddCropToRotationCommand { get; private set; }
@@ -463,15 +470,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
                 {
                     int year = startYear + yearIndex;
 
-                    // Calculate which crop from the sequence should be grown this year
-                    // Apply rotation shift: (yearIndex + shiftOffset) determines the position in the sequence
-                    // 
-                    // For positive offsets (RightShift): Standard modulo works
-                    //   Example: (5 + 1) % 3 = 0 (wraps around to first crop)
-                    // 
-                    // For negative offsets (LeftShift): Need to handle negative modulo correctly
-                    //   C# modulo can return negative values, so we add rotationLength and modulo again
-                    //   Example: (-1) % 3 = -1, but we want 2, so: ((-1 % 3) + 3) % 3 = 2
+                    // Calculation of crop from sequence for the current year
                     int rawIndex = (yearIndex + shiftOffset) % rotationLength;
                     int cropIndex = (rawIndex + rotationLength) % rotationLength;  // Ensure positive result
                     var crop = crops[cropIndex];
@@ -535,7 +534,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         /// 
         /// This method performs several important operations:
         /// 1. Removes the crop from the CropDtos collection
-        /// 2. Resets the Year property on remaining crops to maintain consecutive years
+        /// 2. Resets the Year property on the remaining crops to maintain consecutive years
         /// 3. Manages selection state (selects a different crop if the removed one was selected)
         /// 4. Triggers regeneration of the preview grid through collection change event
         /// 
@@ -746,8 +745,9 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
             // Regenerate the preview grid when crops are added or removed
             GenerateFieldAssignmentRows();
             
-            // Notify UI that HasNoCrops may have changed
+            // Notify UI that HasNoCrops and ShouldShowPreview may have changed
             RaisePropertyChanged(nameof(HasNoCrops));
+            RaisePropertyChanged(nameof(ShouldShowPreview));
         }
 
         /// <summary>
@@ -774,6 +774,12 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
                 e.PropertyName == nameof(IRotationComponentDto.NumberOfFields))
             {
                 GenerateFieldAssignmentRows();
+                
+                // Notify UI that ShouldShowPreview may have changed when NumberOfFields changes
+                if (e.PropertyName == nameof(IRotationComponentDto.NumberOfFields))
+                {
+                    RaisePropertyChanged(nameof(ShouldShowPreview));
+                }
             }
         }
 

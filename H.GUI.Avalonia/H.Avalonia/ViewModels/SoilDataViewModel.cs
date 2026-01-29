@@ -43,12 +43,21 @@ namespace H.Avalonia.ViewModels
         private readonly IDefaultGeocoderService _defaultGeocoderService;
         private double _longitude;
         private double _latitude;
+        private bool _isRuralAddressMode;
+        
         private string _address = string.Empty;
         private string _streetAddress = string.Empty;
         private string _municipality = string.Empty;
         private string _postalCode = string.Empty;
+
+        private string _ruralCivicNumbering = string.Empty;
+        private string _ruralRoadName = string.Empty;
+        private string _ruralCounty = string.Empty;
+        private string _ruralMunicipality = string.Empty;
+        private string _ruralPostalCode = string.Empty;
+        
         private bool _allAddressDataEntered = false;
-        private int _searchAttempsMade = 0;
+        private int _searchAttemptsMade = 0;
         private int _searchAttemptsLimit = 3;
         private MPoint _navigationPoint;
         private ImportHelpers _importHelper;
@@ -97,7 +106,7 @@ namespace H.Avalonia.ViewModels
         }
 
         /// <summary>
-        /// The street address entered by the user.
+        /// The street address entered by the user when not in rural address mode.
         /// </summary>
         public string StreetAddress
         {
@@ -112,7 +121,7 @@ namespace H.Avalonia.ViewModels
         }
 
         /// <summary>
-        /// The municipality entered by the user.
+        /// The municipality entered by the user when not in rural address mode.
         /// </summary>
         public string Municipality
         {
@@ -127,7 +136,7 @@ namespace H.Avalonia.ViewModels
         }
 
         /// <summary>
-        /// The postal code entered by the user.
+        /// The postal code entered by the user when not in rural address mode.
         /// </summary>
         public string PostalCode
         {
@@ -142,15 +151,103 @@ namespace H.Avalonia.ViewModels
         }
 
         /// <summary>
+        /// The civic numbering of the address entered by the user, only used when rural address mode is enabled.
+        /// </summary>
+        public string RuralCivicNumbering
+        {
+            get => _ruralCivicNumbering;
+            set
+            {
+                if (SetProperty(ref _ruralCivicNumbering, value))
+                {
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
+                }
+            }
+        }
+
+        /// <summary>
+        /// The road name entered by the user, only used when rural address mode is enabled.
+        /// </summary>
+        public string RuralRoadName
+        {
+            get => _ruralRoadName;
+            set
+            {
+                if (SetProperty(ref _ruralRoadName, value))
+                {
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
+                }
+            }
+        }
+
+        /// <summary>
+        /// The county entered by the user, only used when rural address mode is enabled.
+        /// </summary>
+        public string RuralCounty
+        {
+            get => _ruralCounty;
+            set
+            {
+                if (SetProperty(ref _ruralCounty, value))
+                {
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
+                }
+            }
+        }
+
+        /// <summary>
+        /// The municipality entered by the user, only used when rural address mode is enabled.
+        /// </summary>
+        public string RuralMunicipality
+        {
+            get => _ruralMunicipality;
+            set
+            {
+                if (SetProperty(ref _ruralMunicipality, value))
+                {
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
+                }
+            }
+        }
+
+        /// <summary>
+        /// The postal code entered by the user, only used when rural address mode is enabled.
+        /// </summary>
+        public string RuralPostalCode
+        {
+            get => _ruralPostalCode;
+            set
+            {
+                if (SetProperty(ref _ruralPostalCode, value))
+                {
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
+                }
+            }
+        }
+
+        /// <summary>
         /// Boolean that indicates if all address data has been entered by the user or if user exceeded failed search attempts.
         /// </summary>
         public bool IsAddressSearchEnabled
         {
-            get =>
-                (SelectedProvince != Province.SelectProvince &&
-                !string.IsNullOrWhiteSpace(StreetAddress) &&
-                !string.IsNullOrWhiteSpace(Municipality) &&
-                !string.IsNullOrWhiteSpace(PostalCode)) && _searchAttempsMade < _searchAttemptsLimit;
+            get
+            {
+                if (!IsRuralAddressMode)
+                {
+                    return (SelectedProvince != Province.SelectProvince &&
+                     !string.IsNullOrWhiteSpace(StreetAddress) &&
+                     !string.IsNullOrWhiteSpace(Municipality) &&
+                     !string.IsNullOrWhiteSpace(PostalCode)) && _searchAttemptsMade < _searchAttemptsLimit;
+                }
+                else
+                {
+                    return (SelectedProvince != Province.SelectProvince &&
+                     !string.IsNullOrWhiteSpace(RuralRoadName) &&
+                     !string.IsNullOrWhiteSpace(RuralMunicipality) &&
+                     !string.IsNullOrWhiteSpace(RuralPostalCode)) && _searchAttemptsMade < _searchAttemptsLimit;
+                }
+            }
+
         }
 
         /// <summary>
@@ -158,10 +255,10 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         public int SearchAttemptsMade
         {
-            get => _searchAttempsMade;
+            get => _searchAttemptsMade;
             set
             {
-                if (SetProperty(ref _searchAttempsMade, value))
+                if (SetProperty(ref _searchAttemptsMade, value))
                 {
                     RaisePropertyChanged(nameof(IsAddressSearchEnabled));
                 }
@@ -194,6 +291,21 @@ namespace H.Avalonia.ViewModels
         {
             get => _provinces;
             set => SetProperty(ref _provinces, value);
+        }
+
+        /// <summary>
+        /// Boolean indicating whether rural address mode is enabled
+        /// </summary>
+        public bool IsRuralAddressMode
+        {
+            get => _isRuralAddressMode;
+            set
+            {
+                if (SetProperty(ref _isRuralAddressMode, value))
+                {
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
+                }
+            }
         }
 
         public SoilDataViewModel() { }
@@ -575,10 +687,11 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private async void OnGetCoordinates()
         {
-            if (_searchAttempsMade <= _searchAttemptsLimit)
+            if (_searchAttemptsMade <= _searchAttemptsLimit)
             {
                 NotificationManager.ShowToast(H.Core.Properties.Resources.TooManyAddressSearches, H.Core.Properties.Resources.DescriptionTooManyAddressSearches, NotificationType.Warning);
             }
+
             try
             {
                 // Call the geocoding service to get coordinates from the address, return early if problem encountered.

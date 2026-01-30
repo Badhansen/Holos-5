@@ -20,6 +20,7 @@ public partial class CropDto : DtoBase, ICropDto
     private ObservableCollection<CropType> _cropTypes;
     private double _wetYield;
     private bool _isSelected;
+    private bool _herbicideUsed;
 
     #endregion
 
@@ -82,6 +83,7 @@ public partial class CropDto : DtoBase, ICropDto
         this.Year = DateTime.Now.Year;
         this.AmountOfIrrigation = 0;
         this.WetYield = 0;
+        this.HerbicideUsed = false;
 
         this.PropertyChanged += OnPropertyChanged;
     }
@@ -130,6 +132,15 @@ public partial class CropDto : DtoBase, ICropDto
     {
         get => _isSelected;
         set => SetProperty(ref _isSelected, value);
+    }
+
+    /// <summary>
+    /// Indicates whether herbicide was used for this crop
+    /// </summary>
+    public bool HerbicideUsed
+    {
+        get => _herbicideUsed;
+        set => SetProperty(ref _herbicideUsed, value);
     }
 
     #endregion

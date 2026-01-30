@@ -160,6 +160,7 @@ x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationCompone
 												<Grid.RowDefinitions>
 													<RowDefinition Height="Auto"/>
 													<RowDefinition Height="Auto"/>
+													<RowDefinition Height="Auto"/>
 												</Grid.RowDefinitions>
 
 												<!-- Yield Row -->
@@ -195,6 +196,25 @@ x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationCompone
 													   Grid.Column="2"
 													   Content="mm"
 													   Classes="unit-label"/>
+
+												<!-- Herbicide Row -->
+												<Label Grid.Row="2" 
+													   Grid.Column="0" 
+													   Content="Herbicide used:" 
+													   Classes="input-label" />
+
+												<StackPanel Grid.Row="2" 
+														   Grid.Column="1"
+														   Grid.ColumnSpan="2"
+														   Orientation="Horizontal" 
+														   Spacing="16">
+													<RadioButton Content="Yes" 
+															   GroupName="HerbicideGroup"
+															   IsChecked="{Binding HerbicideUsed}"/>
+													<RadioButton Content="No" 
+															   GroupName="HerbicideGroup"
+															   IsChecked="{Binding !HerbicideUsed}"/>
+												</StackPanel>
 											</Grid>
 										</DataTemplate>
 									</ContentControl.ContentTemplate>

@@ -42,4 +42,9 @@ public interface ICropDto : IDto
     /// Indicates whether this crop is currently selected in the UI
     /// </summary>
     bool IsSelected { get; set; }
+
+    /// <summary>
+    /// Indicates whether herbicide was used for this crop
+    /// </summary>
+    bool HerbicideUsed { get; set; }
 }

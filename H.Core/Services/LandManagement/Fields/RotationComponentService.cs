@@ -76,6 +76,7 @@ public class RotationComponentService : ComponentServiceBase, IRotationComponent
             return;
         }
 
+        
         rotationComponent.EndYear = DateTime.Now.Year;
         rotationComponent.StartYear = rotationComponent.EndYear - 10;
     }

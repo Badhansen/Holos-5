@@ -47,4 +47,10 @@ public interface ICropDto : IDto
     /// Indicates whether herbicide was used for this crop
     /// </summary>
     bool HerbicideUsed { get; set; }
+
+    /// <summary>
+    /// Indicates whether changes to this crop should be copied to other crops
+    /// of the same type in the same field (row)
+    /// </summary>
+    bool CopyToSimilarCrops { get; set; }
 }

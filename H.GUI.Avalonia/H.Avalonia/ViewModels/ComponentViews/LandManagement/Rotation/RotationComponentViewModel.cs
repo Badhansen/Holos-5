@@ -216,7 +216,26 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         public ICropDto SelectedCropDto
         {
             get => _selectedCropDto;
-            set => SetProperty(ref _selectedCropDto, value);
+            set
+            {
+                // Unsubscribe from old selected crop if it exists
+                if (_selectedCropDto != null)
+                {
+                    _selectedCropDto.PropertyChanged -= OnSelectedCropDtoPropertyChanged;
+                }
+
+                if (SetProperty(ref _selectedCropDto, value))
+                {
+                    // Subscribe to the new selected crop's property changes
+                    if (_selectedCropDto != null)
+                    {
+                        _selectedCropDto.PropertyChanged += OnSelectedCropDtoPropertyChanged;
+                    }
+
+                    // Update the visual highlighting when the selected crop changes
+                    UpdateCopyTargetHighlighting();
+                }
+            }
         }
 
         /// <summary>
@@ -513,7 +532,10 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
                         cellCropDto.Year = year;
                         cellCropDto.WetYield = sourceCrop.WetYield;
                         cellCropDto.AmountOfIrrigation = sourceCrop.AmountOfIrrigation;
+                        cellCropDto.HerbicideUsed = sourceCrop.HerbicideUsed;
                         cellCropDto.ValidCropTypes = sourceCrop.ValidCropTypes;
+                        // Always initialize CopyToSimilarCrops to false for new cells
+                        cellCropDto.CopyToSimilarCrops = false;
                     }
                     else
                     {
@@ -584,6 +606,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         /// 
         /// This method updates only the clicked cell's selection state without affecting other cells.
         /// When a cell is clicked, it becomes the selected crop for editing in Step 4.
+        /// If "Copy to Similar Crops" is enabled, it will also highlight target cells.
         /// </summary>
         /// <param name="obj">The YearCropAssignment representing the clicked cell in the preview grid</param>
         private void OnSetSelectedCropFromCellExecute(object obj)
@@ -591,17 +614,12 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
             // Validate that the view model is not disposed and the parameter is a YearCropAssignment
             if (!IsDisposed && obj is YearCropAssignment assignment)
             {
-                // Clear all previous selections in the preview grid
-                ClearAllCellSelections();
-                
                 // Set the flag to true - grid cell selection SHOULD trigger auto-scroll
                 this.ShouldTriggerAutoScroll = true;
                 
                 // Set the selected crop for editing in Step 4
+                // This will trigger UpdateCopyTargetHighlighting via the property setter
                 this.SelectedCropDto = assignment.CropDto;
-                
-                // Select only the specific clicked cell
-                assignment.IsSelected = true;
             }
         }
 
@@ -847,23 +865,216 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
             RaisePropertyChanged(nameof(ShouldShowPreview));
         }
 
-        /// <summary>
-        /// Handles property changes on individual crop DTOs
-        /// </summary>
-        private void OnCropDtoPropertyChanged(object sender, PropertyChangedEventArgs e)
+    /// <summary>
+    /// Handles property changes on individual crop DTOs
+    /// </summary>
+    private void OnCropDtoPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        // Regenerate field assignments when CropType changes
+        if (e.PropertyName == nameof(ICropDto.CropType))
         {
-            // Regenerate field assignments when CropType changes
-            if (e.PropertyName == nameof(ICropDto.CropType))
-            {
-                GenerateFieldAssignmentRows();
-            }
+            GenerateFieldAssignmentRows();
         }
 
-        /// <summary>
-        /// Handles property changes on the RotationComponentDto
-        /// </summary>
-        private void OnRotationDtoPropertyChanged(object sender, PropertyChangedEventArgs e)
+        // Handle copying values to similar crops
+        if (sender is ICropDto cropDto)
         {
+            CopyValuesToSimilarCrops(cropDto, e.PropertyName);
+        }
+    }
+
+    /// <summary>
+    /// Handles property changes on the currently selected crop DTO (the one being edited in Step 4).
+    /// This is separate from OnCropDtoPropertyChanged which handles changes to crops in the timeline (Step 2).
+    /// </summary>
+    private void OnSelectedCropDtoPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (sender is ICropDto cropDto)
+        {
+            // Handle copying values to similar crops when properties change
+            CopyValuesToSimilarCrops(cropDto, e.PropertyName);
+            
+            // Update visual highlighting when CopyToSimilarCrops toggle changes
+            if (e.PropertyName == nameof(ICropDto.CopyToSimilarCrops))
+            {
+                UpdateCopyTargetHighlighting();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Updates the visual highlighting of cells that will receive copied values.
+    /// 
+    /// This method provides visual feedback to users by highlighting all cells that will
+    /// be affected when they change values with the "Copy to Similar Crops" toggle enabled.
+    /// 
+    /// Highlighting behavior:
+    /// - When toggle is ON: Highlights all cells in the same row with matching crop type
+    /// - When toggle is OFF: Only highlights the currently selected cell
+    /// - When no crop selected: Clears all highlighting
+    /// 
+    /// Visual effect: Target cells get a special selection state that can be styled
+    /// differently from regular selection (e.g., orange border vs blue border)
+    /// </summary>
+    private void UpdateCopyTargetHighlighting()
+    {
+        // Clear all previous copy target highlighting
+        if (FieldAssignmentRows == null)
+        {
+            return;
+        }
+
+        // If no crop is selected, clear all highlighting and return
+        if (SelectedCropDto == null)
+        {
+            ClearAllCellSelections();
+            return;
+        }
+
+        // Find the field row containing the selected crop
+        foreach (var row in FieldAssignmentRows)
+        {
+            if (row.YearAssignments == null)
+            {
+                continue;
+            }
+
+            // Check if this row contains the selected crop
+            var sourceAssignment = row.YearAssignments.FirstOrDefault(a => a.CropDto == SelectedCropDto);
+            if (sourceAssignment == null)
+            {
+                // This row doesn't contain the selected crop, clear its selections
+                foreach (var assignment in row.YearAssignments)
+                {
+                    assignment.IsSelected = false;
+                }
+                continue;
+            }
+
+            // Found the correct row - now highlight based on toggle state
+            if (SelectedCropDto.CopyToSimilarCrops)
+            {
+                // Toggle is ON: Highlight the selected crop AND all target crops of same type
+                foreach (var assignment in row.YearAssignments)
+                {
+                    assignment.IsSelected = assignment.CropDto == SelectedCropDto ||
+                                           (assignment.CropType == SelectedCropDto.CropType);
+                }
+            }
+            else
+            {
+                // Toggle is OFF: Only highlight the currently selected crop
+                foreach (var assignment in row.YearAssignments)
+                {
+                    assignment.IsSelected = assignment.CropDto == SelectedCropDto;
+                }
+            }
+
+            // Break after processing the correct row
+            break;
+        }
+    }
+
+    /// <summary>
+    /// Copies crop values to all other crops of the same type in the same field row
+    /// when the CopyToSimilarCrops toggle is enabled.
+    /// 
+    /// This method implements the "Copy to Similar Crops" feature that allows users
+    /// to efficiently apply the same values (yield, irrigation, herbicide) to multiple
+    /// crops of the same type within a single field.
+    /// 
+    /// Algorithm:
+    /// 1. Check if copying is enabled for the source crop
+    /// 2. Verify the property being changed is copyable (WetYield, AmountOfIrrigation, or HerbicideUsed)
+    /// 3. Find the field row containing the source crop
+    /// 4. Copy the value to all other crops in that row that have the same crop type
+    /// 
+    /// Example:
+    /// Field 1 has: Wheat(2020), Barley(2021), Wheat(2022), Barley(2023)
+    /// User enables copy for Wheat(2020) and changes yield to 4000 kg/ha
+    /// Result: Wheat(2022) in Field 1 also gets yield = 4000 kg/ha
+    /// Note: Wheat crops in other fields are not affected (different rows)
+    /// </summary>
+    /// <param name="sourceCrop">The crop DTO that was modified</param>
+    /// <param name="propertyName">The name of the property that changed</param>
+    private void CopyValuesToSimilarCrops(ICropDto sourceCrop, string propertyName)
+    {
+        // Only copy if the toggle is enabled
+        if (sourceCrop == null || !sourceCrop.CopyToSimilarCrops)
+        {
+            return;
+        }
+
+        // Only copy these specific properties
+        var copyableProperties = new[]
+        {
+            nameof(ICropDto.WetYield),
+            nameof(ICropDto.AmountOfIrrigation),
+            nameof(ICropDto.HerbicideUsed)
+        };
+
+        if (!copyableProperties.Contains(propertyName))
+        {
+            return;
+        }
+
+        // Find the field row that contains this crop
+        if (FieldAssignmentRows == null)
+        {
+            return;
+        }
+
+        foreach (var row in FieldAssignmentRows)
+        {
+            if (row.YearAssignments == null)
+            {
+                continue;
+            }
+
+            // Check if this row contains the source crop
+            var sourceAssignment = row.YearAssignments.FirstOrDefault(a => a.CropDto == sourceCrop);
+            if (sourceAssignment == null)
+            {
+                continue; // This row doesn't contain the source crop, skip it
+            }
+
+            // Found the correct row - now copy values to other crops of the same type
+            foreach (var assignment in row.YearAssignments)
+            {
+                // Skip if:
+                // 1. It's the source crop itself
+                // 2. It's a different crop type
+                if (assignment.CropDto == sourceCrop ||
+                    assignment.CropType != sourceCrop.CropType)
+                {
+                    continue;
+                }
+
+                // Copy the property value
+                switch (propertyName)
+                {
+                    case nameof(ICropDto.WetYield):
+                        assignment.CropDto.WetYield = sourceCrop.WetYield;
+                        break;
+                    case nameof(ICropDto.AmountOfIrrigation):
+                        assignment.CropDto.AmountOfIrrigation = sourceCrop.AmountOfIrrigation;
+                        break;
+                    case nameof(ICropDto.HerbicideUsed):
+                        assignment.CropDto.HerbicideUsed = sourceCrop.HerbicideUsed;
+                        break;
+                }
+            }
+
+            // Break after processing the correct row
+            break;
+        }
+    }
+
+    /// <summary>
+    /// Handles property changes on the RotationComponentDto
+    /// </summary>
+    private void OnRotationDtoPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
             // Regenerate field assignments if relevant properties change
             if (e.PropertyName == nameof(IRotationComponentDto.StartYear) ||
                 e.PropertyName == nameof(IRotationComponentDto.EndYear) ||

@@ -21,6 +21,7 @@ public partial class CropDto : DtoBase, ICropDto
     private double _wetYield;
     private bool _isSelected;
     private bool _herbicideUsed;
+    private bool _copyToSimilarCrops;
 
     #endregion
 
@@ -84,6 +85,7 @@ public partial class CropDto : DtoBase, ICropDto
         this.AmountOfIrrigation = 0;
         this.WetYield = 0;
         this.HerbicideUsed = false;
+        this.CopyToSimilarCrops = false;
 
         this.PropertyChanged += OnPropertyChanged;
     }
@@ -141,6 +143,16 @@ public partial class CropDto : DtoBase, ICropDto
     {
         get => _herbicideUsed;
         set => SetProperty(ref _herbicideUsed, value);
+    }
+
+    /// <summary>
+    /// Indicates whether changes to this crop should be copied to other crops
+    /// of the same type in the same field (row)
+    /// </summary>
+    public bool CopyToSimilarCrops
+    {
+        get => _copyToSimilarCrops;
+        set => SetProperty(ref _copyToSimilarCrops, value);
     }
 
     #endregion

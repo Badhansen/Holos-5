@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -146,6 +146,34 @@ x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationCompone
 											  Foreground="Gray" 
 											  FontStyle="Italic"/>
 								</StackPanel>
+
+								<!-- Copy to Similar Crops Toggle -->
+								<Border Background="#FFF9C4"
+										BorderBrush="#FBC02D"
+										BorderThickness="1"
+										CornerRadius="4"
+										Padding="12"
+										Margin="0,0,0,16">
+									<StackPanel Spacing="8">
+										<StackPanel Orientation="Horizontal" Spacing="8">
+											<TextBlock Text="Copy to Similar Crops" 
+													   FontWeight="SemiBold"
+													   FontSize="14"
+													   VerticalAlignment="Center"/>
+										</StackPanel>
+										<TextBlock TextWrapping="Wrap"
+												   FontSize="12"
+												   Foreground="#666"
+												   Margin="24,0,0,8">
+											When enabled, changes you make to yield, irrigation, and herbicide will be automatically 
+											copied to all other cells in this field (row) that have the same crop type.
+										</TextBlock>
+										<ToggleSwitch IsChecked="{Binding SelectedCropDto.CopyToSimilarCrops}"
+													  OnContent="Copy enabled"
+													  OffContent="Copy disabled"
+													  Margin="24,0,0,0"/>
+									</StackPanel>
+								</Border>
 								
 								<!-- Crop editing fields -->
 								<ContentControl Content="{Binding SelectedCropDto}">

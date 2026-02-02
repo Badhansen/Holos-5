@@ -596,8 +596,9 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
                 // Set the flag to false - timeline selection should NOT trigger auto-scroll
                 this.ShouldTriggerAutoScroll = false;
                 
-                // Set the selected crop for editing in Step 3
-                this.SelectedCropDto = cropDto;
+                // Clear the selected crop to hide Step 4
+                // Timeline selections are for visualization only, not for editing
+                this.SelectedCropDto = null;
             }
         }
 
@@ -660,8 +661,14 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
                             _fieldComponentService.ResetAllYears(this.CropDtos);
                         }
 
-                        // Handle selection management
-                        // If we just deleted the selected crop, we need to select a different one
+                        // Clear grid cell selection and hide Step 4
+                        // The removed crop may have been used in the preview grid
+                        // and we need to regenerate the grid before allowing re-selection
+                        ClearAllCellSelections();
+                        this.SelectedCropDto = null;
+
+                        // Handle timeline selection management
+                        // If we just deleted the selected timeline card, we need to select a different one
                         var wasSelected = cropDto.IsSelected;
                         if (wasSelected && this.CropDtos.Any())
                         {
@@ -1254,7 +1261,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         /// - When false: Cell displays with normal gray border (1px thickness)
         /// 
         /// This property is updated by UpdatePreviewCellSelection() when:
-        /// - User clicks a crop card in the timeline (Step 2)
+        /// - User clicks a crop card in the timeline
         /// - All cells with matching CropType have IsSelected set to true
         /// - All cells with non-matching CropType have IsSelected set to false
         /// 

@@ -2,24 +2,23 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation;
+using System;
 
 namespace H.Avalonia.Views.ComponentViews.LandManagement.Rotation;
 
-/// <summary>
-/// Code-behind for the Rotation Component View.
-/// This view manages the UI for creating and configuring crop rotations across multiple fields and years.
-/// It includes automatic scrolling behavior to enhance user experience when editing crop details.
-/// </summary>
 public partial class RotationComponentView : UserControl
 {
-    #region Properties
+    #region Fields
 
-    // ==================================================================================
-    // AVALONIA STYLED PROPERTIES
-    // ==================================================================================
-    // These properties are part of Avalonia's property system and support data binding,
-    // styling, and animations. They are registered with the Avalonia property system.
-    // ==================================================================================
+    private DispatcherTimer _scrollTimer;
+    private double _scrollStartOffset;
+    private double _scrollTargetOffset;
+    private DateTime _scrollStartTime;
+    private const int ScrollDurationMs = 600; // Gentle 600ms scroll duration
+
+    #endregion
+
+    #region Properties
 
     /// <summary>
     /// Avalonia styled property for controlling the visibility of advanced configuration options.
@@ -28,17 +27,6 @@ public partial class RotationComponentView : UserControl
     /// </summary>
     public static readonly StyledProperty<bool> ShowAdvancedOptionsProperty =
         AvaloniaProperty.Register<RotationComponentView, bool>(nameof(ShowAdvancedOptions), defaultValue: false);
-
-    /// <summary>
-    /// Gets or sets whether advanced options should be displayed in the rotation configuration UI.
-    /// This controls the visibility of additional settings that are useful for power users
-    /// but may overwhelm new users.
-    /// </summary>
-    public bool ShowAdvancedOptions
-    {
-        get => GetValue(ShowAdvancedOptionsProperty);
-        set => SetValue(ShowAdvancedOptionsProperty, value);
-    }
 
     #endregion
 
@@ -68,6 +56,21 @@ public partial class RotationComponentView : UserControl
         // Subscribe to DataContext changes to handle ViewModel lifecycle events
         // This allows us to properly attach/detach event handlers when the ViewModel changes
         this.DataContextChanged += OnDataContextChanged;
+    }
+
+    #endregion
+
+    #region Propertie
+
+    /// <summary>
+    /// Gets or sets whether advanced options should be displayed in the rotation configuration UI.
+    /// This controls the visibility of additional settings that are useful for power users
+    /// but may overwhelm new users.
+    /// </summary>
+    public bool ShowAdvancedOptions
+    {
+        get => GetValue(ShowAdvancedOptionsProperty);
+        set => SetValue(ShowAdvancedOptionsProperty, value);
     }
 
     #endregion
@@ -138,7 +141,7 @@ public partial class RotationComponentView : UserControl
                 // This prevents scrolling to the wrong position due to pending layout changes
                 Dispatcher.UIThread.Post(() =>
                 {
-                    ScrollToBottom();
+                    ScrollToBottomSmooth();
                     
                     // Reset the auto-scroll flag to prevent scrolling on subsequent programmatic changes
                     if (viewModel != null)
@@ -161,16 +164,72 @@ public partial class RotationComponentView : UserControl
     /// This provides a better user experience by automatically showing the editing controls
     /// when a user selects a crop from the preview grid without requiring manual scrolling.
     /// </summary>
-    private void ScrollToBottom()
+    private void ScrollToBottomSmooth()
     {
         // Find the ScrollViewer control by name from the XAML
         var scrollViewer = this.FindControl<ScrollViewer>("MainScrollViewer");
-        if (scrollViewer != null)
+        if (scrollViewer == null)
         {
-            // Scroll to the end with smooth animation
-            // This brings the crop editing section (Step 4) into view
-            scrollViewer.ScrollToEnd();
+            return;
         }
+
+        // Get the current and target scroll positions
+        _scrollStartOffset = scrollViewer.Offset.Y;
+        _scrollTargetOffset = scrollViewer.Extent.Height - scrollViewer.Viewport.Height;
+
+        // If already at bottom, no need to scroll
+        if (Math.Abs(_scrollStartOffset - _scrollTargetOffset) < 1.0)
+        {
+            return;
+        }
+
+        // Initialize scroll animation
+        _scrollStartTime = DateTime.Now;
+
+        // Stop any existing scroll animation
+        _scrollTimer?.Stop();
+
+        // Create and start a timer for smooth scrolling
+        _scrollTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(16) // ~60 FPS
+        };
+
+        _scrollTimer.Tick += (s, e) =>
+        {
+            var elapsed = (DateTime.Now - _scrollStartTime).TotalMilliseconds;
+            var progress = Math.Min(elapsed / ScrollDurationMs, 1.0);
+
+            // Apply easing function (cubic ease in-out for smooth acceleration/deceleration)
+            var easedProgress = EaseInOutCubic(progress);
+
+            // Calculate current offset
+            var currentOffset = _scrollStartOffset + (_scrollTargetOffset - _scrollStartOffset) * easedProgress;
+
+            // Apply the scroll offset
+            scrollViewer.Offset = new Vector(scrollViewer.Offset.X, currentOffset);
+
+            // Stop when animation is complete
+            if (progress >= 1.0)
+            {
+                _scrollTimer.Stop();
+            }
+        };
+
+        _scrollTimer.Start();
+    }
+
+    /// <summary>
+    /// Cubic easing in-out function for smooth animation
+    /// Provides gentle acceleration at start and deceleration at end
+    /// </summary>
+    /// <param name="t">Progress from 0 to 1</param>
+    /// <returns>Eased value from 0 to 1</returns>
+    private double EaseInOutCubic(double t)
+    {
+        return t < 0.5
+            ? 4 * t * t * t
+            : 1 - Math.Pow(-2 * t + 2, 3) / 2;
     }
 
     #endregion

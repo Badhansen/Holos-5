@@ -249,6 +249,18 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
             set => SetProperty(ref _shouldTriggerAutoScroll, value);
         }
 
+        /// <summary>
+        /// The name of the field (row) where the selected crop is located.
+        /// Format: "Field 1", "Field 2", etc.
+        /// Used to display context information in Step 4 about which field is being edited.
+        /// </summary>
+        private string _selectedFieldName;
+        public string SelectedFieldName
+        {
+            get => _selectedFieldName;
+            set => SetProperty(ref _selectedFieldName, value);
+        }
+
         public IRotationComponentDto SelectedRotationComponentDto
         {
             get => _selectedRotationComponentDto;
@@ -594,6 +606,9 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
                 // Set the flag to false - timeline selection should NOT trigger auto-scroll
                 this.ShouldTriggerAutoScroll = false;
                 
+                // Clear the selected field name since we're not selecting from grid
+                this.SelectedFieldName = null;
+                
                 // Clear the selected crop to hide Step 4
                 // Timeline selections are for visualization only, not for editing
                 this.SelectedCropDto = null;
@@ -603,9 +618,13 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         /// <summary>
         /// Handles the selection of a crop from a preview grid cell (Step 3).
         /// 
-        /// This method updates only the clicked cell's selection state without affecting other cells.
-        /// When a cell is clicked, it becomes the selected crop for editing in Step 4.
-        /// If "Copy to Similar Crops" is enabled, it will also highlight target cells.
+        /// This method ensures SINGLE CELL selection behavior across the entire grid:
+        /// 1. Clears ALL previous cell selections across ALL rows
+        /// 2. Selects ONLY the clicked cell
+        /// 3. Updates highlighting based on "Copy to Similar Crops" toggle
+        /// 
+        /// This prevents multiple cells from being selected across different rows,
+        /// ensuring that Step 4 editing only pertains to a single selected cell.
         /// </summary>
         /// <param name="obj">The YearCropAssignment representing the clicked cell in the preview grid</param>
         private void OnSetSelectedCropFromCellExecute(object obj)
@@ -613,13 +632,49 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
             // Validate that the view model is not disposed and the parameter is a YearCropAssignment
             if (!IsDisposed && obj is YearCropAssignment assignment)
             {
+                // CRITICAL: Clear ALL cell selections across ALL rows first
+                // This ensures only ONE cell can be selected at a time across the entire grid
+                ClearAllCellSelections();
+
+                // Find and store the field name (row) that contains this assignment
+                var fieldName = FindFieldNameForAssignment(assignment);
+                if (!string.IsNullOrEmpty(fieldName))
+                {
+                    this.SelectedFieldName = fieldName;
+                }
+
                 // Set the flag to true - grid cell selection SHOULD trigger auto-scroll
                 this.ShouldTriggerAutoScroll = true;
                 
                 // Set the selected crop for editing in Step 4
                 // This will trigger UpdateCopyTargetHighlighting via the property setter
+                // which will handle highlighting for the selected cell and similar crops if enabled
                 this.SelectedCropDto = assignment.CropDto;
             }
+        }
+
+        /// <summary>
+        /// Finds the field name (row) that contains the specified year crop assignment.
+        /// This is used to display context information in Step 4 about which field is being edited.
+        /// </summary>
+        /// <param name="assignment">The year crop assignment to find</param>
+        /// <returns>The field name (e.g., "Field 1"), or null if not found</returns>
+        private string FindFieldNameForAssignment(YearCropAssignment assignment)
+        {
+            if (FieldAssignmentRows == null || assignment == null)
+            {
+                return null;
+            }
+
+            foreach (var row in FieldAssignmentRows)
+            {
+                if (row.YearAssignments != null && row.YearAssignments.Contains(assignment))
+                {
+                    return row.FieldName;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -663,6 +718,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
                         // The removed crop may have been used in the preview grid
                         // and we need to regenerate the grid before allowing re-selection
                         ClearAllCellSelections();
+                        this.SelectedFieldName = null;
                         this.SelectedCropDto = null;
 
                         // Handle timeline selection management

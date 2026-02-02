@@ -107,22 +107,31 @@ x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationCompone
 										Width="24"
 										Height="24"
 										VerticalAlignment="Center">
-									<TextBlock Text="?" 
+									<TextBlock Text="✎" 
 											   FontSize="14"
 											   FontWeight="Bold"
 											   Foreground="White"
 											   HorizontalAlignment="Center"
 											   VerticalAlignment="Center"/>
 								</Border>
-								<TextBlock VerticalAlignment="Center">
-									<Run Text="Currently editing:"/>
-									<Run Text="{Binding SelectedCropDto.CropType, Mode=OneWay}" 
-										 FontWeight="Bold"/>
-									<Run Text="(Year"/>
-									<Run Text="{Binding SelectedCropDto.Year, Mode=OneWay}" 
-										 FontWeight="Bold"/>
-									<Run Text=")"/>
-								</TextBlock>
+								<StackPanel VerticalAlignment="Center">
+									<TextBlock>
+										<Run Text="Currently editing:"/>
+										<Run Text="{Binding SelectedCropDto.CropType, Mode=OneWay}" 
+											 FontWeight="Bold"/>
+										<Run Text="(Year"/>
+										<Run Text="{Binding SelectedCropDto.Year, Mode=OneWay}" 
+											 FontWeight="Bold"/>
+										<Run Text=")"/>
+									</TextBlock>
+									<TextBlock FontSize="11" 
+											   Foreground="#666"
+											   Margin="0,2,0,0">
+										<Run Text="Field:"/>
+										<Run Text="{Binding SelectedFieldName, Mode=OneWay}"
+											 FontWeight="SemiBold"/>
+									</TextBlock>
+								</StackPanel>
 							</StackPanel>
 						</Border>
 

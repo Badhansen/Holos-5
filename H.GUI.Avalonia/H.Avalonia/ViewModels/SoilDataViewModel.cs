@@ -687,28 +687,33 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private async void OnGetCoordinates()
         {
-            if (_searchAttemptsMade <= _searchAttemptsLimit)
+            if (_searchAttemptsMade >= _searchAttemptsLimit)
             {
                 NotificationManager.ShowToast(H.Core.Properties.Resources.TooManyAddressSearches, H.Core.Properties.Resources.DescriptionTooManyAddressSearches, NotificationType.Warning);
+                return;
             }
-
             try
             {
                 // Call the geocoding service to get coordinates from the address, return early if problem encountered.
+                var coordinates = (latitude: 0d, longitude: 0d);
                 Logger.LogInformation($"Attempting coordinate acquisition from address in {nameof(SoilDataViewModel)}.{nameof(OnGetAddress)}");
-                var point = await _defaultGeocoderService.GetCoordinates(StreetAddress, Municipality, SelectedProvince, PostalCode);
-                if (point.latitude == 0 || point.longitude == 0)
+                // Join civic numbering and road name as geocoder does not have separate parameter field for civic numbering.
+                if (IsRuralAddressMode)
+                    coordinates = await _defaultGeocoderService.GetCoordinates(RuralCivicNumbering+" "+RuralRoadName, RuralMunicipality, SelectedProvince, RuralPostalCode, RuralCounty);
+                else
+                    coordinates = await _defaultGeocoderService.GetCoordinates(StreetAddress, Municipality, SelectedProvince, PostalCode);
+                if (coordinates.latitude == 0 || coordinates.longitude == 0)
                 {
                     SearchAttemptsMade += 1;
                     Logger.LogDebug($@"Cannot find the coordinate from the address entered.");
                     NotificationManager.ShowToast(H.Core.Properties.Resources.InvalidAddress, Core.Properties.Resources.MessageIncorrectAddress, NotificationType.Error);
                     return;
                 }
-
+                                                                                                                                         
                 SearchAttemptsMade = 0; // Reset the search attempts since we were successful.
                 Logger.LogInformation($"Coordinate acquired from address in {nameof(SoilDataViewModel)}.{nameof(OnGetAddress)}");
-                Latitude = point.latitude;
-                Longitude = point.longitude;
+                Latitude = coordinates.latitude;
+                Longitude = coordinates.longitude;
                 NavigationPoint = GetNavigationPoint();
             }
             catch (ArgumentOutOfRangeException e)
@@ -718,7 +723,7 @@ namespace H.Avalonia.ViewModels
                 NotificationManager.ShowToast(H.Core.Properties.Resources.InvalidAddress, Core.Properties.Resources.MessageIncorrectAddress, NotificationType.Error);
             }
         }
-
+         
         /// <summary>
         /// Gets the new address values based on the coordinates provided by the user.
         /// </summary>

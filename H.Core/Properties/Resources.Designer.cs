@@ -16148,7 +16148,7 @@ namespace H.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter the address, coordinates, or right-click on the map to set farms location..
+        ///   Looks up a localized string similar to Right-click on the map, or enter coordinates to set farms location..
         /// </summary>
         public static string SoilDataViewStepTwoDesc {
             get {

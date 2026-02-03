@@ -6428,7 +6428,7 @@ Please note: emissions related to the deposition or application of livestock man
     <value>Select the province in which the farm is located.</value>
   </data>
   <data name="SoilDataViewStepTwoDesc" xml:space="preserve">
-    <value>Enter the address, coordinates, or right-click on the map to set farms location.</value>
+    <value>Right-click on the map, or enter coordinates to set farms location.</value>
   </data>
   <data name="SoilDataViewStepThreeDesc" xml:space="preserve">
     <value>Once you've entered your location, click below to retrieve soil data.</value>

@@ -2,6 +2,7 @@
 using H.Core.Enumerations;
 using Microsoft.Extensions.Logging;
 using Moq;
+using SharpKml.Dom.Xal;
 
 
 namespace H.Avalonia.Test.Services
@@ -14,7 +15,6 @@ namespace H.Avalonia.Test.Services
         private ILogger _loggerMock;
         private Mock<INotificationManagerService> _mockNotificationManagerService;
         private INotificationManagerService _notificationManagerServiceMock;
-        private string _address = "5403 1 Ave S, Lethbridge, AB T1J 4B1";
         private string _streetAddress = "5403 1 Ave South";
         private string _municipality = "Lethbridge";
         private Province _province = Province.Alberta;
@@ -32,7 +32,7 @@ namespace H.Avalonia.Test.Services
             // Clean up cached file for future test runs
             var path = Path.GetTempPath();
             var invalidCharacters = Path.GetInvalidFileNameChars();
-            var cleanedFileName = invalidCharacters.Aggregate("5403 1 Ave S, Lethbridge, Alberta, Canada, T1J 4B1", (current, c) => current.Replace(c, '_')).Replace(" ", "_").Replace(",", "");
+            var cleanedFileName = invalidCharacters.Aggregate("5403 1 Ave S, Lethbridge, Alberta, T1J 4B1, Canada", (current, c) => current.Replace(c, '_')).Replace(" ", "_").Replace(",", "");
             var filename = $"nominatim_geocoder_data_address_{cleanedFileName}";
             var fullPath = Path.Combine(path, filename);
             if (File.Exists(fullPath))

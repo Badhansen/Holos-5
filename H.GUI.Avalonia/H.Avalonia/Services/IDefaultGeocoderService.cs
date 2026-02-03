@@ -13,9 +13,10 @@ namespace H.Avalonia.Services
         /// <param name="municipality">The municipality of the address to check if geocode data is cached</param>
         /// <param name="province">The province of the address to check if geocode data is cached</param>
         /// <param name="postalCode">The postal code of the address to check if geocode data is cached</param>
-        /// <param name="country">The country of the address to check if geocode data is cached</param>
+        /// <param name="county">(Optional param) The county of the address to check if geocode data is cached</param>
+        /// <param name="country">(Optional param) The country of the address to check if geocode data is cached, defaults to Canada.</param>
         /// <returns>True if cached file exists for this address, false otherwise</returns>
-        bool IsCached(string street, string municipality, Province province, string postalCode, string country = "Canada");
+        bool IsCached(string street, string municipality, Province province, string postalCode, string? county = null, string country = "Canada");
         /// <summary>
         /// Returns the latitude and longitude for the given address.
         /// </summary>
@@ -23,9 +24,10 @@ namespace H.Avalonia.Services
         /// <param name="municipality">The municipality of the address to geocode and get coordinates for</param>
         /// <param name="province">The province of the address to geocode and get coordinates for</param>
         /// <param name="postalCode">The postal code of the address to geocode and get coordinates for</param>
-        /// <param name="country">The country of the address to geocode and get coordinates for</param>
+        /// <param name="county">(Optional param) The county of the address to geocode and get coordinates</param>
+        /// <param name="country">(Optional param) The country of the address to geocode and get coordinates for, defaults to Canada.</param>
         /// <returns>Longitude and latitude coordinates</returns>
-        Task<(double latitude, double longitude)> GetCoordinates(string street, string municipality, Province province, string postalCode, string country = "Canada");
+        Task<(double latitude, double longitude)> GetCoordinates(string street, string municipality, Province province, string postalCode, string? county = null, string country = "Canada");
         /// <summary>
         /// Returns a JObject of all the data returned from the Nominatim API for the given address
         /// </summary>
@@ -33,8 +35,9 @@ namespace H.Avalonia.Services
         /// <param name="municipality">The municipality of the address to geocode and get coordinates for</param>
         /// <param name="province">The province of the address to geocode and get coordinates for</param>
         /// <param name="postalCode">The postal code of the address to geocode and get coordinates for</param>
-        /// <param name="country">The country of the address to geocode and get coordinates for</param>
+        /// <param name="county">(Optional param) The county of the address to geocode and get coordinates</param>
+        /// <param name="country">(Optional param) The country of the address to geocode and get coordinates for, defaults to Canada.</param>
         /// <returns>JObject containing all the data returned from the Nominatim API for the given address</returns>
-        Task<JObject> GetApiContent(string street, string municipality, Province province, string postalCode, string country = "Canada");
+        Task<JObject> GetApiContent(string street, string municipality, Province province, string postalCode, string? county = null, string country = "Canada");
     }
 }

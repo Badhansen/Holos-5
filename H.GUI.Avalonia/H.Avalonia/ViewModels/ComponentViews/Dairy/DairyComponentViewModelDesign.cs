@@ -30,7 +30,12 @@ public class DairyComponentViewModelDesign : DairyComponentViewModel
             CalvingIntervalMonths = 13,
             DryPeriodDays = 60,
             CalfMortalityRate = 4.5,
-            FemaleCalfRatio = 48.0
+            FemaleCalfRatio = 48.0,
+            
+            // Production defaults - typical Holstein values
+            DefaultMilkProduction = 28.0,
+            DefaultMilkFatContent = 3.7,
+            DefaultMilkProteinContent = 3.1
         };
 
         // Assign the sample DTO to the bound property

@@ -22,6 +22,8 @@ namespace H.Core.Factories.Animals
         private double _endWeight;
         private double _periodDailyGain;
         private double _milkProduction;
+        private double _milkFatContent = 3.9;
+        private double _milkProteinContentAsPercentage = 3.2;
         private double _woolProduction;
         private double _gainCoefficientA;
         private double _gainCoefficientB;
@@ -120,6 +122,26 @@ namespace H.Core.Factories.Animals
         {
             get => _milkProduction;
             set => SetProperty(ref _milkProduction, value);
+        }
+
+        /// <summary>
+        /// Fat content of milk (%)
+        /// </summary>
+        [Units(MetricUnitsOfMeasurement.Percentage)]
+        public double MilkFatContent
+        {
+            get => _milkFatContent;
+            set => SetProperty(ref _milkFatContent, value);
+        }
+
+        /// <summary>
+        /// Protein content of milk (%)
+        /// </summary>
+        [Units(MetricUnitsOfMeasurement.Percentage)]
+        public double MilkProteinContentAsPercentage
+        {
+            get => _milkProteinContentAsPercentage;
+            set => SetProperty(ref _milkProteinContentAsPercentage, value);
         }
 
         /// <summary>
@@ -234,6 +256,42 @@ namespace H.Core.Factories.Animals
             }
         }
 
+        private void ValidateMilkFatContent()
+        {
+            var key = nameof(MilkFatContent);
+            
+            if (MilkFatContent < 0)
+            {
+                AddError(key, "Milk fat content cannot be negative");
+            }
+            else if (MilkFatContent > 10)
+            {
+                AddError(key, "Milk fat content cannot exceed 10%");
+            }
+            else
+            {
+                RemoveError(key);
+            }
+        }
+
+        private void ValidateMilkProteinContent()
+        {
+            var key = nameof(MilkProteinContentAsPercentage);
+            
+            if (MilkProteinContentAsPercentage < 0)
+            {
+                AddError(key, "Milk protein content cannot be negative");
+            }
+            else if (MilkProteinContentAsPercentage > 10)
+            {
+                AddError(key, "Milk protein content cannot exceed 10%");
+            }
+            else
+            {
+                RemoveError(key);
+            }
+        }
+
         private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName != null)
@@ -253,6 +311,14 @@ namespace H.Core.Factories.Animals
                 else if (e.PropertyName.Equals(nameof(End)))
                 {
                     this.ValidateEnd();
+                }
+                else if (e.PropertyName.Equals(nameof(MilkFatContent)))
+                {
+                    this.ValidateMilkFatContent();
+                }
+                else if (e.PropertyName.Equals(nameof(MilkProteinContentAsPercentage)))
+                {
+                    this.ValidateMilkProteinContent();
                 }
             }
         }

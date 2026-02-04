@@ -20,4 +20,10 @@ public interface IDairyComponentDto : IAnimalComponentDto
     int CalculatedHeifers { get; }
     int CalculatedLactating { get; }
     int CalculatedDry { get; }
+    
+    // Herd Production Defaults - Used to populate management periods
+    // NOTE: See DairyComponentDto for detailed explanation of two-level architecture
+    double DefaultMilkProduction { get; set; }
+    double DefaultMilkFatContent { get; set; }
+    double DefaultMilkProteinContent { get; set; }
 }

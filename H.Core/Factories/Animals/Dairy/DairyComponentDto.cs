@@ -29,6 +29,17 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     private int _calculatedLactating;
     private int _calculatedDry;
     
+    // Herd Production Defaults - Used to populate management periods
+    // NOTE: These are separate from ManagementPeriodDto properties
+    // WHY DUPLICATE PROPERTIES?
+    // - Component level: Herd-level defaults for simplified user input
+    // - ManagementPeriod level: Actual values used in emissions calculations
+    // - When auto-generating animal groups, these defaults populate the management period values
+    // - Advanced users can then override individual management period values if needed
+    private double _defaultMilkProduction = 25.0;
+    private double _defaultMilkFatContent = 3.9;
+    private double _defaultMilkProteinContent = 3.2;
+    
     #endregion
 
     #region Constructors
@@ -202,6 +213,70 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
 
     #endregion
 
+    #region Properties - Herd Production Defaults
+
+    /// <summary>
+    /// Default milk production for the herd (used when creating management periods)
+    /// 
+    /// ARCHITECTURE NOTE: This is a herd-level default that will be used to populate
+    /// ManagementPeriod.MilkProduction when auto-generating animal groups.
+    /// 
+    /// TWO-LEVEL PATTERN:
+    /// 1. User enters this value once (simplified input)
+    /// 2. System uses it to populate all lactating cow management periods
+    /// 3. Advanced users can override individual management period values later
+    /// 
+    /// (kg head?¹ day?¹)
+    /// </summary>
+    [Units(MetricUnitsOfMeasurement.KilogramPerHeadPerDay)]
+    public double DefaultMilkProduction
+    {
+        get => _defaultMilkProduction;
+        set => SetProperty(ref _defaultMilkProduction, value);
+    }
+
+    /// <summary>
+    /// Default milk fat content for the herd (used when creating management periods)
+    /// 
+    /// ARCHITECTURE NOTE: This is a herd-level default that will be used to populate
+    /// ManagementPeriod.MilkFatContent when auto-generating animal groups.
+    /// 
+    /// Typical values by breed:
+    /// - Holstein: 3.5-3.9%
+    /// - Jersey: 4.5-5.0%
+    /// - Guernsey: 4.2-4.7%
+    /// 
+    /// (%)
+    /// </summary>
+    [Units(MetricUnitsOfMeasurement.Percentage)]
+    public double DefaultMilkFatContent
+    {
+        get => _defaultMilkFatContent;
+        set => SetProperty(ref _defaultMilkFatContent, value);
+    }
+
+    /// <summary>
+    /// Default milk protein content for the herd (used when creating management periods)
+    /// 
+    /// ARCHITECTURE NOTE: This is a herd-level default that will be used to populate
+    /// ManagementPeriod.MilkProteinContentAsPercentage when auto-generating animal groups.
+    /// 
+    /// Typical values by breed:
+    /// - Holstein: 3.0-3.2%
+    /// - Jersey: 3.6-3.9%
+    /// - Guernsey: 3.3-3.6%
+    /// 
+    /// (%)
+    /// </summary>
+    [Units(MetricUnitsOfMeasurement.Percentage)]
+    public double DefaultMilkProteinContent
+    {
+        get => _defaultMilkProteinContent;
+        set => SetProperty(ref _defaultMilkProteinContent, value);
+    }
+
+    #endregion
+
     #region Private Methods
 
     /// <summary>
@@ -361,6 +436,69 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
         }
     }
 
+    /// <summary>
+    /// Validates that the default milk production is within a reasonable range
+    /// </summary>
+    private void ValidateDefaultMilkProduction()
+    {
+        var key = nameof(DefaultMilkProduction);
+        
+        if (DefaultMilkProduction < 0)
+        {
+            AddError(key, "Milk production cannot be negative");
+        }
+        else if (DefaultMilkProduction > 100)
+        {
+            AddError(key, "Milk production cannot exceed 100 kg/day");
+        }
+        else
+        {
+            RemoveError(key);
+        }
+    }
+
+    /// <summary>
+    /// Validates that the default milk fat content is within a reasonable range
+    /// </summary>
+    private void ValidateDefaultMilkFatContent()
+    {
+        var key = nameof(DefaultMilkFatContent);
+        
+        if (DefaultMilkFatContent < 0)
+        {
+            AddError(key, "Milk fat content cannot be negative");
+        }
+        else if (DefaultMilkFatContent > 10)
+        {
+            AddError(key, "Milk fat content cannot exceed 10%");
+        }
+        else
+        {
+            RemoveError(key);
+        }
+    }
+
+    /// <summary>
+    /// Validates that the default milk protein content is within a reasonable range
+    /// </summary>
+    private void ValidateDefaultMilkProteinContent()
+    {
+        var key = nameof(DefaultMilkProteinContent);
+        
+        if (DefaultMilkProteinContent < 0)
+        {
+            AddError(key, "Milk protein content cannot be negative");
+        }
+        else if (DefaultMilkProteinContent > 10)
+        {
+            AddError(key, "Milk protein content cannot exceed 10%");
+        }
+        else
+        {
+            RemoveError(key);
+        }
+    }
+
     #endregion
 
     #region Event Handlers
@@ -395,6 +533,18 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
                 
             case nameof(FemaleCalfRatio):
                 ValidateFemaleCalfRatio();
+                break;
+                
+            case nameof(DefaultMilkProduction):
+                ValidateDefaultMilkProduction();
+                break;
+                
+            case nameof(DefaultMilkFatContent):
+                ValidateDefaultMilkFatContent();
+                break;
+                
+            case nameof(DefaultMilkProteinContent):
+                ValidateDefaultMilkProteinContent();
                 break;
         }
     }

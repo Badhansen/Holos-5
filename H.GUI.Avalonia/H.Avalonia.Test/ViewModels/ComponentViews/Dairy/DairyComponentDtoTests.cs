@@ -74,6 +74,11 @@ public class DairyComponentDtoTests
         Assert.AreEqual(60, dto.DryPeriodDays);
         Assert.AreEqual(5.0, dto.CalfMortalityRate);
         Assert.AreEqual(50.0, dto.FemaleCalfRatio);
+        
+        // Assert - Default Production Values
+        Assert.AreEqual(25.0, dto.DefaultMilkProduction);
+        Assert.AreEqual(3.9, dto.DefaultMilkFatContent);
+        Assert.AreEqual(3.2, dto.DefaultMilkProteinContent);
     }
 
     [TestMethod]
@@ -779,4 +784,306 @@ public class DairyComponentDtoTests
     }
 
     #endregion
+
+    #region DefaultMilkProduction Validation Tests
+
+    [TestMethod]
+    public void DefaultMilkProduction_ValidValue_NoErrors()
+    {
+        // Arrange
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act
+        _dto.DefaultMilkProduction = 30.0;
+
+        // Assert
+        Assert.IsFalse(_dto.HasErrors);
+        Assert.AreEqual(30.0, _dto.DefaultMilkProduction);
+    }
+
+    [TestMethod]
+    public void DefaultMilkProduction_Negative_HasError()
+    {
+        // Arrange
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act
+        _dto.DefaultMilkProduction = -5.0;
+
+        // Assert
+        Assert.IsTrue(_dto.HasErrors);
+        var errors = _dto.GetErrors(nameof(_dto.DefaultMilkProduction)) as IEnumerable<string>;
+        Assert.IsNotNull(errors);
+        Assert.AreEqual("Milk production cannot be negative", errors.First());
+    }
+
+    [TestMethod]
+    public void DefaultMilkProduction_ExceedsMaximum_HasError()
+    {
+        // Arrange
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act
+        _dto.DefaultMilkProduction = 150.0;
+
+        // Assert
+        Assert.IsTrue(_dto.HasErrors);
+        var errors = _dto.GetErrors(nameof(_dto.DefaultMilkProduction)) as IEnumerable<string>;
+        Assert.IsNotNull(errors);
+        Assert.AreEqual("Milk production cannot exceed 100 kg/day", errors.First());
+    }
+
+    [TestMethod]
+    public void DefaultMilkProduction_BoundaryValues_NoErrors()
+    {
+        // Arrange
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act & Assert - Zero
+        _dto.DefaultMilkProduction = 0;
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act & Assert - Maximum
+        _dto.DefaultMilkProduction = 100.0;
+        Assert.IsFalse(_dto.HasErrors);
+    }
+
+    [TestMethod]
+    public void DefaultMilkProduction_TypicalValues_NoErrors()
+    {
+        // Arrange
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act & Assert - Low production
+        _dto.DefaultMilkProduction = 15.0;
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act & Assert - Average production
+        _dto.DefaultMilkProduction = 25.0;
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act & Assert - High production
+        _dto.DefaultMilkProduction = 40.0;
+        Assert.IsFalse(_dto.HasErrors);
+    }
+
+    #endregion
+
+    #region DefaultMilkFatContent Validation Tests
+
+    [TestMethod]
+    public void DefaultMilkFatContent_ValidValue_NoErrors()
+    {
+        // Arrange
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act
+        _dto.DefaultMilkFatContent = 4.2;
+
+        // Assert
+        Assert.IsFalse(_dto.HasErrors);
+        Assert.AreEqual(4.2, _dto.DefaultMilkFatContent);
+    }
+
+    [TestMethod]
+    public void DefaultMilkFatContent_Negative_HasError()
+    {
+        // Arrange
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act
+        _dto.DefaultMilkFatContent = -1.0;
+
+        // Assert
+        Assert.IsTrue(_dto.HasErrors);
+        var errors = _dto.GetErrors(nameof(_dto.DefaultMilkFatContent)) as IEnumerable<string>;
+        Assert.IsNotNull(errors);
+        Assert.AreEqual("Milk fat content cannot be negative", errors.First());
+    }
+
+    [TestMethod]
+    public void DefaultMilkFatContent_ExceedsMaximum_HasError()
+    {
+        // Arrange
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act
+        _dto.DefaultMilkFatContent = 15.0;
+
+        // Assert
+        Assert.IsTrue(_dto.HasErrors);
+        var errors = _dto.GetErrors(nameof(_dto.DefaultMilkFatContent)) as IEnumerable<string>;
+        Assert.IsNotNull(errors);
+        Assert.AreEqual("Milk fat content cannot exceed 10%", errors.First());
+    }
+
+    [TestMethod]
+    public void DefaultMilkFatContent_BoundaryValues_NoErrors()
+    {
+        // Arrange
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act & Assert - Zero
+        _dto.DefaultMilkFatContent = 0;
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act & Assert - Maximum
+        _dto.DefaultMilkFatContent = 10.0;
+        Assert.IsFalse(_dto.HasErrors);
+    }
+
+    [TestMethod]
+    public void DefaultMilkFatContent_TypicalBreedValues_NoErrors()
+    {
+        // Arrange
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act & Assert - Holstein
+        _dto.DefaultMilkFatContent = 3.7;
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act & Assert - Jersey
+        _dto.DefaultMilkFatContent = 4.9;
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act & Assert - Guernsey
+        _dto.DefaultMilkFatContent = 4.5;
+        Assert.IsFalse(_dto.HasErrors);
+    }
+
+    #endregion
+
+    #region DefaultMilkProteinContent Validation Tests
+
+    [TestMethod]
+    public void DefaultMilkProteinContent_ValidValue_NoErrors()
+    {
+        // Arrange
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act
+        _dto.DefaultMilkProteinContent = 3.5;
+
+        // Assert
+        Assert.IsFalse(_dto.HasErrors);
+        Assert.AreEqual(3.5, _dto.DefaultMilkProteinContent);
+    }
+
+    [TestMethod]
+    public void DefaultMilkProteinContent_Negative_HasError()
+    {
+        // Arrange
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act
+        _dto.DefaultMilkProteinContent = -1.0;
+
+        // Assert
+        Assert.IsTrue(_dto.HasErrors);
+        var errors = _dto.GetErrors(nameof(_dto.DefaultMilkProteinContent)) as IEnumerable<string>;
+        Assert.IsNotNull(errors);
+        Assert.AreEqual("Milk protein content cannot be negative", errors.First());
+    }
+
+    [TestMethod]
+    public void DefaultMilkProteinContent_ExceedsMaximum_HasError()
+    {
+        // Arrange
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act
+        _dto.DefaultMilkProteinContent = 12.0;
+
+        // Assert
+        Assert.IsTrue(_dto.HasErrors);
+        var errors = _dto.GetErrors(nameof(_dto.DefaultMilkProteinContent)) as IEnumerable<string>;
+        Assert.IsNotNull(errors);
+        Assert.AreEqual("Milk protein content cannot exceed 10%", errors.First());
+    }
+
+    [TestMethod]
+    public void DefaultMilkProteinContent_BoundaryValues_NoErrors()
+    {
+        // Arrange
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act & Assert - Zero
+        _dto.DefaultMilkProteinContent = 0;
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act & Assert - Maximum
+        _dto.DefaultMilkProteinContent = 10.0;
+        Assert.IsFalse(_dto.HasErrors);
+    }
+
+    [TestMethod]
+    public void DefaultMilkProteinContent_TypicalBreedValues_NoErrors()
+    {
+        // Arrange
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act & Assert - Holstein
+        _dto.DefaultMilkProteinContent = 3.1;
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act & Assert - Jersey
+        _dto.DefaultMilkProteinContent = 3.8;
+        Assert.IsFalse(_dto.HasErrors);
+
+        // Act & Assert - Guernsey
+        _dto.DefaultMilkProteinContent = 3.5;
+        Assert.IsFalse(_dto.HasErrors);
+    }
+
+    #endregion
+
+    #region Combined Default Production Tests
+
+    [TestMethod]
+    public void DefaultProduction_AllValid_NoErrors()
+    {
+        // Arrange & Act - Typical Holstein operation
+        _dto.DefaultMilkProduction = 28.0;
+        _dto.DefaultMilkFatContent = 3.7;
+        _dto.DefaultMilkProteinContent = 3.1;
+
+        // Assert
+        Assert.IsFalse(_dto.HasErrors);
+    }
+
+    [TestMethod]
+    public void DefaultProduction_HighProducingJerseyHerd_NoErrors()
+    {
+        // Arrange & Act - High producing Jersey herd
+        _dto.DefaultMilkProduction = 22.0;
+        _dto.DefaultMilkFatContent = 5.0;
+        _dto.DefaultMilkProteinContent = 3.9;
+
+        // Assert
+        Assert.IsFalse(_dto.HasErrors);
+    }
+
+    [TestMethod]
+    public void DefaultProduction_MultipleInvalid_HasMultipleErrors()
+    {
+        // Arrange & Act
+        _dto.DefaultMilkProduction = -5.0;
+        _dto.DefaultMilkFatContent = 15.0;
+        _dto.DefaultMilkProteinContent = -2.0;
+
+        // Assert
+        Assert.IsTrue(_dto.HasErrors);
+        
+        var milkErrors = _dto.GetErrors(nameof(_dto.DefaultMilkProduction)) as IEnumerable<string>;
+        Assert.IsNotNull(milkErrors);
+        
+        var fatErrors = _dto.GetErrors(nameof(_dto.DefaultMilkFatContent)) as IEnumerable<string>;
+        Assert.IsNotNull(fatErrors);
+        
+        var proteinErrors = _dto.GetErrors(nameof(_dto.DefaultMilkProteinContent)) as IEnumerable<string>;
+        Assert.IsNotNull(proteinErrors);
+    }
+
+    #endregion
 }
+

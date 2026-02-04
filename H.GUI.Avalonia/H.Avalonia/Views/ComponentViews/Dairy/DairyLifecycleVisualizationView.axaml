@@ -1,16 +1,22 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-             x:Class="H.Avalonia.Views.ComponentViews.Dairy.DairyLifecycleVisualizationView">
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:converters="clr-namespace:H.Avalonia.Converters"
+           mc:Ignorable="d"
+           x:Class="H.Avalonia.Views.ComponentViews.Dairy.DairyLifecycleVisualizationView">
+
+<UserControl.Resources>
+  <converters:BoolToBorderBrushConverter x:Key="BoolToBorderBrushConverter"/>
+  <converters:BoolToBorderThicknessConverter x:Key="BoolToBorderThicknessConverter"/>
+</UserControl.Resources>
 
   <Border BorderBrush="#E0E0E0" 
           BorderThickness="2" 
           CornerRadius="8" 
           Background="White"
           Padding="24">
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto,*,Auto,Auto">
       
       <!-- Title -->
       <StackPanel Grid.Row="0" Margin="0,0,0,24">
@@ -38,10 +44,12 @@
                 Width="180" 
                 Height="140"
                 Background="#E3F2FD" 
-                BorderBrush="#1976D2" 
-                BorderThickness="2"
+                BorderBrush="{Binding IsCalfSelected, Converter={StaticResource BoolToBorderBrushConverter}}" 
+                BorderThickness="{Binding IsCalfSelected, Converter={StaticResource BoolToBorderThicknessConverter}}"
                 CornerRadius="12"
-                Padding="16">
+                Padding="16"
+                Cursor="Hand"
+                PointerPressed="Calf_PointerPressed">
           <StackPanel VerticalAlignment="Center">
             <TextBlock Text="CALF" 
                        FontSize="16" 
@@ -81,10 +89,12 @@
                 Width="180" 
                 Height="140"
                 Background="#F3E5F5" 
-                BorderBrush="#7B1FA2" 
-                BorderThickness="2"
+                BorderBrush="{Binding IsHeiferSelected, Converter={StaticResource BoolToBorderBrushConverter}}" 
+                BorderThickness="{Binding IsHeiferSelected, Converter={StaticResource BoolToBorderThicknessConverter}}"
                 CornerRadius="12"
-                Padding="16">
+                Padding="16"
+                Cursor="Hand"
+                PointerPressed="Heifer_PointerPressed">
           <StackPanel VerticalAlignment="Center">
             <TextBlock Text="HEIFER" 
                        FontSize="16" 
@@ -124,10 +134,12 @@
                 Width="200" 
                 Height="140"
                 Background="#E8F5E9" 
-                BorderBrush="#388E3C" 
-                BorderThickness="3"
+                BorderBrush="{Binding IsLactatingSelected, Converter={StaticResource BoolToBorderBrushConverter}}" 
+                BorderThickness="{Binding IsLactatingSelected, Converter={StaticResource BoolToBorderThicknessConverter}}"
                 CornerRadius="12"
-                Padding="16">
+                Padding="16"
+                Cursor="Hand"
+                PointerPressed="Lactating_PointerPressed">
           <StackPanel VerticalAlignment="Center">
             <TextBlock Text="LACTATING COW" 
                        FontSize="16" 
@@ -167,10 +179,12 @@
                 Width="180" 
                 Height="140"
                 Background="#FFF3E0" 
-                BorderBrush="#F57C00" 
-                BorderThickness="2"
+                BorderBrush="{Binding IsDrySelected, Converter={StaticResource BoolToBorderBrushConverter}}" 
+                BorderThickness="{Binding IsDrySelected, Converter={StaticResource BoolToBorderThicknessConverter}}"
                 CornerRadius="12"
-                Padding="16">
+                Padding="16"
+                Cursor="Hand"
+                PointerPressed="Dry_PointerPressed">
           <StackPanel VerticalAlignment="Center">
             <TextBlock Text="DRY COW" 
                        FontSize="16" 
@@ -215,10 +229,12 @@
         <Border Canvas.Left="545" 
                 Canvas.Top="300"
                 Background="#FFEBEE"
-                BorderBrush="#D32F2F"
-                BorderThickness="1"
+                BorderBrush="{Binding IsCullingSelected, Converter={StaticResource BoolToBorderBrushConverter}}"
+                BorderThickness="{Binding IsCullingSelected, Converter={StaticResource BoolToBorderThicknessConverter}}"
                 CornerRadius="6"
-                Padding="12,8">
+                Padding="12,8"
+                Cursor="Hand"
+                PointerPressed="Culling_PointerPressed">
           <StackPanel>
             <TextBlock Text="CULLING" 
                        FontSize="12" 
@@ -242,10 +258,12 @@
         <Border Canvas.Left="270" 
                 Canvas.Top="300"
                 Background="#E8F5E9"
-                BorderBrush="#2E7D32"
-                BorderThickness="1"
+                BorderBrush="{Binding IsReplacementSelected, Converter={StaticResource BoolToBorderBrushConverter}}"
+                BorderThickness="{Binding IsReplacementSelected, Converter={StaticResource BoolToBorderThicknessConverter}}"
                 CornerRadius="6"
-                Padding="12,8">
+                Padding="12,8"
+                Cursor="Hand"
+                PointerPressed="Replacement_PointerPressed">
           <StackPanel>
             <TextBlock Text="REPLACEMENT" 
                        FontSize="12" 
@@ -261,8 +279,43 @@
 
       </Canvas>
 
+      <!-- Stage Information Box (appears when a stage is selected) -->
+      <Border Grid.Row="2"
+              Background="#FFF9E6"
+              BorderBrush="#FFA000"
+              BorderThickness="2"
+              CornerRadius="6"
+              Padding="16"
+              Margin="0,0,0,16"
+              IsVisible="{Binding HasSelection}">
+        <StackPanel>
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0"
+                       Text="{Binding SelectedStageTitle}"
+                       FontSize="14"
+                       FontWeight="Bold"
+                       Foreground="#F57C00"/>
+            <Button Grid.Column="1"
+                    Content="?"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    FontSize="16"
+                    Foreground="#F57C00"
+                    Cursor="Hand"
+                    Click="CloseInfo_Click"
+                    Padding="8,0"/>
+          </Grid>
+          <TextBlock Text="{Binding SelectedStageDescription}"
+                     TextWrapping="Wrap"
+                     FontSize="12"
+                     Foreground="#666"
+                     LineHeight="18"
+                     Margin="0,8,0,0"/>
+        </StackPanel>
+      </Border>
+
       <!-- Legend and Key Information -->
-      <Border Grid.Row="2" 
+      <Border Grid.Row="3" 
               Background="#F5F5F5" 
               CornerRadius="6" 
               Padding="16"

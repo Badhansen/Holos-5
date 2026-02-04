@@ -6,89 +6,144 @@
              x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
   
   <!-- Step 1: Herd Overview -->
-  <Border BorderBrush="#43A047" BorderThickness="2" CornerRadius="8">
+  <Border Classes="step-container" Margin="0,0,0,20">
     <StackPanel>
       <!-- Step Header -->
-      <Border Background="#43A047" CornerRadius="6,6,0,0" Padding="20">
-        <Grid ColumnDefinitions="Auto,*,Auto">
-          <Border Grid.Column="0" Background="White" Width="40" Height="40" 
-                 CornerRadius="20" Margin="0,0,16,0">
-            <TextBlock Text="1" FontSize="20" FontWeight="Bold" Foreground="#43A047" 
-                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
-          </Border>
-          <StackPanel Grid.Column="1" VerticalAlignment="Center">
-            <TextBlock Text="Herd Overview" FontSize="20" FontWeight="Bold" Foreground="White"/>
-            <TextBlock Text="Define your total herd size and key production parameters" 
-                      FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0"/>
-          </StackPanel>
-          <TextBlock Grid.Column="2" Text="" FontSize="28" VerticalAlignment="Center"/>
-        </Grid>
-      </Border>
+      <StackPanel Classes="step-header">
+        <Border Classes="step-badge">
+          <TextBlock Text="Step 1" Classes="step-badge-text"/>
+        </Border>
+        <StackPanel VerticalAlignment="Center">
+          <TextBlock Text="Herd Overview" 
+                     FontSize="16" 
+                     FontWeight="Bold" 
+                     Foreground="#605D5D"/>
+          <TextBlock Text="Define your total herd size and key production parameters" 
+                     Classes="step-number-description"
+                     Margin="0,4,0,0"/>
+        </StackPanel>
+      </StackPanel>
       
       <!-- Step Content -->
-      <Border Background="White" Padding="24">
-        <StackPanel>
-          <TextBlock Text="Enter Your Herd Parameters" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,16"/>
+      <StackPanel>
+        <TextBlock Text="Enter Your Herd Parameters" 
+                   FontSize="14" 
+                   FontWeight="SemiBold" 
+                   Margin="0,0,0,12"/>
+        
+        <!-- Input Grid -->
+        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" MaxWidth="900">
+          <!-- Row 0 -->
+          <Border Grid.Row="0" Grid.Column="0" 
+                  Classes="input-card"
+                  Margin="0,0,8,12">
+            <StackPanel>
+              <TextBlock Text="Total Milking Cows" 
+                         FontSize="12" 
+                         FontWeight="SemiBold" 
+                         Margin="0,0,0,6"/>
+              <TextBox Text="100" 
+                       Padding="8" 
+                       FontSize="12" 
+                       Watermark="Enter number of milking cows"/>
+              <TextBlock Text="Number of cows in the milking herd" 
+                         Classes="input-hint"/>
+            </StackPanel>
+          </Border>
           
-          <!-- Input Grid -->
-          <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" MaxWidth="900">
-            <!-- Row 0 -->
-            <Border Grid.Row="0" Grid.Column="0" Margin="0,0,10,16">
-              <StackPanel>
-                <TextBlock Text="Total Milking Cows" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                <TextBox Text="100" Padding="10" FontSize="14" Watermark="Enter number of milking cows"/>
-                <TextBlock Text="Number of cows in the milking herd" FontSize="11" Foreground="#666" Margin="0,4,0,0"/>
-              </StackPanel>
-            </Border>
-            
-            <Border Grid.Row="0" Grid.Column="1" Margin="10,0,0,16">
-              <StackPanel>
-                <TextBlock Text="Replacement Rate (%)" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                <TextBox Text="30" Padding="10" FontSize="14" Watermark="Enter replacement rate"/>
-                <TextBlock Text="Percentage of herd replaced annually" FontSize="11" Foreground="#666" Margin="0,4,0,0"/>
-              </StackPanel>
-            </Border>
-            
-            <!-- Row 1 -->
-            <Border Grid.Row="1" Grid.Column="0" Margin="0,0,10,16">
-              <StackPanel>
-                <TextBlock Text="Calving Interval (months)" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                <TextBox Text="14" Padding="10" FontSize="14" Watermark="Enter calving interval"/>
-                <TextBlock Text="Average months between calvings" FontSize="11" Foreground="#666" Margin="0,4,0,0"/>
-              </StackPanel>
-            </Border>
-            
-            <Border Grid.Row="1" Grid.Column="1" Margin="10,0,0,16">
-              <StackPanel>
-                <TextBlock Text="Dry Period (days)" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                <TextBox Text="60" Padding="10" FontSize="14" Watermark="Enter dry period length"/>
-                <TextBlock Text="Days before calving without milking" FontSize="11" Foreground="#666" Margin="0,4,0,0"/>
-              </StackPanel>
-            </Border>
-            
-            <!-- Row 2 -->
-            <Border Grid.Row="2" Grid.Column="0" Margin="0,0,10,0">
-              <StackPanel>
-                <TextBlock Text="Calf Mortality Rate (%)" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                <TextBox Text="5" Padding="10" FontSize="14" Watermark="Enter mortality rate"/>
-                <TextBlock Text="Percentage of calves lost before 4 months" FontSize="11" Foreground="#666" Margin="0,4,0,0"/>
-              </StackPanel>
-            </Border>
-            
-            <Border Grid.Row="2" Grid.Column="1" Margin="10,0,0,0">
-              <StackPanel>
-                <TextBlock Text="Female Calf Ratio (%)" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                <TextBox Text="50" Padding="10" FontSize="14" Watermark="Enter female ratio"/>
-                <TextBlock Text="Expected percentage of female calves" FontSize="11" Foreground="#666" Margin="0,4,0,0"/>
-              </StackPanel>
-            </Border>
-          </Grid>
+          <Border Grid.Row="0" Grid.Column="1" 
+                  Classes="input-card"
+                  Margin="8,0,0,12">
+            <StackPanel>
+              <TextBlock Text="Replacement Rate (%)" 
+                         FontSize="12" 
+                         FontWeight="SemiBold" 
+                         Margin="0,0,0,6"/>
+              <TextBox Text="30" 
+                       Padding="8" 
+                       FontSize="12" 
+                       Watermark="Enter replacement rate"/>
+              <TextBlock Text="Percentage of herd replaced annually" 
+                         Classes="input-hint"/>
+            </StackPanel>
+          </Border>
+          
+          <!-- Row 1 -->
+          <Border Grid.Row="1" Grid.Column="0" 
+                  Classes="input-card"
+                  Margin="0,0,8,12">
+            <StackPanel>
+              <TextBlock Text="Calving Interval (months)" 
+                         FontSize="12" 
+                         FontWeight="SemiBold" 
+                         Margin="0,0,0,6"/>
+              <TextBox Text="14" 
+                       Padding="8" 
+                       FontSize="12" 
+                       Watermark="Enter calving interval"/>
+              <TextBlock Text="Average months between calvings" 
+                         Classes="input-hint"/>
+            </StackPanel>
+          </Border>
+          
+          <Border Grid.Row="1" Grid.Column="1" 
+                  Classes="input-card"
+                  Margin="8,0,0,12">
+            <StackPanel>
+              <TextBlock Text="Dry Period (days)" 
+                         FontSize="12" 
+                         FontWeight="SemiBold" 
+                         Margin="0,0,0,6"/>
+              <TextBox Text="60" 
+                       Padding="8" 
+                       FontSize="12" 
+                       Watermark="Enter dry period length"/>
+              <TextBlock Text="Days before calving without milking" 
+                         Classes="input-hint"/>
+            </StackPanel>
+          </Border>
+          
+          <!-- Row 2 -->
+          <Border Grid.Row="2" Grid.Column="0" 
+                  Classes="input-card"
+                  Margin="0,0,8,0">
+            <StackPanel>
+              <TextBlock Text="Calf Mortality Rate (%)" 
+                         FontSize="12" 
+                         FontWeight="SemiBold" 
+                         Margin="0,0,0,6"/>
+              <TextBox Text="5" 
+                       Padding="8" 
+                       FontSize="12" 
+                       Watermark="Enter mortality rate"/>
+              <TextBlock Text="Percentage of calves lost before 4 months" 
+                         Classes="input-hint"/>
+            </StackPanel>
+          </Border>
+          
+          <Border Grid.Row="2" Grid.Column="1" 
+                  Classes="input-card"
+                  Margin="8,0,0,0">
+            <StackPanel>
+              <TextBlock Text="Female Calf Ratio (%)" 
+                         FontSize="12" 
+                         FontWeight="SemiBold" 
+                         Margin="0,0,0,6"/>
+              <TextBox Text="50" 
+                       Padding="8" 
+                       FontSize="12" 
+                       Watermark="Enter female ratio"/>
+              <TextBlock Text="Expected percentage of female calves" 
+                         Classes="input-hint"/>
+            </StackPanel>
+          </Border>
+        </Grid>
 
-          <Button Content="Calculate Herd Composition" Padding="16,10" Margin="0,24,0,0"
-                 Background="#43A047" Foreground="White" CornerRadius="4" 
-                 FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Left"/>
-        </StackPanel>
-      </Border>
+        <Button Content="Calculate Herd Composition" 
+                Classes="responsive-button"
+                Margin="0,20,0,0"
+                HorizontalAlignment="Left"/>
+      </StackPanel>
     </StackPanel>
   </Border>
   

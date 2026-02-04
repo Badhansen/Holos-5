@@ -1,148 +1,240 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl x:Name="HerdOverviewRootControl"
+             xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="900"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="400"
              x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
   
   <!-- Step 1: Herd Overview -->
-  <Border Classes="step-container" Margin="0,0,0,20">
+  <Border x:Name="StepContainerBorder" Classes="step-container">
     <StackPanel>
       <!-- Step Header -->
-      <StackPanel Classes="step-header">
-        <Border Classes="step-badge">
-          <TextBlock Text="Step 1" Classes="step-badge-text"/>
+      <StackPanel x:Name="StepHeaderPanel" Margin="0,0,0,20">
+        <Border x:Name="StepBadgeBorder" Classes="step-badge" HorizontalAlignment="Left">
+          <TextBlock x:Name="StepNumberTextBlock" Text="Step 1" Classes="step-badge-text"/>
         </Border>
-        <StackPanel VerticalAlignment="Center">
-          <TextBlock Text="Herd Overview" 
-                     FontSize="16" 
-                     FontWeight="Bold" 
-                     Foreground="#605D5D"/>
-          <TextBlock Text="Define your total herd size and key production parameters" 
-                     Classes="step-number-description"
-                     Margin="0,4,0,0"/>
-        </StackPanel>
+        <TextBlock x:Name="StepDescriptionTextBlock"
+                   Text="Define Herd Overview Parameters"
+                   Classes="step-number-description"
+                   Margin="0,8,0,0"/>
       </StackPanel>
       
-      <!-- Step Content -->
-      <StackPanel>
-        <TextBlock Text="Enter Your Herd Parameters" 
-                   FontSize="14" 
-                   FontWeight="SemiBold" 
-                   Margin="0,0,0,12"/>
-        
-        <!-- Input Grid -->
-        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" MaxWidth="900">
-          <!-- Row 0 -->
-          <Border Grid.Row="0" Grid.Column="0" 
-                  Classes="input-card"
-                  Margin="0,0,8,12">
-            <StackPanel>
-              <TextBlock Text="Total Milking Cows" 
-                         FontSize="12" 
-                         FontWeight="SemiBold" 
-                         Margin="0,0,0,6"/>
-              <TextBox Text="100" 
-                       Padding="8" 
-                       FontSize="12" 
-                       Watermark="Enter number of milking cows"/>
-              <TextBlock Text="Number of cows in the milking herd" 
-                         Classes="input-hint"/>
-            </StackPanel>
-          </Border>
-          
-          <Border Grid.Row="0" Grid.Column="1" 
-                  Classes="input-card"
-                  Margin="8,0,0,12">
-            <StackPanel>
-              <TextBlock Text="Replacement Rate (%)" 
-                         FontSize="12" 
-                         FontWeight="SemiBold" 
-                         Margin="0,0,0,6"/>
-              <TextBox Text="30" 
-                       Padding="8" 
-                       FontSize="12" 
-                       Watermark="Enter replacement rate"/>
-              <TextBlock Text="Percentage of herd replaced annually" 
-                         Classes="input-hint"/>
-            </StackPanel>
-          </Border>
-          
-          <!-- Row 1 -->
-          <Border Grid.Row="1" Grid.Column="0" 
-                  Classes="input-card"
-                  Margin="0,0,8,12">
-            <StackPanel>
-              <TextBlock Text="Calving Interval (months)" 
-                         FontSize="12" 
-                         FontWeight="SemiBold" 
-                         Margin="0,0,0,6"/>
-              <TextBox Text="14" 
-                       Padding="8" 
-                       FontSize="12" 
-                       Watermark="Enter calving interval"/>
-              <TextBlock Text="Average months between calvings" 
-                         Classes="input-hint"/>
-            </StackPanel>
-          </Border>
-          
-          <Border Grid.Row="1" Grid.Column="1" 
-                  Classes="input-card"
-                  Margin="8,0,0,12">
-            <StackPanel>
-              <TextBlock Text="Dry Period (days)" 
-                         FontSize="12" 
-                         FontWeight="SemiBold" 
-                         Margin="0,0,0,6"/>
-              <TextBox Text="60" 
-                       Padding="8" 
-                       FontSize="12" 
-                       Watermark="Enter dry period length"/>
-              <TextBlock Text="Days before calving without milking" 
-                         Classes="input-hint"/>
-            </StackPanel>
-          </Border>
-          
-          <!-- Row 2 -->
-          <Border Grid.Row="2" Grid.Column="0" 
-                  Classes="input-card"
-                  Margin="0,0,8,0">
-            <StackPanel>
-              <TextBlock Text="Calf Mortality Rate (%)" 
-                         FontSize="12" 
-                         FontWeight="SemiBold" 
-                         Margin="0,0,0,6"/>
-              <TextBox Text="5" 
-                       Padding="8" 
-                       FontSize="12" 
-                       Watermark="Enter mortality rate"/>
-              <TextBlock Text="Percentage of calves lost before 4 months" 
-                         Classes="input-hint"/>
-            </StackPanel>
-          </Border>
-          
-          <Border Grid.Row="2" Grid.Column="1" 
-                  Classes="input-card"
-                  Margin="8,0,0,0">
-            <StackPanel>
-              <TextBlock Text="Female Calf Ratio (%)" 
-                         FontSize="12" 
-                         FontWeight="SemiBold" 
-                         Margin="0,0,0,6"/>
-              <TextBox Text="50" 
-                       Padding="8" 
-                       FontSize="12" 
-                       Watermark="Enter female ratio"/>
-              <TextBlock Text="Expected percentage of female calves" 
-                         Classes="input-hint"/>
-            </StackPanel>
-          </Border>
-        </Grid>
+      <!-- Overview Content -->
+      <StackPanel x:Name="OverviewContentStackPanel"
+                  Orientation="Horizontal" 
+                  HorizontalAlignment="Left"
+                  Grid.IsSharedSizeScope="True">
 
-        <Button Content="Calculate Herd Composition" 
-                Classes="responsive-button"
-                Margin="0,20,0,0"
-                HorizontalAlignment="Left"/>
+        <!-- Herd Size Section -->
+        <Border x:Name="HerdSizeCardBorder" Classes="input-card" Margin="0,0,8,0">
+          <StackPanel>
+            <TextBlock x:Name="HerdSizeTitleTextBlock" 
+                       Text="Herd Size" 
+                       FontWeight="Bold" 
+                       Margin="0,0,0,12"/>
+            
+            <!-- Total Milking Cows -->
+            <Grid x:Name="TotalMilkingCowsRowGrid" Margin="0,0,0,8">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+                <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+              </Grid.ColumnDefinitions>
+              <TextBlock x:Name="TotalMilkingCowsLabelTextBlock"
+                         Grid.Column="0" 
+                         Text="Milking Cows:" 
+                         FontWeight="Medium" 
+                         Foreground="RoyalBlue"
+                         VerticalAlignment="Center" 
+                         Margin="0,0,8,0"/>
+              <NumericUpDown x:Name="TotalMilkingCowsInputNumericUpDown"
+                             Grid.Column="1" 
+                             Minimum="1" 
+                             Maximum="10000"
+                             FormatString="0"
+                             Increment="1"
+                             Value="{Binding Path=SelectedDairyComponentDto.TotalMilkingCows}"
+                             Margin="8,0"
+                             HorizontalAlignment="Stretch"/>
+              <TextBlock x:Name="TotalMilkingCowsUnitTextBlock"
+                         Grid.Column="2" 
+                         Text="head" 
+                         VerticalAlignment="Center"
+                         Margin="8,0,0,0"/>
+            </Grid>
+
+            <!-- Replacement Rate -->
+            <Grid x:Name="ReplacementRateRowGrid" Margin="0,0,0,8">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+                <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+              </Grid.ColumnDefinitions>
+              <TextBlock x:Name="ReplacementRateLabelTextBlock"
+                         Grid.Column="0" 
+                         Text="Replacement:" 
+                         FontWeight="Medium" 
+                         Foreground="RoyalBlue"
+                         VerticalAlignment="Center" 
+                         Margin="0,0,8,0"/>
+              <NumericUpDown x:Name="ReplacementRateInputNumericUpDown"
+                             Grid.Column="1" 
+                             Minimum="0" 
+                             Maximum="100"
+                             FormatString="0.0"
+                             Increment="0.5"
+                             Value="{Binding Path=SelectedDairyComponentDto.ReplacementRate}"
+                             Margin="8,0"
+                             HorizontalAlignment="Stretch"/>
+              <TextBlock x:Name="ReplacementRateUnitTextBlock"
+                         Grid.Column="2" 
+                         Text="%" 
+                         VerticalAlignment="Center"
+                         Margin="8,0,0,0"/>
+            </Grid>
+          </StackPanel>
+        </Border>
+
+        <!-- Production Cycle Section -->
+        <Border x:Name="ProductionCycleCardBorder" Classes="input-card" Margin="0,0,8,0">
+          <StackPanel>
+            <TextBlock x:Name="ProductionCycleTitleTextBlock" 
+                       Text="Production Cycle" 
+                       FontWeight="Bold" 
+                       Margin="0,0,0,12"/>
+            
+            <!-- Calving Interval -->
+            <Grid x:Name="CalvingIntervalRowGrid" Margin="0,0,0,8">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+                <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+              </Grid.ColumnDefinitions>
+              <TextBlock x:Name="CalvingIntervalLabelTextBlock"
+                         Grid.Column="0" 
+                         Text="Calving Interval:" 
+                         FontWeight="Medium" 
+                         Foreground="RoyalBlue"
+                         VerticalAlignment="Center" 
+                         Margin="0,0,8,0"/>
+              <NumericUpDown x:Name="CalvingIntervalInputNumericUpDown"
+                             Grid.Column="1" 
+                             Minimum="10" 
+                             Maximum="24"
+                             FormatString="0"
+                             Increment="1"
+                             Value="{Binding Path=SelectedDairyComponentDto.CalvingIntervalMonths}"
+                             Margin="8,0"
+                             HorizontalAlignment="Stretch"/>
+              <TextBlock x:Name="CalvingIntervalUnitTextBlock"
+                         Grid.Column="2" 
+                         Text="months" 
+                         VerticalAlignment="Center"
+                         Margin="8,0,0,0"/>
+            </Grid>
+
+            <!-- Dry Period -->
+            <Grid x:Name="DryPeriodRowGrid" Margin="0,0,0,8">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+                <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+              </Grid.ColumnDefinitions>
+              <TextBlock x:Name="DryPeriodLabelTextBlock"
+                         Grid.Column="0" 
+                         Text="Dry Period:" 
+                         FontWeight="Medium" 
+                         Foreground="RoyalBlue"
+                         VerticalAlignment="Center" 
+                         Margin="0,0,8,0"/>
+              <NumericUpDown x:Name="DryPeriodInputNumericUpDown"
+                             Grid.Column="1" 
+                             Minimum="0" 
+                             Maximum="120"
+                             FormatString="0"
+                             Increment="5"
+                             Value="{Binding Path=SelectedDairyComponentDto.DryPeriodDays}"
+                             Margin="8,0"
+                             HorizontalAlignment="Stretch"/>
+              <TextBlock x:Name="DryPeriodUnitTextBlock"
+                         Grid.Column="2" 
+                         Text="days" 
+                         VerticalAlignment="Center"
+                         Margin="8,0,0,0"/>
+            </Grid>
+          </StackPanel>
+        </Border>
+
+        <!-- Calf Management Section -->
+        <Border x:Name="CalfManagementCardBorder" Classes="input-card" Margin="0,0,8,0">
+          <StackPanel>
+            <TextBlock x:Name="CalfManagementTitleTextBlock" 
+                       Text="Calf Management" 
+                       FontWeight="Bold" 
+                       Margin="0,0,0,12"/>
+            
+            <!-- Calf Mortality Rate -->
+            <Grid x:Name="CalfMortalityRowGrid" Margin="0,0,0,8">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+                <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+              </Grid.ColumnDefinitions>
+              <TextBlock x:Name="CalfMortalityLabelTextBlock"
+                         Grid.Column="0" 
+                         Text="Mortality Rate:" 
+                         FontWeight="Medium" 
+                         Foreground="RoyalBlue"
+                         VerticalAlignment="Center" 
+                         Margin="0,0,8,0"/>
+              <NumericUpDown x:Name="CalfMortalityInputNumericUpDown"
+                             Grid.Column="1" 
+                             Minimum="0" 
+                             Maximum="50"
+                             FormatString="0.0"
+                             Increment="0.5"
+                             Value="{Binding Path=SelectedDairyComponentDto.CalfMortalityRate}"
+                             Margin="8,0"
+                             HorizontalAlignment="Stretch"/>
+              <TextBlock x:Name="CalfMortalityUnitTextBlock"
+                         Grid.Column="2" 
+                         Text="%" 
+                         VerticalAlignment="Center"
+                         Margin="8,0,0,0"/>
+            </Grid>
+
+            <!-- Female Calf Ratio -->
+            <Grid x:Name="FemaleCalfRatioRowGrid" Margin="0,0,0,8">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+                <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+              </Grid.ColumnDefinitions>
+              <TextBlock x:Name="FemaleCalfRatioLabelTextBlock"
+                         Grid.Column="0" 
+                         Text="Female Ratio:" 
+                         FontWeight="Medium" 
+                         Foreground="RoyalBlue"
+                         VerticalAlignment="Center" 
+                         Margin="0,0,8,0"/>
+              <NumericUpDown x:Name="FemaleCalfRatioInputNumericUpDown"
+                             Grid.Column="1" 
+                             Minimum="0" 
+                             Maximum="100"
+                             FormatString="0.0"
+                             Increment="1"
+                             Value="{Binding Path=SelectedDairyComponentDto.FemaleCalfRatio}"
+                             Margin="8,0"
+                             HorizontalAlignment="Stretch"/>
+              <TextBlock x:Name="FemaleCalfRatioUnitTextBlock"
+                         Grid.Column="2" 
+                         Text="%" 
+                         VerticalAlignment="Center"
+                         Margin="8,0,0,0"/>
+            </Grid>
+          </StackPanel>
+        </Border>
       </StackPanel>
     </StackPanel>
   </Border>

@@ -68,6 +68,7 @@ using H.Core.Services.Climate;
 using H.Core.Services.Countries;
 using H.Core.Services.DietService;
 using H.Core.Services.Initialization;
+using H.Core.Services.Animals.Dairy;
 using H.Core.Services.LandManagement.Fields;
 using H.Core.Services.Provinces;
 using H.Core.Services.StorageService;
@@ -358,6 +359,7 @@ namespace H.Avalonia.Infrastructure.DependencyInjection
             containerRegistry.RegisterSingleton<IComponentInitializationService, ComponentInitializationService>();
             containerRegistry.RegisterSingleton<IFieldComponentService, FieldComponentService>();
             containerRegistry.RegisterSingleton<IRotationComponentService, RotationComponentService>();
+            containerRegistry.RegisterSingleton<IDairyComponentService, DairyComponentService>();
             containerRegistry.RegisterSingleton<IClimateService, ClimateService>();
             containerRegistry.RegisterSingleton<IFarmResultsService_NEW, FarmResultsService_NEW>();
             containerRegistry.RegisterSingleton<IDietService, DefaultDietService>();

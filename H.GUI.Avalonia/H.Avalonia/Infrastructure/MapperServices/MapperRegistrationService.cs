@@ -29,6 +29,9 @@ public class MapperRegistrationService
 
         // Animal component mappers
         RegisterAnimalComponentMappers(containerRegistry);
+        
+        // Dairy component mappers
+        RegisterDairyComponentMappers(containerRegistry);
 
         // Management period mappers
         RegisterManagementPeriodMappers(containerRegistry);
@@ -139,6 +142,18 @@ public class MapperRegistrationService
         containerRegistry.RegisterInstance(animalComponentToAnimalComponentDtoConfiguration.CreateMapper(), nameof(AnimalComponentBaseToAnimalComponentDtoMapper));
         containerRegistry.RegisterInstance(animalGroupDtoToAnimalGroupConfiguration.CreateMapper(), nameof(AnimalGroupDtoToAnimalGroupMapper));
         containerRegistry.RegisterInstance(animalGroupDtoToAnimalGroupDtoConfiguration.CreateMapper(), nameof(AnimalGroupDtoToAnimalGroupDtoMapper));
+    }
+
+    private void RegisterDairyComponentMappers(IContainerRegistry containerRegistry)
+    {
+        var dairyComponentToDtoConfiguration = new MapperConfiguration(expression =>
+        {
+            expression.AddProfile<AnimalComponentBaseToAnimalComponentDtoMapper>();
+            expression.AddProfile<AnimalComponentDtoToAnimalComponentMapper>();
+            expression.AddProfile<DairyComponentToDtoMapper>();
+        });
+
+        containerRegistry.RegisterInstance(dairyComponentToDtoConfiguration.CreateMapper(), nameof(DairyComponentToDtoMapper));
     }
 
     private void RegisterManagementPeriodMappers(IContainerRegistry containerRegistry)

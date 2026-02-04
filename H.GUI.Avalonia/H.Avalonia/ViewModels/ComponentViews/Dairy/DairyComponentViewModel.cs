@@ -1,7 +1,7 @@
 using H.Core.Factories.Animals.Dairy;
 using H.Core.Models;
 using H.Core.Models.Animals.Dairy;
-using H.Core.Services.Animals;
+using H.Core.Services.Animals.Dairy;
 using H.Core.Services.StorageService;
 using Microsoft.Extensions.Logging;
 using Prism.Events;
@@ -22,7 +22,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// <summary>
         /// Service for managing dairy component operations and data transfer
         /// </summary>
-        private readonly IAnimalComponentService _animalComponentService;
+        private readonly IDairyComponentService _dairyComponentService;
 
         /// <summary>
         /// The domain model object representing the dairy component being edited
@@ -55,25 +55,18 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// <param name="regionManager">Prism region manager for navigation between views</param>
         /// <param name="eventAggregator">Event aggregator for pub/sub messaging between components</param>
         /// <param name="storageService">Service for accessing application storage and active farm data</param>
-        /// <param name="animalComponentService">Service for animal component operations and data transfer</param>
+        /// <param name="dairyComponentService">Service for dairy component operations and data transfer</param>
         /// <param name="logger">Logger instance for diagnostic and error logging</param>
         /// <exception cref="ArgumentNullException">Thrown if any required dependency is null</exception>
         public DairyComponentViewModel(
             IRegionManager regionManager,
             IEventAggregator eventAggregator,
             IStorageService storageService,
-            IAnimalComponentService animalComponentService,
+            IDairyComponentService dairyComponentService,
             ILogger logger) : base(regionManager, eventAggregator, storageService, logger)
         {
-            // Validate and store animal component service dependency
-            if (animalComponentService != null)
-            {
-                _animalComponentService = animalComponentService;
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(animalComponentService));
-            }
+            // Validate and store dairy component service dependency
+            _dairyComponentService = dairyComponentService ?? throw new ArgumentNullException(nameof(dairyComponentService));
 
             // Initialize collections and commands
             this.Construct();
@@ -159,18 +152,14 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
             // Hold a reference to the selected dairy component domain object
             _selectedDairyComponent = dairyComponent;
 
-            // Build a DTO to represent the model/domain object
-            var dairyComponentDto = _animalComponentService.TransferToAnimalComponentDto(dairyComponent);
+            // Build a DTO to represent the model/domain object using the dairy-specific service
+            var dairyComponentDto = _dairyComponentService.TransferToDairyComponentDto(dairyComponent);
 
-            // Cast to the specific dairy DTO interface
-            if (dairyComponentDto is IDairyComponentDto specificDairyDto)
-            {
-                // Listen for changes on the DTO so we can validate user input before assigning values to the model
-                specificDairyDto.PropertyChanged += this.DairyComponentDtoOnPropertyChanged;
+            // Listen for changes on the DTO so we can validate user input before assigning values to the model
+            dairyComponentDto.PropertyChanged += this.DairyComponentDtoOnPropertyChanged;
 
-                // Assign the DTO to the property that is bound to the view
-                this.SelectedDairyComponentDto = specificDairyDto;
-            }
+            // Assign the DTO to the property that is bound to the view
+            this.SelectedDairyComponentDto = dairyComponentDto;
         }
 
         #endregion
@@ -224,7 +213,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
                     try
                     {
                         // A property on the DTO has been changed by the user, assign the new value to the system object after any unit conversion (if necessary)
-                        _animalComponentService.TransferAnimalComponentDtoToSystem(dairyComponentDto, _selectedDairyComponent);
+                        _dairyComponentService.TransferDairyDtoToSystem(dairyComponentDto, _selectedDairyComponent);
                     }
                     catch (Exception exception)
                     {

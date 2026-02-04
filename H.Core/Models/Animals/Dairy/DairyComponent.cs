@@ -7,6 +7,7 @@ using H.Infrastructure;
 namespace H.Core.Models.Animals.Dairy
 {
     /// <summary>
+    /// Represents a dairy cattle operation component with lifecycle-based herd management
     /// </summary>
     public class DairyComponent : AnimalComponentBase
     {

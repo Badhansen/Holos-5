@@ -123,6 +123,55 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         }
 
         /// <summary>
+        /// Called when navigating away from this view. Performs final transfer of DTO data to domain model
+        /// and validates that no errors exist before allowing navigation.
+        /// </summary>
+        /// <param name="navigationContext">Navigation context containing navigation parameters</param>
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            base.OnNavigatedFrom(navigationContext);
+
+            // Perform final transfer from DTO to domain model before leaving
+            if (_selectedDairyComponent != null && _selectedDairyComponentDto != null)
+            {
+                // Cast to concrete type to access validation properties
+                var dairyComponentDto = _selectedDairyComponentDto as DairyComponentDto;
+                
+                // Only transfer if there are no validation errors
+                if (dairyComponentDto != null && !dairyComponentDto.HasErrors)
+                {
+                    try
+                    {
+                        _dairyComponentService.TransferDairyDtoToSystem(
+                            dairyComponentDto, 
+                            _selectedDairyComponent);
+                        
+                        Logger?.LogInformation("Successfully saved dairy component changes");
+                    }
+                    catch (Exception exception)
+                    {
+                        Logger?.LogError(exception, "Error saving dairy component changes during navigation");
+                    }
+                }
+                else
+                {
+                    Logger?.LogWarning("Dairy component has validation errors, changes not saved");
+                }
+            }
+
+            // Clean up event handlers
+            if (_selectedDairyComponentDto != null)
+            {
+                _selectedDairyComponentDto.PropertyChanged -= OnDairyComponentDtoPropertyChanged;
+                
+                if (_selectedDairyComponentDto is DairyComponentDto dto)
+                {
+                    dto.PropertyChanged -= DairyComponentDtoOnPropertyChanged;
+                }
+            }
+        }
+
+        /// <summary>
         /// Initializes the view model with a dairy component
         /// </summary>
         /// <param name="component">The dairy component to initialize with</param>

@@ -6445,4 +6445,37 @@ Please note: emissions related to the deposition or application of livestock man
   <data name="DescriptionTooManyAddressSearches" xml:space="preserve">
     <value>Please find the farm location by selected a province and right clicking the location on the map or by entering the coordinates directly.</value>
   </data>
+  <data name="SoilDataViewStepTwoRightClickOnMap" xml:space="preserve">
+    <value>Right-click farm location on map</value>
+  </data>
+  <data name="SoilDataViewStepTwoLatitudeAndLongitude" xml:space="preserve">
+    <value>Latitude and longitude</value>
+  </data>
+  <data name="SoilDataViewStepTwoRoadSearch" xml:space="preserve">
+    <value>Road Search</value>
+  </data>
+  <data name="SoilDataViewCivicNumber" xml:space="preserve">
+    <value>Civic Number (Optional)</value>
+  </data>
+  <data name="SoilDataViewRoadName" xml:space="preserve">
+    <value>Road Name</value>
+  </data>
+  <data name="SoilDataViewCounty" xml:space="preserve">
+    <value>County (Optional)</value>
+  </data>
+  <data name="SoilDataViewMunicipality" xml:space="preserve">
+    <value>Municipality</value>
+  </data>
+  <data name="SoilDataViewPostalCode" xml:space="preserve">
+    <value>Postal Code</value>
+  </data>
+  <data name="SoilDataViewUrbanAddressFormatToggle" xml:space="preserve">
+    <value>Urban Address Format</value>
+  </data>
+  <data name="SoilDataViewAddressSearchDisclaimer" xml:space="preserve">
+    <value>Road search will acquire the approximate location of the farm, once found, navigate on the map and right-click the exact location of the farm.</value>
+  </data>
+  <data name="LabelGetCoordinates" xml:space="preserve">
+    <value>Get Coordinates</value>
+  </data>
 </root>

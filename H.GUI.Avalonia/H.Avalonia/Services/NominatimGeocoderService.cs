@@ -17,6 +17,10 @@ using Path = System.IO.Path;
 
 namespace H.Avalonia.Services
 {
+    /// <summary>
+    /// Geocoding service that uses the Nominatim API to get latitude and longitude coordinates for a given address.
+    /// For best results as of February 2026, street searches return most reliable results. Specific address searches can yield inconsistent results especially for rural addresses.
+    /// </summary>
     public class NominatimGeocoderService : IDefaultGeocoderService
     {
         #region Fields

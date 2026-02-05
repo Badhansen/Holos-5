@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,8 +44,8 @@ namespace H.Avalonia.ViewModels
         private readonly IDefaultGeocoderService _defaultGeocoderService;
         private double _longitude;
         private double _latitude;
-        private bool _isRuralAddressMode;
         
+        private bool _isComplexRuralAddressMode = false;
         private string _address = string.Empty;
         private string _streetAddress = string.Empty;
         private string _municipality = string.Empty;
@@ -56,7 +57,6 @@ namespace H.Avalonia.ViewModels
         private string _ruralMunicipality = string.Empty;
         private string _ruralPostalCode = string.Empty;
         
-        private bool _allAddressDataEntered = false;
         private int _searchAttemptsMade = 0;
         private int _searchAttemptsLimit = 3;
         private MPoint _navigationPoint;
@@ -71,12 +71,43 @@ namespace H.Avalonia.ViewModels
                                             StoragePlaceholder.SoilViewItems.Any(item => item.IsSelected);
         public bool AllViewItemsSelected { get; set; }
 
+        private bool _stepTwoAddressSearchSelected;
+        private bool _stepTwoLongLatSelected;
+        private bool _stepTwoRightClickMapSelected = true;
+
         private readonly KmlHelpers _kmlHelpers;
 
         public readonly Dictionary<Province, List<Polygon>> WktPolygonMap = new();
         private bool _isDataProcessing;
         private Province _selectedProvince;
         private ICountrySettings _countrySettings;
+
+        /// <summary>
+        /// Boolean that indicates if the address search option is selected in step two of the location selection process.
+        /// </summary>
+        public bool StepTwoAddressSearchSelected
+        {
+            get => _stepTwoAddressSearchSelected;
+            set => SetProperty(ref _stepTwoAddressSearchSelected, value);
+        }
+
+        /// <summary>
+        /// Boolean that indicates if the longitude/latitude input option is selected in step two of the location selection process.
+        /// </summary>
+        public bool StepTwoLongLatSelected
+        {
+            get => _stepTwoLongLatSelected;
+            set => SetProperty(ref _stepTwoLongLatSelected, value);
+        }
+
+        /// <summary>
+        /// Boolean that indicates if the right click on map option is selected in step two of the location selection process.
+        /// </summary>
+        public bool StepTwoRightClickMapSelected
+        {
+            get => _stepTwoRightClickMapSelected;
+            set => SetProperty(ref _stepTwoRightClickMapSelected, value);
+        }
 
         /// <summary>
         /// The longitude value of a coordinate
@@ -232,7 +263,7 @@ namespace H.Avalonia.ViewModels
         {
             get
             {
-                if (!IsRuralAddressMode)
+                if (!IsComplexRuralAddressMode)
                 {
                     return (SelectedProvince != Province.SelectProvince &&
                      !string.IsNullOrWhiteSpace(StreetAddress) &&
@@ -294,14 +325,14 @@ namespace H.Avalonia.ViewModels
         }
 
         /// <summary>
-        /// Boolean indicating whether rural address mode is enabled
+        /// Boolean indicating whether complex rural address mode is enabled (enables civic number and county fields).
         /// </summary>
-        public bool IsRuralAddressMode
+        public bool IsComplexRuralAddressMode
         {
-            get => _isRuralAddressMode;
+            get => _isComplexRuralAddressMode;
             set
             {
-                if (SetProperty(ref _isRuralAddressMode, value))
+                if (SetProperty(ref _isComplexRuralAddressMode, value))
                 {
                     RaisePropertyChanged(nameof(IsAddressSearchEnabled));
                 }
@@ -698,7 +729,7 @@ namespace H.Avalonia.ViewModels
                 var coordinates = (latitude: 0d, longitude: 0d);
                 Logger.LogInformation($"Attempting coordinate acquisition from address in {nameof(SoilDataViewModel)}.{nameof(OnGetAddress)}");
                 // Join civic numbering and road name as geocoder does not have separate parameter field for civic numbering.
-                if (IsRuralAddressMode)
+                if (IsComplexRuralAddressMode)
                     coordinates = await _defaultGeocoderService.GetCoordinates(RuralCivicNumbering+" "+RuralRoadName, RuralMunicipality, SelectedProvince, RuralPostalCode, RuralCounty);
                 else
                     coordinates = await _defaultGeocoderService.GetCoordinates(StreetAddress, Municipality, SelectedProvince, PostalCode);

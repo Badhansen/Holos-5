@@ -1,4 +1,5 @@
 using H.Core.Factories.Animals.Dairy;
+using H.Core.Factories.Animals;
 using H.Core.Models;
 using H.Core.Models.Animals.Dairy;
 using H.Core.Services.Animals.Dairy;
@@ -79,6 +80,13 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// <summary>
         /// The DTO representing the dairy component's herd overview and production parameters.
         /// This property is bound to the view and includes validation logic for user input.
+        /// 
+        /// ARCHITECTURE NOTE:
+        /// This DTO contains AnimalGroupDtos which the view should bind to directly via:
+        /// {Binding SelectedDairyComponentDto.AnimalGroupDtos}
+        /// 
+        /// This ensures proper validation and data flow through the DTO layer.
+        /// The collection is guaranteed to be non-null (initialized in AnimalComponentDto constructor).
         /// </summary>
         public IDairyComponentDto SelectedDairyComponentDto
         {
@@ -188,7 +196,12 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         }
 
         /// <summary>
-        /// Initializes the dairy component and sets up data binding
+        /// Initializes the dairy component and sets up data binding.
+        /// 
+        /// ARCHITECTURE NOTE:
+        /// This method creates a DairyComponentDto from the domain model.
+        /// The DTO will contain AnimalGroupDtos (not domain AnimalGroup objects).
+        /// The service layer handles the conversion between domain objects and DTOs.
         /// </summary>
         /// <param name="dairyComponent">The dairy component to initialize</param>
         public void InitializeDairyComponent(DairyComponent dairyComponent)
@@ -202,12 +215,14 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
             _selectedDairyComponent = dairyComponent;
 
             // Build a DTO to represent the model/domain object using the dairy-specific service
+            // This will also convert AnimalGroup domain objects to AnimalGroupDtos
             var dairyComponentDto = _dairyComponentService.TransferToDairyComponentDto(dairyComponent);
 
             // Listen for changes on the DTO so we can validate user input before assigning values to the model
             dairyComponentDto.PropertyChanged += this.DairyComponentDtoOnPropertyChanged;
 
             // Assign the DTO to the property that is bound to the view
+            // This will also trigger RaisePropertyChanged for AnimalGroupDtos
             this.SelectedDairyComponentDto = dairyComponentDto;
         }
 
@@ -231,17 +246,23 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         #region Event Handlers
 
         /// <summary>
-        /// Handles property changes on the DairyComponentDto
+        /// Handles property changes on the DairyComponentDto.
+        /// This is where we can add logic to respond to specific property changes.
         /// </summary>
         private void OnDairyComponentDtoPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // Handle property change notifications from the DTO
-            // This is where we can add logic to respond to specific property changes
+            // Views binding directly to SelectedDairyComponentDto.AnimalGroupDtos will
+            // automatically receive collection change notifications via INotifyPropertyChanged
         }
 
         /// <summary>
         /// Some property on the <see cref="SelectedDairyComponentDto"/> has changed. Check if we need to validate any user
         /// input before assigning the value on to the associated <see cref="DairyComponent"/> domain object.
+        /// 
+        /// ARCHITECTURE NOTE:
+        /// Changes to AnimalGroupDtos will also flow through this handler.
+        /// The service layer handles transferring AnimalGroupDto changes back to AnimalGroup domain objects.
         /// </summary>
         private void DairyComponentDtoOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -262,6 +283,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
                     try
                     {
                         // A property on the DTO has been changed by the user, assign the new value to the system object after any unit conversion (if necessary)
+                        // This includes changes to AnimalGroupDtos which will be transferred to AnimalGroup domain objects
                         _dairyComponentService.TransferDairyDtoToSystem(dairyComponentDto, _selectedDairyComponent);
                     }
                     catch (Exception exception)

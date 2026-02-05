@@ -31,4 +31,23 @@ public interface IDairyComponentService
     /// <param name="dairyComponent">The target domain model to update</param>
     /// <returns>The updated dairy component</returns>
     DairyComponent TransferDairyDtoToSystem(DairyComponentDto dairyDto, DairyComponent dairyComponent);
+    
+    /// <summary>
+    /// Auto-generates the four lifecycle-based animal groups for a dairy herd based on calculated herd composition.
+    /// Creates: Calf group, Heifer group, Lactating cow group, and Dry cow group.
+    /// 
+    /// This method bridges the gap between simplified herd overview inputs and detailed
+    /// animal group structure required for emissions calculations.
+    /// 
+    /// IMPORTANT - DATA PRESERVATION:
+    /// This method ONLY generates groups if:
+    /// 1. forceRegeneration = true (user explicitly clicked "Regenerate Groups" button), OR
+    /// 2. The component has NO existing groups (first-time setup)
+    /// 
+    /// This prevents accidental deletion of user-configured animal groups when loading saved components.
+    /// </summary>
+    /// <param name="dairyDto">The DTO containing herd overview parameters and calculated animal counts</param>
+    /// <param name="dairyComponent">The dairy component to populate with animal groups</param>
+    /// <param name="forceRegeneration">If true, clears existing groups and regenerates. If false, only generates if component has no groups.</param>
+    void GenerateAnimalGroups(DairyComponentDto dairyDto, DairyComponent dairyComponent, bool forceRegeneration = false);
 }

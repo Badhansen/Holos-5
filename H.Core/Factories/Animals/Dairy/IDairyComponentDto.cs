@@ -30,4 +30,15 @@ public interface IDairyComponentDto : IAnimalComponentDto
     // Staggered Progression - Flow Rate Inputs
     // These represent the number of animals entering each lifecycle stage per year
     int CalvesEnteringPerYear { get; set; }
+    int HeifersEnteringPerYear { get; set; }
+    int LactatingCowsEnteringPerYear { get; set; }
+    int DryCowsEnteringPerYear { get; set; }
+    
+    // Staggered Progression - Calculated Steady-State Populations
+    // These are read-only calculated properties showing the steady-state population in each stage
+    int SteadyStateCalves { get; }
+    int SteadyStateHeifers { get; }
+    int SteadyStateLactating { get; }
+    int SteadyStateDry { get; }
+    int TotalSteadyStateHerdSize { get; }
 }

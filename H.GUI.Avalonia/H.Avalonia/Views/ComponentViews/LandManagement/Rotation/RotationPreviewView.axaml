@@ -1,0 +1,204 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:rotation="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation"
+         xmlns:converters="clr-namespace:H.Avalonia.Converters"
+         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+         x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationPreviewView">
+
+<Design.DataContext>
+    <rotation:RotationComponentViewModelDesign/>
+</Design.DataContext>
+
+<UserControl.Resources>
+    <!-- Add converters for selection styling -->
+    <converters:BoolToSelectionBorderThicknessConverter x:Key="BoolToSelectionBorderThicknessConverter"/>
+    <converters:BoolToSelectionBorderBrushConverter x:Key="BoolToSelectionBorderBrushConverter"/>
+</UserControl.Resources>
+
+    <!-- Step 3: Preview Field Assignment -->
+    <Border Classes="step-container"
+            Margin="{StaticResource DefaultUserControlMargin}">
+        <StackPanel>
+            <!-- Step Header -->
+            <StackPanel Margin="0,0,0,20">
+                <Border Classes="step-badge" HorizontalAlignment="Left">
+                    <TextBlock Text="Step 3" Classes="step-badge-text"/>
+                </Border>
+                <TextBlock Text="Preview Field Assignments"
+                           Classes="step-number-description"
+                           Margin="0,8,0,0"/>
+                <TextBlock Text="Review how crops will be distributed across fields over time. Each row represents a field, each column represents a year."
+                           Foreground="Gray"
+                           FontSize="12"
+                           Margin="0,4,0,0"/>
+            </StackPanel>
+
+            <!-- Preview Grid - Only visible when both NumberOfFields > 0 AND crops exist -->
+            <Border BorderBrush="LightGray"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Background="White"
+                    IsVisible="{Binding ShouldShowPreview}">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                    <Grid Margin="12">
+                        <!-- Dynamic ItemsControl to display field rows -->
+                        <ItemsControl ItemsSource="{Binding FieldAssignmentRows}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <!-- Each row showing one field's crop assignments across years -->
+                                    <Border BorderBrush="#E0E0E0" 
+                                            BorderThickness="0,0,0,1"
+                                            Padding="8,12">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <!-- Field name column -->
+                                                <ColumnDefinition Width="150"/>
+                                                <!-- Remaining space for year columns -->
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Field Name -->
+                                            <Border Grid.Column="0"
+                                                    Background="#F5F5F5" 
+                                                    Padding="12,8"
+                                                    Margin="0,0,8,0"
+                                                    CornerRadius="4">
+                                                <TextBlock Text="{Binding FieldName}" 
+                                                           FontWeight="SemiBold"
+                                                           VerticalAlignment="Center"/>
+                                            </Border>
+
+                                            <!-- Year/Crop Assignments -->
+                                            <ItemsControl Grid.Column="1"
+                                                          ItemsSource="{Binding YearAssignments}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Horizontal" Spacing="8"/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <!-- Each year/crop cell with fixed width and selection highlighting - Now clickable -->
+                                                        <Button Background="Transparent"
+                                                                BorderThickness="0"
+                                                                Padding="0"
+                                                                Cursor="Hand"
+                                                                Command="{Binding $parent[UserControl].((rotation:RotationComponentViewModel)DataContext).SetSelectedCropFromCellCommand}"
+                                                                CommandParameter="{Binding}">
+                                                            <Button.Styles>
+                                                                <Style Selector="Button:pointerover">
+                                                                    <Setter Property="Background" Value="Transparent"/>
+                                                                </Style>
+                                                                <Style Selector="Button:pressed">
+                                                                    <Setter Property="Background" Value="Transparent"/>
+                                                                </Style>
+                                                            </Button.Styles>
+                                                            <Border Background="{Binding CropBackground}"
+                                                                    Padding="8,8"
+                                                                    Width="120"
+                                                                    CornerRadius="4"
+                                                                    BorderBrush="{Binding IsSelected, Converter={StaticResource BoolToSelectionBorderBrushConverter}}"
+                                                                    BorderThickness="{Binding IsSelected, Converter={StaticResource BoolToSelectionBorderThicknessConverter}}">
+                                                                <Border.Styles>
+                                                                    <Style Selector="Border:pointerover">
+                                                                        <Setter Property="Opacity" Value="0.85"/>
+                                                                    </Style>
+                                                                </Border.Styles>
+                                                                <StackPanel Spacing="4">
+                                                                    <!-- Year label -->
+                                                                    <TextBlock Text="{Binding Year}" 
+                                                                               FontSize="11"
+                                                                               FontWeight="SemiBold"
+                                                                               Foreground="#666666"
+                                                                               TextAlignment="Center"/>
+                                                                    <!-- Crop name with icon - with text trimming -->
+                                                                    <TextBlock Text="{Binding CropDisplay}" 
+                                                                               TextAlignment="Center"
+                                                                               TextWrapping="Wrap"
+                                                                               TextTrimming="CharacterEllipsis"
+                                                                               MaxLines="2"
+                                                                               FontWeight="Medium"
+                                                                               Foreground="{DynamicResource TextControlForeground}"
+                                                                               ToolTip.Tip="{Binding CropDisplay}"/>
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </Button>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Grid>
+                                    </Border>
+                                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </ScrollViewer>
+            </Border>
+
+            <!-- Empty State Message when preview should not be shown -->
+            <Border IsVisible="{Binding !ShouldShowPreview}"
+                    Background="#FFF3E0"
+                    BorderBrush="#FF9800"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="16"
+                    Margin="0,0,0,12">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="ℹ" 
+                               FontSize="20"
+                               Margin="0,0,12,0"
+                               VerticalAlignment="Center"/>
+                    <StackPanel>
+                        <TextBlock Text="Preview requirements:" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                        <TextBlock Text="• Configure the number of fields in Step 1" Margin="0,0,0,2"/>
+                        <TextBlock Text="• Add at least one crop in Step 2"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Helpful Note -->
+            <Border Background="#E8F5E9"
+                    BorderBrush="#4CAF50"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="12"
+                    Margin="0,12,0,0"
+                    IsVisible="{Binding IsShiftEnabled}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="ℹ"
+                               FontSize="18"
+                               Margin="0,0,12,0"
+                               VerticalAlignment="Top"/>
+                    <TextBlock TextWrapping="Wrap">
+                        <Run Text="Rotation shifting is enabled. "/>
+                        <Run Text="Each field will grow a different sequence of crops, starting at different points in the rotation. "/>
+                        <Run Text="This diversifies operational risk and distributes workload across the growing season."/>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+
+            <!-- Next Step Guidance -->
+            <Border Background="#FFF3E0"
+                    BorderBrush="#FF9800"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="12"
+                    Margin="0,12,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="→"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Margin="0,0,12,0"
+                               VerticalAlignment="Top"/>
+                    <TextBlock TextWrapping="Wrap">
+                        <Run Text="Next step: "/>
+                        <Run Text="Click any cell in the preview grid to edit crop-specific details (yield, irrigation, etc.) for that field and year."
+                             FontWeight="SemiBold"/>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Border>
+</UserControl>

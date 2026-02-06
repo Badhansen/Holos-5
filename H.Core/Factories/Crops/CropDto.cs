@@ -20,6 +20,8 @@ public partial class CropDto : DtoBase, ICropDto
     private ObservableCollection<CropType> _cropTypes;
     private double _wetYield;
     private bool _isSelected;
+    private bool _herbicideUsed;
+    private bool _copyToSimilarCrops;
 
     #endregion
 
@@ -27,11 +29,63 @@ public partial class CropDto : DtoBase, ICropDto
 
     public CropDto()
     {
-        this.ValidCropTypes = new ObservableCollection<CropType>() { CropType.NotSelected, CropType.Oats, CropType.Wheat, CropType.Barley };
+        // Initialize with diverse crop types representing all color categories
+        this.ValidCropTypes = new ObservableCollection<CropType>() 
+        { 
+            CropType.NotSelected,
+            
+            // Cereals - Orange
+            CropType.Wheat,
+            CropType.Barley,
+            CropType.Oats,
+            CropType.Rye,
+            CropType.Corn,
+            CropType.GrainCorn,
+            CropType.SilageCorn,
+            CropType.Triticale,
+            CropType.Durum,
+            
+            // Oilseeds - Green
+            CropType.Canola,
+            CropType.Flax,
+            CropType.FlaxSeed,
+            CropType.Sunflower,
+            CropType.SunflowerSeed,
+            CropType.Soybeans,
+            CropType.Mustard,
+            CropType.MustardSeed,
+            
+            // Pulses - Blue
+            CropType.Peas,
+            CropType.DryPeas,
+            CropType.FieldPeas,
+            CropType.Lentils,
+            CropType.Chickpeas,
+            CropType.FabaBeans,
+            CropType.Beans,
+            CropType.DryBean,
+            
+            // Forages - Purple
+            CropType.AlfalfaMedicagoSativaL,
+            CropType.AlfalfaHay,
+            CropType.TameGrass,
+            CropType.TameLegume,
+            CropType.TameMixed,
+            CropType.GrassHay,
+            CropType.PerennialForages,
+            CropType.Forage,
+            
+            // Fallow - Gray
+            CropType.Fallow,
+            CropType.SummerFallow
+        };
+        
         this.CropType = this.ValidCropTypes.ElementAt(0);
         this.Year = DateTime.Now.Year;
         this.AmountOfIrrigation = 0;
         this.WetYield = 0;
+        this.HerbicideUsed = false;
+        this.CopyToSimilarCrops = false;
 
         this.PropertyChanged += OnPropertyChanged;
     }
@@ -80,6 +134,25 @@ public partial class CropDto : DtoBase, ICropDto
     {
         get => _isSelected;
         set => SetProperty(ref _isSelected, value);
+    }
+
+    /// <summary>
+    /// Indicates whether herbicide was used for this crop
+    /// </summary>
+    public bool HerbicideUsed
+    {
+        get => _herbicideUsed;
+        set => SetProperty(ref _herbicideUsed, value);
+    }
+
+    /// <summary>
+    /// Indicates whether changes to this crop should be copied to other crops
+    /// of the same type in the same field (row)
+    /// </summary>
+    public bool CopyToSimilarCrops
+    {
+        get => _copyToSimilarCrops;
+        set => SetProperty(ref _copyToSimilarCrops, value);
     }
 
     #endregion

@@ -92,9 +92,9 @@ public class ComponentInitializationService : IComponentInitializationService
         {
             _animalComponentService.InitializeComponent(activeFarm, animalComponentBase);
         }
-        else if (componentBase is RotationComponent rotationComponentBase)
+        else if (componentBase is RotationComponent rotationComponent)
         {
-            _rotationComponentService.InitializeComponent(activeFarm, rotationComponentBase);
+            _rotationComponentService.InitializeComponent(activeFarm, rotationComponent);
         }
     } 
 

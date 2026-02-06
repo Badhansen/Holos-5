@@ -1,0 +1,63 @@
+using H.Core.Factories.Animals.Dairy;
+using H.Core.Services.Animals.Dairy;
+using H.Core.Services.StorageService;
+using Microsoft.Extensions.Logging;
+using Prism.Events;
+using Prism.Regions;
+
+namespace H.Avalonia.ViewModels.ComponentViews.Dairy;
+
+/// <summary>
+/// Design-time ViewModel for the Dairy Component view, providing sample data for the Avalonia designer.
+/// This allows designers to see realistic data while building the UI without running the full application.
+/// </summary>
+public class DairyComponentViewModelDesign : DairyComponentViewModel
+{
+    /// <summary>
+    /// Parameterless constructor for design-time support.
+    /// Initializes the ViewModel with sample dairy herd data for visualization in the designer.
+    /// </summary>
+    public DairyComponentViewModelDesign()
+    {
+        // Create a sample DairyComponentDto with realistic values
+        var dairyDto = new DairyComponentDto
+        {
+            Name = "Sample Dairy Herd",
+            
+            // Input parameters with typical dairy operation values
+            TotalMilkingCows = 150,
+            ReplacementRate = 28.5,
+            CalvingIntervalMonths = 13,
+            DryPeriodDays = 60,
+            CalfMortalityRate = 4.5,
+            FemaleCalfRatio = 48.0,
+            
+            // Production defaults - typical Holstein values
+            DefaultMilkProduction = 28.0,
+            DefaultMilkFatContent = 3.7,
+            DefaultMilkProteinContent = 3.1
+        };
+
+        // Assign the sample DTO to the bound property
+        base.SelectedDairyComponentDto = dairyDto;
+    }
+
+    /// <summary>
+    /// Constructor with dependency injection for runtime use.
+    /// This constructor is never called in design mode but is required for the inheritance hierarchy.
+    /// </summary>
+    /// <param name="regionManager">Prism region manager for navigation</param>
+    /// <param name="eventAggregator">Event aggregator for pub/sub messaging</param>
+    /// <param name="storageService">Storage service for farm data</param>
+    /// <param name="dairyComponentService">Service for dairy component operations</param>
+    /// <param name="logger">Logger instance</param>
+    public DairyComponentViewModelDesign(
+        IRegionManager regionManager,
+        IEventAggregator eventAggregator,
+        IStorageService storageService,
+        IDairyComponentService dairyComponentService,
+        ILogger logger)
+        : base(regionManager, eventAggregator, storageService, dairyComponentService, logger)
+    {
+    }
+}

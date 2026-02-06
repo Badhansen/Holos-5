@@ -2,6 +2,7 @@
 using H.Avalonia.ViewModels.ComponentViews.LandManagement.Field;
 using H.Core.Factories;
 using H.Core.Factories.Crops;
+using H.Core.Factories.Fields;
 using H.Core.Models;
 using H.Core.Models.Animals.Beef;
 using H.Core.Models.LandManagement.Fields;

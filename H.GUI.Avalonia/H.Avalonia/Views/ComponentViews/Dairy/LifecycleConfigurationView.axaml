@@ -1,0 +1,106 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+xmlns:dairy="clr-namespace:H.Avalonia.Views.ComponentViews.Dairy"
+mc:Ignorable="d" d:DesignWidth="1400"
+x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
+  
+<!-- Step 2: Lifecycle Timeline -->
+      <Border BorderBrush="#1976D2" BorderThickness="2" CornerRadius="8" Margin="0,0,0,20">
+        <StackPanel>
+          <Border Background="#1976D2" CornerRadius="6,6,0,0" Padding="20">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <Border Grid.Column="0" Background="White" Width="40" Height="40" 
+                     CornerRadius="20" Margin="0,0,16,0">
+                <TextBlock Text="2" FontSize="20" FontWeight="Bold" Foreground="#1976D2" 
+                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              </Border>
+              <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock Text="Lifecycle Configuration" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="Configure management practices for each lifecycle stage" 
+                          FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0"/>
+              </StackPanel>
+              
+            </Grid>
+          </Border>
+          
+          <Border Background="White" Padding="24">
+            <StackPanel>
+              <!-- Lifecycle Flow Visualization -->
+              <Border Background="#F5F5F5" CornerRadius="8" Padding="24" Margin="0,0,0,24">
+                <StackPanel>
+                  <TextBlock Text="Dairy Cattle Lifecycle Flow" FontSize="16" FontWeight="SemiBold" 
+                            HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                  
+                  <Grid ColumnDefinitions="*,Auto,*,Auto,*,Auto,*" HorizontalAlignment="Center">
+                    <Border Grid.Column="0" Background="#E3F2FD" CornerRadius="8" Padding="20" MinWidth="140">
+                      <StackPanel>
+                        
+                        <TextBlock Text="CALF" FontSize="14" FontWeight="Bold" 
+                                  HorizontalAlignment="Center" Margin="0,8,0,4"/>
+                        <TextBlock Text="0-4 months" FontSize="11" Foreground="#666" 
+                                  HorizontalAlignment="Center"/>
+                      </StackPanel>
+                    </Border>
+                    
+                    
+                    
+                    <Border Grid.Column="2" Background="#F3E5F5" CornerRadius="8" Padding="20" MinWidth="140">
+                      <StackPanel>
+                        
+                        <TextBlock Text="HEIFER" FontSize="14" FontWeight="Bold" 
+                                  HorizontalAlignment="Center" Margin="0,8,0,4"/>
+                        <TextBlock Text="4mo-1st calving" FontSize="11" Foreground="#666" 
+                                  HorizontalAlignment="Center"/>
+                      </StackPanel>
+                    </Border>
+                    
+                    
+                    
+                    <Border Grid.Column="4" Background="#E8F5E9" CornerRadius="8" Padding="20" MinWidth="140">
+                      <StackPanel>
+                        
+                        <TextBlock Text="LACTATING" FontSize="14" FontWeight="Bold" 
+                                  HorizontalAlignment="Center" Margin="0,8,0,4"/>
+                        <TextBlock Text="Post-calving" FontSize="11" Foreground="#666" 
+                                  HorizontalAlignment="Center"/>
+                      </StackPanel>
+                    </Border>
+                    
+                    
+                    
+                    <Border Grid.Column="6" Background="#FFF3E0" CornerRadius="8" Padding="20" MinWidth="140">
+                      <StackPanel>
+                        
+                        <TextBlock Text="DRY" FontSize="14" FontWeight="Bold" 
+                                  HorizontalAlignment="Center" Margin="0,8,0,4"/>
+                        <TextBlock Text="Pre-calving" FontSize="11" Foreground="#666" 
+                                  HorizontalAlignment="Center"/>
+                      </StackPanel>
+                    </Border>
+                  </Grid>
+                </StackPanel>
+              </Border>
+
+              <!-- Expanded Lifecycle Stage Cards -->
+              <StackPanel>
+                
+                <!-- Calf Stage Card -->
+                <dairy:CalfStageView Margin="0,0,0,16"/>
+
+                <!-- Heifer Stage Card -->
+                <dairy:HeiferStageView Margin="0,0,0,16"/>
+
+                <!-- Lactating Stage Card -->
+                <dairy:LactatingStageView Margin="0,0,0,16"/>
+
+                <!-- Dry Stage Card -->
+                <dairy:DryStageView/>
+                
+              </StackPanel>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Border>
+</UserControl>

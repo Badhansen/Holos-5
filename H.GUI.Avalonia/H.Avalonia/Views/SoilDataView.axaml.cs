@@ -5,23 +5,25 @@ using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using H.Avalonia.ViewModels;
 using H.Core.Enumerations;
+using H.Core.Providers.Soil;
 using Mapsui;
 using Mapsui.Extensions;
 using Mapsui.Layers;
 using Mapsui.Limiting;
 using Mapsui.Nts;
 using Mapsui.Nts.Extensions;
+using Mapsui.Projections;
 using Mapsui.Providers;
 using Mapsui.Rendering;
 using Mapsui.Styles;
 using Mapsui.Tiling;
 using Mapsui.Tiling.Layers;
+using Mapsui.UI.Avalonia;
 using Mapsui.Widgets.Zoom;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using H.Core.Providers.Soil;
-using Microsoft.Extensions.Logging;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace H.Avalonia.Views
@@ -198,9 +200,10 @@ namespace H.Avalonia.Views
         private void InitializeMap()
         {
             _logger.LogDebug("Attempting to initialize map in " + nameof(SoilDataView));
+
             SoilTabMap.Map.Layers.Add(OpenStreetMap.CreateTileLayer());
             SoilTabMap.Map.Navigator.Limiter = new ViewportLimiterKeepWithinExtent();
-            //SoilMap.Map.Navigator.OverridePanBounds = panBounds;
+
             SoilTabMap.Map.Widgets.Add(new ZoomInOutWidget
             {
                 MarginX = 10,
@@ -210,7 +213,36 @@ namespace H.Avalonia.Views
                 BackColor = Color.White,
                 Opacity = 1,
             });
+
+            // Subscribe to when the map control is fully loaded and rendered
+            SoilTabMap.LayoutUpdated += OnMapLayoutUpdated;
+
             _logger.LogDebug("Map initialized successfully in " + nameof(SoilData));
+        }
+
+        private bool _hasZoomedToCanada = false;
+
+        private void OnMapLayoutUpdated(object? sender, EventArgs e)
+        {
+            // Check if viewport is initialized and we haven't zoomed yet
+            if (_hasZoomedToCanada || SoilTabMap.Map.Navigator.Viewport.Width <= 0) return;
+
+            _hasZoomedToCanada = true;
+            SoilTabMap.LayoutUpdated -= OnMapLayoutUpdated;
+
+            // Define Canada's bounding box in EPSG:4326 (lat/lon)
+            var minX = -141.0;  // West longitude
+            var minY = 41.7;    // South latitude
+            var maxX = -52.6;   // East longitude
+            var maxY = 83.1;    // North latitude
+
+            // Convert to EPSG:3857 (Web Mercator)
+            var min = SphericalMercator.FromLonLat(minX, minY);
+            var max = SphericalMercator.FromLonLat(maxX, maxY);
+            var canadaBounds = new MRect(min.x, min.y, max.x, max.y);
+
+            // Zoom to Canada
+            SoilTabMap.Map.Navigator.ZoomToBox(canadaBounds, MBoxFit.Fit);
         }
 
         /// <summary>

@@ -3,7 +3,7 @@ using H.Core.Mappers;
 using H.Core.Models;
 using Prism.Ioc;
 
-namespace H.Core.Factories;
+namespace H.Core.Factories.Fields;
 
 /// <summary>
 /// A class used to create new <see cref="FieldSystemComponentDto"/> instances. The class will provide basic initialization of a new instance before returning the result to the caller.

@@ -2,6 +2,7 @@
 using H.Core.Enumerations;
 using H.Core.Factories;
 using H.Core.Factories.Crops;
+using H.Core.Factories.Fields;
 using H.Core.Models;
 using H.Core.Services.LandManagement.Fields;
 using H.Core.Services.StorageService;
@@ -17,6 +18,9 @@ public class FieldComponentViewModelDesign : FieldComponentViewModel
     {
         base.SelectedFieldSystemComponentDto = new FieldSystemComponentDto();
         base.SelectedFieldSystemComponentDto.Name = "A Field";
+        this.SelectedFieldSystemComponentDto.FieldArea = 23.55;
+        this.SelectedFieldSystemComponentDto.StartYear = 1980;
+        this.SelectedFieldSystemComponentDto.EndYear = 2050;
 
         base.SelectedFieldSystemComponentDto.CropDtos = new ObservableCollection<ICropDto>()
         {

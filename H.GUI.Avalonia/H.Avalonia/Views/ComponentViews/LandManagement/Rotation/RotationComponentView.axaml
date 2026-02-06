@@ -1,0 +1,284 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+xmlns:rotation="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation"
+xmlns:shared="clr-namespace:H.Avalonia.Views.ComponentViews.Shared"
+xmlns:properties="clr-namespace:H.Avalonia.Infrastructure.Properties;assembly=H.Avalonia.Infrastructure"
+xmlns:rotationViews="clr-namespace:H.Avalonia.Views.ComponentViews.LandManagement.Rotation"
+mc:Ignorable="d"
+x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationComponentView">
+
+<Design.DataContext>
+<rotation:RotationComponentViewModelDesign/>
+</Design.DataContext>
+
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<!-- Title -->
+			<RowDefinition Height="Auto"/>
+			<!-- Advanced Options Toggle -->
+			<RowDefinition Height="Auto"/>
+			<!-- Content -->
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<StackPanel Grid.Row="0">
+			<!-- Title -->
+			<TextBox Classes="view-title" Text="{Binding Path=SelectedRotationComponentDto.Name}"/>
+			<Border Classes="title-underline"/>
+		</StackPanel>
+
+		<!-- Advanced Options Toggle Section -->
+		<shared:AdvancedOptionsToggleView Grid.Row="1"
+										  Margin="{StaticResource DefaultUserControlMargin}"
+										  Title="Show Advanced Options"
+										  Description="Display additional configuration options for detailed crop rotation management"
+										  IsChecked="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"/>
+
+		<!-- Main Content Area with Timeline-Based Approach -->
+		<ScrollViewer Grid.Row="2" 
+					  Name="MainScrollViewer"
+					  VerticalScrollBarVisibility="Auto">
+			<StackPanel Margin="0,0,0,40">
+				
+				<!-- Step 1: Rotation Overview -->
+				<rotationViews:RotationOverviewView Margin="{StaticResource DefaultUserControlMargin}"
+				                                    DataContext="{Binding}"/>
+
+				<!-- Step Divider -->
+				<GridSplitter Height="2" 
+							  Background="LightGray" 
+							  HorizontalAlignment="Stretch"
+							  Margin="{StaticResource DefaultUserControlMargin}"/>
+
+				<!-- Step 2: Build Rotation Timeline -->
+				<rotationViews:RotationTimelineView Margin="{StaticResource DefaultUserControlMargin}"
+				                                    DataContext="{Binding}"/>
+
+				<!-- Step Divider -->
+				<GridSplitter Height="2" 
+							  Background="LightGray" 
+							  HorizontalAlignment="Stretch"
+							  Margin="{StaticResource DefaultUserControlMargin}"/>
+
+				<!-- Step 3: Preview Field Assignments -->
+				<rotationViews:RotationPreviewView DataContext="{Binding}"
+												   IsVisible="{Binding ShouldShowPreview}"/>
+
+				<!-- Step Divider -->
+				<GridSplitter Height="2" 
+							  Background="LightGray" 
+							  HorizontalAlignment="Stretch"
+							  Margin="{StaticResource DefaultUserControlMargin}"
+							  IsVisible="{Binding ShouldShowPreview}"/>
+
+				<!-- Step 4: Edit Crop Details - Only show when a cell is selected -->
+				<Border Classes="step-container"
+						Margin="{StaticResource DefaultUserControlMargin}"
+						IsVisible="{Binding SelectedCropDto, Converter={x:Static ObjectConverters.IsNotNull}}">
+					<StackPanel>
+						<!-- Step Header -->
+						<StackPanel Margin="0,0,0,20">
+							<Border Classes="step-badge" HorizontalAlignment="Left">
+								<TextBlock Text="Step 4" Classes="step-badge-text"/>
+							</Border>
+							<TextBlock Text="Edit Crop Details"
+									   Classes="step-number-description"
+									   Margin="0,8,0,0"/>
+							<TextBlock Text="Configure yield and irrigation for each crop in your rotation. Click a cell in the preview grid above to edit its details."
+									   Foreground="Gray"
+									   FontSize="12"
+									   Margin="0,4,0,0"/>
+						</StackPanel>
+
+						<!-- Currently Editing Indicator -->
+						<Border IsVisible="{Binding SelectedCropDto, Converter={x:Static ObjectConverters.IsNotNull}}"
+								Background="#E3F2FD"
+								BorderBrush="#2196F3"
+								BorderThickness="1"
+								CornerRadius="4"
+								Padding="12"
+								Margin="0,0,0,16">
+							<StackPanel Orientation="Horizontal" Spacing="8">
+								<Border Background="#2196F3"
+										CornerRadius="12"
+										Width="24"
+										Height="24"
+										VerticalAlignment="Center">
+									<TextBlock Text="✎" 
+											   FontSize="14"
+											   FontWeight="Bold"
+											   Foreground="White"
+											   HorizontalAlignment="Center"
+											   VerticalAlignment="Center"/>
+								</Border>
+								<StackPanel VerticalAlignment="Center">
+									<TextBlock>
+										<Run Text="Currently editing:"/>
+										<Run Text="{Binding SelectedCropDto.CropType, Mode=OneWay}" 
+											 FontWeight="Bold"/>
+										<Run Text="(Year"/>
+										<Run Text="{Binding SelectedCropDto.Year, Mode=OneWay}" 
+											 FontWeight="Bold"/>
+										<Run Text=")"/>
+									</TextBlock>
+									<TextBlock FontSize="11" 
+											   Foreground="#666"
+											   Margin="0,2,0,0">
+										<Run Text="Field:"/>
+										<Run Text="{Binding SelectedFieldName, Mode=OneWay}"
+											 FontWeight="SemiBold"/>
+									</TextBlock>
+								</StackPanel>
+							</StackPanel>
+						</Border>
+
+						<!-- Crop Details Editing Section -->
+						<Border IsVisible="{Binding SelectedCropDto, Converter={x:Static ObjectConverters.IsNotNull}}"
+								Background="#F8F9FA"
+								BorderBrush="#E9ECEF"
+								BorderThickness="1"
+								CornerRadius="8"
+								Padding="20">
+							<StackPanel>
+								<!-- Section Header -->
+								<StackPanel Margin="0,0,0,20">
+									<TextBlock Text="Crop Details" 
+											  FontSize="18" 
+											  FontWeight="Bold" 
+											  Foreground="#2C3E50" 
+											  Margin="0,0,0,4"/>
+									<TextBlock Text="Configure yield and irrigation for the selected crop" 
+											  FontSize="12" 
+											  Foreground="Gray" 
+											  FontStyle="Italic"/>
+								</StackPanel>
+
+								<!-- Copy to Similar Crops Toggle -->
+								<Border Background="#FFF9C4"
+										BorderBrush="#FBC02D"
+										BorderThickness="1"
+										CornerRadius="4"
+										Padding="12"
+										Margin="0,0,0,16">
+									<StackPanel Spacing="8">
+										<StackPanel Orientation="Horizontal" Spacing="8">
+											<TextBlock Text="Copy to Similar Crops" 
+													   FontWeight="SemiBold"
+													   FontSize="14"
+													   VerticalAlignment="Center"/>
+										</StackPanel>
+										<TextBlock TextWrapping="Wrap"
+												   FontSize="12"
+												   Foreground="#666"
+												   Margin="24,0,0,8">
+											When enabled, changes you make to yield, irrigation, and herbicide will be automatically 
+											copied to all other cells in this field (row) that have the same crop type.
+										</TextBlock>
+										<ToggleSwitch IsChecked="{Binding SelectedCropDto.CopyToSimilarCrops}"
+													  OnContent="Copy enabled"
+													  OffContent="Copy disabled"
+													  Margin="24,0,0,0"/>
+									</StackPanel>
+								</Border>
+								
+								<!-- Crop editing fields -->
+								<ContentControl Content="{Binding SelectedCropDto}">
+									<ContentControl.ContentTemplate>
+										<DataTemplate>
+											<Grid VerticalAlignment="Top" HorizontalAlignment="Left">
+												<Grid.ColumnDefinitions>
+													<ColumnDefinition MinWidth="160"/>
+													<ColumnDefinition MinWidth="120"/>
+													<ColumnDefinition MinWidth="120"/>
+												</Grid.ColumnDefinitions>
+												<Grid.RowDefinitions>
+													<RowDefinition Height="Auto"/>
+													<RowDefinition Height="Auto"/>
+													<RowDefinition Height="Auto"/>
+												</Grid.RowDefinitions>
+
+												<!-- Yield Row -->
+												<Label Grid.Row="0" 
+													   Grid.Column="0" 
+													   Content="Yield (wet weight):"  
+													   Classes="input-label" />
+
+												<NumericUpDown Name="YieldNumericUpDown" 
+															   Grid.Row="0" 
+															   Grid.Column="1" 
+															   Minimum="0" 
+															   Value="{Binding WetYield}"/>
+
+												<Label Grid.Row="0"
+													   Grid.Column="2"
+													   Content="kg/ha"
+													   Classes="unit-label"/>
+
+												<!-- Irrigation Row -->
+												<Label Grid.Row="1" 
+													   Grid.Column="0" 
+													   Content="Amount of irrigation:" 
+													   Classes="input-label" />
+
+												<NumericUpDown Name="IrrigationNumericUpDown" 
+															   Grid.Row="1" 
+															   Grid.Column="1" 
+															   Minimum="0" 
+															   Value="{Binding AmountOfIrrigation}"/>
+
+												<Label Grid.Row="1"
+													   Grid.Column="2"
+													   Content="mm"
+													   Classes="unit-label"/>
+
+												<!-- Herbicide Row -->
+												<Label Grid.Row="2" 
+													   Grid.Column="0" 
+													   Content="Herbicide used:" 
+													   Classes="input-label" />
+
+												<StackPanel Grid.Row="2" 
+														   Grid.Column="1"
+														   Grid.ColumnSpan="2"
+														   Orientation="Horizontal" 
+														   Spacing="16">
+													<RadioButton Content="Yes" 
+															   GroupName="HerbicideGroup"
+															   IsChecked="{Binding HerbicideUsed}"/>
+													<RadioButton Content="No" 
+															   GroupName="HerbicideGroup"
+															   IsChecked="{Binding !HerbicideUsed}"/>
+												</StackPanel>
+											</Grid>
+										</DataTemplate>
+									</ContentControl.ContentTemplate>
+								</ContentControl>
+							</StackPanel>
+						</Border>
+
+						<!-- Empty State Message when no crop is selected -->
+						<Border IsVisible="{Binding SelectedCropDto, Converter={x:Static ObjectConverters.IsNull}}"
+								Background="#E3F2FD"
+								BorderBrush="#2196F3"
+								BorderThickness="1"
+								CornerRadius="4"
+								Padding="16">
+							<StackPanel Orientation="Horizontal">
+								<TextBlock Text="?" 
+										   FontSize="20"
+										   Margin="0,0,12,0"
+										   VerticalAlignment="Center"/>
+								<TextBlock Text="Click a cell in the preview grid (Step 3) to edit its details"
+										   VerticalAlignment="Center"/>
+							</StackPanel>
+						</Border>
+					</StackPanel>
+				</Border>
+
+			</StackPanel>
+		</ScrollViewer>
+	</Grid>
+</UserControl>

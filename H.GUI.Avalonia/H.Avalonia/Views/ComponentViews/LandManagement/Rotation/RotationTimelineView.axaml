@@ -1,0 +1,168 @@
+<UserControl x:Name="RotationTimelineRootControl"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:rotation="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation"
+             xmlns:converters="clr-namespace:H.Avalonia.Converters"
+             mc:Ignorable="d"
+             x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationTimelineView">
+
+    <Design.DataContext>
+        <rotation:RotationComponentViewModelDesign/>
+    </Design.DataContext>
+
+    <UserControl.Resources>
+        <!-- Add converters for selection styling -->
+        <converters:BoolToBackgroundConverter x:Key="BoolToBackgroundConverter"/>
+        <converters:BoolToBorderBrushConverter x:Key="BoolToBorderBrushConverter"/>
+        <converters:BoolToBorderThicknessConverter x:Key="BoolToBorderThicknessConverter"/>
+        <converters:BoolToScaleTransformConverter x:Key="BoolToScaleTransformConverter"/>
+        <converters:CropTypeToColorConverter x:Key="CropTypeToColorConverter"/>
+    </UserControl.Resources>
+
+    <!-- Step 2: Build Rotation Timeline -->
+    <Border x:Name="StepContainerBorder" Classes="step-container">
+        <StackPanel>
+            <!-- Step Header -->
+            <StackPanel x:Name="StepHeaderPanel" Margin="0,0,0,20">
+                <Border x:Name="StepBadgeBorder" Classes="step-badge" HorizontalAlignment="Left">
+                    <TextBlock x:Name="StepNumberTextBlock" Text="Step 2" Classes="step-badge-text"/>
+                </Border>
+                <TextBlock x:Name="StepTitleTextBlock"
+                           Text="Build Your Rotation Sequence"
+                           Classes="step-number-description"
+                           Margin="0,8,0,0"/>
+                <TextBlock x:Name="StepDescriptionTextBlock"
+                           Text="Add crops to create your rotation timeline. Each crop represents one year in the sequence."
+                           Foreground="Gray"
+                           FontSize="12"
+                           Margin="0,4,0,0"/>
+            </StackPanel>
+
+            <!-- Timeline Controls -->
+            <StackPanel x:Name="TimelineControlsPanel" Orientation="Horizontal" Margin="0,0,0,12">
+                <Button x:Name="AddCropButton"
+                        Content="+ Add Crop" 
+                        Command="{Binding AddCropToRotationCommand}"
+                        Margin="0,0,8,0"/>
+                <TextBlock x:Name="CropsInSequenceLabelTextBlock"
+                           Text="Crops in sequence:" 
+                           VerticalAlignment="Center"
+                           Margin="8,0,8,0"
+                           IsVisible="{Binding CropDtos.Count}"/>
+                <TextBlock x:Name="CropsCountTextBlock"
+                           Text="{Binding CropDtos.Count}"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"
+                           IsVisible="{Binding CropDtos.Count}"/>
+            </StackPanel>
+
+            <!-- Timeline Container - Only visible when crops exist -->
+            <Border Classes="timeline-container"
+                    IsVisible="{Binding CropDtos.Count}">
+                <StackPanel>
+                    <!-- Timeline Header -->
+                    <TextBlock Text="Rotation Timeline" Classes="timeline-header" />
+
+                    <!-- Timeline Scrollable Area -->
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Hidden"
+                                  MaxHeight="250"
+                                  MinHeight="150">
+                        <ItemsControl ItemsSource="{Binding CropDtos}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="15" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <!-- Timeline Card -->
+                                    <Button Background="Transparent"
+                                            BorderThickness="0"
+                                            Padding="0"
+                                            Margin="5"
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalContentAlignment="Stretch"
+                                            Command="{Binding $parent[UserControl].((rotation:RotationComponentViewModel)DataContext).SetSelectedCropCommand}"
+                                            CommandParameter="{Binding}">
+
+                                        <Border Classes="timeline-card"
+                                                Background="{Binding CropType, Converter={StaticResource CropTypeToColorConverter}}">
+                                            <StackPanel Spacing="8" Margin="8">
+                                                <!-- Top row with Year Badge and Delete Button in same DockPanel for perfect alignment -->
+                                                <DockPanel LastChildFill="False">
+                                                    <!-- Year Badge -->
+                                                    <Border Classes="year-badge" 
+                                                            DockPanel.Dock="Left"
+                                                            VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Year}" 
+                                                                   Classes="year-badge-text"
+                                                                   VerticalAlignment="Center"
+                                                                   HorizontalAlignment="Center" />
+                                                    </Border>
+                                                    
+                                                    <!-- Delete Button -->
+                                                    <Button Classes="delete-button"
+                                                            DockPanel.Dock="Right"
+                                                            VerticalAlignment="Center"
+                                                            Command="{Binding $parent[UserControl].((rotation:RotationComponentViewModel)DataContext).RemoveSpecificCropCommand}"
+                                                            CommandParameter="{Binding}">
+                                                        <TextBlock Name="DeleteTextBlock" 
+                                                                   Classes="delete-text"
+                                                                   Text="Delete"/>
+                                                    </Button>
+                                                </DockPanel>
+                                                
+                                                <!-- Crop Type Section -->
+                                                <StackPanel Spacing="4">
+                                                    <TextBlock Text="Select crop"
+                                                               FontSize="11"
+                                                               Foreground="Gray"
+                                                               FontWeight="SemiBold"
+                                                               HorizontalAlignment="Left" />
+
+                                                    <ComboBox ItemsSource="{Binding ValidCropTypes}"
+                                                              SelectedItem="{Binding CropType}"
+                                                              MinWidth="140"
+                                                              HorizontalAlignment="Stretch" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <!-- Timeline Navigation Hint -->
+                    <TextBlock Text="Tip: Scroll horizontally to view all crops, selected crop will be highlighted"
+                               Classes="timeline-hint" />
+                </StackPanel>
+            </Border>
+
+            <!-- Empty State Message -->
+            <Border x:Name="EmptyStateMessageBorder"
+                    IsVisible="{Binding !CropDtos.Count}"
+                    Background="#FFF3E0"
+                    BorderBrush="#FF9800"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="16"
+                    Margin="0,12,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock x:Name="EmptyStateIconTextBlock"
+                               Text="" 
+                               FontSize="20"
+                               Margin="0,0,12,0"
+                               VerticalAlignment="Center"/>
+                    <TextBlock x:Name="EmptyStateMessageTextBlock"
+                               Text="Add at least one crop to create your rotation"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Border>
+</UserControl>

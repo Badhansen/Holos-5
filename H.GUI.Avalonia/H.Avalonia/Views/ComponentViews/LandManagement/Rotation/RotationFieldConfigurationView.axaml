@@ -1,0 +1,124 @@
+﻿<UserControl x:Name="RotationFieldConfigurationRootControl"
+         xmlns="https://github.com/avaloniaui"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:rotation="clr-namespace:H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation"
+         xmlns:rotationViews="clr-namespace:H.Avalonia.Views.ComponentViews.LandManagement.Rotation"
+         xmlns:enums="clr-namespace:H.Core.Enumerations;assembly=H.Core"
+         xmlns:converters="clr-namespace:H.Avalonia.Converters"
+         mc:Ignorable="d"
+         x:Class="H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationFieldConfigurationView">
+
+<Design.DataContext>
+    <rotation:RotationComponentViewModelDesign/>
+</Design.DataContext>
+
+<UserControl.Resources>
+    <converters:EnumToBoolConverter x:Key="EnumToBoolConverter"/>
+</UserControl.Resources>
+
+    <!-- Field Configuration Section -->
+    <Border x:Name="FieldConfigurationCardBorder" Classes="input-card" Grid.IsSharedSizeScope="True">
+        <StackPanel>
+            <TextBlock x:Name="FieldConfigurationTitleTextBlock" Text="Field Configuration" FontWeight="Bold" Margin="0,0,0,12"/>
+            
+            <!-- Number of Fields -->
+            <Grid x:Name="NumberOfFieldsRowGrid" Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+                    <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="NumberOfFieldsLabelTextBlock"
+                           Grid.Column="0" 
+                           Text="Fields:" 
+                           FontWeight="Medium" 
+                           Foreground="RoyalBlue"
+                           VerticalAlignment="Center" 
+                           Margin="0,0,8,0"/>
+                <NumericUpDown x:Name="NumberOfFieldsInputNumericUpDown"
+                               Grid.Column="1" 
+                               Minimum="1" 
+                               Maximum="20"
+                               FormatString="0"
+                               Increment="1"
+                               Value="{Binding SelectedRotationComponentDto.NumberOfFields}"
+                               Margin="8,0"
+                               HorizontalAlignment="Stretch"/>
+                <TextBlock x:Name="NumberOfFieldsUnitTextBlock"
+                           Grid.Column="2" 
+                           Text="" 
+                           VerticalAlignment="Center"
+                           Margin="8,0,0,0"/>
+            </Grid>
+
+            <!-- Field Area -->
+            <Grid x:Name="FieldAreaRowGrid" Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+                    <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="FieldAreaLabelTextBlock"
+                           Grid.Column="0" 
+                           Text="Area:" 
+                           FontWeight="Medium" 
+                           Foreground="RoyalBlue"
+                           VerticalAlignment="Center" 
+                           Margin="0,0,8,0"/>
+                <NumericUpDown x:Name="FieldAreaInputNumericUpDown"
+                               Grid.Column="1" 
+                               Minimum="0.1"
+                               Value="{Binding Path=SelectedRotationComponentDto.FieldArea}"
+                               Margin="8,0"
+                               HorizontalAlignment="Stretch"/>
+                <Label x:Name="FieldAreaUnitLabel"
+                       Grid.Column="2" 
+                       Classes="unit-label"
+                       Content="{Binding Path=StorageService.Storage.ApplicationData.DisplayUnitStrings.HectaresString}"
+                       VerticalContentAlignment="Center"
+                       Margin="8,0,0,0"/>
+            </Grid>
+
+            <!-- Rotation Shift Direction (Advanced Option) -->
+            <StackPanel Margin="0,12,0,0"
+                        IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource FindAncestor, AncestorType=rotationViews:RotationComponentView}, FallbackValue=False}">
+                <TextBlock Text="Rotation shift direction:" 
+                           FontWeight="Medium" 
+                           Foreground="RoyalBlue"
+                           Margin="0,0,0,8"/>
+                
+                <!-- Radio Button Group -->
+                <StackPanel Spacing="6">
+                    <!-- No Shift Option -->
+                    <RadioButton GroupName="ShiftDirection"
+                                 IsChecked="{Binding ShiftDirection, 
+                                             Converter={StaticResource EnumToBoolConverter}, 
+                                             ConverterParameter={x:Static enums:RotationShiftDirection.None}}">
+                        <TextBlock Text="No Shift" 
+                                   FontWeight="SemiBold"/>
+                    </RadioButton>
+
+                    <!-- Right Shift Option (Traditional) -->
+                    <RadioButton GroupName="ShiftDirection"
+                                 IsChecked="{Binding ShiftDirection, 
+                                             Converter={StaticResource EnumToBoolConverter}, 
+                                             ConverterParameter={x:Static enums:RotationShiftDirection.RightShift}}">
+                        <TextBlock Text="Right Shift →" 
+                                   FontWeight="SemiBold"/>
+                    </RadioButton>
+
+                    <!-- Left Shift Option (Reverse) -->
+                    <RadioButton GroupName="ShiftDirection"
+                                 IsChecked="{Binding ShiftDirection, 
+                                             Converter={StaticResource EnumToBoolConverter}, 
+                                             ConverterParameter={x:Static enums:RotationShiftDirection.LeftShift}}">
+                        <TextBlock Text="← Left Shift" 
+                                   FontWeight="SemiBold"/>
+                    </RadioButton>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

@@ -1,4 +1,5 @@
 ﻿using H.Core.Factories;
+using H.Core.Factories.Fields;
 using Moq;
 using Prism.Ioc;
 

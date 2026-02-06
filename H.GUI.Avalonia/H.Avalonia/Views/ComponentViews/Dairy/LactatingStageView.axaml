@@ -1,0 +1,178 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1000"
+             x:Class="H.Avalonia.Views.ComponentViews.Dairy.LactatingStageView">
+  
+  <!-- Lactating Stage Card -->
+  <Border Classes="step-container" 
+          BorderBrush="#388E3C" 
+          Margin="0,0,0,16">
+    <StackPanel>
+      <Border Background="#E8F5E9" 
+              Padding="16" 
+              CornerRadius="6,6,0,0">
+        <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+          <Border Grid.Column="0" 
+                  Background="#388E3C" 
+                  Width="48" 
+                  Height="48" 
+                  CornerRadius="24" 
+                  Margin="0,0,12,0">
+            <TextBlock Text="•" 
+                       FontSize="24" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center"/>
+          </Border>
+          <StackPanel Grid.Column="1" VerticalAlignment="Center">
+            <TextBlock Text="Lactating Stage" 
+                       FontSize="16" 
+                       FontWeight="Bold"/>
+            <TextBlock Text="86 animals • Milk production • 4 lactation phases" 
+                       FontSize="12" 
+                       Foreground="#666" 
+                       Margin="0,2,0,0"/>
+          </StackPanel>
+          <Border Grid.Column="2" 
+                  Background="White" 
+                  Padding="8,4" 
+                  CornerRadius="4" 
+                  Margin="0,0,8,0">
+            <TextBlock Text="Configured" 
+                       FontSize="11" 
+                       Foreground="#43A047" 
+                       FontWeight="SemiBold"/>
+          </Border>
+          <Button Grid.Column="3" 
+                  Content="Collapse" 
+                  Classes="responsive-button"
+                  Background="#388E3C"/>
+        </Grid>
+      </Border>
+      
+      <!-- Expanded Content -->
+      <Border Background="White" Padding="20">
+        <StackPanel>
+          <TextBlock Text="Lactation Phases" 
+                     FontSize="14" 
+                     FontWeight="SemiBold" 
+                     Margin="0,0,0,12"/>
+          
+          <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
+            <!-- Phase 1: Early Lactation -->
+            <Border Grid.Row="0" Grid.Column="0" 
+                    Classes="input-card"
+                    Background="#F9FFF9" 
+                    Margin="0,0,6,6">
+              <StackPanel>
+                <TextBlock Text="Phase 1: Early Lactation" 
+                           FontSize="13" 
+                           FontWeight="SemiBold" 
+                           Margin="0,0,0,8"/>
+                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto">
+                  <TextBlock Grid.Row="0" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
+                  <TextBlock Grid.Row="0" Grid.Column="1" Text="Days 1-150" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                  <TextBlock Grid.Row="1" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
+                  <TextBlock Grid.Row="1" Grid.Column="1" Text="35 kg/day milk" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                  <TextBlock Grid.Row="2" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
+                  <TextBlock Grid.Row="2" Grid.Column="1" Text="4.0% fat | 3.3% protein" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                  <TextBlock Grid.Row="3" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,0"/>
+                  <TextBlock Grid.Row="3" Grid.Column="1" Text="600 kg avg weight" FontSize="11" Foreground="#666"/>
+                </Grid>
+              </StackPanel>
+            </Border>
+            
+            <!-- Phase 2: Mid Lactation -->
+            <Border Grid.Row="0" Grid.Column="1" 
+                    Classes="input-card"
+                    Background="#F9FFF9" 
+                    Margin="6,0,0,6">
+              <StackPanel>
+                <TextBlock Text="Phase 2: Mid Lactation" 
+                           FontSize="13" 
+                           FontWeight="SemiBold" 
+                           Margin="0,0,0,8"/>
+                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto">
+                  <TextBlock Grid.Row="0" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
+                  <TextBlock Grid.Row="0" Grid.Column="1" Text="Days 151-240" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                  <TextBlock Grid.Row="1" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
+                  <TextBlock Grid.Row="1" Grid.Column="1" Text="28 kg/day milk" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                  <TextBlock Grid.Row="2" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
+                  <TextBlock Grid.Row="2" Grid.Column="1" Text="4.0% fat | 3.3% protein" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                  <TextBlock Grid.Row="3" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,0"/>
+                  <TextBlock Grid.Row="3" Grid.Column="1" Text="620 kg avg weight" FontSize="11" Foreground="#666"/>
+                </Grid>
+              </StackPanel>
+            </Border>
+            
+            <!-- Phase 3: Late Lactation -->
+            <Border Grid.Row="1" Grid.Column="0" 
+                    Classes="input-card"
+                    Background="#F9FFF9" 
+                    Margin="0,6,6,0">
+              <StackPanel>
+                <TextBlock Text="Phase 3: Late Lactation" 
+                           FontSize="13" 
+                           FontWeight="SemiBold" 
+                           Margin="0,0,0,8"/>
+                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto">
+                  <TextBlock Grid.Row="0" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
+                  <TextBlock Grid.Row="0" Grid.Column="1" Text="Days 241-305" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                  <TextBlock Grid.Row="1" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
+                  <TextBlock Grid.Row="1" Grid.Column="1" Text="20 kg/day milk" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                  <TextBlock Grid.Row="2" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
+                  <TextBlock Grid.Row="2" Grid.Column="1" Text="4.0% fat | 3.3% protein" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                  <TextBlock Grid.Row="3" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,0"/>
+                  <TextBlock Grid.Row="3" Grid.Column="1" Text="640 kg avg weight" FontSize="11" Foreground="#666"/>
+                </Grid>
+              </StackPanel>
+            </Border>
+            
+            <!-- Phase 4: End Lactation -->
+            <Border Grid.Row="1" Grid.Column="1" 
+                    Classes="input-card"
+                    Background="#F9FFF9" 
+                    Margin="6,6,0,0">
+              <StackPanel>
+                <TextBlock Text="Phase 4: End Lactation" 
+                           FontSize="13" 
+                           FontWeight="SemiBold" 
+                           Margin="0,0,0,8"/>
+                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto">
+                  <TextBlock Grid.Row="0" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
+                  <TextBlock Grid.Row="0" Grid.Column="1" Text="Days 306-365" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                  <TextBlock Grid.Row="1" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
+                  <TextBlock Grid.Row="1" Grid.Column="1" Text="12 kg/day milk" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                  <TextBlock Grid.Row="2" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
+                  <TextBlock Grid.Row="2" Grid.Column="1" Text="4.2% fat | 3.4% protein" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                  <TextBlock Grid.Row="3" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,0"/>
+                  <TextBlock Grid.Row="3" Grid.Column="1" Text="650 kg avg weight" FontSize="11" Foreground="#666"/>
+                </Grid>
+              </StackPanel>
+            </Border>
+          </Grid>
+          
+          <Border Background="#FFFEF7" 
+                  BorderBrush="#FFD54F" 
+                  BorderThickness="1" 
+                  CornerRadius="6" 
+                  Padding="12" 
+                  Margin="0,16,0,0">
+            <Grid ColumnDefinitions="*,*">
+              <StackPanel Grid.Column="0">
+                <TextBlock Text="• Housing: Free stall barn" FontSize="12" Margin="0,0,0,4"/>
+                <TextBlock Text="• Diet: High energy TMR" FontSize="12"/>
+              </StackPanel>
+              <StackPanel Grid.Column="1">
+                <TextBlock Text="• Manure: Liquid slurry" FontSize="12" Margin="0,0,0,4"/>
+                <TextBlock Text="• Group Pairing: 1" FontSize="12"/>
+              </StackPanel>
+            </Grid>
+          </Border>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </Border>
+  
+</UserControl>

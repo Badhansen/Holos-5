@@ -10,5 +10,6 @@ public class AnimalComponentBaseToAnimalComponentDtoMapper : Profile
     public AnimalComponentBaseToAnimalComponentDtoMapper()
     {
         CreateMap<AnimalComponentBase, IAnimalComponentDto>();
+        CreateMap<AnimalComponentBase, AnimalComponentDto>();
     }
 }

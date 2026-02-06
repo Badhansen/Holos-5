@@ -1,5 +1,6 @@
 ﻿using H.Core.Factories;
 using H.Core.Factories.Crops;
+using H.Core.Factories.Fields;
 using H.Core.Models;
 using H.Core.Models.LandManagement.Fields;
 using H.Core.Services.Animals;
@@ -173,6 +174,9 @@ public class FieldComponentService : ComponentServiceBase, IFieldComponentServic
     public void InitializeComponent(Farm farm, FieldSystemComponent fieldSystemComponent)
     {
         base.InitializeComponent(farm, fieldSystemComponent);
+
+        fieldSystemComponent.EndYear = DateTime.Now.Year;
+        fieldSystemComponent.StartYear = fieldSystemComponent.EndYear - 10;
     }
 
     /// <summary>

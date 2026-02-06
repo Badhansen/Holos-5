@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="80"
+             x:Class="H.Avalonia.Views.ComponentViews.Shared.AdvancedOptionsToggleView">
+
+	<!-- Advanced Options Toggle Section -->
+	<Border Background="#F8F9FA" 
+	        CornerRadius="8" 
+	        Padding="16,12" 
+	        BorderBrush="#E9ECEF" 
+	        BorderThickness="1">
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			
+			<StackPanel Grid.Column="0" VerticalAlignment="Center">
+				<TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+				          FontSize="15" FontWeight="SemiBold" 
+				          Foreground="#495057" Margin="0,0,0,2"/>
+				<TextBlock Text="{Binding Description, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+				          FontSize="11" Foreground="#6C757D" 
+				          FontStyle="Italic"/>
+			</StackPanel>
+			
+			<ToggleSwitch Grid.Column="1" 
+			            Name="ShowAdvancedOptionsToggle"
+			            VerticalAlignment="Center"
+			            Margin="12,0,0,0"
+			            OffContent="Basic"
+			            OnContent="Advanced"
+			            IsChecked="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"/>
+		</Grid>
+	</Border>
+</UserControl>

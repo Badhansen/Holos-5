@@ -162,7 +162,7 @@
 
 	<Style Selector="TextBlock.step-number-description">
 		<Setter Property="FontSize" Value="16"/>
-		<Setter Property="FontStyle" Value="Italic"/>
+		<Setter Property="FontStyle" Value="Normal"/>
 		<Setter Property="Foreground" Value="#605D5D"/>
 		<Setter Property="Margin" Value="0,0,4,0"/>
 	</Style>
@@ -250,6 +250,34 @@
 		<Setter Property="CornerRadius" Value="8"/>
 		<Setter Property="Padding" Value="20"/>
 		<Setter Property="BoxShadow" Value="0 2 8 0 #1A000000"/>
+	</Style>
+
+	<!-- Step Container Border Style -->
+	<!-- Shared style for step content containers used in Field and Rotation component views -->
+	<Style Selector="Border.step-container">
+		<Setter Property="Background" Value="White"/>
+		<Setter Property="BorderBrush" Value="LightGray"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="CornerRadius" Value="8"/>
+		<Setter Property="Padding" Value="20"/>
+		<Setter Property="BoxShadow" Value="0 2 8 0 #1A000000"/>
+	</Style>
+
+	<Style Selector="Border.input-card">
+		<Setter Property="BorderBrush" Value="#E0E0E0"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="CornerRadius" Value="6"/>
+		<Setter Property="Padding" Value="16"/>
+		<Setter Property="Background" Value="#FAFAFA"/>
+		<Setter Property="HorizontalAlignment" Value="Left"/>
+	</Style>
+
+	<!-- Input Card Hint Text Style -->
+	<!-- Style for hint/help text that appears below inputs in input cards -->
+	<Style Selector="TextBlock.input-hint">
+		<Setter Property="FontSize" Value="11"/>
+		<Setter Property="Foreground" Value="#666666"/>
+		<Setter Property="Margin" Value="0,10,0,0"/>
 	</Style>
 
 	<!-- Timeline Card Styles -->

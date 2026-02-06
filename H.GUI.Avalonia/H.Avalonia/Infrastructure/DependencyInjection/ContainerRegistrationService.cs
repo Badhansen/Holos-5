@@ -9,6 +9,7 @@ using H.Avalonia.ViewModels.ComponentViews.Dairy;
 using H.Avalonia.ViewModels.ComponentViews.Infrastructure;
 using H.Avalonia.ViewModels.ComponentViews.LandManagement;
 using H.Avalonia.ViewModels.ComponentViews.LandManagement.Field;
+using H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation;
 using H.Avalonia.ViewModels.ComponentViews.OtherAnimals;
 using H.Avalonia.ViewModels.ComponentViews.Poultry;
 using H.Avalonia.ViewModels.ComponentViews.Sheep;
@@ -50,10 +51,13 @@ using H.Core.Factories.Animals;
 using H.Core.Factories.Climate;
 using H.Core.Factories.Crops;
 using H.Core.Factories.FarmFactory;
+using H.Core.Factories.Fields;
+using H.Core.Factories.Rotations;
 using H.Core.Mappers;
 using H.Core.Models.Animals;
 using H.Core.Models.Climate;
 using H.Core.Models.LandManagement.Fields;
+using H.Core.Models.LandManagement.Rotation;
 using H.Core.Providers;
 using H.Core.Providers.Climate;
 using H.Core.Providers.Energy;
@@ -64,14 +68,17 @@ using H.Core.Services.Climate;
 using H.Core.Services.Countries;
 using H.Core.Services.DietService;
 using H.Core.Services.Initialization;
+using H.Core.Services.Animals.Dairy;
 using H.Core.Services.LandManagement.Fields;
 using H.Core.Services.Provinces;
 using H.Core.Services.StorageService;
+using H.Core.Services.CropColorService;
 using H.Infrastructure.Services;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Prism.Ioc;
 using ClimateResultsView = H.Avalonia.Views.ResultViews.ClimateResultsView;
+using RotationComponentView = H.Avalonia.Views.ComponentViews.LandManagement.Rotation.RotationComponentView;
 using SoilResultsView = H.Avalonia.Views.ResultViews.SoilResultsView;
 
 namespace H.Avalonia.Infrastructure.DependencyInjection
@@ -352,6 +359,7 @@ namespace H.Avalonia.Infrastructure.DependencyInjection
             containerRegistry.RegisterSingleton<IComponentInitializationService, ComponentInitializationService>();
             containerRegistry.RegisterSingleton<IFieldComponentService, FieldComponentService>();
             containerRegistry.RegisterSingleton<IRotationComponentService, RotationComponentService>();
+            containerRegistry.RegisterSingleton<IDairyComponentService, DairyComponentService>();
             containerRegistry.RegisterSingleton<IClimateService, ClimateService>();
             containerRegistry.RegisterSingleton<IFarmResultsService_NEW, FarmResultsService_NEW>();
             containerRegistry.RegisterSingleton<IDietService, DefaultDietService>();
@@ -361,6 +369,7 @@ namespace H.Avalonia.Infrastructure.DependencyInjection
             containerRegistry.RegisterSingleton<IErrorHandlerService, ErrorHandlerService>();
             containerRegistry.RegisterSingleton<INotificationManagerService, NotificationManagerService>();
             containerRegistry.RegisterSingleton<IDefaultGeocoderService, NominatimGeocoderService>();
+            containerRegistry.RegisterSingleton<ICropColorService, CropColorService>();
 
             // Unit conversion
             containerRegistry.RegisterSingleton<IUnitsOfMeasurementCalculator, UnitsOfMeasurementCalculator>();
@@ -386,6 +395,7 @@ namespace H.Avalonia.Infrastructure.DependencyInjection
 
             containerRegistry.Register(typeof(IFactory<CropDto>), typeof(CropFactory));
             containerRegistry.Register(typeof(IFactory<FieldSystemComponentDto>), typeof(FieldFactory));
+            containerRegistry.Register(typeof(IFactory<RotationComponentDto>), typeof(RotationComponentFactory));
             containerRegistry.Register(typeof(IFactory<AnimalComponentDto>), typeof(AnimalComponentFactory));
             containerRegistry.Register(typeof(IFactory<DailyClimateDto>), typeof(DailyClimateDataFactory));
 
@@ -468,6 +478,7 @@ namespace H.Avalonia.Infrastructure.DependencyInjection
             RegisterDailyClimateTransferService(containerRegistry);
             RegisterCropTransferService(containerRegistry);
             RegisterFieldTransferService(containerRegistry);
+            RegisterRotationTransferService(containerRegistry);
             RegisterAnimalTransferService(containerRegistry);
             
             _logger.LogInformation("Successfully registered transfer services");
@@ -536,6 +547,29 @@ namespace H.Avalonia.Infrastructure.DependencyInjection
                 return new TransferService<FieldSystemComponent, FieldSystemComponentDto>(
                     unitsOfMeasurementCalculator: unitsCalculator,
                     dtoFactory: fieldDtoFactory,
+                    dtoToModelMapper: dtoToModelMapper,
+                    modelToDtoMapper: modelToDtoMapper
+                );
+            });
+        }
+
+        /// <summary>
+        /// Register TransferService for RotationComponent and RotationComponentDto
+        /// </summary>
+        private void RegisterRotationTransferService(IContainerRegistry containerRegistry)
+        {
+            _logger.LogDebug("Registering Rotation transfer service");
+            
+            containerRegistry.Register<ITransferService<RotationComponent, RotationComponentDto>>(() =>
+            {
+                var unitsCalculator = _containerProvider.Resolve<IUnitsOfMeasurementCalculator>();
+                var rotationDtoFactory = _containerProvider.Resolve<IFactory<RotationComponentDto>>();
+                var dtoToModelMapper = _containerProvider.Resolve<IMapper>(nameof(RotationComponentDtoToRotationComponentMapper));
+                var modelToDtoMapper = _containerProvider.Resolve<IMapper>(nameof(RotationComponentToRotationComponentDtoMapper));
+
+                return new TransferService<RotationComponent, RotationComponentDto>(
+                    unitsOfMeasurementCalculator: unitsCalculator,
+                    dtoFactory: rotationDtoFactory,
                     dtoToModelMapper: dtoToModelMapper,
                     modelToDtoMapper: modelToDtoMapper
                 );

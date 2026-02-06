@@ -1,8 +1,79 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="H.Avalonia.Views.ComponentViews.Dairy.DairyComponentView">
-  This is a dairy component
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+xmlns:dairy="clr-namespace:H.Avalonia.Views.ComponentViews.Dairy"
+xmlns:dairyVm="clr-namespace:H.Avalonia.ViewModels.ComponentViews.Dairy"
+xmlns:shared="clr-namespace:H.Avalonia.Views.ComponentViews.Shared"
+mc:Ignorable="d" d:DesignWidth="1400"
+x:Class="H.Avalonia.Views.ComponentViews.Dairy.DairyComponentView">
+  
+  <Design.DataContext>
+    <dairyVm:DairyComponentViewModelDesign/>
+  </Design.DataContext>
+  
+  <Grid>
+    <Grid.RowDefinitions>
+      <!-- Title -->
+      <RowDefinition Height="Auto"/>
+      <!-- Advanced Options Toggle -->
+      <RowDefinition Height="Auto"/>
+      <!-- Content -->
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+
+    <StackPanel Grid.Row="0">
+      <!-- Title -->
+      <TextBox Classes="view-title" Text="{Binding Path=SelectedDairyComponentDto.Name}"/>
+      <Border Classes="title-underline"/>
+    </StackPanel>
+
+    <!-- Advanced Options Toggle Section -->
+    <shared:AdvancedOptionsToggleView Grid.Row="1"
+                                      Margin="{StaticResource DefaultUserControlMargin}"
+                                      Title="Show Advanced Options"
+                                      Description="Display additional configuration options for detailed dairy operation management"
+                                      IsChecked="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"/>
+
+    <ScrollViewer Grid.Row="2" 
+                  VerticalScrollBarVisibility="Auto" 
+                  HorizontalScrollBarVisibility="Disabled">
+      <StackPanel Margin="{StaticResource DefaultUserControlMargin}">
+
+            <!-- Lifecycle Visualization - Educational Diagram (Advanced Options Only) -->
+      <dairy:DairyLifecycleVisualizationView Margin="0,0,0,24"
+                                              IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+
+      <!-- Step 1: Herd Overview -->
+      <dairy:HerdOverviewView Margin="0,0,0,16"/>
+
+      <!-- Calculated Herd Composition Panel -->
+      <dairy:CalculatedHerdCompositionView Margin="0,0,0,20"/>
+
+      <!-- Step 2: Lifecycle Configuration -->
+      <dairy:LifecycleConfigurationView Margin="0,0,0,16"/>
+
+        <!-- Help Panel -->
+        <Border Background="#E3F2FD" BorderBrush="#1976D2" BorderThickness="1" CornerRadius="4">
+          <Border Padding="16">
+            <StackPanel>
+              <Grid ColumnDefinitions="Auto,*">
+                <StackPanel Grid.Column="1">
+                  <TextBlock Text="Understanding the Lifecycle Approach" FontSize="14" FontWeight="Bold" Margin="0,0,0,8"/>
+                  <TextBlock TextWrapping="Wrap" FontSize="12" LineHeight="18" Text="This configuration method follows the natural flow of dairy cattle through their productive life. Instead of manually creating separate animal groups, you define your herd size and key parameters, and the system automatically calculates how many animals are in each lifecycle stage."/>
+                  <TextBlock TextWrapping="Wrap" FontSize="12" LineHeight="18" Margin="0,12,0,0" FontWeight="SemiBold" Text="Benefits:"/>
+                  <TextBlock TextWrapping="Wrap" FontSize="12" LineHeight="18" Margin="0,4,0,0" Text="• Reduces configuration errors by auto-calculating animal numbers"/>
+                  <TextBlock TextWrapping="Wrap" FontSize="12" LineHeight="18" Margin="0,4,0,0" Text="• Ensures all lifecycle stages are accounted for"/>
+                  <TextBlock TextWrapping="Wrap" FontSize="12" LineHeight="18" Margin="0,4,0,0" Text="• Provides a visual understanding of herd dynamics"/>
+                  <TextBlock TextWrapping="Wrap" FontSize="12" LineHeight="18" Margin="0,4,0,0" Text="• Simplifies complex dairy operation modeling"/>
+                </StackPanel>
+              </Grid>
+            </StackPanel>
+          </Border>
+        </Border>
+
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+  
 </UserControl>

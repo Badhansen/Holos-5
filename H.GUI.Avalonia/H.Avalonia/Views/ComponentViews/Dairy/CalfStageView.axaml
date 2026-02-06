@@ -1,11 +1,16 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="1000"
-             x:Class="H.Avalonia.Views.ComponentViews.Dairy.CalfStageView">
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:converters="clr-namespace:H.Avalonia.Converters"
+           mc:Ignorable="d" d:DesignWidth="1000"
+           x:Class="H.Avalonia.Views.ComponentViews.Dairy.CalfStageView">
   
-  <!-- Calf Stage Card -->
+<UserControl.Resources>
+  <converters:DivideByTwelveConverter x:Key="DivideByTwelveConverter"/>
+</UserControl.Resources>
+  
+<!-- Calf Stage Card -->
   <Border BorderBrush="#2196F3" BorderThickness="2" CornerRadius="8">
     <StackPanel>
       <Border Background="#E3F2FD" Padding="16" CornerRadius="6,6,0,0">
@@ -26,6 +31,52 @@
       <!-- Expanded Content -->
       <Border Background="White" Padding="20">
         <StackPanel>
+          
+          <!-- NEW: Flow Rate Input Section -->
+          <Border Background="#FFF9E6" BorderBrush="#FFA000" BorderThickness="1" 
+                 CornerRadius="6" Padding="16" Margin="0,0,0,16">
+            <StackPanel>
+              <TextBlock Text="🐄 Staggered Progression Input" 
+                        FontSize="14" FontWeight="SemiBold" 
+                        Foreground="#F57C00" Margin="0,0,0,8"/>
+              <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#666" 
+                        Margin="0,0,0,12">
+                Enter the number of calves born (entering the calf stage) per year. 
+                This represents the continuous flow of animals through your dairy operation.
+              </TextBlock>
+              
+              <Grid ColumnDefinitions="Auto,200,*">
+                <TextBlock Grid.Column="0" Text="Calves Entering Per Year:" 
+                          FontSize="13" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                <NumericUpDown Grid.Column="1" 
+                              Value="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear}"
+                              Minimum="0" 
+                              Maximum="10000"
+                              Increment="1"
+                              FormatString="N0"
+                              Height="32"/>
+                <TextBlock Grid.Column="2" Text="calves/year" 
+                          FontSize="12" Foreground="#666" 
+                          VerticalAlignment="Center" Margin="8,0,0,0"/>
+              </Grid>
+              
+              <!-- Helpful calculation note -->
+              <Border Background="White" BorderBrush="#E0E0E0" BorderThickness="1"
+                     CornerRadius="4" Padding="8" Margin="0,12,0,0">
+                <StackPanel>
+                  <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#666" 
+                            FontStyle="Italic">
+                    <Run Text="💡 Tip: "/>
+                    <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
+                    <Run Text=" calves/year ≈ "/>
+                    <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, Converter={StaticResource DivideByTwelveConverter}, StringFormat='{}{0:F1}'}" FontWeight="SemiBold"/>
+                    <Run Text=" calves/month"/>
+                  </TextBlock>
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </Border>
+          
           <TextBlock Text="Management Phases" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,12"/>
           
           <Grid ColumnDefinitions="*,*">

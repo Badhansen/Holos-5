@@ -26,4 +26,8 @@ public interface IDairyComponentDto : IAnimalComponentDto
     double DefaultMilkProduction { get; set; }
     double DefaultMilkFatContent { get; set; }
     double DefaultMilkProteinContent { get; set; }
+    
+    // Staggered Progression - Flow Rate Inputs
+    // These represent the number of animals entering each lifecycle stage per year
+    int CalvesEnteringPerYear { get; set; }
 }

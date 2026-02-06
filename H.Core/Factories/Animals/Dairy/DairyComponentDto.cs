@@ -40,6 +40,9 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     private double _defaultMilkFatContent = 3.9;
     private double _defaultMilkProteinContent = 3.2;
     
+    // Staggered Progression - Flow Rate Inputs
+    private int _calvesEnteringPerYear = 100;
+    
     #endregion
 
     #region Constructors
@@ -274,6 +277,32 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
         get => _defaultMilkProteinContent;
         set => SetProperty(ref _defaultMilkProteinContent, value);
     }
+    
+    #endregion
+    
+    #region Properties - Staggered Progression Flow Rates
+
+    /// <summary>
+    /// Number of calves entering the calf stage (birth) per year.
+    /// This represents the continuous flow of animals being born into the dairy operation.
+    /// 
+    /// STAGGERED PROGRESSION MODEL:
+    /// Instead of modeling all animals moving through stages synchronously, this approach
+    /// models a steady flow of animals entering each stage. This better represents
+    /// real dairy operations where calving occurs year-round.
+    /// 
+    /// CALCULATION NOTE:
+    /// This value can be used to calculate steady-state populations:
+    /// - Steady-state calves = (CalvesEnteringPerYear) × (Duration in calf stage / 365 days)
+    /// - Example: 100 calves/year × (4 months / 12 months) = ~33 calves at any given time
+    /// 
+    /// (number of animals per year)
+    /// </summary>
+    public int CalvesEnteringPerYear
+    {
+        get => _calvesEnteringPerYear;
+        set => SetProperty(ref _calvesEnteringPerYear, value);
+    }
 
     #endregion
 
@@ -498,6 +527,27 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
             RemoveError(key);
         }
     }
+    
+    /// <summary>
+    /// Validates that the calves entering per year is within a reasonable range
+    /// </summary>
+    private void ValidateCalvesEnteringPerYear()
+    {
+        var key = nameof(CalvesEnteringPerYear);
+        
+        if (CalvesEnteringPerYear < 0)
+        {
+            AddError(key, "Calves entering per year cannot be negative");
+        }
+        else if (CalvesEnteringPerYear > 10000)
+        {
+            AddError(key, "Calves entering per year cannot exceed 10,000");
+        }
+        else
+        {
+            RemoveError(key);
+        }
+    }
 
     #endregion
 
@@ -545,6 +595,10 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
                 
             case nameof(DefaultMilkProteinContent):
                 ValidateDefaultMilkProteinContent();
+                break;
+                
+            case nameof(CalvesEnteringPerYear):
+                ValidateCalvesEnteringPerYear();
                 break;
         }
     }

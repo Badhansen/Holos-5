@@ -31,6 +31,9 @@ namespace H.Avalonia.Services
         private const int ApiTimeout = 60;
         private const int ApiLockoutSeconds = 5;
 
+        private int _searchAttemptsMade = 0;
+        private const int _searchAttemptsLimit = 3;
+
         private DateTime _lastApiRequestTime = DateTime.MinValue;
 
         #endregion
@@ -81,6 +84,15 @@ namespace H.Avalonia.Services
             street = PrepareStreetStringForAPI(street);
             var path = this.GetCachePath(street, municipality, province, postalCode, county, country);
             return File.Exists(path);
+        }
+
+        /// <summary>
+        /// Returns boolean on if the API request is ready or not due to previous request being made too recently or too many requests made without a successful API call.
+        /// </summary>
+        /// <returns>True if an API call can be made, false if an API call can't be made.</returns>
+        public bool IsReadyForRequest()
+        {
+            return !((DateTime.Now - _lastApiRequestTime).TotalSeconds < ApiLockoutSeconds || (_searchAttemptsMade >= _searchAttemptsLimit));
         }
 
         /// <summary>
@@ -227,13 +239,21 @@ namespace H.Avalonia.Services
         private async Task<string> GetAndCacheNominatimData(string street, string municipality, Province province, string postalCode, string? county, string country)
         {
             // Check if request is locked out due to previous request being made too recently
-            if (IsRequestLocked())
+            if (((DateTime.Now - _lastApiRequestTime).TotalSeconds < ApiLockoutSeconds))
             {
-                _notificationManagerService.ShowToast("Too many requests made.", $"Please wait {ApiLockoutSeconds - (DateTime.Now - _lastApiRequestTime).TotalSeconds:F0} seconds before looking up another address.");
+                _notificationManagerService.ShowToast("Too many requests made too quickly.", $"Please wait {ApiLockoutSeconds - (DateTime.Now - _lastApiRequestTime).TotalSeconds:F0} seconds before looking up another address.");
                 _logger.LogWarning($"{nameof(NominatimGeocoderService)}: API request blocked due to lockout timer.");
                 return null;
             }
-            _lastApiRequestTime = DateTime.Now;
+            _lastApiRequestTime = DateTime.Now; // Update last API request time to now since we are making a request
+
+            // Check if we have exceeded our search attempts limit
+            if (_searchAttemptsMade >= _searchAttemptsLimit)
+            {
+                _notificationManagerService.ShowToast(H.Core.Properties.Resources.TooManyAddressSearches, H.Core.Properties.Resources.DescriptionTooManyAddressSearches, NotificationType.Warning);
+                _logger.LogWarning($"{nameof(NominatimGeocoderService)}: API request blocked due too many requests being made.");
+                return null;
+            }
 
             string apiUrl = GetCorrectApiUrl(street, municipality, province, postalCode, county, country);
             string content = null;
@@ -249,14 +269,17 @@ namespace H.Avalonia.Services
                         // Check if content returned by API is empty, if so do not return
                         if (content == "[]")
                         {
+                            _searchAttemptsMade += 1; // Increment search attempts since we got an empty response
                             _logger.LogError($"{nameof(NominatimGeocoderService)}.{nameof(DownloadNominatimApiData)}: API content empty. Address not valid.");
                             _notificationManagerService.ShowToast(H.Core.Properties.Resources.CoordinateError, H.Core.Properties.Resources.CantFindCoordinate, NotificationType.Error);
                             return null;
                         }
+                        _searchAttemptsMade = 0; // Reset the search attempts since we were successful.
                         CacheData(content, street, municipality, province, postalCode, county, country);
                     }
                     else
                     {
+                        _notificationManagerService.ShowToast(H.Core.Properties.Resources.ErrorCouldNotReachNominatimApi, H.Core.Properties.Resources.ErrorCouldNotReachNominatimApiDescription, NotificationType.Error);
                         _logger.LogError($"{nameof(NominatimGeocoderService)}.{nameof(GetCoordinates)}, Nominatim API Task Status: {getNominatimApi.Status}");
                         throw new Exception("Nominatim API couldn't be reached or connection timed out.");
                     }
@@ -374,15 +397,6 @@ namespace H.Avalonia.Services
             var lat = double.Parse(jObject["lat"]?.ToString());
             var lon = double.Parse(jObject["lon"]?.ToString());
             return (latitude: lat, longitude: lon);
-        }
-
-        /// <summary>
-        /// Returns boolean on if the API request is locked out due to previous request being made too recently.
-        /// </summary>
-        /// <returns>False if an API call can be made, true if an API call can be made.</returns>
-        private bool IsRequestLocked()
-        {
-            return (DateTime.Now - _lastApiRequestTime).TotalSeconds < ApiLockoutSeconds;
         }
         #endregion
     }

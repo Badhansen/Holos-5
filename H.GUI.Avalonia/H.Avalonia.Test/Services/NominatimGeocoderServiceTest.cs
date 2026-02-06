@@ -104,5 +104,12 @@ namespace H.Avalonia.Test.Services
             var latitudeAndLongitude = await _nominatimGeocoderService.GetCoordinates(_streetAddress, _municipality, _province, _postalCode);
             Assert.IsTrue(_nominatimGeocoderService.IsCached(_streetAddress, _municipality, _province, _postalCode));
         }
+
+        [TestMethod]
+        public void TestIsReadyForRequest()
+        {
+            _nominatimGeocoderService = new NominatimGeocoderService(_loggerMock, _notificationManagerServiceMock);
+            Assert.IsTrue(_nominatimGeocoderService.IsReadyForRequest());
+        }
     }
 }

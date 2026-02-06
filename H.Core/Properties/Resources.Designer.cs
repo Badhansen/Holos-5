@@ -6298,6 +6298,24 @@ namespace H.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not reach Nominatim..
+        /// </summary>
+        public static string ErrorCouldNotReachNominatimApi {
+            get {
+                return ResourceManager.GetString("ErrorCouldNotReachNominatimApi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location data could not be retrieved from Nominatim API, try another method of setting farm location..
+        /// </summary>
+        public static string ErrorCouldNotReachNominatimApiDescription {
+            get {
+                return ResourceManager.GetString("ErrorCouldNotReachNominatimApiDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Must be a valid date later than the Start Date..
         /// </summary>
         public static string ErrorEndDate {

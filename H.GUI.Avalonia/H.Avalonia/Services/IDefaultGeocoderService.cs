@@ -18,6 +18,11 @@ namespace H.Avalonia.Services
         /// <returns>True if cached file exists for this address, false otherwise</returns>
         bool IsCached(string street, string municipality, Province province, string postalCode, string? county = null, string country = "Canada");
         /// <summary>
+        /// Returns boolean on if the API request is ready or not due to previous request being made too recently or too many requests made without a successful API call.
+        /// </summary>
+        /// <returns>True if an API call can be made, false if an API call can't be made.</returns>
+        bool IsReadyForRequest();
+        /// <summary>
         /// Returns the latitude and longitude for the given address.
         /// </summary>
         /// <param name="street">The street address to geocode and get coordinates for</param>

@@ -6478,4 +6478,10 @@ Please note: emissions related to the deposition or application of livestock man
   <data name="LabelGetCoordinates" xml:space="preserve">
     <value>Get Coordinates</value>
   </data>
+  <data name="ErrorCouldNotReachNominatimApi" xml:space="preserve">
+    <value>Could not reach Nominatim.</value>
+  </data>
+  <data name="ErrorCouldNotReachNominatimApiDescription" xml:space="preserve">
+    <value>Location data could not be retrieved from Nominatim API, try another method of setting farm location.</value>
+  </data>
 </root>

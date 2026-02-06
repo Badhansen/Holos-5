@@ -5927,4 +5927,10 @@ Please note: emissions related to the deposition or application of livestock man
   <data name="LabelGetCoordinates" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="ErrorCouldNotReachNominatimApi" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ErrorCouldNotReachNominatimApiDescription" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
 </root>

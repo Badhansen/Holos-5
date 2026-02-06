@@ -27,180 +27,460 @@
         </StackPanel>
       </StackPanel>
       
-      <Grid ColumnDefinitions="*,*,*,*,Auto">
-        <!-- Calves -->
-        <Border Grid.Column="0" 
-                Background="White" 
-                CornerRadius="4" 
-                Padding="12" 
-                Margin="4">
-          <StackPanel>
-            <TextBlock Text="CALF" 
-                       FontSize="14" 
-                       FontWeight="Bold" 
-                       Foreground="#1976D2" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,8,0,8"/>
-            <TextBlock Text="Calves" 
-                       FontSize="12" 
-                       FontWeight="SemiBold" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,0,0,4"/>
-            <TextBlock Text="{Binding SelectedDairyComponentDto.SteadyStateCalves, StringFormat='{}{0} animals'}" 
-                       FontSize="18" 
-                       FontWeight="Bold" 
-                       Foreground="#1976D2" 
-                       HorizontalAlignment="Center"/>
-            <TextBlock Text="120 days in stage" 
-                       FontSize="10" 
-                       Foreground="#666" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,4,0,0"/>
-          </StackPanel>
-        </Border>
-        
-        <!-- Heifers -->
-        <Border Grid.Column="1" 
-                Background="White" 
-                CornerRadius="4" 
-                Padding="12" 
-                Margin="4">
-          <StackPanel>
-            <TextBlock Text="HEIFER" 
-                       FontSize="14" 
-                       FontWeight="Bold" 
-                       Foreground="#7B1FA2" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,8,0,8"/>
-            <TextBlock Text="Heifers" 
-                       FontSize="12" 
-                       FontWeight="SemiBold" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,0,0,4"/>
-            <TextBlock Text="{Binding SelectedDairyComponentDto.SteadyStateHeifers, StringFormat='{}{0} animals'}" 
-                       FontSize="18" 
-                       FontWeight="Bold" 
-                       Foreground="#7B1FA2" 
-                       HorizontalAlignment="Center"/>
-            <TextBlock Text="608 days in stage" 
-                       FontSize="10" 
-                       Foreground="#666" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,4,0,0"/>
-          </StackPanel>
-        </Border>
-        
-        <!-- Lactating -->
-        <Border Grid.Column="2" 
-                Background="White" 
-                CornerRadius="4" 
-                Padding="12" 
-                Margin="4">
-          <StackPanel>
-            <TextBlock Text="LACTATING" 
-                       FontSize="14" 
-                       FontWeight="Bold" 
-                       Foreground="#388E3C" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,8,0,8"/>
-            <TextBlock Text="Lactating" 
-                       FontSize="12" 
-                       FontWeight="SemiBold" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,0,0,4"/>
-            <TextBlock Text="{Binding SelectedDairyComponentDto.SteadyStateLactating, StringFormat='{}{0} animals'}" 
-                       FontSize="18" 
-                       FontWeight="Bold" 
-                       Foreground="#388E3C" 
-                       HorizontalAlignment="Center"/>
-            <TextBlock Text="305 days in stage" 
-                       FontSize="10" 
-                       Foreground="#666" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,4,0,0"/>
-          </StackPanel>
-        </Border>
-        
-        <!-- Dry -->
-        <Border Grid.Column="3" 
-                Background="White" 
-                CornerRadius="4" 
-                Padding="12" 
-                Margin="4">
-          <StackPanel>
-            <TextBlock Text="DRY" 
-                       FontSize="14" 
-                       FontWeight="Bold" 
-                       Foreground="#F57C00" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,8,0,8"/>
-            <TextBlock Text="Dry Cows" 
-                       FontSize="12" 
-                       FontWeight="SemiBold" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,0,0,4"/>
-            <TextBlock Text="{Binding SelectedDairyComponentDto.SteadyStateDry, StringFormat='{}{0} animals'}" 
-                       FontSize="18" 
-                       FontWeight="Bold" 
-                       Foreground="#F57C00" 
-                       HorizontalAlignment="Center"/>
-            <TextBlock Text="{Binding SelectedDairyComponentDto.DryPeriodDays, StringFormat='{}{0} days in stage'}" 
-                       FontSize="10" 
-                       Foreground="#666" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,4,0,0"/>
-          </StackPanel>
-        </Border>
-        
-        <!-- Total -->
-        <Border Grid.Column="4" 
-                Background="#43A047" 
-                CornerRadius="4" 
-                Padding="16" 
-                Margin="4"
-                VerticalAlignment="Stretch">
-          <StackPanel VerticalAlignment="Center">
-            <TextBlock Text="TOTAL" 
-                       FontSize="14" 
-                       FontWeight="Bold" 
-                       Foreground="White" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,0,0,8"/>
-            <TextBlock Text="{Binding SelectedDairyComponentDto.TotalSteadyStateHerdSize, StringFormat='{}{0}'}" 
-                       FontSize="24" 
-                       FontWeight="Bold" 
-                       Foreground="White" 
-                       HorizontalAlignment="Center"/>
-            <TextBlock Text="animals" 
-                       FontSize="12" 
-                       Foreground="White" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,4,0,0"/>
-          </StackPanel>
-        </Border>
-      </Grid>
+      <!-- Main Content with Cards and Calculations -->
+      <StackPanel>
+        <!-- Stage Cards Row with Integrated Calculations -->
+        <Grid ColumnDefinitions="*,*,*,*,Auto">
+          <!-- Calves -->
+          <Border Grid.Column="0" 
+                  Background="White" 
+                  BorderBrush="#1976D2"
+                  BorderThickness="2"
+                  CornerRadius="8" 
+                  Padding="12" 
+                  Margin="4">
+            <StackPanel>
+              <TextBlock Text="CALF" 
+                         FontSize="14" 
+                         FontWeight="Bold" 
+                         Foreground="#1976D2" 
+                         HorizontalAlignment="Center" 
+                         Margin="0,4,0,8"/>
+              
+              <TextBlock Text="{Binding SelectedDairyComponentDto.SteadyStateCalves, StringFormat='{}{0} animals'}" 
+                         FontSize="20" 
+                         FontWeight="Bold" 
+                         Foreground="#1976D2" 
+                         HorizontalAlignment="Center"
+                         Margin="0,0,0,8"/>
+              
+              <TextBlock Text="120 days in stage" 
+                         FontSize="10" 
+                         Foreground="#666" 
+                         HorizontalAlignment="Center"
+                         Margin="0,0,0,12"/>
+              
+              <!-- Integrated Calculation -->
+              <Border Background="#E3F2FD" 
+                      BorderBrush="#1976D2" 
+                      BorderThickness="1"
+                      CornerRadius="4" 
+                      Padding="8">
+                <StackPanel>
+                  <TextBlock Text="Input:" 
+                             FontSize="9" 
+                             FontWeight="SemiBold" 
+                             Foreground="#1976D2"
+                             HorizontalAlignment="Center"
+                             Margin="0,0,0,4"/>
+                  <TextBlock TextWrapping="Wrap" 
+                             FontSize="10" 
+                             Foreground="#666"
+                             HorizontalAlignment="Center"
+                             Margin="0,0,0,6">
+                    <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0}'}" FontWeight="Bold" Foreground="#1976D2"/>
+                    <Run Text=" calves/yr"/>
+                  </TextBlock>
+                  
+                  <TextBlock Text="Formula:" 
+                             FontSize="9" 
+                             FontWeight="SemiBold" 
+                             Foreground="#1976D2"
+                             HorizontalAlignment="Center"
+                             Margin="0,0,0,4"/>
+                  <TextBlock TextWrapping="Wrap" 
+                             FontSize="9" 
+                             Foreground="#666"
+                             HorizontalAlignment="Center"
+                             TextAlignment="Center"
+                             LineHeight="13">
+                    <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0}'}" FontWeight="SemiBold"/>
+                    <Run Text=" * 0.329"/>
+                    <LineBreak/>
+                    <Run Text="= "/>
+                    <Run Text="{Binding SelectedDairyComponentDto.SteadyStateCalves}" FontWeight="Bold" Foreground="#1976D2"/>
+                  </TextBlock>
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </Border>
+          
+          <!-- Heifers -->
+          <Border Grid.Column="1" 
+                  Background="White" 
+                  BorderBrush="#7B1FA2"
+                  BorderThickness="2"
+                  CornerRadius="8" 
+                  Padding="12" 
+                  Margin="4">
+            <StackPanel>
+              <TextBlock Text="HEIFER" 
+                         FontSize="14" 
+                         FontWeight="Bold" 
+                         Foreground="#7B1FA2" 
+                         HorizontalAlignment="Center" 
+                         Margin="0,4,0,8"/>
+              
+              <TextBlock Text="{Binding SelectedDairyComponentDto.SteadyStateHeifers, StringFormat='{}{0} animals'}" 
+                         FontSize="20" 
+                         FontWeight="Bold" 
+                         Foreground="#7B1FA2" 
+                         HorizontalAlignment="Center"
+                         Margin="0,0,0,8"/>
+              
+              <TextBlock Text="608 days in stage" 
+                         FontSize="10" 
+                         Foreground="#666" 
+                         HorizontalAlignment="Center"
+                         Margin="0,0,0,12"/>
+              
+              <!-- Integrated Calculation -->
+              <Border Background="#F3E5F5" 
+                      BorderBrush="#7B1FA2" 
+                      BorderThickness="1"
+                      CornerRadius="4" 
+                      Padding="8">
+                <StackPanel>
+                  <TextBlock Text="Input:" 
+                             FontSize="9" 
+                             FontWeight="SemiBold" 
+                             Foreground="#7B1FA2"
+                             HorizontalAlignment="Center"
+                             Margin="0,0,0,4"/>
+                  <TextBlock TextWrapping="Wrap" 
+                             FontSize="10" 
+                             Foreground="#666"
+                             HorizontalAlignment="Center"
+                             Margin="0,0,0,6">
+                    <Run Text="{Binding SelectedDairyComponentDto.HeifersEnteringPerYear, StringFormat='{}{0}'}" FontWeight="Bold" Foreground="#7B1FA2"/>
+                    <Run Text=" heifers/yr"/>
+                  </TextBlock>
+                  
+                  <TextBlock Text="Formula:" 
+                             FontSize="9" 
+                             FontWeight="SemiBold" 
+                             Foreground="#7B1FA2"
+                             HorizontalAlignment="Center"
+                             Margin="0,0,0,4"/>
+                  <TextBlock TextWrapping="Wrap" 
+                             FontSize="9" 
+                             Foreground="#666"
+                             HorizontalAlignment="Center"
+                             TextAlignment="Center"
+                             LineHeight="13">
+                    <Run Text="{Binding SelectedDairyComponentDto.HeifersEnteringPerYear, StringFormat='{}{0}'}" FontWeight="SemiBold"/>
+                    <Run Text=" * 1.666"/>
+                    <LineBreak/>
+                    <Run Text="= "/>
+                    <Run Text="{Binding SelectedDairyComponentDto.SteadyStateHeifers}" FontWeight="Bold" Foreground="#7B1FA2"/>
+                  </TextBlock>
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </Border>
+          
+          <!-- Lactating -->
+          <Border Grid.Column="2" 
+                  Background="White" 
+                  BorderBrush="#388E3C"
+                  BorderThickness="2"
+                  CornerRadius="8" 
+                  Padding="12" 
+                  Margin="4">
+            <StackPanel>
+              <TextBlock Text="LACTATING" 
+                         FontSize="14" 
+                         FontWeight="Bold" 
+                         Foreground="#388E3C" 
+                         HorizontalAlignment="Center" 
+                         Margin="0,4,0,8"/>
+              
+              <TextBlock Text="{Binding SelectedDairyComponentDto.SteadyStateLactating, StringFormat='{}{0} animals'}" 
+                         FontSize="20" 
+                         FontWeight="Bold" 
+                         Foreground="#388E3C" 
+                         HorizontalAlignment="Center"
+                         Margin="0,0,0,8"/>
+              
+              <TextBlock Text="305 days in stage" 
+                         FontSize="10" 
+                         Foreground="#666" 
+                         HorizontalAlignment="Center"
+                         Margin="0,0,0,12"/>
+              
+              <!-- Integrated Calculation -->
+              <Border Background="#E8F5E9" 
+                      BorderBrush="#388E3C" 
+                      BorderThickness="1"
+                      CornerRadius="4" 
+                      Padding="8">
+                <StackPanel>
+                  <TextBlock Text="Input:" 
+                             FontSize="9" 
+                             FontWeight="SemiBold" 
+                             Foreground="#388E3C"
+                             HorizontalAlignment="Center"
+                             Margin="0,0,0,4"/>
+                  <TextBlock TextWrapping="Wrap" 
+                             FontSize="10" 
+                             Foreground="#666"
+                             HorizontalAlignment="Center"
+                             Margin="0,0,0,6">
+                    <Run Text="{Binding SelectedDairyComponentDto.LactatingCowsEnteringPerYear, StringFormat='{}{0}'}" FontWeight="Bold" Foreground="#388E3C"/>
+                    <Run Text=" cows/yr"/>
+                  </TextBlock>
+                  
+                  <TextBlock Text="Formula:" 
+                             FontSize="9" 
+                             FontWeight="SemiBold" 
+                             Foreground="#388E3C"
+                             HorizontalAlignment="Center"
+                             Margin="0,0,0,4"/>
+                  <TextBlock TextWrapping="Wrap" 
+                             FontSize="9" 
+                             Foreground="#666"
+                             HorizontalAlignment="Center"
+                             TextAlignment="Center"
+                             LineHeight="13">
+                    <Run Text="{Binding SelectedDairyComponentDto.LactatingCowsEnteringPerYear, StringFormat='{}{0}'}" FontWeight="SemiBold"/>
+                    <Run Text=" * 0.836"/>
+                    <LineBreak/>
+                    <Run Text="= "/>
+                    <Run Text="{Binding SelectedDairyComponentDto.SteadyStateLactating}" FontWeight="Bold" Foreground="#388E3C"/>
+                  </TextBlock>
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </Border>
+          
+          <!-- Dry -->
+          <Border Grid.Column="3" 
+                  Background="White" 
+                  BorderBrush="#F57C00"
+                  BorderThickness="2"
+                  CornerRadius="8" 
+                  Padding="12" 
+                  Margin="4">
+            <StackPanel>
+              <TextBlock Text="DRY" 
+                         FontSize="14" 
+                         FontWeight="Bold" 
+                         Foreground="#F57C00" 
+                         HorizontalAlignment="Center" 
+                         Margin="0,4,0,8"/>
+              
+              <TextBlock Text="{Binding SelectedDairyComponentDto.SteadyStateDry, StringFormat='{}{0} animals'}" 
+                         FontSize="20" 
+                         FontWeight="Bold" 
+                         Foreground="#F57C00" 
+                         HorizontalAlignment="Center"
+                         Margin="0,0,0,8"/>
+              
+              <TextBlock Text="{Binding SelectedDairyComponentDto.DryPeriodDays, StringFormat='{}{0} days in stage'}" 
+                         FontSize="10" 
+                         Foreground="#666" 
+                         HorizontalAlignment="Center"
+                         Margin="0,0,0,12"/>
+              
+              <!-- Integrated Calculation -->
+              <Border Background="#FFF3E0" 
+                      BorderBrush="#F57C00" 
+                      BorderThickness="1"
+                      CornerRadius="4" 
+                      Padding="8">
+                <StackPanel>
+                  <TextBlock Text="Input:" 
+                             FontSize="9" 
+                             FontWeight="SemiBold" 
+                             Foreground="#F57C00"
+                             HorizontalAlignment="Center"
+                             Margin="0,0,0,4"/>
+                  <TextBlock TextWrapping="Wrap" 
+                             FontSize="10" 
+                             Foreground="#666"
+                             HorizontalAlignment="Center"
+                             Margin="0,0,0,6">
+                    <Run Text="{Binding SelectedDairyComponentDto.DryCowsEnteringPerYear, StringFormat='{}{0}'}" FontWeight="Bold" Foreground="#F57C00"/>
+                    <Run Text=" cows/yr"/>
+                  </TextBlock>
+                  
+                  <TextBlock Text="Formula:" 
+                             FontSize="9" 
+                             FontWeight="SemiBold" 
+                             Foreground="#F57C00"
+                             HorizontalAlignment="Center"
+                             Margin="0,0,0,4"/>
+                  <TextBlock TextWrapping="Wrap" 
+                             FontSize="9" 
+                             Foreground="#666"
+                             HorizontalAlignment="Center"
+                             TextAlignment="Center"
+                             LineHeight="13">
+                    <Run Text="{Binding SelectedDairyComponentDto.DryCowsEnteringPerYear, StringFormat='{}{0}'}" FontWeight="SemiBold"/>
+                    <Run Text=" * ("/>
+                    <Run Text="{Binding SelectedDairyComponentDto.DryPeriodDays, StringFormat='{}{0}'}"/>
+                    <Run Text="/365)"/>
+                    <LineBreak/>
+                    <Run Text="= "/>
+                    <Run Text="{Binding SelectedDairyComponentDto.SteadyStateDry}" FontWeight="Bold" Foreground="#F57C00"/>
+                  </TextBlock>
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </Border>
+          
+          <!-- Total -->
+          <Border Grid.Column="4" 
+                  Background="#43A047" 
+                  CornerRadius="8" 
+                  Padding="16" 
+                  Margin="4"
+                  VerticalAlignment="Stretch">
+            <StackPanel VerticalAlignment="Center">
+              <TextBlock Text="TOTAL" 
+                         FontSize="14" 
+                         FontWeight="Bold" 
+                         Foreground="White" 
+                         HorizontalAlignment="Center" 
+                         Margin="0,0,0,4"/>
+              <TextBlock Text="{Binding SelectedDairyComponentDto.TotalSteadyStateHerdSize, StringFormat='{}{0}'}" 
+                         FontSize="24" 
+                         FontWeight="Bold" 
+                         Foreground="White" 
+                         HorizontalAlignment="Center"
+                         Margin="0,0,0,2"/>
+              <TextBlock Text="animals" 
+                         FontSize="10" 
+                         Foreground="White" 
+                         HorizontalAlignment="Center"/>
+            </StackPanel>
+          </Border>
+        </Grid>
+      </StackPanel>
       
-      <!-- Explanation -->
+      
+      <!-- Overall Explanation -->
       <Border Background="White" 
-              BorderBrush="#E0E0E0" 
-              BorderThickness="1" 
-              CornerRadius="4" 
-              Padding="12" 
-              Margin="4,8,4,4">
+              BorderBrush="#43A047" 
+              BorderThickness="2" 
+              CornerRadius="6" 
+              Padding="16" 
+              Margin="4,12,4,4">
         <StackPanel>
-          <TextBlock Text="?? Understanding Steady-State Populations" 
-                     FontSize="12" 
-                     FontWeight="SemiBold" 
-                     Margin="0,0,0,8"/>
+          <TextBlock Text="How These Numbers Are Calculated" 
+                     FontSize="13" 
+                     FontWeight="Bold" 
+                     Foreground="#43A047"
+                     Margin="0,0,0,12"/>
+          
           <TextBlock TextWrapping="Wrap" 
                      FontSize="11" 
                      Foreground="#666" 
-                     LineHeight="16">
-            <Run Text="These numbers show how many animals will be in each stage at any given time in a steady-state operation. "/>
-            <Run Text="Calculation: (Animals entering per year) × (Days in stage ÷ 365). "/>
-            <Run Text="This method represents continuous calving operations where animals flow through stages year-round, " FontWeight="SemiBold"/>
-            <Run Text="providing a more realistic model for emissions calculations and herd management."/>
+                     LineHeight="18"
+                     Margin="0,0,0,12">
+            <Run Text="The numbers shown above represent the " FontWeight="SemiBold"/>
+            <Run Text="steady-state population" FontWeight="Bold" Foreground="#43A047"/>
+            <Run Text=" — how many animals will be in each stage at any given moment in a continuous-flow dairy operation."/>
           </TextBlock>
+          
+          <Border Background="#F1F8E9" 
+                  BorderBrush="#8BC34A" 
+                  BorderThickness="1"
+                  CornerRadius="4" 
+                  Padding="12" 
+                  Margin="0,0,0,12">
+            <StackPanel>
+              <TextBlock Text="The Formula" 
+                         FontSize="12" 
+                         FontWeight="SemiBold" 
+                         Foreground="#558B2F"
+                         Margin="0,0,0,8"/>
+              <TextBlock TextWrapping="Wrap" 
+                         FontSize="11" 
+                         Foreground="#666"
+                         LineHeight="18">
+                <Run Text="Steady-State Population = " FontWeight="SemiBold"/>
+                <Run Text="(Animals Entering Per Year)" FontWeight="Bold" Foreground="#1976D2"/>
+                <Run Text=" * "/>
+                <Run Text="(Days in Stage / 365)" FontWeight="Bold" Foreground="#F57C00"/>
+              </TextBlock>
+            </StackPanel>
+          </Border>
+          
+          <TextBlock Text="Example Walkthrough: Calf Stage" 
+                     FontSize="12" 
+                     FontWeight="SemiBold" 
+                     Foreground="#1976D2"
+                     Margin="0,0,0,8"/>
+          
+          <StackPanel Margin="12,0,0,12">
+            <TextBlock TextWrapping="Wrap" 
+                       FontSize="11" 
+                       Foreground="#666" 
+                       LineHeight="18"
+                       Margin="0,0,0,6">
+              <Run Text="1. You entered: " FontWeight="SemiBold"/>
+              <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0} calves'}" FontWeight="Bold" Foreground="#1976D2"/>
+              <Run Text=" are born per year"/>
+            </TextBlock>
+            
+            <TextBlock TextWrapping="Wrap" 
+                       FontSize="11" 
+                       Foreground="#666" 
+                       LineHeight="18"
+                       Margin="0,0,0,6">
+              <Run Text="2. Calves stay in this stage for: " FontWeight="SemiBold"/>
+              <Run Text="120 days" FontWeight="Bold" Foreground="#F57C00"/>
+              <Run Text=" (from birth to weaning)"/>
+            </TextBlock>
+            
+            <TextBlock TextWrapping="Wrap" 
+                       FontSize="11" 
+                       Foreground="#666" 
+                       LineHeight="18"
+                       Margin="0,0,0,6">
+              <Run Text="3. Calculate the ratio: " FontWeight="SemiBold"/>
+              <Run Text="120 / 365 = 0.329" FontWeight="Bold"/>
+              <Run Text=" (about one-third of a year)"/>
+            </TextBlock>
+            
+            <TextBlock TextWrapping="Wrap" 
+                       FontSize="11" 
+                       Foreground="#666" 
+                       LineHeight="18">
+              <Run Text="4. Multiply: " FontWeight="SemiBold"/>
+              <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0}'}" FontWeight="Bold" Foreground="#1976D2"/>
+              <Run Text=" * 0.329 = "/>
+              <Run Text="{Binding SelectedDairyComponentDto.SteadyStateCalves}" FontWeight="Bold" Foreground="#43A047" FontSize="12"/>
+              <Run Text=" calves at any time"/>
+            </TextBlock>
+          </StackPanel>
+          
+          <Border Background="#FFF3E0" 
+                  BorderBrush="#FF9800" 
+                  BorderThickness="1"
+                  CornerRadius="4" 
+                  Padding="12">
+            <StackPanel>
+              <TextBlock Text="Key Insight" 
+                         FontSize="12" 
+                         FontWeight="SemiBold" 
+                         Foreground="#E65100"
+                         Margin="0,0,0,8"/>
+              <TextBlock TextWrapping="Wrap" 
+                         FontSize="11" 
+                         Foreground="#666"
+                         LineHeight="18">
+                <Run Text="Even though "/>
+                <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0} calves'}" FontWeight="Bold"/>
+                <Run Text=" are born each year, only "/>
+                <Run Text="{Binding SelectedDairyComponentDto.SteadyStateCalves}" FontWeight="Bold" Foreground="#43A047"/>
+                <Run Text=" calves are present at any given moment because they only spend "/>
+                <Run Text="120 days" FontWeight="Bold"/>
+                <Run Text=" (one-third of a year) in this stage before moving to the heifer stage. This continuous flow creates the steady-state population."/>
+              </TextBlock>
+            </StackPanel>
+          </Border>
         </StackPanel>
       </Border>
     </StackPanel>

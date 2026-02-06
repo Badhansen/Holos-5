@@ -108,11 +108,8 @@ namespace H.Avalonia.Services
                 return ParseNominatimApiContentForCoordinates(content);
             }
             // Hit if there was an error downloading data from the API and no cached data available.
-            else
-            {
-                _logger.LogError($"{nameof(NominatimGeocoderService)}: there was an error while trying to download Nominatim coordinates data,");
-                return (0, 0);
-            }
+            _logger.LogError($"{nameof(NominatimGeocoderService)}: there was an error while trying to download Nominatim coordinates data,");
+            return (0, 0);
         }
 
         /// <summary>
@@ -145,7 +142,7 @@ namespace H.Avalonia.Services
         /// Prepares the street address string for styling that works better with Nominatim 
         /// </summary>
         /// <param name="street">The street address string to reformat to a preferable format</param>
-        /// <returns></returns>
+        /// <returns>String with sanitized address formatting specialized for Nominatim API Call.</returns>
         private string PrepareStreetStringForAPI(string street)
         {
             // Dictionary containing directions that can be converted to their abbreviated counterpart

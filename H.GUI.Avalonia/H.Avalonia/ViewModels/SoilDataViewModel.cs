@@ -727,7 +727,7 @@ namespace H.Avalonia.ViewModels
             {
                 // Call the geocoding service to get coordinates from the address, return early if problem encountered.
                 var coordinates = (latitude: 0d, longitude: 0d);
-                Logger.LogInformation($"Attempting coordinate acquisition from address in {nameof(SoilDataViewModel)}.{nameof(OnGetAddress)}");
+                Logger.LogInformation($"Attempting coordinate acquisition from address in {nameof(SoilDataViewModel)}.{nameof(OnGetCoordinates)}");
                 // Join civic numbering and road name as geocoder does not have separate parameter field for civic numbering.
                 if (IsComplexRuralAddressMode)
                     coordinates = await _defaultGeocoderService.GetCoordinates(RuralCivicNumbering+" "+RuralRoadName, RuralMunicipality, SelectedProvince, RuralPostalCode, RuralCounty);
@@ -742,7 +742,7 @@ namespace H.Avalonia.ViewModels
                 }
                                                                                                                                          
                 SearchAttemptsMade = 0; // Reset the search attempts since we were successful.
-                Logger.LogInformation($"Coordinate acquired from address in {nameof(SoilDataViewModel)}.{nameof(OnGetAddress)}");
+                Logger.LogInformation($"Coordinate acquired from address in {nameof(SoilDataViewModel)}.{nameof(OnGetCoordinates)}");
                 Latitude = coordinates.latitude;
                 Longitude = coordinates.longitude;
                 NavigationPoint = GetNavigationPoint();
@@ -758,16 +758,8 @@ namespace H.Avalonia.ViewModels
         /// <summary>
         /// Gets the new address values based on the coordinates provided by the user.
         /// </summary>
-        private async void OnGetAddress()
+        private void OnGetAddress()
         {
-            var address = await _mapHelpers.GetAddressFromLocationAsync(Latitude, Longitude);
-            if (string.IsNullOrEmpty(address))
-            {
-                Logger.LogDebug($@"Cannot find the coordinate. Please enter correct latitude and longitude values");
-                NotificationManager.ShowToast(H.Core.Properties.Resources.IncorrectCoordinate, Core.Properties.Resources.MessageInValidCoordinateEntered, NotificationType.Information);
-                return;
-            }
-            Address = address;
             NavigationPoint = GetNavigationPoint();
         }
 
@@ -791,14 +783,6 @@ namespace H.Avalonia.ViewModels
             Latitude = point.latitude;
             Longitude = point.longitude;
 
-            var address = await _mapHelpers.GetAddressFromLocationAsync(Latitude, Longitude);
-            if (string.IsNullOrEmpty(address))
-            {
-                Logger.LogDebug($@"Incorrect coordinate location cannot find matching address.");
-                NotificationManager.ShowToast(H.Core.Properties.Resources.CantFindAddress, Core.Properties.Resources.MessageIncorrectLocationSelected, NotificationType.Information);
-                return;
-            }
-            Address = address;
         }
 
         /// <summary>

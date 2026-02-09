@@ -50,6 +50,38 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     private ManureStateType _heiferPhase1ManureHandlingSystem = ManureStateType.LiquidNoCrust;
     private ManureStateType _heiferPhase2ManureHandlingSystem = ManureStateType.LiquidNoCrust;
     
+    // Calf stage phases (2 phases)
+    private ManureStateType _calfPhase1ManureHandlingSystem = ManureStateType.SolidStorage;
+    private ManureStateType _calfPhase2ManureHandlingSystem = ManureStateType.SolidStorage;
+    
+    // Lactating stage phases (4 phases)
+    private ManureStateType _lactatingPhase1ManureHandlingSystem = ManureStateType.LiquidNoCrust;
+    private ManureStateType _lactatingPhase2ManureHandlingSystem = ManureStateType.LiquidNoCrust;
+    private ManureStateType _lactatingPhase3ManureHandlingSystem = ManureStateType.LiquidNoCrust;
+    private ManureStateType _lactatingPhase4ManureHandlingSystem = ManureStateType.LiquidNoCrust;
+    
+    // Dry stage phases (2 phases)
+    private ManureStateType _dryPhase1ManureHandlingSystem = ManureStateType.DeepBedding;
+    private ManureStateType _dryPhase2ManureHandlingSystem = ManureStateType.DeepBedding;
+    
+    // Housing Types for each phase
+    private HousingType _heiferPhase1HousingType = HousingType.FreeStallBarnSlurryScraping;
+    private HousingType _heiferPhase2HousingType = HousingType.FreeStallBarnSlurryScraping;
+    
+    // Calf stage housing types (2 phases)
+    private HousingType _calfPhase1HousingType = HousingType.HousedInBarnSolid;
+    private HousingType _calfPhase2HousingType = HousingType.HousedInBarnSolid;
+    
+    // Lactating stage housing types (4 phases)
+    private HousingType _lactatingPhase1HousingType = HousingType.FreeStallBarnSlurryScraping;
+    private HousingType _lactatingPhase2HousingType = HousingType.FreeStallBarnSlurryScraping;
+    private HousingType _lactatingPhase3HousingType = HousingType.FreeStallBarnSlurryScraping;
+    private HousingType _lactatingPhase4HousingType = HousingType.FreeStallBarnSlurryScraping;
+    
+    // Dry stage housing types (2 phases)
+    private HousingType _dryPhase1HousingType = HousingType.FreeStallBarnSolidLitter;
+    private HousingType _dryPhase2HousingType = HousingType.FreeStallBarnSolidLitter;
+    
     #endregion
 
     #region Constructors
@@ -425,6 +457,190 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     {
         get => _heiferPhase2ManureHandlingSystem;
         set => SetProperty(ref _heiferPhase2ManureHandlingSystem, value);
+    }
+    
+    /// <summary>
+    /// Manure handling system for calf Phase 1 (Milk-Fed Period: Days 1-90)
+    /// This determines how manure is stored and handled during the milk-fed period
+    /// </summary>
+    public ManureStateType CalfPhase1ManureHandlingSystem
+    {
+        get => _calfPhase1ManureHandlingSystem;
+        set => SetProperty(ref _calfPhase1ManureHandlingSystem, value);
+    }
+    
+    /// <summary>
+    /// Manure handling system for calf Phase 2 (Weaning Period: Days 91-120)
+    /// This determines how manure is stored and handled during the weaning period
+    /// </summary>
+    public ManureStateType CalfPhase2ManureHandlingSystem
+    {
+        get => _calfPhase2ManureHandlingSystem;
+        set => SetProperty(ref _calfPhase2ManureHandlingSystem, value);
+    }
+    
+    /// <summary>
+    /// Manure handling system for lactating Phase 1 (Early Lactation: Days 1-150)
+    /// This determines how manure is stored and handled during early lactation
+    /// </summary>
+    public ManureStateType LactatingPhase1ManureHandlingSystem
+    {
+        get => _lactatingPhase1ManureHandlingSystem;
+        set => SetProperty(ref _lactatingPhase1ManureHandlingSystem, value);
+    }
+    
+    /// <summary>
+    /// Manure handling system for lactating Phase 2 (Mid Lactation: Days 151-240)
+    /// This determines how manure is stored and handled during mid lactation
+    /// </summary>
+    public ManureStateType LactatingPhase2ManureHandlingSystem
+    {
+        get => _lactatingPhase2ManureHandlingSystem;
+        set => SetProperty(ref _lactatingPhase2ManureHandlingSystem, value);
+    }
+    
+    /// <summary>
+    /// Manure handling system for lactating Phase 3 (Late Lactation: Days 241-305)
+    /// This determines how manure is stored and handled during late lactation
+    /// </summary>
+    public ManureStateType LactatingPhase3ManureHandlingSystem
+    {
+        get => _lactatingPhase3ManureHandlingSystem;
+        set => SetProperty(ref _lactatingPhase3ManureHandlingSystem, value);
+    }
+    
+    /// <summary>
+    /// Manure handling system for lactating Phase 4 (End Lactation: Days 306-365)
+    /// This determines how manure is stored and handled during end lactation
+    /// </summary>
+    public ManureStateType LactatingPhase4ManureHandlingSystem
+    {
+        get => _lactatingPhase4ManureHandlingSystem;
+        set => SetProperty(ref _lactatingPhase4ManureHandlingSystem, value);
+    }
+    
+    /// <summary>
+    /// Manure handling system for dry Phase 1 (Far-off Dry: Days 1-45)
+    /// This determines how manure is stored and handled during the far-off dry period
+    /// </summary>
+    public ManureStateType DryPhase1ManureHandlingSystem
+    {
+        get => _dryPhase1ManureHandlingSystem;
+        set => SetProperty(ref _dryPhase1ManureHandlingSystem, value);
+    }
+    
+    /// <summary>
+    /// Manure handling system for dry Phase 2 (Close-up Period: Days 46-60)
+    /// This determines how manure is stored and handled during the close-up period
+    /// </summary>
+    public ManureStateType DryPhase2ManureHandlingSystem
+    {
+        get => _dryPhase2ManureHandlingSystem;
+        set => SetProperty(ref _dryPhase2ManureHandlingSystem, value);
+    }
+
+    #endregion
+    
+    #region Properties - Housing Types
+    
+    /// <summary>
+    /// Housing type for heifer Phase 1 (Growing Phase: 4-12 months)
+    /// This determines the type of housing facility used during the growing phase
+    /// </summary>
+    public HousingType HeiferPhase1HousingType
+    {
+        get => _heiferPhase1HousingType;
+        set => SetProperty(ref _heiferPhase1HousingType, value);
+    }
+    
+    /// <summary>
+    /// Housing type for heifer Phase 2 (Breeding Phase: 12-24 months)
+    /// This determines the type of housing facility used during the breeding phase
+    /// </summary>
+    public HousingType HeiferPhase2HousingType
+    {
+        get => _heiferPhase2HousingType;
+        set => SetProperty(ref _heiferPhase2HousingType, value);
+    }
+    
+    /// <summary>
+    /// Housing type for calf Phase 1 (Milk-Fed Period: Days 1-90)
+    /// This determines the type of housing facility used during the milk-fed period
+    /// </summary>
+    public HousingType CalfPhase1HousingType
+    {
+        get => _calfPhase1HousingType;
+        set => SetProperty(ref _calfPhase1HousingType, value);
+    }
+    
+    /// <summary>
+    /// Housing type for calf Phase 2 (Weaning Period: Days 91-120)
+    /// This determines the type of housing facility used during the weaning period
+    /// </summary>
+    public HousingType CalfPhase2HousingType
+    {
+        get => _calfPhase2HousingType;
+        set => SetProperty(ref _calfPhase2HousingType, value);
+    }
+    
+    /// <summary>
+    /// Housing type for lactating Phase 1 (Early Lactation: Days 1-150)
+    /// This determines the type of housing facility used during early lactation
+    /// </summary>
+    public HousingType LactatingPhase1HousingType
+    {
+        get => _lactatingPhase1HousingType;
+        set => SetProperty(ref _lactatingPhase1HousingType, value);
+    }
+    
+    /// <summary>
+    /// Housing type for lactating Phase 2 (Mid Lactation: Days 151-240)
+    /// This determines the type of housing facility used during mid lactation
+    /// </summary>
+    public HousingType LactatingPhase2HousingType
+    {
+        get => _lactatingPhase2HousingType;
+        set => SetProperty(ref _lactatingPhase2HousingType, value);
+    }
+    
+    /// <summary>
+    /// Housing type for lactating Phase 3 (Late Lactation: Days 241-305)
+    /// This determines the type of housing facility used during late lactation
+    /// </summary>
+    public HousingType LactatingPhase3HousingType
+    {
+        get => _lactatingPhase3HousingType;
+        set => SetProperty(ref _lactatingPhase3HousingType, value);
+    }
+    
+    /// <summary>
+    /// Housing type for lactating Phase 4 (End Lactation: Days 306-365)
+    /// This determines the type of housing facility used during end lactation
+    /// </summary>
+    public HousingType LactatingPhase4HousingType
+    {
+        get => _lactatingPhase4HousingType;
+        set => SetProperty(ref _lactatingPhase4HousingType, value);
+    }
+    
+    /// <summary>
+    /// Housing type for dry Phase 1 (Far-off Dry: Days 1-45)
+    /// This determines the type of housing facility used during the far-off dry period
+    /// </summary>
+    public HousingType DryPhase1HousingType
+    {
+        get => _dryPhase1HousingType;
+        set => SetProperty(ref _dryPhase1HousingType, value);
+    }
+    
+    /// <summary>
+    /// Housing type for dry Phase 2 (Close-up Period: Days 46-60)
+    /// This determines the type of housing facility used during the close-up period
+    /// </summary>
+    public HousingType DryPhase2HousingType
+    {
+        get => _dryPhase2HousingType;
+        set => SetProperty(ref _dryPhase2HousingType, value);
     }
 
     #endregion

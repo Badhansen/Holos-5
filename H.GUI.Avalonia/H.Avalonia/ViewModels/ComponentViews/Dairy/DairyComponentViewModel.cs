@@ -69,6 +69,11 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// </summary>
         private IEnumerable<ManureStateType> _manureStateTypes;
 
+        /// <summary>
+        /// Collection of available housing types for dropdown selection
+        /// </summary>
+        private IEnumerable<HousingType> _housingTypes;
+
         #endregion
 
         #region Constructors
@@ -194,6 +199,15 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         {
             get => _manureStateTypes;
             set => SetProperty(ref _manureStateTypes, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the collection of available housing types
+        /// </summary>
+        public IEnumerable<HousingType> HousingTypes
+        {
+            get => _housingTypes;
+            set => SetProperty(ref _housingTypes, value);
         }
 
         #endregion
@@ -333,6 +347,12 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
 
             // Initialize manure state types (excluding obsolete options)
             ManureStateTypes = Enum.GetValues<ManureStateType>()
+                .Where(x => !x.GetType().GetMember(x.ToString())[0]
+                    .GetCustomAttributes(typeof(ObsoleteAttribute), false).Any())
+                .ToList();
+
+            // Initialize housing types (excluding obsolete options)
+            HousingTypes = Enum.GetValues<HousingType>()
                 .Where(x => !x.GetType().GetMember(x.ToString())[0]
                     .GetCustomAttributes(typeof(ObsoleteAttribute), false).Any())
                 .ToList();

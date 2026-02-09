@@ -46,4 +46,24 @@ public interface IDairyComponentDto : IAnimalComponentDto
     // Manure Handling Systems - Phase-specific configurations
     ManureStateType HeiferPhase1ManureHandlingSystem { get; set; }
     ManureStateType HeiferPhase2ManureHandlingSystem { get; set; }
+    ManureStateType CalfPhase1ManureHandlingSystem { get; set; }
+    ManureStateType CalfPhase2ManureHandlingSystem { get; set; }
+    ManureStateType LactatingPhase1ManureHandlingSystem { get; set; }
+    ManureStateType LactatingPhase2ManureHandlingSystem { get; set; }
+    ManureStateType LactatingPhase3ManureHandlingSystem { get; set; }
+    ManureStateType LactatingPhase4ManureHandlingSystem { get; set; }
+    ManureStateType DryPhase1ManureHandlingSystem { get; set; }
+    ManureStateType DryPhase2ManureHandlingSystem { get; set; }
+    
+    // Housing Types - Phase-specific configurations
+    HousingType HeiferPhase1HousingType { get; set; }
+    HousingType HeiferPhase2HousingType { get; set; }
+    HousingType CalfPhase1HousingType { get; set; }
+    HousingType CalfPhase2HousingType { get; set; }
+    HousingType LactatingPhase1HousingType { get; set; }
+    HousingType LactatingPhase2HousingType { get; set; }
+    HousingType LactatingPhase3HousingType { get; set; }
+    HousingType LactatingPhase4HousingType { get; set; }
+    HousingType DryPhase1HousingType { get; set; }
+    HousingType DryPhase2HousingType { get; set; }
 }

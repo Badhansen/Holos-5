@@ -28,6 +28,12 @@ public class DairyComponentViewModelDesign : DairyComponentViewModel
                 .GetCustomAttributes(typeof(ObsoleteAttribute), false).Any())
             .ToList();
 
+        // Initialize HousingTypes collection (filtering out obsolete values)
+        HousingTypes = Enum.GetValues<HousingType>()
+            .Where(x => !x.GetType().GetMember(x.ToString())[0]
+                .GetCustomAttributes(typeof(ObsoleteAttribute), false).Any())
+            .ToList();
+
         // Create a sample DairyComponentDto with realistic values
         var dairyDto = new DairyComponentDto
         {
@@ -48,7 +54,39 @@ public class DairyComponentViewModelDesign : DairyComponentViewModel
             
             // Manure handling system defaults for heifer phases
             HeiferPhase1ManureHandlingSystem = ManureStateType.LiquidNoCrust,
-            HeiferPhase2ManureHandlingSystem = ManureStateType.LiquidNoCrust
+            HeiferPhase2ManureHandlingSystem = ManureStateType.LiquidNoCrust,
+            
+            // Calf phases - typically solid storage for individual pens
+            CalfPhase1ManureHandlingSystem = ManureStateType.SolidStorage,
+            CalfPhase2ManureHandlingSystem = ManureStateType.SolidStorage,
+            
+            // Lactating phases - typically liquid slurry systems
+            LactatingPhase1ManureHandlingSystem = ManureStateType.LiquidNoCrust,
+            LactatingPhase2ManureHandlingSystem = ManureStateType.LiquidNoCrust,
+            LactatingPhase3ManureHandlingSystem = ManureStateType.LiquidNoCrust,
+            LactatingPhase4ManureHandlingSystem = ManureStateType.LiquidNoCrust,
+            
+            // Dry phases - typically deep bedding
+            DryPhase1ManureHandlingSystem = ManureStateType.DeepBedding,
+            DryPhase2ManureHandlingSystem = ManureStateType.DeepBedding,
+            
+            // Housing type defaults for heifer phases
+            HeiferPhase1HousingType = HousingType.FreeStallBarnSlurryScraping,
+            HeiferPhase2HousingType = HousingType.FreeStallBarnSlurryScraping,
+            
+            // Calf phases - typically housed in barn with solid litter
+            CalfPhase1HousingType = HousingType.HousedInBarnSolid,
+            CalfPhase2HousingType = HousingType.HousedInBarnSolid,
+            
+            // Lactating phases - typically free stall barn
+            LactatingPhase1HousingType = HousingType.FreeStallBarnSlurryScraping,
+            LactatingPhase2HousingType = HousingType.FreeStallBarnSlurryScraping,
+            LactatingPhase3HousingType = HousingType.FreeStallBarnSlurryScraping,
+            LactatingPhase4HousingType = HousingType.FreeStallBarnSlurryScraping,
+            
+            // Dry phases - typically free stall with solid litter
+            DryPhase1HousingType = HousingType.FreeStallBarnSolidLitter,
+            DryPhase2HousingType = HousingType.FreeStallBarnSolidLitter
         };
 
         // Assign the sample DTO to the bound property

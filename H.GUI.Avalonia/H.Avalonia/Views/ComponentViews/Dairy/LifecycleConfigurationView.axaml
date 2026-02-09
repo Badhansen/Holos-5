@@ -14,18 +14,16 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                 IsVisible="{Binding IsCalfSelected}">
           <StackPanel>
             <Border Background="#2196F3" CornerRadius="6,6,0,0" Padding="20">
-              <Grid ColumnDefinitions="Auto,*,Auto">
-                <Border Grid.Column="0" Background="White" Width="40" Height="40" 
-                       CornerRadius="20" Margin="0,0,16,0">
-                  <TextBlock Text="3" FontSize="20" FontWeight="Bold" Foreground="#2196F3" 
-                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              <StackPanel>
+                <!-- Step Badge -->
+                <Border Classes="step-badge" HorizontalAlignment="Left" Background="White" Margin="0,0,0,12">
+                  <TextBlock Text="Step 3" Classes="step-badge-text" Foreground="#2196F3"/>
                 </Border>
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                  <TextBlock Text="Lifecycle Configuration - Calf Stage" FontSize="20" FontWeight="Bold" Foreground="White"/>
-                  <TextBlock Text="Configure management practices for calf stage (birth to 4 months)" 
-                            FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0"/>
-                </StackPanel>
-              </Grid>
+                <!-- Title and Description -->
+                <TextBlock Text="Lifecycle Configuration - Calf Stage" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="Configure management practices for calf stage (birth to 4 months)" 
+                          FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0"/>
+              </StackPanel>
             </Border>
             <Border Background="White" Padding="24">
               <dairy:CalfStageView/>
@@ -38,18 +36,16 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                 IsVisible="{Binding IsHeiferSelected}">
           <StackPanel>
             <Border Background="#7B1FA2" CornerRadius="6,6,0,0" Padding="20">
-              <Grid ColumnDefinitions="Auto,*,Auto">
-                <Border Grid.Column="0" Background="White" Width="40" Height="40" 
-                       CornerRadius="20" Margin="0,0,16,0">
-                  <TextBlock Text="3" FontSize="20" FontWeight="Bold" Foreground="#7B1FA2" 
-                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              <StackPanel>
+                <!-- Step Badge -->
+                <Border Classes="step-badge" HorizontalAlignment="Left" Background="White" Margin="0,0,0,12">
+                  <TextBlock Text="Step 3" Classes="step-badge-text" Foreground="#7B1FA2"/>
                 </Border>
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                  <TextBlock Text="Lifecycle Configuration - Heifer Stage" FontSize="20" FontWeight="Bold" Foreground="White"/>
-                  <TextBlock Text="Configure management practices for heifer stage (4 months to first calving)" 
-                            FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0"/>
-                </StackPanel>
-              </Grid>
+                <!-- Title and Description -->
+                <TextBlock Text="Lifecycle Configuration - Heifer Stage" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="Configure management practices for heifer stage (4 months to first calving)" 
+                          FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0"/>
+              </StackPanel>
             </Border>
             <Border Background="White" Padding="24">
               <dairy:HeiferStageView/>
@@ -62,18 +58,16 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                 IsVisible="{Binding IsLactatingSelected}">
           <StackPanel>
             <Border Background="#388E3C" CornerRadius="6,6,0,0" Padding="20">
-              <Grid ColumnDefinitions="Auto,*,Auto">
-                <Border Grid.Column="0" Background="White" Width="40" Height="40" 
-                       CornerRadius="20" Margin="0,0,16,0">
-                  <TextBlock Text="3" FontSize="20" FontWeight="Bold" Foreground="#388E3C" 
-                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              <StackPanel>
+                <!-- Step Badge -->
+                <Border Classes="step-badge" HorizontalAlignment="Left" Background="White" Margin="0,0,0,12">
+                  <TextBlock Text="Step 3" Classes="step-badge-text" Foreground="#388E3C"/>
                 </Border>
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                  <TextBlock Text="Lifecycle Configuration - Lactating Stage" FontSize="20" FontWeight="Bold" Foreground="White"/>
-                  <TextBlock Text="Configure management practices for lactating cow stage (active milk production)" 
-                            FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0"/>
-                </StackPanel>
-              </Grid>
+                <!-- Title and Description -->
+                <TextBlock Text="Lifecycle Configuration - Lactating Stage" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="Configure management practices for lactating cow stage (active milk production)" 
+                          FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0"/>
+              </StackPanel>
             </Border>
             <Border Background="White" Padding="24">
               <dairy:LactatingStageView/>
@@ -86,18 +80,16 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                 IsVisible="{Binding IsDrySelected}">
           <StackPanel>
             <Border Background="#F57C00" CornerRadius="6,6,0,0" Padding="20">
-              <Grid ColumnDefinitions="Auto,*,Auto">
-                <Border Grid.Column="0" Background="White" Width="40" Height="40" 
-                       CornerRadius="20" Margin="0,0,16,0">
-                  <TextBlock Text="3" FontSize="20" FontWeight="Bold" Foreground="#F57C00" 
-                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              <StackPanel>
+                <!-- Step Badge -->
+                <Border Classes="step-badge" HorizontalAlignment="Left" Background="White" Margin="0,0,0,12">
+                  <TextBlock Text="Step 3" Classes="step-badge-text" Foreground="#F57C00"/>
                 </Border>
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                  <TextBlock Text="Lifecycle Configuration - Dry Stage" FontSize="20" FontWeight="Bold" Foreground="White"/>
-                  <TextBlock Text="Configure management practices for dry cow stage (pre-calving period)" 
-                            FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0"/>
-                </StackPanel>
-              </Grid>
+                <!-- Title and Description -->
+                <TextBlock Text="Lifecycle Configuration - Dry Stage" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="Configure management practices for dry cow stage (pre-calving period)" 
+                          FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0"/>
+              </StackPanel>
             </Border>
             <Border Background="White" Padding="24">
               <dairy:DryStageView/>
@@ -117,18 +109,16 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
           </Border.IsVisible>
           <StackPanel>
             <Border Background="#1976D2" CornerRadius="6,6,0,0" Padding="20">
-              <Grid ColumnDefinitions="Auto,*,Auto">
-                <Border Grid.Column="0" Background="White" Width="40" Height="40" 
-                       CornerRadius="20" Margin="0,0,16,0">
-                  <TextBlock Text="3" FontSize="20" FontWeight="Bold" Foreground="#1976D2" 
-                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              <StackPanel>
+                <!-- Step Badge -->
+                <Border Classes="step-badge" HorizontalAlignment="Left" Background="White" Margin="0,0,0,12">
+                  <TextBlock Text="Step 3" Classes="step-badge-text" Foreground="#1976D2"/>
                 </Border>
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                  <TextBlock Text="Lifecycle Configuration" FontSize="20" FontWeight="Bold" Foreground="White"/>
-                  <TextBlock Text="?? Click a stage card above to configure management practices" 
-                            FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0" FontWeight="SemiBold"/>
-                </StackPanel>
-              </Grid>
+                <!-- Title and Description -->
+                <TextBlock Text="Lifecycle Configuration" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="?? Click a stage card above to configure management practices" 
+                          FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0" FontWeight="SemiBold"/>
+              </StackPanel>
             </Border>
             <Border Background="White" Padding="24">
               <Border Background="#E3F2FD" BorderBrush="#1976D2" BorderThickness="1" CornerRadius="6" Padding="20">

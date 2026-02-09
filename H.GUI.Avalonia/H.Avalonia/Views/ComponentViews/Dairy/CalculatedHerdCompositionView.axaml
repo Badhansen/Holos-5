@@ -23,18 +23,33 @@
       <!-- Step Header -->
       <StackPanel x:Name="StepHeaderStackPanel"
                   Classes="step-header">
-        <StackPanel x:Name="HeaderContentStackPanel"
-                    VerticalAlignment="Center">
-          <TextBlock x:Name="HeaderTitleTextBlock"
-                     Text="Calculated Herd Composition" 
-                     FontSize="16" 
-                     FontWeight="Bold" 
-                     Foreground="#605D5D"/>
-          <TextBlock x:Name="HeaderDescriptionTextBlock"
-                     Text="Based on animals entering each stage per year (steady-state flow)" 
-                     Classes="step-number-description"
-                     Margin="0,4,0,0"/>
-        </StackPanel>
+        <!-- Step Badge -->
+        <Border Classes="step-badge" HorizontalAlignment="Left">
+          <TextBlock Text="Step 2" Classes="step-badge-text"/>
+        </Border>
+        
+        <!-- Title -->
+        <TextBlock x:Name="HeaderTitleTextBlock"
+                   Text="Select a Lifecycle Stage to Configure"
+                   Classes="step-number-description"
+                   Margin="0,8,0,0"/>
+        
+        <!-- Description -->
+        <TextBlock x:Name="HeaderDescriptionTextBlock"
+                   Text="Click on one of the stage cards below to begin editing its management practices in Step 3" 
+                   FontSize="12"
+                   Foreground="#666"
+                   TextWrapping="Wrap"
+                   Margin="0,8,0,0"/>
+        
+        <!-- Context Info -->
+        <TextBlock x:Name="HeaderContextTextBlock"
+                   Text="Steady-state population calculated from animals entering each stage per year" 
+                   FontSize="11"
+                   FontStyle="Italic"
+                   Foreground="#999"
+                   TextWrapping="Wrap"
+                   Margin="0,4,0,0"/>
       </StackPanel>
       
       <!-- Main Content with Cards and Calculations -->

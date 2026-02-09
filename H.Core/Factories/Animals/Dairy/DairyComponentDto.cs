@@ -46,6 +46,10 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     private int _lactatingCowsEnteringPerYear = 30;
     private int _dryCowsEnteringPerYear = 100;
     
+    // Manure Handling Systems for each phase
+    private ManureStateType _heiferPhase1ManureHandlingSystem = ManureStateType.LiquidNoCrust;
+    private ManureStateType _heiferPhase2ManureHandlingSystem = ManureStateType.LiquidNoCrust;
+    
     #endregion
 
     #region Constructors
@@ -397,6 +401,30 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
                 RaisePropertyChanged(nameof(TotalSteadyStateHerdSize));
             }
         }
+    }
+
+    #endregion
+    
+    #region Properties - Manure Handling Systems
+    
+    /// <summary>
+    /// Manure handling system for heifer Phase 1 (Growing Phase: 4-12 months)
+    /// This determines how manure is stored and handled during the growing phase
+    /// </summary>
+    public ManureStateType HeiferPhase1ManureHandlingSystem
+    {
+        get => _heiferPhase1ManureHandlingSystem;
+        set => SetProperty(ref _heiferPhase1ManureHandlingSystem, value);
+    }
+    
+    /// <summary>
+    /// Manure handling system for heifer Phase 2 (Breeding Phase: 12-24 months)
+    /// This determines how manure is stored and handled during the breeding phase
+    /// </summary>
+    public ManureStateType HeiferPhase2ManureHandlingSystem
+    {
+        get => _heiferPhase2ManureHandlingSystem;
+        set => SetProperty(ref _heiferPhase2ManureHandlingSystem, value);
     }
 
     #endregion

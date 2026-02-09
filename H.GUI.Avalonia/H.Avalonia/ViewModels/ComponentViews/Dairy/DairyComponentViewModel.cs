@@ -9,6 +9,9 @@ using Prism.Events;
 using Prism.Regions;
 using System;
 using System.ComponentModel;
+using System.Collections.Generic;
+using System.Linq;
+using H.Core.Enumerations;
 
 namespace H.Avalonia.ViewModels.ComponentViews.Dairy
 {
@@ -60,6 +63,11 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// Indicates if the Dry card is selected
         /// </summary>
         private bool _isDrySelected;
+
+        /// <summary>
+        /// Collection of available manure state types for dropdown selection
+        /// </summary>
+        private IEnumerable<ManureStateType> _manureStateTypes;
 
         #endregion
 
@@ -177,6 +185,15 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         {
             get => _isDrySelected;
             set => SetProperty(ref _isDrySelected, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the collection of available manure state types
+        /// </summary>
+        public IEnumerable<ManureStateType> ManureStateTypes
+        {
+            get => _manureStateTypes;
+            set => SetProperty(ref _manureStateTypes, value);
         }
 
         #endregion
@@ -313,6 +330,12 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
             _isHeiferSelected = false;
             _isLactatingSelected = false;
             _isDrySelected = false;
+
+            // Initialize manure state types (excluding obsolete options)
+            ManureStateTypes = Enum.GetValues<ManureStateType>()
+                .Where(x => !x.GetType().GetMember(x.ToString())[0]
+                    .GetCustomAttributes(typeof(ObsoleteAttribute), false).Any())
+                .ToList();
         }
 
         /// <summary>

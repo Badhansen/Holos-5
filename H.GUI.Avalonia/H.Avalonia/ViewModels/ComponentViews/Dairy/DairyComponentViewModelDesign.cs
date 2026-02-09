@@ -4,6 +4,9 @@ using H.Core.Services.StorageService;
 using Microsoft.Extensions.Logging;
 using Prism.Events;
 using Prism.Regions;
+using System.Linq;
+using System;
+using H.Core.Enumerations;
 
 namespace H.Avalonia.ViewModels.ComponentViews.Dairy;
 
@@ -19,6 +22,12 @@ public class DairyComponentViewModelDesign : DairyComponentViewModel
     /// </summary>
     public DairyComponentViewModelDesign()
     {
+        // Initialize ManureStateTypes collection (filtering out obsolete values)
+        ManureStateTypes = Enum.GetValues<ManureStateType>()
+            .Where(x => !x.GetType().GetMember(x.ToString())[0]
+                .GetCustomAttributes(typeof(ObsoleteAttribute), false).Any())
+            .ToList();
+
         // Create a sample DairyComponentDto with realistic values
         var dairyDto = new DairyComponentDto
         {
@@ -35,7 +44,11 @@ public class DairyComponentViewModelDesign : DairyComponentViewModel
             // Production defaults - typical Holstein values
             DefaultMilkProduction = 28.0,
             DefaultMilkFatContent = 3.7,
-            DefaultMilkProteinContent = 3.1
+            DefaultMilkProteinContent = 3.1,
+            
+            // Manure handling system defaults for heifer phases
+            HeiferPhase1ManureHandlingSystem = ManureStateType.LiquidNoCrust,
+            HeiferPhase2ManureHandlingSystem = ManureStateType.LiquidNoCrust
         };
 
         // Assign the sample DTO to the bound property

@@ -1,4 +1,5 @@
 using H.Core.Factories.Animals;
+using H.Core.Enumerations;
 
 namespace H.Core.Factories.Animals.Dairy;
 
@@ -41,4 +42,8 @@ public interface IDairyComponentDto : IAnimalComponentDto
     int SteadyStateLactating { get; }
     int SteadyStateDry { get; }
     int TotalSteadyStateHerdSize { get; }
+    
+    // Manure Handling Systems - Phase-specific configurations
+    ManureStateType HeiferPhase1ManureHandlingSystem { get; set; }
+    ManureStateType HeiferPhase2ManureHandlingSystem { get; set; }
 }

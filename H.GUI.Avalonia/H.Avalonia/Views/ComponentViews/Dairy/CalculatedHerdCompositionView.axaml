@@ -93,7 +93,7 @@
                            Margin="0,0,0,8"/>
                 
                 <TextBlock x:Name="CalfDaysTextBlock"
-                           Text="120 days in stage" 
+                           Text="{Binding SelectedDairyComponentDto.CalfStageDurationDays, StringFormat='{}{0} days in stage'}" 
                            FontSize="10" 
                            Foreground="#666" 
                            HorizontalAlignment="Center"
@@ -188,7 +188,7 @@
                          Margin="0,0,0,8"/>
               
               <TextBlock x:Name="HeiferDaysTextBlock"
-                         Text="608 days in stage" 
+                         Text="{Binding SelectedDairyComponentDto.HeiferStageDurationDays, StringFormat='{}{0} days in stage'}" 
                          FontSize="10" 
                          Foreground="#666" 
                          HorizontalAlignment="Center"
@@ -283,7 +283,7 @@
                          Margin="0,0,0,8"/>
               
               <TextBlock x:Name="LactatingDaysTextBlock"
-                         Text="305 days in stage" 
+                         Text="{Binding SelectedDairyComponentDto.LactationDurationDays, StringFormat='{}{0} days in stage'}" 
                          FontSize="10" 
                          Foreground="#666" 
                          HorizontalAlignment="Center"

@@ -18,61 +18,123 @@
 </UserControl.Resources>
   
 <!-- Lactating Stage Card -->
-  <Border Classes="step-container" 
-          BorderBrush="#388E3C" 
-          Margin="0,0,0,16">
-    <Border Background="White" Padding="20">
-      <StackPanel>
+<Border Classes="step-container" 
+        BorderBrush="#388E3C" 
+        Margin="0,0,0,16">
+  <Border Background="White" Padding="20">
+    <StackPanel>
         
-        <!-- NEW: Flow Rate Input Section -->
-        <Border Background="#FFF9E6" BorderBrush="#FFA000" BorderThickness="1" 
-               CornerRadius="6" Padding="16" Margin="0,0,0,16">
-          <StackPanel>
-            <TextBlock Text="🐄 Staggered Progression Input" 
-                      FontSize="14" FontWeight="SemiBold" 
-                      Foreground="#F57C00" Margin="0,0,0,8"/>
-            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#666" 
-                      Margin="0,0,0,12">
-              Enter the number of cows entering lactation (calving and starting milk production) per year. 
-              This includes first-calf heifers and cows re-calving after their dry period.
-            </TextBlock>
+      <!-- Production Values Section -->
+      <Border Background="#E8F5E9" 
+              BorderBrush="#388E3C" 
+              BorderThickness="1" 
+              CornerRadius="6" 
+              Padding="16" 
+              Margin="0,0,0,16">
+        <StackPanel>
+          <TextBlock Text="🥛 Production Values" 
+                    FontSize="14" 
+                    FontWeight="SemiBold" 
+                    Foreground="#388E3C" 
+                    Margin="0,0,0,8"/>
+          <TextBlock TextWrapping="Wrap" 
+                    FontSize="12" 
+                    Foreground="#666" 
+                    Margin="0,0,0,12">
+            Enter the default milk production values for lactating cows. 
+            These values will be used across all lactation phases.
+          </TextBlock>
             
-            <Grid ColumnDefinitions="Auto,200,*">
-              <TextBlock Grid.Column="0" Text="Cows Entering Lactation Per Year:" 
-                        FontSize="13" VerticalAlignment="Center" Margin="0,0,12,0"/>
-              <NumericUpDown Grid.Column="1" 
-                            Value="{Binding SelectedDairyComponentDto.LactatingCowsEnteringPerYear}"
-                            Minimum="0" 
-                            Maximum="10000"
-                            Increment="1"
-                            FormatString="N0"
-                            Height="32"/>
-              <TextBlock Grid.Column="2" Text="cows/year" 
-                        FontSize="12" Foreground="#666" 
-                        VerticalAlignment="Center" Margin="8,0,0,0"/>
-            </Grid>
+          <!-- Milk Production -->
+          <Grid Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="150"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" 
+                      Text="Milk Production:" 
+                      FontWeight="Medium" 
+                      Foreground="RoyalBlue"
+                      VerticalAlignment="Center" 
+                      Margin="0,0,12,0"/>
+            <NumericUpDown Grid.Column="1" 
+                          Minimum="0" 
+                          Maximum="100"
+                          FormatString="0.0"
+                          Increment="0.5"
+                          Value="{Binding SelectedDairyComponentDto.DefaultMilkProduction}"
+                          Height="32"/>
+            <TextBlock Grid.Column="2" 
+                      Text="kg/day" 
+                      FontSize="12" 
+                      Foreground="#666" 
+                      VerticalAlignment="Center" 
+                      Margin="8,0,0,0"/>
+          </Grid>
             
-            <!-- Helpful calculation note -->
-            <Border Background="White" BorderBrush="#E0E0E0" BorderThickness="1"
-                   CornerRadius="4" Padding="8" Margin="0,12,0,0">
-              <StackPanel>
-                <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#666" 
-                          FontStyle="Italic">
-                  <Run Text="💡 Tip: "/>
-                  <Run Text="{Binding SelectedDairyComponentDto.LactatingCowsEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
-                  <Run Text=" cows/year ≈ "/>
-                  <Run Text="{Binding SelectedDairyComponentDto.LactatingCowsEnteringPerYear, Converter={StaticResource DivideByTwelveConverter}, StringFormat='{}{0:F1}'}" FontWeight="SemiBold"/>
-                  <Run Text=" cows/month"/>
-                </TextBlock>
-              </StackPanel>
-            </Border>
-          </StackPanel>
-        </Border>
+          <!-- Milk Fat -->
+          <Grid Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="150"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" 
+                      Text="Milk Fat:" 
+                      FontWeight="Medium" 
+                      Foreground="RoyalBlue"
+                      VerticalAlignment="Center" 
+                      Margin="0,0,12,0"/>
+            <NumericUpDown Grid.Column="1" 
+                          Minimum="0" 
+                          Maximum="10"
+                          FormatString="0.0"
+                          Increment="0.1"
+                          Value="{Binding SelectedDairyComponentDto.DefaultMilkFatContent}"
+                          Height="32"/>
+            <TextBlock Grid.Column="2" 
+                      Text="%" 
+                      FontSize="12" 
+                      Foreground="#666" 
+                      VerticalAlignment="Center" 
+                      Margin="8,0,0,0"/>
+          </Grid>
+            
+          <!-- Milk Protein -->
+          <Grid Margin="0,0,0,0">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="150"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" 
+                      Text="Milk Protein:" 
+                      FontWeight="Medium" 
+                      Foreground="RoyalBlue"
+                      VerticalAlignment="Center" 
+                      Margin="0,0,12,0"/>
+            <NumericUpDown Grid.Column="1" 
+                          Minimum="0" 
+                          Maximum="10"
+                          FormatString="0.0"
+                          Increment="0.1"
+                          Value="{Binding SelectedDairyComponentDto.DefaultMilkProteinContent}"
+                          Height="32"/>
+            <TextBlock Grid.Column="2" 
+                      Text="%" 
+                      FontSize="12" 
+                      Foreground="#666" 
+                      VerticalAlignment="Center" 
+                      Margin="8,0,0,0"/>
+          </Grid>
+        </StackPanel>
+      </Border>
         
-        <TextBlock Text="Lactation Phases" 
-                   FontSize="14" 
-                   FontWeight="SemiBold" 
-                   Margin="0,0,0,12"/>
+      <TextBlock Text="Lactation Phases" 
+                 FontSize="14" 
+                 FontWeight="SemiBold" 
+                 Margin="0,0,0,12"/>
         
         <Grid ColumnDefinitions="*,*" RowDefinitions="*,*">
           <!-- Phase 1: Early Lactation -->

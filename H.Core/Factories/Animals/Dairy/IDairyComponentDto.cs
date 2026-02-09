@@ -16,6 +16,11 @@ public interface IDairyComponentDto : IAnimalComponentDto
     double CalfMortalityRate { get; set; }
     double FemaleCalfRatio { get; set; }
     
+    // Lifecycle Stage Durations
+    int CalfStageDurationDays { get; set; }
+    int HeiferStageDurationDays { get; set; }
+    int LactationDurationDays { get; set; }
+    
     // Calculated Herd Composition - Read-only outputs
     int CalculatedCalves { get; }
     int CalculatedHeifers { get; }

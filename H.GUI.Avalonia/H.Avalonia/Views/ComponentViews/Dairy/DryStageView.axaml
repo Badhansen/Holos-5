@@ -18,56 +18,11 @@
 </UserControl.Resources>
   
 <!-- Dry Stage Card -->
-  <Border BorderBrush="#F57C00" BorderThickness="2" CornerRadius="8">
-    <Border Background="White" Padding="20">
-      <StackPanel>
+<Border BorderBrush="#F57C00" BorderThickness="2" CornerRadius="8">
+  <Border Background="White" Padding="20">
+    <StackPanel>
         
-        <!-- NEW: Flow Rate Input Section -->
-        <Border Background="#FFF9E6" BorderBrush="#FFA000" BorderThickness="1" 
-               CornerRadius="6" Padding="16" Margin="0,0,0,16">
-          <StackPanel>
-            <TextBlock Text="🐄 Staggered Progression Input" 
-                      FontSize="14" FontWeight="SemiBold" 
-                      Foreground="#F57C00" Margin="0,0,0,8"/>
-            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#666" 
-                      Margin="0,0,0,12">
-              Enter the number of cows entering the dry period (being dried off from lactation) per year. 
-              This represents lactating cows stopping milk production in preparation for their next calving.
-            </TextBlock>
-            
-            <Grid ColumnDefinitions="Auto,200,*">
-              <TextBlock Grid.Column="0" Text="Cows Entering Dry Period Per Year:" 
-                        FontSize="13" VerticalAlignment="Center" Margin="0,0,12,0"/>
-              <NumericUpDown Grid.Column="1" 
-                            Value="{Binding SelectedDairyComponentDto.DryCowsEnteringPerYear}"
-                            Minimum="0" 
-                            Maximum="10000"
-                            Increment="1"
-                            FormatString="N0"
-                            Height="32"/>
-              <TextBlock Grid.Column="2" Text="cows/year" 
-                        FontSize="12" Foreground="#666" 
-                        VerticalAlignment="Center" Margin="8,0,0,0"/>
-            </Grid>
-            
-            <!-- Helpful calculation note -->
-            <Border Background="White" BorderBrush="#E0E0E0" BorderThickness="1"
-                   CornerRadius="4" Padding="8" Margin="0,12,0,0">
-              <StackPanel>
-                <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#666" 
-                          FontStyle="Italic">
-                  <Run Text="💡 Tip: "/>
-                  <Run Text="{Binding SelectedDairyComponentDto.DryCowsEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
-                  <Run Text=" cows/year ≈ "/>
-                  <Run Text="{Binding SelectedDairyComponentDto.DryCowsEnteringPerYear, Converter={StaticResource DivideByTwelveConverter}, StringFormat='{}{0:F1}'}" FontWeight="SemiBold"/>
-                  <Run Text=" cows/month"/>
-                </TextBlock>
-              </StackPanel>
-            </Border>
-          </StackPanel>
-        </Border>
-        
-        <TextBlock Text="Management Phases" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,12"/>
+      <TextBlock Text="Management Phases" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,12"/>
         
         <Grid ColumnDefinitions="*,*">
           <!-- Phase 1: Far-off Dry Period -->

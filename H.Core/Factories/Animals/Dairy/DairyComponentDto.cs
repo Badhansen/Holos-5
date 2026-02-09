@@ -23,6 +23,11 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     private double _calfMortalityRate = 5.0;
     private double _femaleCalfRatio = 50.0;
     
+    // Lifecycle Stage Durations
+    private int _calfStageDurationDays = 120;
+    private int _heiferStageDurationDays = 608;
+    private int _lactationDurationDays = 305;
+    
     // Calculated Herd Composition - Read-only outputs
     private int _calculatedCalves;
     private int _calculatedHeifers;
@@ -203,6 +208,69 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
             if (SetProperty(ref _femaleCalfRatio, value))
             {
                 CalculateHerdComposition();
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Duration of the calf stage (birth to 4 months)
+    /// This is used to calculate steady-state calf populations
+    /// 
+    /// Default: 120 days (4 months)
+    /// 
+    /// (days)
+    /// </summary>
+    public int CalfStageDurationDays
+    {
+        get => _calfStageDurationDays;
+        set
+        {
+            if (SetProperty(ref _calfStageDurationDays, value))
+            {
+                RaisePropertyChanged(nameof(SteadyStateCalves));
+                RaisePropertyChanged(nameof(TotalSteadyStateHerdSize));
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Duration of the heifer stage (4 months to first calving at ~24 months)
+    /// This is used to calculate steady-state heifer populations
+    /// 
+    /// Default: 608 days (~20 months)
+    /// 
+    /// (days)
+    /// </summary>
+    public int HeiferStageDurationDays
+    {
+        get => _heiferStageDurationDays;
+        set
+        {
+            if (SetProperty(ref _heiferStageDurationDays, value))
+            {
+                RaisePropertyChanged(nameof(SteadyStateHeifers));
+                RaisePropertyChanged(nameof(TotalSteadyStateHerdSize));
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Duration of the lactation period (active milk production)
+    /// This is used to calculate steady-state lactating cow populations
+    /// 
+    /// Default: 305 days (standard 10-month lactation)
+    /// 
+    /// (days)
+    /// </summary>
+    public int LactationDurationDays
+    {
+        get => _lactationDurationDays;
+        set
+        {
+            if (SetProperty(ref _lactationDurationDays, value))
+            {
+                RaisePropertyChanged(nameof(SteadyStateLactating));
+                RaisePropertyChanged(nameof(TotalSteadyStateHerdSize));
             }
         }
     }
@@ -443,7 +511,7 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     /// Calculated steady-state population of calves in the herd.
     /// This represents how many calves are present at any given moment in a continuous-flow operation.
     /// 
-    /// FORMULA: CalvesEnteringPerYear × (Days in calf stage / 365)
+    /// FORMULA: CalvesEnteringPerYear × (CalfStageDurationDays / 365)
     /// Example: 100 calves/year × (120 days / 365) = 100 × 0.329 = 33 calves at steady-state
     /// 
     /// (number of animals)
@@ -452,9 +520,7 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     {
         get
         {
-            // Calf stage: birth to 4 months (120 days)
-            const int daysInCalfStage = 120;
-            return (int)Math.Round(CalvesEnteringPerYear * (daysInCalfStage / 365.0));
+            return (int)Math.Round(CalvesEnteringPerYear * (CalfStageDurationDays / 365.0));
         }
     }
     
@@ -462,7 +528,7 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     /// Calculated steady-state population of heifers in the herd.
     /// This represents how many replacement heifers are present at any given moment.
     /// 
-    /// FORMULA: HeifersEnteringPerYear × (Days in heifer stage / 365)
+    /// FORMULA: HeifersEnteringPerYear × (HeiferStageDurationDays / 365)
     /// Example: 30 heifers/year × (608 days / 365) = 30 × 1.666 = 50 heifers at steady-state
     /// 
     /// (number of animals)
@@ -471,12 +537,7 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     {
         get
         {
-            // Heifer stage: 4 months to 24 months (608 days = 240 + 365 + 3)
-            // Phase 1 (Growing): 4-12 months = 240 days
-            // Phase 2 (Breeding): 12-24 months = 365 days
-            // Total = 605 days, but using 608 for consistency with training materials
-            const int daysInHeiferStage = 608;
-            return (int)Math.Round(HeifersEnteringPerYear * (daysInHeiferStage / 365.0));
+            return (int)Math.Round(HeifersEnteringPerYear * (HeiferStageDurationDays / 365.0));
         }
     }
     
@@ -484,7 +545,7 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     /// Calculated steady-state population of lactating cows in the herd.
     /// This represents how many cows are producing milk at any given moment.
     /// 
-    /// FORMULA: LactatingCowsEnteringPerYear × (Days in lactation / 365)
+    /// FORMULA: LactatingCowsEnteringPerYear × (LactationDurationDays / 365)
     /// Example: 100 cows/year × (305 days / 365) = 100 × 0.836 = 84 lactating cows at steady-state
     /// 
     /// (number of animals)
@@ -493,9 +554,7 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     {
         get
         {
-            // Lactation period: 305 days (standard 10-month lactation)
-            const int daysInLactation = 305;
-            return (int)Math.Round(LactatingCowsEnteringPerYear * (daysInLactation / 365.0));
+            return (int)Math.Round(LactatingCowsEnteringPerYear * (LactationDurationDays / 365.0));
         }
     }
     
@@ -900,6 +959,69 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
             RemoveError(key);
         }
     }
+    
+    /// <summary>
+    /// Validates that the calf stage duration is within a reasonable range
+    /// </summary>
+    private void ValidateCalfStageDurationDays()
+    {
+        var key = nameof(CalfStageDurationDays);
+        
+        if (CalfStageDurationDays < 30)
+        {
+            AddError(key, "Calf stage duration must be at least 30 days");
+        }
+        else if (CalfStageDurationDays > 365)
+        {
+            AddError(key, "Calf stage duration cannot exceed 365 days");
+        }
+        else
+        {
+            RemoveError(key);
+        }
+    }
+    
+    /// <summary>
+    /// Validates that the heifer stage duration is within a reasonable range
+    /// </summary>
+    private void ValidateHeiferStageDurationDays()
+    {
+        var key = nameof(HeiferStageDurationDays);
+        
+        if (HeiferStageDurationDays < 365)
+        {
+            AddError(key, "Heifer stage duration must be at least 365 days (1 year)");
+        }
+        else if (HeiferStageDurationDays > 1095)
+        {
+            AddError(key, "Heifer stage duration cannot exceed 1095 days (3 years)");
+        }
+        else
+        {
+            RemoveError(key);
+        }
+    }
+    
+    /// <summary>
+    /// Validates that the lactation duration is within a reasonable range
+    /// </summary>
+    private void ValidateLactationDurationDays()
+    {
+        var key = nameof(LactationDurationDays);
+        
+        if (LactationDurationDays < 200)
+        {
+            AddError(key, "Lactation duration must be at least 200 days");
+        }
+        else if (LactationDurationDays > 400)
+        {
+            AddError(key, "Lactation duration cannot exceed 400 days");
+        }
+        else
+        {
+            RemoveError(key);
+        }
+    }
 
     /// <summary>
     /// Validates that the default milk production is within a reasonable range
@@ -1082,6 +1204,18 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
                 
             case nameof(FemaleCalfRatio):
                 ValidateFemaleCalfRatio();
+                break;
+                
+            case nameof(CalfStageDurationDays):
+                ValidateCalfStageDurationDays();
+                break;
+                
+            case nameof(HeiferStageDurationDays):
+                ValidateHeiferStageDurationDays();
+                break;
+                
+            case nameof(LactationDurationDays):
+                ValidateLactationDurationDays();
                 break;
                 
             case nameof(DefaultMilkProduction):

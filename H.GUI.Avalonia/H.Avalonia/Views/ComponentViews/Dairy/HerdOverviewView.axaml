@@ -1,12 +1,17 @@
 <UserControl x:Name="HerdOverviewRootControl"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="400"
-             x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
+           xmlns="https://github.com/avaloniaui"
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:converters="clr-namespace:H.Avalonia.Converters"
+           mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="400"
+           x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
   
-  <!-- Step 1: Herd Parameters -->
+<UserControl.Resources>
+  <converters:DivideByTwelveConverter x:Key="DivideByTwelveConverter"/>
+</UserControl.Resources>
+  
+<!-- Step 1: Herd Parameters -->
   <Border x:Name="StepContainerBorder" Classes="step-container">
     <StackPanel>
       <!-- Step Header -->
@@ -27,7 +32,7 @@
                   Grid.IsSharedSizeScope="True">
 
         <!-- Production Cycle Section -->
-        <Border x:Name="ProductionCycleCardBorder" Classes="input-card" Margin="0,0,8,0">
+        <Border x:Name="ProductionCycleCardBorder" Classes="input-card" Margin="0,0,0,0">
           <StackPanel>
             <TextBlock x:Name="ProductionCycleTitleTextBlock" 
                        Text="Lifecycle Parameters" 
@@ -64,6 +69,96 @@
                          Margin="8,0,0,0"/>
             </Grid>
             
+            <!-- Calf Stage Duration -->
+            <Grid x:Name="CalfStageDurationRowGrid" Margin="0,0,0,8">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+                <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+              </Grid.ColumnDefinitions>
+              <TextBlock x:Name="CalfStageDurationLabelTextBlock"
+                         Grid.Column="0" 
+                         Text="Calf Stage:" 
+                         FontWeight="Medium" 
+                         Foreground="RoyalBlue"
+                         VerticalAlignment="Center" 
+                         Margin="0,0,8,0"/>
+              <NumericUpDown x:Name="CalfStageDurationInputNumericUpDown"
+                             Grid.Column="1" 
+                             Minimum="30" 
+                             Maximum="365"
+                             FormatString="0"
+                             Increment="5"
+                             Value="{Binding Path=SelectedDairyComponentDto.CalfStageDurationDays}"
+                             Margin="8,0"
+                             HorizontalAlignment="Stretch"/>
+              <TextBlock x:Name="CalfStageDurationUnitTextBlock"
+                         Grid.Column="2" 
+                         Text="days" 
+                         VerticalAlignment="Center"
+                         Margin="8,0,0,0"/>
+            </Grid>
+            
+            <!-- Heifer Stage Duration -->
+            <Grid x:Name="HeiferStageDurationRowGrid" Margin="0,0,0,8">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+                <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+              </Grid.ColumnDefinitions>
+              <TextBlock x:Name="HeiferStageDurationLabelTextBlock"
+                         Grid.Column="0" 
+                         Text="Heifer Stage:" 
+                         FontWeight="Medium" 
+                         Foreground="RoyalBlue"
+                         VerticalAlignment="Center" 
+                         Margin="0,0,8,0"/>
+              <NumericUpDown x:Name="HeiferStageDurationInputNumericUpDown"
+                             Grid.Column="1" 
+                             Minimum="365" 
+                             Maximum="1095"
+                             FormatString="0"
+                             Increment="10"
+                             Value="{Binding Path=SelectedDairyComponentDto.HeiferStageDurationDays}"
+                             Margin="8,0"
+                             HorizontalAlignment="Stretch"/>
+              <TextBlock x:Name="HeiferStageDurationUnitTextBlock"
+                         Grid.Column="2" 
+                         Text="days" 
+                         VerticalAlignment="Center"
+                         Margin="8,0,0,0"/>
+            </Grid>
+            
+            <!-- Lactation Duration -->
+            <Grid x:Name="LactationDurationRowGrid" Margin="0,0,0,8">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+                <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+              </Grid.ColumnDefinitions>
+              <TextBlock x:Name="LactationDurationLabelTextBlock"
+                         Grid.Column="0" 
+                         Text="Lactation Period:" 
+                         FontWeight="Medium" 
+                         Foreground="RoyalBlue"
+                         VerticalAlignment="Center" 
+                         Margin="0,0,8,0"/>
+              <NumericUpDown x:Name="LactationDurationInputNumericUpDown"
+                             Grid.Column="1" 
+                             Minimum="200" 
+                             Maximum="400"
+                             FormatString="0"
+                             Increment="5"
+                             Value="{Binding Path=SelectedDairyComponentDto.LactationDurationDays}"
+                             Margin="8,0"
+                             HorizontalAlignment="Stretch"/>
+              <TextBlock x:Name="LactationDurationUnitTextBlock"
+                         Grid.Column="2" 
+                         Text="days" 
+                         VerticalAlignment="Center"
+                         Margin="8,0,0,0"/>
+            </Grid>
+            
             <!-- Help Text -->
             <TextBlock Text="Duration before calving that cows stop producing milk"
                        FontSize="11"
@@ -73,116 +168,207 @@
                        Margin="0,4,0,0"/>
           </StackPanel>
         </Border>
-
-        <!-- Production Defaults Section -->
-        <Border x:Name="ProductionDefaultsCardBorder" Classes="input-card" Margin="0,0,0,0">
-          <StackPanel>
-            <TextBlock x:Name="ProductionDefaultsTitleTextBlock" 
-                       Text="Production Defaults" 
-                       FontWeight="Bold" 
-                       Margin="0,0,0,12"/>
-            
-            <!-- Help Text -->
-            <TextBlock x:Name="ProductionDefaultsHelpTextBlock"
-                       Text="Default values for lactating cows"
-                       FontSize="11"
-                       FontStyle="Italic"
-                       Foreground="#666"
-                       TextWrapping="Wrap"
-                       Margin="0,0,0,12"/>
-            
-            <!-- Default Milk Production -->
-            <Grid x:Name="DefaultMilkProductionRowGrid" Margin="0,0,0,8">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
-                <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
-              </Grid.ColumnDefinitions>
-              <TextBlock x:Name="DefaultMilkProductionLabelTextBlock"
-                         Grid.Column="0" 
-                         Text="Milk Production:" 
-                         FontWeight="Medium" 
-                         Foreground="RoyalBlue"
-                         VerticalAlignment="Center" 
-                         Margin="0,0,8,0"/>
-              <NumericUpDown x:Name="DefaultMilkProductionInputNumericUpDown"
-                             Grid.Column="1" 
-                             Minimum="0" 
-                             Maximum="100"
-                             FormatString="0.0"
-                             Increment="0.5"
-                             Value="{Binding Path=SelectedDairyComponentDto.DefaultMilkProduction}"
-                             Margin="8,0"
-                             HorizontalAlignment="Stretch"/>
-              <TextBlock x:Name="DefaultMilkProductionUnitTextBlock"
-                         Grid.Column="2" 
-                         Text="kg/day" 
-                         VerticalAlignment="Center"
-                         Margin="8,0,0,0"/>
-            </Grid>
-
-            <!-- Default Milk Fat Content -->
-            <Grid x:Name="DefaultMilkFatContentRowGrid" Margin="0,0,0,8">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
-                <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
-              </Grid.ColumnDefinitions>
-              <TextBlock x:Name="DefaultMilkFatContentLabelTextBlock"
-                         Grid.Column="0" 
-                         Text="Milk Fat:" 
-                         FontWeight="Medium" 
-                         Foreground="RoyalBlue"
-                         VerticalAlignment="Center" 
-                         Margin="0,0,8,0"/>
-              <NumericUpDown x:Name="DefaultMilkFatContentInputNumericUpDown"
-                             Grid.Column="1" 
-                             Minimum="0" 
-                             Maximum="10"
-                             FormatString="0.0"
-                             Increment="0.1"
-                             Value="{Binding Path=SelectedDairyComponentDto.DefaultMilkFatContent}"
-                             Margin="8,0"
-                             HorizontalAlignment="Stretch"/>
-              <TextBlock x:Name="DefaultMilkFatContentUnitTextBlock"
-                         Grid.Column="2" 
-                         Text="%" 
-                         VerticalAlignment="Center"
-                         Margin="8,0,0,0"/>
-            </Grid>
-
-            <!-- Default Milk Protein Content -->
-            <Grid x:Name="DefaultMilkProteinContentRowGrid" Margin="0,0,0,8">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
-                <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
-              </Grid.ColumnDefinitions>
-              <TextBlock x:Name="DefaultMilkProteinContentLabelTextBlock"
-                         Grid.Column="0" 
-                         Text="Milk Protein:" 
-                         FontWeight="Medium" 
-                         Foreground="RoyalBlue"
-                         VerticalAlignment="Center" 
-                         Margin="0,0,8,0"/>
-              <NumericUpDown x:Name="DefaultMilkProteinContentInputNumericUpDown"
-                             Grid.Column="1" 
-                             Minimum="0" 
-                             Maximum="10"
-                             FormatString="0.0"
-                             Increment="0.1"
-                             Value="{Binding Path=SelectedDairyComponentDto.DefaultMilkProteinContent}"
-                             Margin="8,0"
-                             HorizontalAlignment="Stretch"/>
-              <TextBlock x:Name="DefaultMilkProteinContentUnitTextBlock"
-                         Grid.Column="2" 
-                         Text="%" 
-                         VerticalAlignment="Center"
-                         Margin="8,0,0,0"/>
-            </Grid>
-          </StackPanel>
-        </Border>
       </StackPanel>
+      
+      <!-- Staggered Progression Flow Rates Section -->
+      <Border x:Name="StaggeredProgressionCardBorder" 
+              Classes="input-card" 
+              Background="#FFF9E6" 
+              BorderBrush="#FFA000" 
+              BorderThickness="2"
+              Margin="0,16,0,0">
+        <StackPanel>
+          <TextBlock x:Name="StaggeredProgressionTitleTextBlock"
+                     Text="?? Staggered Progression Flow Rates" 
+                     FontWeight="Bold" 
+                     Margin="0,0,0,8"/>
+          
+          <!-- Help Text -->
+          <TextBlock x:Name="StaggeredProgressionHelpTextBlock"
+                     Text="Enter the number of animals entering each lifecycle stage per year"
+                     FontSize="11"
+                     FontStyle="Italic"
+                     Foreground="#666"
+                     TextWrapping="Wrap"
+                     Margin="0,0,0,12"/>
+          
+          <!-- Calves Entering Per Year -->
+          <Grid x:Name="CalvesEnteringRowGrid" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+              <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="CalvesEnteringLabelTextBlock"
+                       Grid.Column="0" 
+                       Text="Calves Entering:" 
+                       FontWeight="Medium" 
+                       Foreground="RoyalBlue"
+                       VerticalAlignment="Center" 
+                       Margin="0,0,8,0"/>
+            <NumericUpDown x:Name="CalvesEnteringInputNumericUpDown"
+                           Grid.Column="1" 
+                           Minimum="0" 
+                           Maximum="10000"
+                           FormatString="0"
+                           Increment="1"
+                           Value="{Binding Path=SelectedDairyComponentDto.CalvesEnteringPerYear}"
+                           Margin="8,0"
+                           HorizontalAlignment="Stretch"/>
+            <TextBlock x:Name="CalvesEnteringUnitTextBlock"
+                       Grid.Column="2" 
+                       Text="calves/year" 
+                       VerticalAlignment="Center"
+                       Margin="8,0,0,0"/>
+          </Grid>
+          
+          <!-- Calves Per Month Tip -->
+          <TextBlock x:Name="CalvesPerMonthTipTextBlock"
+                     TextWrapping="Wrap" 
+                     FontSize="11" 
+                     Foreground="#666" 
+                     FontStyle="Italic"
+                     Margin="0,0,0,12">
+            <Run Text="?? "/>
+            <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
+            <Run Text=" calves/year ? "/>
+            <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, Converter={StaticResource DivideByTwelveConverter}, StringFormat='{}{0:F1}'}" FontWeight="SemiBold"/>
+            <Run Text=" calves/month"/>
+          </TextBlock>
+          
+          <!-- Heifers Entering Per Year -->
+          <Grid x:Name="HeifersEnteringRowGrid" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+              <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="HeifersEnteringLabelTextBlock"
+                       Grid.Column="0" 
+                       Text="Heifers Entering:" 
+                       FontWeight="Medium" 
+                       Foreground="RoyalBlue"
+                       VerticalAlignment="Center" 
+                       Margin="0,0,8,0"/>
+            <NumericUpDown x:Name="HeifersEnteringInputNumericUpDown"
+                           Grid.Column="1" 
+                           Minimum="0" 
+                           Maximum="10000"
+                           FormatString="0"
+                           Increment="1"
+                           Value="{Binding Path=SelectedDairyComponentDto.HeifersEnteringPerYear}"
+                           Margin="8,0"
+                           HorizontalAlignment="Stretch"/>
+            <TextBlock x:Name="HeifersEnteringUnitTextBlock"
+                       Grid.Column="2" 
+                       Text="heifers/year" 
+                       VerticalAlignment="Center"
+                       Margin="8,0,0,0"/>
+          </Grid>
+          
+          <!-- Heifers Per Month Tip -->
+          <TextBlock x:Name="HeifersPerMonthTipTextBlock"
+                     TextWrapping="Wrap" 
+                     FontSize="11" 
+                     Foreground="#666" 
+                     FontStyle="Italic"
+                     Margin="0,0,0,12">
+            <Run Text="?? "/>
+            <Run Text="{Binding SelectedDairyComponentDto.HeifersEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
+            <Run Text=" heifers/year ? "/>
+            <Run Text="{Binding SelectedDairyComponentDto.HeifersEnteringPerYear, Converter={StaticResource DivideByTwelveConverter}, StringFormat='{}{0:F1}'}" FontWeight="SemiBold"/>
+            <Run Text=" heifers/month"/>
+          </TextBlock>
+          
+          <!-- Lactating Cows Entering Per Year -->
+          <Grid x:Name="LactatingEnteringRowGrid" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+              <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="LactatingEnteringLabelTextBlock"
+                       Grid.Column="0" 
+                       Text="Lactating Entering:" 
+                       FontWeight="Medium" 
+                       Foreground="RoyalBlue"
+                       VerticalAlignment="Center" 
+                       Margin="0,0,8,0"/>
+            <NumericUpDown x:Name="LactatingEnteringInputNumericUpDown"
+                           Grid.Column="1" 
+                           Minimum="0" 
+                           Maximum="10000"
+                           FormatString="0"
+                           Increment="1"
+                           Value="{Binding Path=SelectedDairyComponentDto.LactatingCowsEnteringPerYear}"
+                           Margin="8,0"
+                           HorizontalAlignment="Stretch"/>
+            <TextBlock x:Name="LactatingEnteringUnitTextBlock"
+                       Grid.Column="2" 
+                       Text="cows/year" 
+                       VerticalAlignment="Center"
+                       Margin="8,0,0,0"/>
+          </Grid>
+          
+          <!-- Lactating Per Month Tip -->
+          <TextBlock x:Name="LactatingPerMonthTipTextBlock"
+                     TextWrapping="Wrap" 
+                     FontSize="11" 
+                     Foreground="#666" 
+                     FontStyle="Italic"
+                     Margin="0,0,0,12">
+            <Run Text="?? "/>
+            <Run Text="{Binding SelectedDairyComponentDto.LactatingCowsEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
+            <Run Text=" cows/year ? "/>
+            <Run Text="{Binding SelectedDairyComponentDto.LactatingCowsEnteringPerYear, Converter={StaticResource DivideByTwelveConverter}, StringFormat='{}{0:F1}'}" FontWeight="SemiBold"/>
+            <Run Text=" cows/month"/>
+          </TextBlock>
+          
+          <!-- Dry Cows Entering Per Year -->
+          <Grid x:Name="DryEnteringRowGrid" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+              <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="DryEnteringLabelTextBlock"
+                       Grid.Column="0" 
+                       Text="Dry Cows Entering:" 
+                       FontWeight="Medium" 
+                       Foreground="RoyalBlue"
+                       VerticalAlignment="Center" 
+                       Margin="0,0,8,0"/>
+            <NumericUpDown x:Name="DryEnteringInputNumericUpDown"
+                           Grid.Column="1" 
+                           Minimum="0" 
+                           Maximum="10000"
+                           FormatString="0"
+                           Increment="1"
+                           Value="{Binding Path=SelectedDairyComponentDto.DryCowsEnteringPerYear}"
+                           Margin="8,0"
+                           HorizontalAlignment="Stretch"/>
+            <TextBlock x:Name="DryEnteringUnitTextBlock"
+                       Grid.Column="2" 
+                       Text="cows/year" 
+                       VerticalAlignment="Center"
+                       Margin="8,0,0,0"/>
+          </Grid>
+          
+          <!-- Dry Per Month Tip -->
+          <TextBlock x:Name="DryPerMonthTipTextBlock"
+                     TextWrapping="Wrap" 
+                     FontSize="11" 
+                     Foreground="#666" 
+                     FontStyle="Italic"
+                     Margin="0,4,0,0">
+            <Run Text="?? "/>
+            <Run Text="{Binding SelectedDairyComponentDto.DryCowsEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
+            <Run Text=" cows/year ? "/>
+            <Run Text="{Binding SelectedDairyComponentDto.DryCowsEnteringPerYear, Converter={StaticResource DivideByTwelveConverter}, StringFormat='{}{0:F1}'}" FontWeight="SemiBold"/>
+            <Run Text=" cows/month"/>
+          </TextBlock>
+        </StackPanel>
+      </Border>
     </StackPanel>
   </Border>
   

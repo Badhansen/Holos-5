@@ -23,14 +23,6 @@
       <!-- Step Header -->
       <StackPanel x:Name="StepHeaderStackPanel"
                   Classes="step-header">
-        <Border x:Name="StepBadgeBorder"
-                Classes="step-badge" 
-                Background="#43A047">
-          <TextBlock x:Name="StepBadgeTextBlock"
-                     Text="2" 
-                     Classes="step-badge-text" 
-                     FontSize="14"/>
-        </Border>
         <StackPanel x:Name="HeaderContentStackPanel"
                     VerticalAlignment="Center">
           <TextBlock x:Name="HeaderTitleTextBlock"

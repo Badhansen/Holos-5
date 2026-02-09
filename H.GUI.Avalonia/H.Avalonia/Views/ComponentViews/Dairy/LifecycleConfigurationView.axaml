@@ -6,45 +6,145 @@ xmlns:dairy="clr-namespace:H.Avalonia.Views.ComponentViews.Dairy"
 mc:Ignorable="d" d:DesignWidth="1400"
 x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
   
-<!-- Step 2: Lifecycle Timeline -->
-      <Border BorderBrush="#1976D2" BorderThickness="2" CornerRadius="8" Margin="0,0,0,20">
-        <StackPanel>
-          <Border Background="#1976D2" CornerRadius="6,6,0,0" Padding="20">
-            <Grid ColumnDefinitions="Auto,*,Auto">
-              <Border Grid.Column="0" Background="White" Width="40" Height="40" 
-                     CornerRadius="20" Margin="0,0,16,0">
-                <TextBlock Text="2" FontSize="20" FontWeight="Bold" Foreground="#1976D2" 
-                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
+<!-- Step 3: Lifecycle Configuration -->
+      <!-- Dynamic colored header based on selected stage -->
+      <Panel Margin="0,0,0,20">
+        <!-- Calf: Blue -->
+        <Border BorderBrush="#2196F3" BorderThickness="2" CornerRadius="8"
+                IsVisible="{Binding IsCalfSelected}">
+          <StackPanel>
+            <Border Background="#2196F3" CornerRadius="6,6,0,0" Padding="20">
+              <Grid ColumnDefinitions="Auto,*,Auto">
+                <Border Grid.Column="0" Background="White" Width="40" Height="40" 
+                       CornerRadius="20" Margin="0,0,16,0">
+                  <TextBlock Text="3" FontSize="20" FontWeight="Bold" Foreground="#2196F3" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                  <TextBlock Text="Lifecycle Configuration - Calf Stage" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                  <TextBlock Text="Configure management practices for calf stage (birth to 4 months)" 
+                            FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0"/>
+                </StackPanel>
+              </Grid>
+            </Border>
+            <Border Background="White" Padding="24">
+              <dairy:CalfStageView/>
+            </Border>
+          </StackPanel>
+        </Border>
+        
+        <!-- Heifer: Purple -->
+        <Border BorderBrush="#7B1FA2" BorderThickness="2" CornerRadius="8"
+                IsVisible="{Binding IsHeiferSelected}">
+          <StackPanel>
+            <Border Background="#7B1FA2" CornerRadius="6,6,0,0" Padding="20">
+              <Grid ColumnDefinitions="Auto,*,Auto">
+                <Border Grid.Column="0" Background="White" Width="40" Height="40" 
+                       CornerRadius="20" Margin="0,0,16,0">
+                  <TextBlock Text="3" FontSize="20" FontWeight="Bold" Foreground="#7B1FA2" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                  <TextBlock Text="Lifecycle Configuration - Heifer Stage" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                  <TextBlock Text="Configure management practices for heifer stage (4 months to first calving)" 
+                            FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0"/>
+                </StackPanel>
+              </Grid>
+            </Border>
+            <Border Background="White" Padding="24">
+              <dairy:HeiferStageView/>
+            </Border>
+          </StackPanel>
+        </Border>
+        
+        <!-- Lactating: Green -->
+        <Border BorderBrush="#388E3C" BorderThickness="2" CornerRadius="8"
+                IsVisible="{Binding IsLactatingSelected}">
+          <StackPanel>
+            <Border Background="#388E3C" CornerRadius="6,6,0,0" Padding="20">
+              <Grid ColumnDefinitions="Auto,*,Auto">
+                <Border Grid.Column="0" Background="White" Width="40" Height="40" 
+                       CornerRadius="20" Margin="0,0,16,0">
+                  <TextBlock Text="3" FontSize="20" FontWeight="Bold" Foreground="#388E3C" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                  <TextBlock Text="Lifecycle Configuration - Lactating Stage" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                  <TextBlock Text="Configure management practices for lactating cow stage (active milk production)" 
+                            FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0"/>
+                </StackPanel>
+              </Grid>
+            </Border>
+            <Border Background="White" Padding="24">
+              <dairy:LactatingStageView/>
+            </Border>
+          </StackPanel>
+        </Border>
+        
+        <!-- Dry: Orange -->
+        <Border BorderBrush="#F57C00" BorderThickness="2" CornerRadius="8"
+                IsVisible="{Binding IsDrySelected}">
+          <StackPanel>
+            <Border Background="#F57C00" CornerRadius="6,6,0,0" Padding="20">
+              <Grid ColumnDefinitions="Auto,*,Auto">
+                <Border Grid.Column="0" Background="White" Width="40" Height="40" 
+                       CornerRadius="20" Margin="0,0,16,0">
+                  <TextBlock Text="3" FontSize="20" FontWeight="Bold" Foreground="#F57C00" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                  <TextBlock Text="Lifecycle Configuration - Dry Stage" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                  <TextBlock Text="Configure management practices for dry cow stage (pre-calving period)" 
+                            FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0"/>
+                </StackPanel>
+              </Grid>
+            </Border>
+            <Border Background="White" Padding="24">
+              <dairy:DryStageView/>
+            </Border>
+          </StackPanel>
+        </Border>
+        
+        <!-- Default: No stage selected -->
+        <Border BorderBrush="#1976D2" BorderThickness="2" CornerRadius="8">
+          <Border.IsVisible>
+            <MultiBinding Converter="{x:Static BoolConverters.And}">
+              <Binding Path="!IsCalfSelected"/>
+              <Binding Path="!IsHeiferSelected"/>
+              <Binding Path="!IsLactatingSelected"/>
+              <Binding Path="!IsDrySelected"/>
+            </MultiBinding>
+          </Border.IsVisible>
+          <StackPanel>
+            <Border Background="#1976D2" CornerRadius="6,6,0,0" Padding="20">
+              <Grid ColumnDefinitions="Auto,*,Auto">
+                <Border Grid.Column="0" Background="White" Width="40" Height="40" 
+                       CornerRadius="20" Margin="0,0,16,0">
+                  <TextBlock Text="3" FontSize="20" FontWeight="Bold" Foreground="#1976D2" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                  <TextBlock Text="Lifecycle Configuration" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                  <TextBlock Text="?? Click a stage card above to configure management practices" 
+                            FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0" FontWeight="SemiBold"/>
+                </StackPanel>
+              </Grid>
+            </Border>
+            <Border Background="White" Padding="24">
+              <Border Background="#E3F2FD" BorderBrush="#1976D2" BorderThickness="1" CornerRadius="6" Padding="20">
+                <StackPanel HorizontalAlignment="Center">
+                  <TextBlock Text="?? Select a Stage to Begin" FontSize="18" FontWeight="Bold" 
+                            Foreground="#1976D2" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                  <TextBlock Text="Click on one of the stage cards above (Calf, Heifer, Lactating, or Dry)" 
+                            FontSize="14" Foreground="#666" HorizontalAlignment="Center" TextWrapping="Wrap"
+                            TextAlignment="Center" MaxWidth="500" Margin="0,0,0,8"/>
+                  <TextBlock Text="to configure its specific management practices and production parameters." 
+                            FontSize="14" Foreground="#666" HorizontalAlignment="Center" TextWrapping="Wrap"
+                            TextAlignment="Center" MaxWidth="500"/>
+                </StackPanel>
               </Border>
-              <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                <TextBlock Text="Lifecycle Configuration" FontSize="20" FontWeight="Bold" Foreground="White"/>
-                <TextBlock Text="Configure management practices for each lifecycle stage" 
-                          FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0"/>
-              </StackPanel>
-              
-            </Grid>
-          </Border>
-          
-          <Border Background="White" Padding="24">
-            <StackPanel>
-              <!-- Expanded Lifecycle Stage Cards -->
-              <StackPanel>
-                
-                <!-- Calf Stage Card -->
-                <dairy:CalfStageView Margin="0,0,0,16"/>
-
-                <!-- Heifer Stage Card -->
-                <dairy:HeiferStageView Margin="0,0,0,16"/>
-
-                <!-- Lactating Stage Card -->
-                <dairy:LactatingStageView Margin="0,0,0,16"/>
-
-                <!-- Dry Stage Card -->
-                <dairy:DryStageView/>
-                
-              </StackPanel>
-            </StackPanel>
-          </Border>
-        </StackPanel>
-      </Border>
+            </Border>
+          </StackPanel>
+        </Border>
+      </Panel>
 </UserControl>

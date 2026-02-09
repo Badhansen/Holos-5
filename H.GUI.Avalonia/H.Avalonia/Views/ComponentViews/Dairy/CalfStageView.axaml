@@ -12,127 +12,109 @@
   
 <!-- Calf Stage Card -->
   <Border BorderBrush="#2196F3" BorderThickness="2" CornerRadius="8">
-    <StackPanel>
-      <Border Background="#E3F2FD" Padding="16" CornerRadius="6,6,0,0">
-        <Grid ColumnDefinitions="Auto,*,Auto,Auto">
-          <Border Grid.Column="0" Background="#2196F3" Width="48" Height="48" 
-                 CornerRadius="24" Margin="0,0,12,0">
-          </Border>
-          <StackPanel Grid.Column="1" VerticalAlignment="Center">
-            <TextBlock Text="Calf Stage" FontSize="16" FontWeight="Bold"/>
-            <TextBlock Text="95 animals • Birth to 4 months • 2 phases" 
-                      FontSize="12" Foreground="#666" Margin="0,2,0,0"/>
+    <Border Background="White" Padding="20">
+      <StackPanel>
+        
+        <!-- NEW: Flow Rate Input Section -->
+        <Border Background="#FFF9E6" BorderBrush="#FFA000" BorderThickness="1" 
+               CornerRadius="6" Padding="16" Margin="0,0,0,16">
+          <StackPanel>
+            <TextBlock Text="🐄 Staggered Progression Input" 
+                      FontSize="14" FontWeight="SemiBold" 
+                      Foreground="#F57C00" Margin="0,0,0,8"/>
+            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#666" 
+                      Margin="0,0,0,12">
+              Enter the number of calves born (entering the calf stage) per year. 
+              This represents the continuous flow of animals through your dairy operation.
+            </TextBlock>
+            
+            <Grid ColumnDefinitions="Auto,200,*">
+              <TextBlock Grid.Column="0" Text="Calves Entering Per Year:" 
+                        FontSize="13" VerticalAlignment="Center" Margin="0,0,12,0"/>
+              <NumericUpDown Grid.Column="1" 
+                            Value="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear}"
+                            Minimum="0" 
+                            Maximum="10000"
+                            Increment="1"
+                            FormatString="N0"
+                            Height="32"/>
+              <TextBlock Grid.Column="2" Text="calves/year" 
+                        FontSize="12" Foreground="#666" 
+                        VerticalAlignment="Center" Margin="8,0,0,0"/>
+            </Grid>
+            
+            <!-- Helpful calculation note -->
+            <Border Background="White" BorderBrush="#E0E0E0" BorderThickness="1"
+                   CornerRadius="4" Padding="8" Margin="0,12,0,0">
+              <StackPanel>
+                <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#666" 
+                          FontStyle="Italic">
+                  <Run Text="💡 Tip: "/>
+                  <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
+                  <Run Text=" calves/year ≈ "/>
+                  <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, Converter={StaticResource DivideByTwelveConverter}, StringFormat='{}{0:F1}'}" FontWeight="SemiBold"/>
+                  <Run Text=" calves/month"/>
+                </TextBlock>
+              </StackPanel>
+            </Border>
           </StackPanel>
-          <Button Grid.Column="3" Content="Collapse" Padding="12,6" 
-                 Background="#2196F3" Foreground="White" CornerRadius="4"/>
-        </Grid>
-      </Border>
-      
-      <!-- Expanded Content -->
-      <Border Background="White" Padding="20">
-        <StackPanel>
-          
-          <!-- NEW: Flow Rate Input Section -->
-          <Border Background="#FFF9E6" BorderBrush="#FFA000" BorderThickness="1" 
-                 CornerRadius="6" Padding="16" Margin="0,0,0,16">
+        </Border>
+        
+        <TextBlock Text="Management Phases" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,12"/>
+        
+        <Grid ColumnDefinitions="*,*">
+          <!-- Phase 1: Milk-Fed Period -->
+          <Border Grid.Column="0" Background="#F9F9F9" BorderBrush="#E0E0E0" 
+                 BorderThickness="1" CornerRadius="6" Padding="16" Margin="0,0,6,0">
             <StackPanel>
-              <TextBlock Text="🐄 Staggered Progression Input" 
-                        FontSize="14" FontWeight="SemiBold" 
-                        Foreground="#F57C00" Margin="0,0,0,8"/>
-              <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#666" 
-                        Margin="0,0,0,12">
-                Enter the number of calves born (entering the calf stage) per year. 
-                This represents the continuous flow of animals through your dairy operation.
-              </TextBlock>
-              
-              <Grid ColumnDefinitions="Auto,200,*">
-                <TextBlock Grid.Column="0" Text="Calves Entering Per Year:" 
-                          FontSize="13" VerticalAlignment="Center" Margin="0,0,12,0"/>
-                <NumericUpDown Grid.Column="1" 
-                              Value="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear}"
-                              Minimum="0" 
-                              Maximum="10000"
-                              Increment="1"
-                              FormatString="N0"
-                              Height="32"/>
-                <TextBlock Grid.Column="2" Text="calves/year" 
-                          FontSize="12" Foreground="#666" 
-                          VerticalAlignment="Center" Margin="8,0,0,0"/>
+              <TextBlock Text="Phase 1: Milk-Fed Period" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,8"/>
+              <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto">
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="•" FontSize="11" Margin="0,0,4,4"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="Days 1-90 (3 months)" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="•" FontSize="11" Margin="0,0,4,4"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="Individual pens" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="•" FontSize="11" Margin="0,0,4,4"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="Milk replacer diet" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="•" FontSize="11" Margin="0,0,4,0"/>
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="45 → 100 kg" FontSize="11" Foreground="#666"/>
               </Grid>
-              
-              <!-- Helpful calculation note -->
-              <Border Background="White" BorderBrush="#E0E0E0" BorderThickness="1"
-                     CornerRadius="4" Padding="8" Margin="0,12,0,0">
-                <StackPanel>
-                  <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#666" 
-                            FontStyle="Italic">
-                    <Run Text="💡 Tip: "/>
-                    <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
-                    <Run Text=" calves/year ≈ "/>
-                    <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, Converter={StaticResource DivideByTwelveConverter}, StringFormat='{}{0:F1}'}" FontWeight="SemiBold"/>
-                    <Run Text=" calves/month"/>
-                  </TextBlock>
-                </StackPanel>
-              </Border>
             </StackPanel>
           </Border>
           
-          <TextBlock Text="Management Phases" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,12"/>
-          
-          <Grid ColumnDefinitions="*,*">
-            <!-- Phase 1: Milk-Fed Period -->
-            <Border Grid.Column="0" Background="#F9F9F9" BorderBrush="#E0E0E0" 
-                   BorderThickness="1" CornerRadius="6" Padding="16" Margin="0,0,6,0">
-              <StackPanel>
-                <TextBlock Text="Phase 1: Milk-Fed Period" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto">
-                  <TextBlock Grid.Row="0" Grid.Column="0" Text="•" FontSize="11" Margin="0,0,4,4"/>
-                  <TextBlock Grid.Row="0" Grid.Column="1" Text="Days 1-90 (3 months)" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                  <TextBlock Grid.Row="1" Grid.Column="0" Text="•" FontSize="11" Margin="0,0,4,4"/>
-                  <TextBlock Grid.Row="1" Grid.Column="1" Text="Individual pens" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                  <TextBlock Grid.Row="2" Grid.Column="0" Text="•" FontSize="11" Margin="0,0,4,4"/>
-                  <TextBlock Grid.Row="2" Grid.Column="1" Text="Milk replacer diet" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                  <TextBlock Grid.Row="3" Grid.Column="0" Text="•" FontSize="11" Margin="0,0,4,0"/>
-                  <TextBlock Grid.Row="3" Grid.Column="1" Text="45 → 100 kg" FontSize="11" Foreground="#666"/>
-                </Grid>
-              </StackPanel>
-            </Border>
-            
-            <!-- Phase 2: Weaning Period -->
-            <Border Grid.Column="1" Background="#F9F9F9" BorderBrush="#E0E0E0" 
-                   BorderThickness="1" CornerRadius="6" Padding="16" Margin="6,0,0,0">
-              <StackPanel>
-                <TextBlock Text="Phase 2: Weaning Period" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto">
-                  <TextBlock Grid.Row="0" Grid.Column="0" Text="•" FontSize="11" Margin="0,0,4,4"/>
-                  <TextBlock Grid.Row="0" Grid.Column="1" Text="Days 91-120 (1 month)" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                  <TextBlock Grid.Row="1" Grid.Column="0" Text="•" FontSize="11" Margin="0,0,4,4"/>
-                  <TextBlock Grid.Row="1" Grid.Column="1" Text="Group housing" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                  <TextBlock Grid.Row="2" Grid.Column="0" Text="•" FontSize="11" Margin="0,0,4,4"/>
-                  <TextBlock Grid.Row="2" Grid.Column="1" Text="Starter grain + hay" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                  <TextBlock Grid.Row="3" Grid.Column="0" Text="•" FontSize="11" Margin="0,0,4,0"/>
-                  <TextBlock Grid.Row="3" Grid.Column="1" Text="100 → 130 kg" FontSize="11" Foreground="#666"/>
-                </Grid>
-              </StackPanel>
-            </Border>
-          </Grid>
-          
-          <Border Background="#FFFEF7" BorderBrush="#FFD54F" BorderThickness="1" 
-                 CornerRadius="6" Padding="12" Margin="0,16,0,0">
-            <Grid ColumnDefinitions="*,*">
-              <StackPanel Grid.Column="0">
-                <TextBlock Text="• Manure: Solid storage" FontSize="12" Margin="0,0,0,4"/>
-                <TextBlock Text="• Bedding: Straw" FontSize="12"/>
-              </StackPanel>
-              <StackPanel Grid.Column="1">
-                <TextBlock Text="• Mortality Rate: 5%" FontSize="12" Margin="0,0,0,4"/>
-                <TextBlock Text="• Group Pairing: 1" FontSize="12"/>
-              </StackPanel>
-            </Grid>
+          <!-- Phase 2: Weaning Period -->
+          <Border Grid.Column="1" Background="#F9F9F9" BorderBrush="#E0E0E0" 
+                 BorderThickness="1" CornerRadius="6" Padding="16" Margin="6,0,0,0">
+            <StackPanel>
+              <TextBlock Text="Phase 2: Weaning Period" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,8"/>
+              <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto">
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="•" FontSize="11" Margin="0,0,4,4"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="Days 91-120 (1 month)" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="•" FontSize="11" Margin="0,0,4,4"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="Group housing" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="•" FontSize="11" Margin="0,0,4,4"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="Starter grain + hay" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="•" FontSize="11" Margin="0,0,4,0"/>
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="100 → 130 kg" FontSize="11" Foreground="#666"/>
+              </Grid>
+            </StackPanel>
           </Border>
-        </StackPanel>
-      </Border>
-    </StackPanel>
+        </Grid>
+        
+        <Border Background="#FFFEF7" BorderBrush="#FFD54F" BorderThickness="1" 
+               CornerRadius="6" Padding="12" Margin="0,16,0,0">
+          <Grid ColumnDefinitions="*,*">
+            <StackPanel Grid.Column="0">
+              <TextBlock Text="• Manure: Solid storage" FontSize="12" Margin="0,0,0,4"/>
+              <TextBlock Text="• Bedding: Straw" FontSize="12"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+              <TextBlock Text="• Mortality Rate: 5%" FontSize="12" Margin="0,0,0,4"/>
+              <TextBlock Text="• Group Pairing: 1" FontSize="12"/>
+            </StackPanel>
+          </Grid>
+        </Border>
+      </StackPanel>
+    </Border>
   </Border>
   
 </UserControl>

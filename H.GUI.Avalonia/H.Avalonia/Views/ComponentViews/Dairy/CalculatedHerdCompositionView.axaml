@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:dairy="clr-namespace:H.Avalonia.Views.ComponentViews.Dairy"
              mc:Ignorable="d" d:DesignWidth="900"
              x:Class="H.Avalonia.Views.ComponentViews.Dairy.CalculatedHerdCompositionView">
   
@@ -14,7 +15,7 @@
       <!-- Step Header -->
       <StackPanel Classes="step-header">
         <Border Classes="step-badge" Background="#43A047">
-          <TextBlock Text="??" Classes="step-badge-text" FontSize="14"/>
+          <TextBlock Text="2" Classes="step-badge-text" FontSize="14"/>
         </Border>
         <StackPanel VerticalAlignment="Center">
           <TextBlock Text="Calculated Herd Composition" 
@@ -65,7 +66,8 @@
                       BorderBrush="#1976D2" 
                       BorderThickness="1"
                       CornerRadius="4" 
-                      Padding="8">
+                      Padding="8"
+                      IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
                 <StackPanel>
                   <TextBlock Text="Input:" 
                              FontSize="9" 
@@ -139,7 +141,8 @@
                       BorderBrush="#7B1FA2" 
                       BorderThickness="1"
                       CornerRadius="4" 
-                      Padding="8">
+                      Padding="8"
+                      IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
                 <StackPanel>
                   <TextBlock Text="Input:" 
                              FontSize="9" 
@@ -213,7 +216,8 @@
                       BorderBrush="#388E3C" 
                       BorderThickness="1"
                       CornerRadius="4" 
-                      Padding="8">
+                      Padding="8"
+                      IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
                 <StackPanel>
                   <TextBlock Text="Input:" 
                              FontSize="9" 
@@ -287,7 +291,8 @@
                       BorderBrush="#F57C00" 
                       BorderThickness="1"
                       CornerRadius="4" 
-                      Padding="8">
+                      Padding="8"
+                      IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
                 <StackPanel>
                   <TextBlock Text="Input:" 
                              FontSize="9" 
@@ -365,7 +370,8 @@
               BorderThickness="2" 
               CornerRadius="6" 
               Padding="16" 
-              Margin="4,12,4,4">
+              Margin="4,12,4,4"
+              IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
         <StackPanel>
           <TextBlock Text="How These Numbers Are Calculated" 
                      FontSize="13" 

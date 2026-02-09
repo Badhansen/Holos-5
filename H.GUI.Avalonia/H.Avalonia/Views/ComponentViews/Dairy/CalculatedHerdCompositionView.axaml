@@ -1,12 +1,19 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:dairy="clr-namespace:H.Avalonia.Views.ComponentViews.Dairy"
-             mc:Ignorable="d" d:DesignWidth="900"
-             x:Class="H.Avalonia.Views.ComponentViews.Dairy.CalculatedHerdCompositionView">
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:dairy="clr-namespace:H.Avalonia.Views.ComponentViews.Dairy"
+           xmlns:converters="clr-namespace:H.Avalonia.Converters"
+           mc:Ignorable="d" d:DesignWidth="900"
+           x:Class="H.Avalonia.Views.ComponentViews.Dairy.CalculatedHerdCompositionView">
+
+<UserControl.Resources>
+  <converters:BoolToBackgroundConverter x:Key="BoolToBackgroundConverter"/>
+  <converters:BoolToBorderBrushConverter x:Key="BoolToBorderBrushConverter"/>
+  <converters:BoolToBorderThicknessConverter x:Key="BoolToBorderThicknessConverter"/>
+</UserControl.Resources>
   
-  <!-- Calculated Herd Composition Panel - Flow Rate Method Only -->
+<!-- Calculated Herd Composition Panel - Flow Rate Method Only -->
   <Border x:Name="MainContainerBorder"
           Classes="step-container" 
           Background="#E8F5E9" 
@@ -44,98 +51,118 @@
         <Grid x:Name="StageCardsGrid"
               ColumnDefinitions="*,*,*,*,Auto">
           <!-- Calves -->
-          <Border x:Name="CalfStageBorder"
-                  Grid.Column="0" 
-                  Background="White" 
-                  BorderBrush="#1976D2"
-                  BorderThickness="2"
-                  CornerRadius="8" 
-                  Padding="12" 
-                  Margin="4">
-            <StackPanel x:Name="CalfContentStackPanel">
-              <TextBlock x:Name="CalfTitleTextBlock"
-                         Text="CALF" 
-                         FontSize="14" 
-                         FontWeight="Bold" 
-                         Foreground="#1976D2" 
-                         HorizontalAlignment="Center" 
-                         Margin="0,4,0,8"/>
-              
-              <TextBlock x:Name="CalfCountTextBlock"
-                         Text="{Binding SelectedDairyComponentDto.SteadyStateCalves, StringFormat='{}{0} animals'}" 
-                         FontSize="20" 
-                         FontWeight="Bold" 
-                         Foreground="#1976D2" 
-                         HorizontalAlignment="Center"
-                         Margin="0,0,0,8"/>
-              
-              <TextBlock x:Name="CalfDaysTextBlock"
-                         Text="120 days in stage" 
-                         FontSize="10" 
-                         Foreground="#666" 
-                         HorizontalAlignment="Center"
-                         Margin="0,0,0,12"/>
-              
-              <!-- Integrated Calculation -->
-              <Border x:Name="CalfCalculationDetailsBorder"
-                      Background="#E3F2FD" 
-                      BorderBrush="#1976D2" 
-                      BorderThickness="1"
-                      CornerRadius="4" 
-                      Padding="8"
-                      IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
-                <StackPanel x:Name="CalfCalculationStackPanel">
-                  <TextBlock x:Name="CalfInputLabelTextBlock"
-                             Text="Input:" 
-                             FontSize="9" 
-                             FontWeight="SemiBold" 
-                             Foreground="#1976D2"
-                             HorizontalAlignment="Center"
-                             Margin="0,0,0,4"/>
-                  <TextBlock x:Name="CalfInputValueTextBlock"
-                             TextWrapping="Wrap" 
-                             FontSize="10" 
-                             Foreground="#666"
-                             HorizontalAlignment="Center"
-                             Margin="0,0,0,6">
-                    <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0}'}" FontWeight="Bold" Foreground="#1976D2"/>
-                    <Run Text=" calves/yr"/>
-                  </TextBlock>
-                  
-                  <TextBlock x:Name="CalfFormulaLabelTextBlock"
-                             Text="Formula:" 
-                             FontSize="9" 
-                             FontWeight="SemiBold" 
-                             Foreground="#1976D2"
-                             HorizontalAlignment="Center"
-                             Margin="0,0,0,4"/>
-                  <TextBlock x:Name="CalfFormulaTextBlock"
-                             TextWrapping="Wrap" 
-                             FontSize="9" 
-                             Foreground="#666"
-                             HorizontalAlignment="Center"
-                             TextAlignment="Center"
-                             LineHeight="13">
-                    <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0}'}" FontWeight="SemiBold"/>
-                    <Run Text=" * 0.329"/>
-                    <LineBreak/>
-                    <Run Text="= "/>
-                    <Run Text="{Binding SelectedDairyComponentDto.SteadyStateCalves}" FontWeight="Bold" Foreground="#1976D2"/>
-                  </TextBlock>
-                </StackPanel>
-              </Border>
-            </StackPanel>
-          </Border>
+          <Button Grid.Column="0" 
+                  Background="Transparent" 
+                  BorderThickness="0" 
+                  Padding="0"
+                  Cursor="Hand"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  HorizontalContentAlignment="Stretch"
+                  VerticalContentAlignment="Stretch"
+                  Click="OnCalfCardClick">
+            <Border x:Name="CalfStageBorder"
+                    Background="{Binding IsCalfSelected, Converter={StaticResource BoolToBackgroundConverter}}"
+                    BorderBrush="{Binding IsCalfSelected, Converter={StaticResource BoolToBorderBrushConverter}}"
+                    BorderThickness="{Binding IsCalfSelected, Converter={StaticResource BoolToBorderThicknessConverter}}"
+                    CornerRadius="8" 
+                    Padding="12" 
+                    Margin="4">
+              <StackPanel x:Name="CalfContentStackPanel">
+                <TextBlock x:Name="CalfTitleTextBlock"
+                           Text="CALF" 
+                           FontSize="14" 
+                           FontWeight="Bold" 
+                           Foreground="#1976D2" 
+                           HorizontalAlignment="Center" 
+                           Margin="0,4,0,8"/>
+                
+                <TextBlock x:Name="CalfCountTextBlock"
+                           Text="{Binding SelectedDairyComponentDto.SteadyStateCalves, StringFormat='{}{0} animals'}" 
+                           FontSize="20" 
+                           FontWeight="Bold" 
+                           Foreground="#1976D2" 
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,8"/>
+                
+                <TextBlock x:Name="CalfDaysTextBlock"
+                           Text="120 days in stage" 
+                           FontSize="10" 
+                           Foreground="#666" 
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,12"/>
+                
+                <!-- Integrated Calculation -->
+                <Border x:Name="CalfCalculationDetailsBorder"
+                        Background="#E3F2FD" 
+                        BorderBrush="#1976D2" 
+                        BorderThickness="1"
+                        CornerRadius="4" 
+                        Padding="8"
+                        IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
+                  <StackPanel x:Name="CalfCalculationStackPanel">
+                    <TextBlock x:Name="CalfInputLabelTextBlock"
+                               Text="Input:" 
+                               FontSize="9" 
+                               FontWeight="SemiBold" 
+                               Foreground="#1976D2"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,4"/>
+                    <TextBlock x:Name="CalfInputValueTextBlock"
+                               TextWrapping="Wrap" 
+                               FontSize="10" 
+                               Foreground="#666"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,6">
+                      <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0}'}" FontWeight="Bold" Foreground="#1976D2"/>
+                      <Run Text=" calves/yr"/>
+                    </TextBlock>
+                    
+                    <TextBlock x:Name="CalfFormulaLabelTextBlock"
+                               Text="Formula:" 
+                               FontSize="9" 
+                               FontWeight="SemiBold" 
+                               Foreground="#1976D2"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,4"/>
+                    <TextBlock x:Name="CalfFormulaTextBlock"
+                               TextWrapping="Wrap" 
+                               FontSize="9" 
+                               Foreground="#666"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center"
+                               LineHeight="13">
+                      <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0}'}" FontWeight="SemiBold"/>
+                      <Run Text=" * 0.329"/>
+                      <LineBreak/>
+                      <Run Text="= "/>
+                      <Run Text="{Binding SelectedDairyComponentDto.SteadyStateCalves}" FontWeight="Bold" Foreground="#1976D2"/>
+                    </TextBlock>
+                  </StackPanel>
+                </Border>
+              </StackPanel>
+            </Border>
+          </Button>
+          
           
           <!-- Heifers -->
-          <Border x:Name="HeiferStageBorder"
-                  Grid.Column="1" 
-                  Background="White" 
-                  BorderBrush="#7B1FA2"
-                  BorderThickness="2"
-                  CornerRadius="8" 
-                  Padding="12" 
-                  Margin="4">
+          <Button Grid.Column="1" 
+                  Background="Transparent" 
+                  BorderThickness="0" 
+                  Padding="0"
+                  Cursor="Hand"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  HorizontalContentAlignment="Stretch"
+                  VerticalContentAlignment="Stretch"
+                  Click="OnHeiferCardClick">
+            <Border x:Name="HeiferStageBorder"
+                    Background="{Binding IsHeiferSelected, Converter={StaticResource BoolToBackgroundConverter}}"
+                    BorderBrush="{Binding IsHeiferSelected, Converter={StaticResource BoolToBorderBrushConverter}}"
+                    BorderThickness="{Binding IsHeiferSelected, Converter={StaticResource BoolToBorderThicknessConverter}}"
+                    CornerRadius="8" 
+                    Padding="12" 
+                    Margin="4">
             <StackPanel x:Name="HeiferContentStackPanel">
               <TextBlock x:Name="HeiferTitleTextBlock"
                          Text="HEIFER" 
@@ -210,16 +237,27 @@
               </Border>
             </StackPanel>
           </Border>
+        </Button>
+          
           
           <!-- Lactating -->
-          <Border x:Name="LactatingStageBorder"
-                  Grid.Column="2" 
-                  Background="White" 
-                  BorderBrush="#388E3C"
-                  BorderThickness="2"
-                  CornerRadius="8" 
-                  Padding="12" 
-                  Margin="4">
+          <Button Grid.Column="2" 
+                  Background="Transparent" 
+                  BorderThickness="0" 
+                  Padding="0"
+                  Cursor="Hand"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  HorizontalContentAlignment="Stretch"
+                  VerticalContentAlignment="Stretch"
+                  Click="OnLactatingCardClick">
+            <Border x:Name="LactatingStageBorder"
+                    Background="{Binding IsLactatingSelected, Converter={StaticResource BoolToBackgroundConverter}}"
+                    BorderBrush="{Binding IsLactatingSelected, Converter={StaticResource BoolToBorderBrushConverter}}"
+                    BorderThickness="{Binding IsLactatingSelected, Converter={StaticResource BoolToBorderThicknessConverter}}"
+                    CornerRadius="8" 
+                    Padding="12" 
+                    Margin="4">
             <StackPanel x:Name="LactatingContentStackPanel">
               <TextBlock x:Name="LactatingTitleTextBlock"
                          Text="LACTATING" 
@@ -294,16 +332,27 @@
               </Border>
             </StackPanel>
           </Border>
+        </Button>
+          
           
           <!-- Dry -->
-          <Border x:Name="DryStageBorder"
-                  Grid.Column="3" 
-                  Background="White" 
-                  BorderBrush="#F57C00"
-                  BorderThickness="2"
-                  CornerRadius="8" 
-                  Padding="12" 
-                  Margin="4">
+          <Button Grid.Column="3" 
+                  Background="Transparent" 
+                  BorderThickness="0" 
+                  Padding="0"
+                  Cursor="Hand"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  HorizontalContentAlignment="Stretch"
+                  VerticalContentAlignment="Stretch"
+                  Click="OnDryCardClick">
+            <Border x:Name="DryStageBorder"
+                    Background="{Binding IsDrySelected, Converter={StaticResource BoolToBackgroundConverter}}"
+                    BorderBrush="{Binding IsDrySelected, Converter={StaticResource BoolToBorderBrushConverter}}"
+                    BorderThickness="{Binding IsDrySelected, Converter={StaticResource BoolToBorderThicknessConverter}}"
+                    CornerRadius="8" 
+                    Padding="12" 
+                    Margin="4">
             <StackPanel x:Name="DryContentStackPanel">
               <TextBlock x:Name="DryTitleTextBlock"
                          Text="DRY" 
@@ -380,6 +429,7 @@
               </Border>
             </StackPanel>
           </Border>
+        </Button>
           
           <!-- Total -->
           <Border x:Name="TotalBorder"

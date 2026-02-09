@@ -36,6 +36,31 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// </summary>
         private IDairyComponentDto _selectedDairyComponentDto;
 
+        /// <summary>
+        /// Tracks which herd stage card is currently selected (Calf, Heifer, Lactating, or Dry)
+        /// </summary>
+        private string _selectedHerdStage;
+
+        /// <summary>
+        /// Indicates if the Calf card is selected
+        /// </summary>
+        private bool _isCalfSelected;
+
+        /// <summary>
+        /// Indicates if the Heifer card is selected
+        /// </summary>
+        private bool _isHeiferSelected;
+
+        /// <summary>
+        /// Indicates if the Lactating card is selected
+        /// </summary>
+        private bool _isLactatingSelected;
+
+        /// <summary>
+        /// Indicates if the Dry card is selected
+        /// </summary>
+        private bool _isDrySelected;
+
         #endregion
 
         #region Constructors
@@ -107,6 +132,51 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
                     _selectedDairyComponentDto.PropertyChanged += OnDairyComponentDtoPropertyChanged;
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets or sets the currently selected herd stage
+        /// </summary>
+        public string SelectedHerdStage
+        {
+            get => _selectedHerdStage;
+            set => SetProperty(ref _selectedHerdStage, value);
+        }
+
+        /// <summary>
+        /// Gets or sets whether the Calf card is selected
+        /// </summary>
+        public bool IsCalfSelected
+        {
+            get => _isCalfSelected;
+            set => SetProperty(ref _isCalfSelected, value);
+        }
+
+        /// <summary>
+        /// Gets or sets whether the Heifer card is selected
+        /// </summary>
+        public bool IsHeiferSelected
+        {
+            get => _isHeiferSelected;
+            set => SetProperty(ref _isHeiferSelected, value);
+        }
+
+        /// <summary>
+        /// Gets or sets whether the Lactating card is selected
+        /// </summary>
+        public bool IsLactatingSelected
+        {
+            get => _isLactatingSelected;
+            set => SetProperty(ref _isLactatingSelected, value);
+        }
+
+        /// <summary>
+        /// Gets or sets whether the Dry card is selected
+        /// </summary>
+        public bool IsDrySelected
+        {
+            get => _isDrySelected;
+            set => SetProperty(ref _isDrySelected, value);
         }
 
         #endregion
@@ -237,8 +307,46 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// </summary>
         private void Construct()
         {
-            // Initialize commands and collections here as needed
-            // Currently no commands or collections needed for basic dairy component
+            // Initialize selection properties
+            _selectedHerdStage = string.Empty;
+            _isCalfSelected = false;
+            _isHeiferSelected = false;
+            _isLactatingSelected = false;
+            _isDrySelected = false;
+        }
+
+        /// <summary>
+        /// Selects a specific herd stage card and deselects others
+        /// </summary>
+        /// <param name="stage">The stage to select ("Calf", "Heifer", "Lactating", or "Dry")</param>
+        public void SelectHerdStage(string stage)
+        {
+            // Deselect all cards first
+            IsCalfSelected = false;
+            IsHeiferSelected = false;
+            IsLactatingSelected = false;
+            IsDrySelected = false;
+
+            // Select the clicked card
+            SelectedHerdStage = stage;
+
+            switch (stage)
+            {
+                case "Calf":
+                    IsCalfSelected = true;
+                    break;
+                case "Heifer":
+                    IsHeiferSelected = true;
+                    break;
+                case "Lactating":
+                    IsLactatingSelected = true;
+                    break;
+                case "Dry":
+                    IsDrySelected = true;
+                    break;
+            }
+
+            Logger?.LogDebug($"Selected herd stage: {stage}");
         }
 
         #endregion

@@ -8,9 +8,9 @@
            mc:Ignorable="d" d:DesignWidth="1000"
            x:Class="H.Avalonia.Views.ComponentViews.Dairy.HeiferStageView">
 
-<UserControl.DataContext>
+<Design.DataContext>
   <dairy:DairyComponentViewModelDesign/>
-</UserControl.DataContext>
+</Design.DataContext>
   
 <UserControl.Resources>
   <converters:DivideByTwelveConverter x:Key="DivideByTwelveConverter"/>

@@ -18,11 +18,10 @@
 </UserControl.Resources>
   
 <!-- Heifer Stage Card -->
-<Border BorderBrush="#7B1FA2" BorderThickness="2" CornerRadius="8" Margin="0,0,0,16">
-  <Border Background="White" Padding="20">
-    <StackPanel>
-        
-      <TextBlock Text="Management Phases" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,12"/>
+
+  <StackPanel>
+      
+    <TextBlock Text="Management Phases" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,12"/>
         
         <Grid ColumnDefinitions="*,*">
           <!-- Phase 1: Growing Phase -->
@@ -142,7 +141,5 @@
           </Grid>
         </Border>
       </StackPanel>
-    </Border>
-  </Border>
   
 </UserControl>

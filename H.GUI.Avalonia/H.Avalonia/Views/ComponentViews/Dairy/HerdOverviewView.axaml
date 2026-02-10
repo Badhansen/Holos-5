@@ -1,11 +1,12 @@
 <UserControl x:Name="HerdOverviewRootControl"
-           xmlns="https://github.com/avaloniaui"
-           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-           xmlns:converters="clr-namespace:H.Avalonia.Converters"
-           mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="400"
-           x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
+xmlns="https://github.com/avaloniaui"
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+xmlns:converters="clr-namespace:H.Avalonia.Converters"
+xmlns:dairy="clr-namespace:H.Avalonia.Views.ComponentViews.Dairy"
+mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="400"
+x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
   
 <UserControl.Resources>
   <converters:DivideByTwelveConverter x:Key="DivideByTwelveConverter"/>
@@ -26,14 +27,17 @@
       </StackPanel>
       
       <!-- Overview Content -->
-      <StackPanel x:Name="OverviewContentStackPanel"
-                  Orientation="Horizontal" 
-                  HorizontalAlignment="Left"
-                  Grid.IsSharedSizeScope="True">
+      <Grid x:Name="OverviewContentGrid"
+            ColumnDefinitions="Auto,*"
+            Grid.IsSharedSizeScope="True">
 
-        <!-- Production Cycle Section -->
-        <Border x:Name="ProductionCycleCardBorder" Classes="input-card" Margin="0,0,0,0">
-          <StackPanel>
+        <!-- Lifecycle Parameters Section (Left) -->
+        <Border x:Name="ProductionCycleCardBorder" 
+                Grid.Column="0"
+                Classes="input-card" 
+                Margin="0,0,16,0"
+                VerticalAlignment="Top">
+          <StackPanel MinWidth="300">
             <TextBlock x:Name="ProductionCycleTitleTextBlock" 
                        Text="Lifecycle Parameters" 
                        FontWeight="Bold" 
@@ -168,16 +172,16 @@
                        Margin="0,4,0,0"/>
           </StackPanel>
         </Border>
-      </StackPanel>
-      
-      <!-- Staggered Progression Flow Rates Section -->
-      <Border x:Name="StaggeredProgressionCardBorder" 
-              Classes="input-card" 
-              Background="#FFF9E6" 
-              BorderBrush="#FFA000" 
-              BorderThickness="2"
-              Margin="0,16,0,0">
-        <StackPanel>
+        
+        <!-- Staggered Progression Flow Rates Section (Right) -->
+        <Border x:Name="StaggeredProgressionCardBorder" 
+                Grid.Column="1"
+                Classes="input-card" 
+                Background="#FFF9E6" 
+                BorderBrush="#FFA000" 
+                BorderThickness="2"
+                VerticalAlignment="Top">
+          <StackPanel>
           <TextBlock x:Name="StaggeredProgressionTitleTextBlock"
                      Text="?? Staggered Progression Flow Rates" 
                      FontWeight="Bold" 
@@ -228,7 +232,8 @@
                      FontSize="11" 
                      Foreground="#666" 
                      FontStyle="Italic"
-                     Margin="0,0,0,12">
+                     Margin="0,0,0,12"
+                     IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
             <Run Text="?? "/>
             <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
             <Run Text=" calves/year ? "/>
@@ -272,7 +277,8 @@
                      FontSize="11" 
                      Foreground="#666" 
                      FontStyle="Italic"
-                     Margin="0,0,0,12">
+                     Margin="0,0,0,12"
+                     IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
             <Run Text="?? "/>
             <Run Text="{Binding SelectedDairyComponentDto.HeifersEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
             <Run Text=" heifers/year ? "/>
@@ -316,7 +322,8 @@
                      FontSize="11" 
                      Foreground="#666" 
                      FontStyle="Italic"
-                     Margin="0,0,0,12">
+                     Margin="0,0,0,12"
+                     IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
             <Run Text="?? "/>
             <Run Text="{Binding SelectedDairyComponentDto.LactatingCowsEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
             <Run Text=" cows/year ? "/>
@@ -360,7 +367,8 @@
                      FontSize="11" 
                      Foreground="#666" 
                      FontStyle="Italic"
-                     Margin="0,4,0,0">
+                     Margin="0,4,0,0"
+                     IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
             <Run Text="?? "/>
             <Run Text="{Binding SelectedDairyComponentDto.DryCowsEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
             <Run Text=" cows/year ? "/>
@@ -369,6 +377,7 @@
           </TextBlock>
         </StackPanel>
       </Border>
+    </Grid>
     </StackPanel>
   </Border>
   

@@ -18,11 +18,8 @@
 </UserControl.Resources>
   
 <!-- Lactating Stage Card -->
-<Border Classes="step-container" 
-        BorderBrush="#388E3C" 
-        Margin="0,0,0,16">
-  <Border Background="White" Padding="20">
-    <StackPanel>
+
+  <StackPanel>
         
       <!-- Production Values Section -->
       <Border Background="#E8F5E9" 
@@ -400,7 +397,5 @@
           </Grid>
         </Border>
       </StackPanel>
-    </Border>
-  </Border>
   
 </UserControl>

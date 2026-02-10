@@ -22,6 +22,7 @@
     <StackPanel x:Name="MainStackPanel">
       <!-- Step Header -->
       <StackPanel x:Name="StepHeaderStackPanel"
+                  Orientation="Vertical"
                   Classes="step-header">
         <!-- Step Badge -->
         <Border Classes="step-badge" HorizontalAlignment="Left">
@@ -32,24 +33,15 @@
         <TextBlock x:Name="HeaderTitleTextBlock"
                    Text="Select a Lifecycle Stage to Configure"
                    Classes="step-number-description"
-                   Margin="0,8,0,0"/>
+                   Margin="0,12,0,0"/>
         
         <!-- Description -->
         <TextBlock x:Name="HeaderDescriptionTextBlock"
-                   Text="Click on one of the stage cards below to begin editing its management practices in Step 3" 
-                   FontSize="12"
-                   Foreground="#666"
+                   Text="Click on a stage card below to configure its management practices in Step 3" 
+                   FontSize="13"
+                   Foreground="#555"
                    TextWrapping="Wrap"
-                   Margin="0,8,0,0"/>
-        
-        <!-- Context Info -->
-        <TextBlock x:Name="HeaderContextTextBlock"
-                   Text="Steady-state population calculated from animals entering each stage per year" 
-                   FontSize="11"
-                   FontStyle="Italic"
-                   Foreground="#999"
-                   TextWrapping="Wrap"
-                   Margin="0,4,0,0"/>
+                   Margin="0,12,0,0"/>
       </StackPanel>
       
       <!-- Main Content with Cards and Calculations -->
@@ -555,7 +547,7 @@
                        LineHeight="18"
                        Margin="0,0,0,6">
               <Run Text="2. Calves stay in this stage for: " FontWeight="SemiBold"/>
-              <Run Text="120 days" FontWeight="Bold" Foreground="#F57C00"/>
+              <Run Text="{Binding SelectedDairyComponentDto.CalfStageDurationDays, StringFormat='{}{0} days'}" FontWeight="Bold" Foreground="#F57C00"/>
               <Run Text=" before moving to the heifer stage"/>
             </TextBlock>
             
@@ -566,8 +558,8 @@
                        LineHeight="18"
                        Margin="0,0,0,6">
               <Run Text="3. Calculate the ratio: " FontWeight="SemiBold"/>
-              <Run Text="120 / 365 = 0.329" FontWeight="Bold"/>
-              <Run Text=" (about one-third of a year)"/>
+              <Run Text="{Binding SelectedDairyComponentDto.CalfStageDurationDays, StringFormat='{}{0}'}"/>
+              <Run Text=" / 365" FontWeight="Bold"/>
             </TextBlock>
             
             <TextBlock x:Name="ExampleStep4TextBlock"
@@ -577,7 +569,9 @@
                        LineHeight="18">
               <Run Text="4. Multiply: " FontWeight="SemiBold"/>
               <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0}'}" FontWeight="Bold" Foreground="#1976D2"/>
-              <Run Text=" × 0.329 = "/>
+              <Run Text=" × ("/>
+              <Run Text="{Binding SelectedDairyComponentDto.CalfStageDurationDays, StringFormat='{}{0}'}"/>
+              <Run Text="/365) = "/>
               <Run Text="{Binding SelectedDairyComponentDto.SteadyStateCalves}" FontWeight="Bold" Foreground="#43A047" FontSize="12"/>
               <Run Text=" calves present at any time"/>
             </TextBlock>
@@ -606,8 +600,8 @@
                 <Run Text=" enter this stage each year, only "/>
                 <Run Text="{Binding SelectedDairyComponentDto.SteadyStateCalves}" FontWeight="Bold" Foreground="#43A047"/>
                 <Run Text=" calves are present at any given moment because each calf only spends "/>
-                <Run Text="120 days" FontWeight="Bold"/>
-                <Run Text=" (one-third of a year) in this stage before moving to the heifer stage. This continuous flow creates the steady-state population."/>
+                <Run Text="{Binding SelectedDairyComponentDto.CalfStageDurationDays, StringFormat='{}{0} days'}" FontWeight="Bold"/>
+                <Run Text=" in this stage before moving to the heifer stage. This continuous flow creates the steady-state population."/>
               </TextBlock>
             </StackPanel>
           </Border>

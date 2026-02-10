@@ -1,4 +1,4 @@
-<UserControl x:Name="HerdOverviewRootControl"
+﻿<UserControl x:Name="HerdOverviewRootControl"
 xmlns="https://github.com/avaloniaui"
 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -163,13 +163,7 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
                          Margin="8,0,0,0"/>
             </Grid>
             
-            <!-- Help Text -->
-            <TextBlock Text="Duration before calving that cows stop producing milk"
-                       FontSize="11"
-                       FontStyle="Italic"
-                       Foreground="#666"
-                       TextWrapping="Wrap"
-                       Margin="0,4,0,0"/>
+           
           </StackPanel>
         </Border>
         
@@ -183,18 +177,12 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
                 VerticalAlignment="Top">
           <StackPanel>
           <TextBlock x:Name="StaggeredProgressionTitleTextBlock"
-                     Text="?? Staggered Progression Flow Rates" 
+                     Text="Animal Flow Rates" 
                      FontWeight="Bold" 
                      Margin="0,0,0,8"/>
           
           <!-- Help Text -->
-          <TextBlock x:Name="StaggeredProgressionHelpTextBlock"
-                     Text="Enter the number of animals entering each lifecycle stage per year"
-                     FontSize="11"
-                     FontStyle="Italic"
-                     Foreground="#666"
-                     TextWrapping="Wrap"
-                     Margin="0,0,0,12"/>
+
           
           <!-- Calves Entering Per Year -->
           <Grid x:Name="CalvesEnteringRowGrid" Margin="0,0,0,8">
@@ -234,9 +222,9 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
                      FontStyle="Italic"
                      Margin="0,0,0,12"
                      IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
-            <Run Text="?? "/>
+            <Run Text="💡 "/>
             <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
-            <Run Text=" calves/year ? "/>
+            <Run Text=" calves/year ≈ "/>
             <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, Converter={StaticResource DivideByTwelveConverter}, StringFormat='{}{0:F1}'}" FontWeight="SemiBold"/>
             <Run Text=" calves/month"/>
           </TextBlock>
@@ -279,9 +267,9 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
                      FontStyle="Italic"
                      Margin="0,0,0,12"
                      IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
-            <Run Text="?? "/>
+            <Run Text="💡 "/>
             <Run Text="{Binding SelectedDairyComponentDto.HeifersEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
-            <Run Text=" heifers/year ? "/>
+            <Run Text=" heifers/year ≈ "/>
             <Run Text="{Binding SelectedDairyComponentDto.HeifersEnteringPerYear, Converter={StaticResource DivideByTwelveConverter}, StringFormat='{}{0:F1}'}" FontWeight="SemiBold"/>
             <Run Text=" heifers/month"/>
           </TextBlock>
@@ -324,9 +312,9 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
                      FontStyle="Italic"
                      Margin="0,0,0,12"
                      IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
-            <Run Text="?? "/>
+            <Run Text="💡 "/>
             <Run Text="{Binding SelectedDairyComponentDto.LactatingCowsEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
-            <Run Text=" cows/year ? "/>
+            <Run Text=" cows/year ≈ "/>
             <Run Text="{Binding SelectedDairyComponentDto.LactatingCowsEnteringPerYear, Converter={StaticResource DivideByTwelveConverter}, StringFormat='{}{0:F1}'}" FontWeight="SemiBold"/>
             <Run Text=" cows/month"/>
           </TextBlock>
@@ -369,9 +357,9 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
                      FontStyle="Italic"
                      Margin="0,4,0,0"
                      IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
-            <Run Text="?? "/>
+            <Run Text="💡 "/>
             <Run Text="{Binding SelectedDairyComponentDto.DryCowsEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
-            <Run Text=" cows/year ? "/>
+            <Run Text=" cows/year ≈ "/>
             <Run Text="{Binding SelectedDairyComponentDto.DryCowsEnteringPerYear, Converter={StaticResource DivideByTwelveConverter}, StringFormat='{}{0:F1}'}" FontWeight="SemiBold"/>
             <Run Text=" cows/month"/>
           </TextBlock>

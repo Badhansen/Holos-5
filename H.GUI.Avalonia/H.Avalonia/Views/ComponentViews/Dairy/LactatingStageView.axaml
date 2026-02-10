@@ -27,7 +27,8 @@
               BorderThickness="1" 
               CornerRadius="6" 
               Padding="16" 
-              Margin="0,0,0,16">
+              Margin="0,0,0,16"
+              Grid.IsSharedSizeScope="True">
         <StackPanel>
           <TextBlock Text="🥛 Production Values" 
                     FontSize="14" 
@@ -45,27 +46,26 @@
           <!-- Milk Production -->
           <Grid Margin="0,0,0,8">
             <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto"/>
-              <ColumnDefinition Width="150"/>
-              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+              <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" 
                       Text="Milk Production:" 
                       FontWeight="Medium" 
                       Foreground="RoyalBlue"
                       VerticalAlignment="Center" 
-                      Margin="0,0,12,0"/>
+                      Margin="0,0,8,0"/>
             <NumericUpDown Grid.Column="1" 
                           Minimum="0" 
                           Maximum="100"
                           FormatString="0.0"
                           Increment="0.5"
                           Value="{Binding SelectedDairyComponentDto.DefaultMilkProduction}"
-                          Height="32"/>
+                          Margin="8,0"
+                          HorizontalAlignment="Stretch"/>
             <TextBlock Grid.Column="2" 
                       Text="kg/day" 
-                      FontSize="12" 
-                      Foreground="#666" 
                       VerticalAlignment="Center" 
                       Margin="8,0,0,0"/>
           </Grid>
@@ -73,27 +73,26 @@
           <!-- Milk Fat -->
           <Grid Margin="0,0,0,8">
             <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto"/>
-              <ColumnDefinition Width="150"/>
-              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+              <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" 
                       Text="Milk Fat:" 
                       FontWeight="Medium" 
                       Foreground="RoyalBlue"
                       VerticalAlignment="Center" 
-                      Margin="0,0,12,0"/>
+                      Margin="0,0,8,0"/>
             <NumericUpDown Grid.Column="1" 
                           Minimum="0" 
                           Maximum="10"
                           FormatString="0.0"
                           Increment="0.1"
                           Value="{Binding SelectedDairyComponentDto.DefaultMilkFatContent}"
-                          Height="32"/>
+                          Margin="8,0"
+                          HorizontalAlignment="Stretch"/>
             <TextBlock Grid.Column="2" 
                       Text="%" 
-                      FontSize="12" 
-                      Foreground="#666" 
                       VerticalAlignment="Center" 
                       Margin="8,0,0,0"/>
           </Grid>
@@ -101,27 +100,26 @@
           <!-- Milk Protein -->
           <Grid Margin="0,0,0,0">
             <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto"/>
-              <ColumnDefinition Width="150"/>
-              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+              <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" 
                       Text="Milk Protein:" 
                       FontWeight="Medium" 
                       Foreground="RoyalBlue"
                       VerticalAlignment="Center" 
-                      Margin="0,0,12,0"/>
+                      Margin="0,0,8,0"/>
             <NumericUpDown Grid.Column="1" 
                           Minimum="0" 
                           Maximum="10"
                           FormatString="0.0"
                           Increment="0.1"
                           Value="{Binding SelectedDairyComponentDto.DefaultMilkProteinContent}"
-                          Height="32"/>
+                          Margin="8,0"
+                          HorizontalAlignment="Stretch"/>
             <TextBlock Grid.Column="2" 
                       Text="%" 
-                      FontSize="12" 
-                      Foreground="#666" 
                       VerticalAlignment="Center" 
                       Margin="8,0,0,0"/>
           </Grid>

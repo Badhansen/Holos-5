@@ -162,7 +162,13 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         public bool IsCalfSelected
         {
             get => _isCalfSelected;
-            set => SetProperty(ref _isCalfSelected, value);
+            set
+            {
+                if (SetProperty(ref _isCalfSelected, value))
+                {
+                    RaisePropertyChanged(nameof(IsAnyStageSelected));
+                }
+            }
         }
 
         /// <summary>
@@ -171,7 +177,13 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         public bool IsHeiferSelected
         {
             get => _isHeiferSelected;
-            set => SetProperty(ref _isHeiferSelected, value);
+            set
+            {
+                if (SetProperty(ref _isHeiferSelected, value))
+                {
+                    RaisePropertyChanged(nameof(IsAnyStageSelected));
+                }
+            }
         }
 
         /// <summary>
@@ -180,7 +192,13 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         public bool IsLactatingSelected
         {
             get => _isLactatingSelected;
-            set => SetProperty(ref _isLactatingSelected, value);
+            set
+            {
+                if (SetProperty(ref _isLactatingSelected, value))
+                {
+                    RaisePropertyChanged(nameof(IsAnyStageSelected));
+                }
+            }
         }
 
         /// <summary>
@@ -189,7 +207,13 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         public bool IsDrySelected
         {
             get => _isDrySelected;
-            set => SetProperty(ref _isDrySelected, value);
+            set
+            {
+                if (SetProperty(ref _isDrySelected, value))
+                {
+                    RaisePropertyChanged(nameof(IsAnyStageSelected));
+                }
+            }
         }
 
         /// <summary>
@@ -209,6 +233,12 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
             get => _housingTypes;
             set => SetProperty(ref _housingTypes, value);
         }
+
+        /// <summary>
+        /// Gets whether any lifecycle stage card is currently selected.
+        /// Used to control visibility of Step 3 (Lifecycle Configuration).
+        /// </summary>
+        public bool IsAnyStageSelected => IsCalfSelected || IsHeiferSelected || IsLactatingSelected || IsDrySelected;
 
         #endregion
 

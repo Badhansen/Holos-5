@@ -1,7 +1,10 @@
 using System.ComponentModel;
+using System.Collections.ObjectModel;
+using System.Linq;
 using H.Core.CustomAttributes;
 using H.Core.Enumerations;
 using H.Core.Factories.Animals;
+using H.Core.Models.Animals.Dairy;
 
 namespace H.Core.Factories.Animals.Dairy;
 
@@ -87,6 +90,9 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     private HousingType _dryPhase1HousingType = HousingType.FreeStallBarnSolidLitter;
     private HousingType _dryPhase2HousingType = HousingType.FreeStallBarnSolidLitter;
     
+    // Population Entry Mode - Simple vs Advanced
+    private bool _useAdvancedPopulationMode;
+    
     #endregion
 
     #region Constructors
@@ -94,6 +100,18 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     public DairyComponentDto()
     {
         this.PropertyChanged += OnPropertyChanged;
+        
+        // Initialize population group collections
+        CalfPopulationGroups = new ObservableCollection<DairyPopulationGroup>();
+        HeiferPopulationGroups = new ObservableCollection<DairyPopulationGroup>();
+        LactatingPopulationGroups = new ObservableCollection<DairyPopulationGroup>();
+        DryPopulationGroups = new ObservableCollection<DairyPopulationGroup>();
+        
+        // Subscribe to collection changes
+        CalfPopulationGroups.CollectionChanged += OnCalfGroupsCollectionChanged;
+        HeiferPopulationGroups.CollectionChanged += OnHeiferGroupsCollectionChanged;
+        LactatingPopulationGroups.CollectionChanged += OnLactatingGroupsCollectionChanged;
+        DryPopulationGroups.CollectionChanged += OnDryGroupsCollectionChanged;
         
         // Calculate initial values
         CalculateHerdComposition();
@@ -634,6 +652,77 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
             return SteadyStateCalves + SteadyStateHeifers + SteadyStateLactating + SteadyStateDry;
         }
     }
+    
+    #endregion
+    
+    #region Properties - Population Entry Mode and Groups
+    
+    /// <summary>
+    /// Determines whether the user is in Simple mode (single entry) or Advanced mode (multiple groups).
+    /// Simple mode: User enters a single population value per stage
+    /// Advanced mode: User can define multiple named groups with individual populations
+    /// </summary>
+    public bool UseAdvancedPopulationMode
+    {
+        get => _useAdvancedPopulationMode;
+        set
+        {
+            if (SetProperty(ref _useAdvancedPopulationMode, value))
+            {
+                // When switching modes, sync the data
+                if (value)
+                {
+                    // Switching TO Advanced: Create single group from simple values
+                    SyncSimpleToAdvancedMode();
+                }
+                else
+                {
+                    // Switching TO Simple: Calculate totals from groups
+                    SyncAdvancedToSimpleMode();
+                }
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Collection of population groups for the calf stage (Advanced mode)
+    /// </summary>
+    public ObservableCollection<DairyPopulationGroup> CalfPopulationGroups { get; private set; }
+    
+    /// <summary>
+    /// Collection of population groups for the heifer stage (Advanced mode)
+    /// </summary>
+    public ObservableCollection<DairyPopulationGroup> HeiferPopulationGroups { get; private set; }
+    
+    /// <summary>
+    /// Collection of population groups for the lactating stage (Advanced mode)
+    /// </summary>
+    public ObservableCollection<DairyPopulationGroup> LactatingPopulationGroups { get; private set; }
+    
+    /// <summary>
+    /// Collection of population groups for the dry stage (Advanced mode)
+    /// </summary>
+    public ObservableCollection<DairyPopulationGroup> DryPopulationGroups { get; private set; }
+    
+    /// <summary>
+    /// Total calf population from all groups (used in Advanced mode)
+    /// </summary>
+    public int TotalCalfPopulation => CalfPopulationGroups?.Sum(g => g.NumberOfAnimals) ?? 0;
+    
+    /// <summary>
+    /// Total heifer population from all groups (used in Advanced mode)
+    /// </summary>
+    public int TotalHeiferPopulation => HeiferPopulationGroups?.Sum(g => g.NumberOfAnimals) ?? 0;
+    
+    /// <summary>
+    /// Total lactating population from all groups (used in Advanced mode)
+    /// </summary>
+    public int TotalLactatingPopulation => LactatingPopulationGroups?.Sum(g => g.NumberOfAnimals) ?? 0;
+    
+    /// <summary>
+    /// Total dry population from all groups (used in Advanced mode)
+    /// </summary>
+    public int TotalDryPopulation => DryPopulationGroups?.Sum(g => g.NumberOfAnimals) ?? 0;
     
     #endregion
     
@@ -1290,6 +1379,215 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
                 ValidateDryCowsEnteringPerYear();
                 break;
         }
+    }
+    
+    /// <summary>
+    /// Called when population groups change in Advanced mode.
+    /// Updates the steady-state populations based on group totals.
+    /// </summary>
+    private void OnPopulationGroupsChanged()
+    {
+        if (UseAdvancedPopulationMode)
+        {
+            // Update steady-state values from group totals
+            SteadyStateCalves = TotalCalfPopulation;
+            SteadyStateHeifers = TotalHeiferPopulation;
+            SteadyStateLactating = TotalLactatingPopulation;
+            SteadyStateDry = TotalDryPopulation;
+        }
+        
+        // Notify UI of changes
+        RaisePropertyChanged(nameof(TotalCalfPopulation));
+        RaisePropertyChanged(nameof(TotalHeiferPopulation));
+        RaisePropertyChanged(nameof(TotalLactatingPopulation));
+        RaisePropertyChanged(nameof(TotalDryPopulation));
+        RaisePropertyChanged(nameof(TotalSteadyStateHerdSize));
+    }
+    
+    /// <summary>
+    /// Handles collection changes for calf groups
+    /// </summary>
+    private void OnCalfGroupsCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        // Unsubscribe from removed items
+        if (e.OldItems != null)
+        {
+            foreach (var item in e.OldItems)
+            {
+                if (item is DairyPopulationGroup group)
+                {
+                    group.PropertyChanged -= OnGroupPropertyChanged;
+                }
+            }
+        }
+        
+        // Subscribe to new items
+        if (e.NewItems != null)
+        {
+            foreach (var item in e.NewItems)
+            {
+                if (item is DairyPopulationGroup group)
+                {
+                    group.PropertyChanged += OnGroupPropertyChanged;
+                }
+            }
+        }
+        
+        OnPopulationGroupsChanged();
+    }
+    
+    /// <summary>
+    /// Handles collection changes for heifer groups
+    /// </summary>
+    private void OnHeiferGroupsCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        // Unsubscribe from removed items
+        if (e.OldItems != null)
+        {
+            foreach (var item in e.OldItems)
+            {
+                if (item is DairyPopulationGroup group)
+                {
+                    group.PropertyChanged -= OnGroupPropertyChanged;
+                }
+            }
+        }
+        
+        // Subscribe to new items
+        if (e.NewItems != null)
+        {
+            foreach (var item in e.NewItems)
+            {
+                if (item is DairyPopulationGroup group)
+                {
+                    group.PropertyChanged += OnGroupPropertyChanged;
+                }
+            }
+        }
+        
+        OnPopulationGroupsChanged();
+    }
+    
+    /// <summary>
+    /// Handles collection changes for lactating groups
+    /// </summary>
+    private void OnLactatingGroupsCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        // Unsubscribe from removed items
+        if (e.OldItems != null)
+        {
+            foreach (var item in e.OldItems)
+            {
+                if (item is DairyPopulationGroup group)
+                {
+                    group.PropertyChanged -= OnGroupPropertyChanged;
+                }
+            }
+        }
+        
+        // Subscribe to new items
+        if (e.NewItems != null)
+        {
+            foreach (var item in e.NewItems)
+            {
+                if (item is DairyPopulationGroup group)
+                {
+                    group.PropertyChanged += OnGroupPropertyChanged;
+                }
+            }
+        }
+        
+        OnPopulationGroupsChanged();
+    }
+    
+    /// <summary>
+    /// Handles collection changes for dry groups
+    /// </summary>
+    private void OnDryGroupsCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        // Unsubscribe from removed items
+        if (e.OldItems != null)
+        {
+            foreach (var item in e.OldItems)
+            {
+                if (item is DairyPopulationGroup group)
+                {
+                    group.PropertyChanged -= OnGroupPropertyChanged;
+                }
+            }
+        }
+        
+        // Subscribe to new items
+        if (e.NewItems != null)
+        {
+            foreach (var item in e.NewItems)
+            {
+                if (item is DairyPopulationGroup group)
+                {
+                    group.PropertyChanged += OnGroupPropertyChanged;
+                }
+            }
+        }
+        
+        OnPopulationGroupsChanged();
+    }
+    
+    /// <summary>
+    /// Handles property changes on individual population groups
+    /// </summary>
+    private void OnGroupPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        // When a group's NumberOfAnimals changes, recalculate totals
+        if (e.PropertyName == nameof(DairyPopulationGroup.NumberOfAnimals))
+        {
+            OnPopulationGroupsChanged();
+        }
+    }
+    
+    /// <summary>
+    /// Sync from Simple mode to Advanced mode.
+    /// Creates a single group for each stage with the current simple values.
+    /// </summary>
+    private void SyncSimpleToAdvancedMode()
+    {
+        // Clear existing groups
+        CalfPopulationGroups.Clear();
+        HeiferPopulationGroups.Clear();
+        LactatingPopulationGroups.Clear();
+        DryPopulationGroups.Clear();
+        
+        // Create default groups with current values
+        if (SteadyStateCalves > 0)
+            CalfPopulationGroups.Add(new DairyPopulationGroup("Group 1", SteadyStateCalves));
+        
+        if (SteadyStateHeifers > 0)
+            HeiferPopulationGroups.Add(new DairyPopulationGroup("Group 1", SteadyStateHeifers));
+        
+        if (SteadyStateLactating > 0)
+            LactatingPopulationGroups.Add(new DairyPopulationGroup("Group 1", SteadyStateLactating));
+        
+        if (SteadyStateDry > 0)
+            DryPopulationGroups.Add(new DairyPopulationGroup("Group 1", SteadyStateDry));
+    }
+    
+    /// <summary>
+    /// Sync from Advanced mode to Simple mode.
+    /// Calculates totals from all groups and sets the simple values.
+    /// </summary>
+    private void SyncAdvancedToSimpleMode()
+    {
+        // Update steady-state values from group totals
+        if (TotalCalfPopulation > 0)
+            SteadyStateCalves = TotalCalfPopulation;
+        
+        if (TotalHeiferPopulation > 0)
+            SteadyStateHeifers = TotalHeiferPopulation;
+        
+        if (TotalLactatingPopulation > 0)
+            SteadyStateLactating = TotalLactatingPopulation;
+        
+        if (TotalDryPopulation > 0)
+            SteadyStateDry = TotalDryPopulation;
     }
 
     #endregion

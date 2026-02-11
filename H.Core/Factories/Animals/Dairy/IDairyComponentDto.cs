@@ -1,5 +1,7 @@
+using System.Collections.ObjectModel;
 using H.Core.Factories.Animals;
 using H.Core.Enumerations;
+using H.Core.Models.Animals.Dairy;
 
 namespace H.Core.Factories.Animals.Dairy;
 
@@ -47,6 +49,17 @@ public interface IDairyComponentDto : IAnimalComponentDto
     int SteadyStateLactating { get; }
     int SteadyStateDry { get; }
     int TotalSteadyStateHerdSize { get; }
+    
+    // Population Entry Mode - Simple vs Advanced
+    bool UseAdvancedPopulationMode { get; set; }
+    ObservableCollection<DairyPopulationGroup> CalfPopulationGroups { get; }
+    ObservableCollection<DairyPopulationGroup> HeiferPopulationGroups { get; }
+    ObservableCollection<DairyPopulationGroup> LactatingPopulationGroups { get; }
+    ObservableCollection<DairyPopulationGroup> DryPopulationGroups { get; }
+    int TotalCalfPopulation { get; }
+    int TotalHeiferPopulation { get; }
+    int TotalLactatingPopulation { get; }
+    int TotalDryPopulation { get; }
     
     // Manure Handling Systems - Phase-specific configurations
     ManureStateType HeiferPhase1ManureHandlingSystem { get; set; }

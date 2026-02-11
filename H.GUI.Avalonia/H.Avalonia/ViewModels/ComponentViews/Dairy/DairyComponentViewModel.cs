@@ -11,7 +11,9 @@ using System;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
 using H.Core.Enumerations;
+using Prism.Commands;
 
 namespace H.Avalonia.ViewModels.ComponentViews.Dairy
 {
@@ -73,6 +75,26 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// Collection of available housing types for dropdown selection
         /// </summary>
         private IEnumerable<HousingType> _housingTypes;
+        
+        /// <summary>
+        /// The currently selected calf group for management configuration
+        /// </summary>
+        private DairyPopulationGroup _selectedCalfGroup;
+        
+        /// <summary>
+        /// The currently selected heifer group for management configuration
+        /// </summary>
+        private DairyPopulationGroup _selectedHeiferGroup;
+        
+        /// <summary>
+        /// The currently selected lactating group for management configuration
+        /// </summary>
+        private DairyPopulationGroup _selectedLactatingGroup;
+        
+        /// <summary>
+        /// The currently selected dry group for management configuration
+        /// </summary>
+        private DairyPopulationGroup _selectedDryGroup;
 
         #endregion
 
@@ -239,6 +261,69 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// Used to control visibility of Step 3 (Lifecycle Configuration).
         /// </summary>
         public bool IsAnyStageSelected => IsCalfSelected || IsHeiferSelected || IsLactatingSelected || IsDrySelected;
+        
+        /// <summary>
+        /// Command to add a new population group to the calf stage
+        /// </summary>
+        public ICommand AddCalfGroupCommand { get; private set; }
+        
+        /// <summary>
+        /// Command to add a new population group to the heifer stage
+        /// </summary>
+        public ICommand AddHeiferGroupCommand { get; private set; }
+        
+        /// <summary>
+        /// Command to add a new population group to the lactating stage
+        /// </summary>
+        public ICommand AddLactatingGroupCommand { get; private set; }
+        
+        /// <summary>
+        /// Command to add a new population group to the dry stage
+        /// </summary>
+        public ICommand AddDryGroupCommand { get; private set; }
+        
+        /// <summary>
+        /// Command to remove a population group from any stage
+        /// </summary>
+        public ICommand RemoveGroupCommand { get; private set; }
+        
+        /// <summary>
+        /// Gets or sets the currently selected calf group for management configuration.
+        /// In Simple mode, this is null (management applies to the single implicit group).
+        /// In Advanced mode, user selects which group to configure.
+        /// </summary>
+        public DairyPopulationGroup SelectedCalfGroup
+        {
+            get => _selectedCalfGroup;
+            set => SetProperty(ref _selectedCalfGroup, value);
+        }
+        
+        /// <summary>
+        /// Gets or sets the currently selected heifer group for management configuration
+        /// </summary>
+        public DairyPopulationGroup SelectedHeiferGroup
+        {
+            get => _selectedHeiferGroup;
+            set => SetProperty(ref _selectedHeiferGroup, value);
+        }
+        
+        /// <summary>
+        /// Gets or sets the currently selected lactating group for management configuration
+        /// </summary>
+        public DairyPopulationGroup SelectedLactatingGroup
+        {
+            get => _selectedLactatingGroup;
+            set => SetProperty(ref _selectedLactatingGroup, value);
+        }
+        
+        /// <summary>
+        /// Gets or sets the currently selected dry group for management configuration
+        /// </summary>
+        public DairyPopulationGroup SelectedDryGroup
+        {
+            get => _selectedDryGroup;
+            set => SetProperty(ref _selectedDryGroup, value);
+        }
 
         #endregion
 
@@ -386,6 +471,13 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
                 .Where(x => !x.GetType().GetMember(x.ToString())[0]
                     .GetCustomAttributes(typeof(ObsoleteAttribute), false).Any())
                 .ToList();
+                
+            // Initialize commands for adding/removing population groups
+            AddCalfGroupCommand = new DelegateCommand(AddCalfGroup);
+            AddHeiferGroupCommand = new DelegateCommand(AddHeiferGroup);
+            AddLactatingGroupCommand = new DelegateCommand(AddLactatingGroup);
+            AddDryGroupCommand = new DelegateCommand(AddDryGroup);
+            RemoveGroupCommand = new DelegateCommand<DairyPopulationGroup>(RemoveGroup);
         }
 
         /// <summary>
@@ -407,19 +499,168 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
             {
                 case "Calf":
                     IsCalfSelected = true;
+                    // Auto-select first group if in advanced mode
+                    if (SelectedDairyComponentDto?.UseAdvancedPopulationMode == true &&
+                        SelectedDairyComponentDto.CalfPopulationGroups.Any())
+                    {
+                        SelectedCalfGroup = SelectedDairyComponentDto.CalfPopulationGroups.First();
+                    }
                     break;
                 case "Heifer":
                     IsHeiferSelected = true;
+                    if (SelectedDairyComponentDto?.UseAdvancedPopulationMode == true &&
+                        SelectedDairyComponentDto.HeiferPopulationGroups.Any())
+                    {
+                        SelectedHeiferGroup = SelectedDairyComponentDto.HeiferPopulationGroups.First();
+                    }
                     break;
                 case "Lactating":
                     IsLactatingSelected = true;
+                    if (SelectedDairyComponentDto?.UseAdvancedPopulationMode == true &&
+                        SelectedDairyComponentDto.LactatingPopulationGroups.Any())
+                    {
+                        SelectedLactatingGroup = SelectedDairyComponentDto.LactatingPopulationGroups.First();
+                    }
                     break;
                 case "Dry":
                     IsDrySelected = true;
+                    if (SelectedDairyComponentDto?.UseAdvancedPopulationMode == true &&
+                        SelectedDairyComponentDto.DryPopulationGroups.Any())
+                    {
+                        SelectedDryGroup = SelectedDairyComponentDto.DryPopulationGroups.First();
+                    }
                     break;
             }
 
             Logger?.LogDebug($"Selected herd stage: {stage}");
+        }
+        
+        /// <summary>
+        /// Adds a new population group to the calf stage
+        /// </summary>
+        private void AddCalfGroup()
+        {
+            if (SelectedDairyComponentDto?.CalfPopulationGroups == null) return;
+            
+            var groupNumber = SelectedDairyComponentDto.CalfPopulationGroups.Count + 1;
+            var newGroup = new DairyPopulationGroup($"Group {groupNumber}", 0);
+            
+            SelectedDairyComponentDto.CalfPopulationGroups.Add(newGroup);
+            
+            // Auto-select the newly added group
+            SelectedCalfGroup = newGroup;
+            
+            Logger?.LogDebug("Added new calf population group");
+        }
+        
+        /// <summary>
+        /// Adds a new population group to the heifer stage
+        /// </summary>
+        private void AddHeiferGroup()
+        {
+            if (SelectedDairyComponentDto?.HeiferPopulationGroups == null) return;
+            
+            var groupNumber = SelectedDairyComponentDto.HeiferPopulationGroups.Count + 1;
+            var newGroup = new DairyPopulationGroup($"Group {groupNumber}", 0);
+            
+            SelectedDairyComponentDto.HeiferPopulationGroups.Add(newGroup);
+            SelectedHeiferGroup = newGroup;
+            
+            Logger?.LogDebug("Added new heifer population group");
+        }
+        
+        /// <summary>
+        /// Adds a new population group to the lactating stage
+        /// </summary>
+        private void AddLactatingGroup()
+        {
+            if (SelectedDairyComponentDto?.LactatingPopulationGroups == null) return;
+            
+            var groupNumber = SelectedDairyComponentDto.LactatingPopulationGroups.Count + 1;
+            var newGroup = new DairyPopulationGroup($"Group {groupNumber}", 0);
+            
+            SelectedDairyComponentDto.LactatingPopulationGroups.Add(newGroup);
+            SelectedLactatingGroup = newGroup;
+            
+            Logger?.LogDebug("Added new lactating population group");
+        }
+        
+        /// <summary>
+        /// Adds a new population group to the dry stage
+        /// </summary>
+        private void AddDryGroup()
+        {
+            if (SelectedDairyComponentDto?.DryPopulationGroups == null) return;
+            
+            var groupNumber = SelectedDairyComponentDto.DryPopulationGroups.Count + 1;
+            var newGroup = new DairyPopulationGroup($"Group {groupNumber}", 0);
+            
+            SelectedDairyComponentDto.DryPopulationGroups.Add(newGroup);
+            SelectedDryGroup = newGroup;
+            
+            Logger?.LogDebug("Added new dry population group");
+        }
+        
+        /// <summary>
+        /// Removes a population group from the appropriate stage
+        /// </summary>
+        private void RemoveGroup(DairyPopulationGroup group)
+        {
+            if (group == null || SelectedDairyComponentDto == null) return;
+            
+            // Check if we're removing the currently selected group
+            bool wasSelectedCalf = group == SelectedCalfGroup;
+            bool wasSelectedHeifer = group == SelectedHeiferGroup;
+            bool wasSelectedLactating = group == SelectedLactatingGroup;
+            bool wasSelectedDry = group == SelectedDryGroup;
+            
+            // Try to remove from each collection
+            var removed = SelectedDairyComponentDto.CalfPopulationGroups.Remove(group) ||
+                         SelectedDairyComponentDto.HeiferPopulationGroups.Remove(group) ||
+                         SelectedDairyComponentDto.LactatingPopulationGroups.Remove(group) ||
+                         SelectedDairyComponentDto.DryPopulationGroups.Remove(group);
+            
+            if (removed)
+            {
+                // If we removed the selected group, select another one
+                if (wasSelectedCalf && SelectedDairyComponentDto.CalfPopulationGroups.Any())
+                {
+                    SelectedCalfGroup = SelectedDairyComponentDto.CalfPopulationGroups.First();
+                }
+                else if (wasSelectedCalf)
+                {
+                    SelectedCalfGroup = null;
+                }
+                
+                if (wasSelectedHeifer && SelectedDairyComponentDto.HeiferPopulationGroups.Any())
+                {
+                    SelectedHeiferGroup = SelectedDairyComponentDto.HeiferPopulationGroups.First();
+                }
+                else if (wasSelectedHeifer)
+                {
+                    SelectedHeiferGroup = null;
+                }
+                
+                if (wasSelectedLactating && SelectedDairyComponentDto.LactatingPopulationGroups.Any())
+                {
+                    SelectedLactatingGroup = SelectedDairyComponentDto.LactatingPopulationGroups.First();
+                }
+                else if (wasSelectedLactating)
+                {
+                    SelectedLactatingGroup = null;
+                }
+                
+                if (wasSelectedDry && SelectedDairyComponentDto.DryPopulationGroups.Any())
+                {
+                    SelectedDryGroup = SelectedDairyComponentDto.DryPopulationGroups.First();
+                }
+                else if (wasSelectedDry)
+                {
+                    SelectedDryGroup = null;
+                }
+                
+                Logger?.LogDebug($"Removed population group: {group.GroupName}");
+            }
         }
 
         #endregion

@@ -44,13 +44,10 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.DairyComponentView">
       <dairy:DairyLifecycleVisualizationView Margin="0,0,0,24"
                                               IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
 
-      <!-- Step 1: Herd Overview -->
-      <dairy:HerdOverviewView Margin="0,0,0,16"/>
-
-      <!-- Calculated Herd Composition Panel -->
+      <!-- Step 1: Select Stage & Step 2: Configure Population/Duration (CalculatedHerdCompositionView contains both) -->
       <dairy:CalculatedHerdCompositionView Margin="0,0,0,20"/>
 
-      <!-- Step 3: Lifecycle Configuration - Only show when a stage card is selected -->
+      <!-- Step 3: Management Practices Configuration - Only show when a stage card is selected -->
       <dairy:LifecycleConfigurationView Margin="0,0,0,16"
                                         IsVisible="{Binding IsAnyStageSelected}"/>
 

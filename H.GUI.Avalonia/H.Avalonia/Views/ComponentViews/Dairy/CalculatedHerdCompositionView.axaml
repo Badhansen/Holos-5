@@ -3,9 +3,14 @@
            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
            xmlns:dairy="clr-namespace:H.Avalonia.Views.ComponentViews.Dairy"
+           xmlns:dairyVm="clr-namespace:H.Avalonia.ViewModels.ComponentViews.Dairy"
            xmlns:converters="clr-namespace:H.Avalonia.Converters"
            mc:Ignorable="d" d:DesignWidth="900"
            x:Class="H.Avalonia.Views.ComponentViews.Dairy.CalculatedHerdCompositionView">
+
+<Design.DataContext>
+  <dairyVm:DairyComponentViewModelDesign/>
+</Design.DataContext>
 
 <UserControl.Resources>
   <converters:BoolToBackgroundConverter x:Key="BoolToBackgroundConverter"/>
@@ -101,7 +106,7 @@
                         IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
                   <StackPanel x:Name="CalfCalculationStackPanel">
                     <TextBlock x:Name="CalfInputLabelTextBlock"
-                               Text="Input:" 
+                               Text="User Input:" 
                                FontSize="9" 
                                FontWeight="SemiBold" 
                                Foreground="#1976D2"
@@ -113,12 +118,12 @@
                                Foreground="#666"
                                HorizontalAlignment="Center"
                                Margin="0,0,0,6">
-                      <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0}'}" FontWeight="Bold" Foreground="#1976D2"/>
-                      <Run Text=" calves/yr"/>
+                      <Run Text="{Binding SelectedDairyComponentDto.SteadyStateCalves, StringFormat='{}{0}'}" FontWeight="Bold" Foreground="#1976D2"/>
+                      <Run Text=" animals present"/>
                     </TextBlock>
                     
                     <TextBlock x:Name="CalfFormulaLabelTextBlock"
-                               Text="Formula:" 
+                               Text="Calculated Flow Rate:" 
                                FontSize="9" 
                                FontWeight="SemiBold" 
                                Foreground="#1976D2"
@@ -131,11 +136,12 @@
                                HorizontalAlignment="Center"
                                TextAlignment="Center"
                                LineHeight="13">
-                      <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0}'}" FontWeight="SemiBold"/>
-                      <Run Text=" * 0.329"/>
+                      <Run Text="{Binding SelectedDairyComponentDto.SteadyStateCalves, StringFormat='{}{0}'}" FontWeight="SemiBold"/>
+                      <Run Text=" / (120/365)"/>
                       <LineBreak/>
                       <Run Text="= "/>
-                      <Run Text="{Binding SelectedDairyComponentDto.SteadyStateCalves}" FontWeight="Bold" Foreground="#1976D2"/>
+                      <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear}" FontWeight="Bold" Foreground="#1976D2"/>
+                      <Run Text=" entering/yr"/>
                     </TextBlock>
                   </StackPanel>
                 </Border>
@@ -196,7 +202,7 @@
                       IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
                 <StackPanel x:Name="HeiferCalculationStackPanel">
                   <TextBlock x:Name="HeiferInputLabelTextBlock"
-                             Text="Input:" 
+                             Text="User Input:" 
                              FontSize="9" 
                              FontWeight="SemiBold" 
                              Foreground="#7B1FA2"
@@ -208,12 +214,12 @@
                              Foreground="#666"
                              HorizontalAlignment="Center"
                              Margin="0,0,0,6">
-                    <Run Text="{Binding SelectedDairyComponentDto.HeifersEnteringPerYear, StringFormat='{}{0}'}" FontWeight="Bold" Foreground="#7B1FA2"/>
-                    <Run Text=" heifers/yr"/>
+                    <Run Text="{Binding SelectedDairyComponentDto.SteadyStateHeifers, StringFormat='{}{0}'}" FontWeight="Bold" Foreground="#7B1FA2"/>
+                    <Run Text=" animals present"/>
                   </TextBlock>
                   
                   <TextBlock x:Name="HeiferFormulaLabelTextBlock"
-                             Text="Formula:" 
+                             Text="Calculated Flow Rate:" 
                              FontSize="9" 
                              FontWeight="SemiBold" 
                              Foreground="#7B1FA2"
@@ -226,11 +232,12 @@
                              HorizontalAlignment="Center"
                              TextAlignment="Center"
                              LineHeight="13">
-                    <Run Text="{Binding SelectedDairyComponentDto.HeifersEnteringPerYear, StringFormat='{}{0}'}" FontWeight="SemiBold"/>
-                    <Run Text=" * 1.666"/>
+                    <Run Text="{Binding SelectedDairyComponentDto.SteadyStateHeifers, StringFormat='{}{0}'}" FontWeight="SemiBold"/>
+                    <Run Text=" / (608/365)"/>
                     <LineBreak/>
                     <Run Text="= "/>
-                    <Run Text="{Binding SelectedDairyComponentDto.SteadyStateHeifers}" FontWeight="Bold" Foreground="#7B1FA2"/>
+                    <Run Text="{Binding SelectedDairyComponentDto.HeifersEnteringPerYear}" FontWeight="Bold" Foreground="#7B1FA2"/>
+                    <Run Text=" entering/yr"/>
                   </TextBlock>
                 </StackPanel>
               </Border>
@@ -291,7 +298,7 @@
                       IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
                 <StackPanel x:Name="LactatingCalculationStackPanel">
                   <TextBlock x:Name="LactatingInputLabelTextBlock"
-                             Text="Input:" 
+                             Text="User Input:" 
                              FontSize="9" 
                              FontWeight="SemiBold" 
                              Foreground="#388E3C"
@@ -303,12 +310,12 @@
                              Foreground="#666"
                              HorizontalAlignment="Center"
                              Margin="0,0,0,6">
-                    <Run Text="{Binding SelectedDairyComponentDto.LactatingCowsEnteringPerYear, StringFormat='{}{0}'}" FontWeight="Bold" Foreground="#388E3C"/>
-                    <Run Text=" cows/yr"/>
+                    <Run Text="{Binding SelectedDairyComponentDto.SteadyStateLactating, StringFormat='{}{0}'}" FontWeight="Bold" Foreground="#388E3C"/>
+                    <Run Text=" animals present"/>
                   </TextBlock>
                   
                   <TextBlock x:Name="LactatingFormulaLabelTextBlock"
-                             Text="Formula:" 
+                             Text="Calculated Flow Rate:" 
                              FontSize="9" 
                              FontWeight="SemiBold" 
                              Foreground="#388E3C"
@@ -321,11 +328,12 @@
                              HorizontalAlignment="Center"
                              TextAlignment="Center"
                              LineHeight="13">
-                    <Run Text="{Binding SelectedDairyComponentDto.LactatingCowsEnteringPerYear, StringFormat='{}{0}'}" FontWeight="SemiBold"/>
-                    <Run Text=" * 0.836"/>
+                    <Run Text="{Binding SelectedDairyComponentDto.SteadyStateLactating, StringFormat='{}{0}'}" FontWeight="SemiBold"/>
+                    <Run Text=" / (305/365)"/>
                     <LineBreak/>
                     <Run Text="= "/>
-                    <Run Text="{Binding SelectedDairyComponentDto.SteadyStateLactating}" FontWeight="Bold" Foreground="#388E3C"/>
+                    <Run Text="{Binding SelectedDairyComponentDto.LactatingCowsEnteringPerYear}" FontWeight="Bold" Foreground="#388E3C"/>
+                    <Run Text=" entering/yr"/>
                   </TextBlock>
                 </StackPanel>
               </Border>
@@ -386,7 +394,7 @@
                       IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
                 <StackPanel x:Name="DryCalculationStackPanel">
                   <TextBlock x:Name="DryInputLabelTextBlock"
-                             Text="Input:" 
+                             Text="User Input:" 
                              FontSize="9" 
                              FontWeight="SemiBold" 
                              Foreground="#F57C00"
@@ -398,12 +406,12 @@
                              Foreground="#666"
                              HorizontalAlignment="Center"
                              Margin="0,0,0,6">
-                    <Run Text="{Binding SelectedDairyComponentDto.DryCowsEnteringPerYear, StringFormat='{}{0}'}" FontWeight="Bold" Foreground="#F57C00"/>
-                    <Run Text=" cows/yr"/>
+                    <Run Text="{Binding SelectedDairyComponentDto.SteadyStateDry, StringFormat='{}{0}'}" FontWeight="Bold" Foreground="#F57C00"/>
+                    <Run Text=" animals present"/>
                   </TextBlock>
                   
                   <TextBlock x:Name="DryFormulaLabelTextBlock"
-                             Text="Formula:" 
+                             Text="Calculated Flow Rate:" 
                              FontSize="9" 
                              FontWeight="SemiBold" 
                              Foreground="#F57C00"
@@ -416,13 +424,14 @@
                              HorizontalAlignment="Center"
                              TextAlignment="Center"
                              LineHeight="13">
-                    <Run Text="{Binding SelectedDairyComponentDto.DryCowsEnteringPerYear, StringFormat='{}{0}'}" FontWeight="SemiBold"/>
-                    <Run Text=" * ("/>
+                    <Run Text="{Binding SelectedDairyComponentDto.SteadyStateDry, StringFormat='{}{0}'}" FontWeight="SemiBold"/>
+                    <Run Text=" / ("/>
                     <Run Text="{Binding SelectedDairyComponentDto.DryPeriodDays, StringFormat='{}{0}'}"/>
                     <Run Text="/365)"/>
                     <LineBreak/>
                     <Run Text="= "/>
-                    <Run Text="{Binding SelectedDairyComponentDto.SteadyStateDry}" FontWeight="Bold" Foreground="#F57C00"/>
+                    <Run Text="{Binding SelectedDairyComponentDto.DryCowsEnteringPerYear}" FontWeight="Bold" Foreground="#F57C00"/>
+                    <Run Text=" entering/yr"/>
                   </TextBlock>
                 </StackPanel>
               </Border>
@@ -463,150 +472,6 @@
           </Border>
         </Grid>
       </StackPanel>
-      
-      
-      <!-- Overall Explanation -->
-      <Border x:Name="OverallExplanationBorder"
-              Background="White" 
-              BorderBrush="#43A047" 
-              BorderThickness="2" 
-              CornerRadius="6" 
-              Padding="16" 
-              Margin="4,12,4,4"
-              IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
-        <StackPanel x:Name="ExplanationContentStackPanel">
-          <TextBlock x:Name="ExplanationHeaderTextBlock"
-                     Text="How These Numbers Are Calculated" 
-                     FontSize="13" 
-                     FontWeight="Bold" 
-                     Foreground="#43A047"
-                     Margin="0,0,0,12"/>
-          
-          <TextBlock x:Name="ExplanationIntroTextBlock"
-                     TextWrapping="Wrap" 
-                     FontSize="11" 
-                     Foreground="#666" 
-                     LineHeight="18"
-                     Margin="0,0,0,12">
-            <Run Text="The numbers shown above represent the " FontWeight="SemiBold"/>
-            <Run Text="steady-state population" FontWeight="Bold" Foreground="#43A047"/>
-            <Run Text=" — how many animals will be in each stage at any given moment in a continuous-flow dairy operation."/>
-          </TextBlock>
-          
-          <Border x:Name="FormulaBorder"
-                  Background="#F1F8E9" 
-                  BorderBrush="#8BC34A" 
-                  BorderThickness="1"
-                  CornerRadius="4" 
-                  Padding="12" 
-                  Margin="0,0,0,12">
-            <StackPanel x:Name="FormulaStackPanel">
-              <TextBlock x:Name="FormulaHeaderTextBlock"
-                         Text="The Formula" 
-                         FontSize="12" 
-                         FontWeight="SemiBold" 
-                         Foreground="#558B2F"
-                         Margin="0,0,0,8"/>
-              <TextBlock x:Name="FormulaTextBlock"
-                         TextWrapping="Wrap" 
-                         FontSize="11" 
-                         Foreground="#666"
-                         LineHeight="18">
-                <Run Text="Steady-State Population = " FontWeight="SemiBold"/>
-                <Run Text="(Animals Entering Per Year)" FontWeight="Bold" Foreground="#1976D2"/>
-                <Run Text=" * "/>
-                <Run Text="(Days in Stage / 365)" FontWeight="Bold" Foreground="#F57C00"/>
-              </TextBlock>
-            </StackPanel>
-          </Border>
-          
-          <TextBlock x:Name="ExampleHeaderTextBlock"
-                     Text="Example Walkthrough: Calf Stage" 
-                     FontSize="12" 
-                     FontWeight="SemiBold" 
-                     Foreground="#1976D2"
-                     Margin="0,0,0,8"/>
-          
-          <StackPanel x:Name="ExampleStepsStackPanel"
-                      Margin="12,0,0,12">
-            <TextBlock x:Name="ExampleStep1TextBlock"
-                       TextWrapping="Wrap" 
-                       FontSize="11" 
-                       Foreground="#666" 
-                       LineHeight="18"
-                       Margin="0,0,0,6">
-              <Run Text="1. You entered: " FontWeight="SemiBold"/>
-              <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0} calves'}" FontWeight="Bold" Foreground="#1976D2"/>
-              <Run Text=" enter the calf stage per year"/>
-            </TextBlock>
-            
-            <TextBlock x:Name="ExampleStep2TextBlock"
-                       TextWrapping="Wrap" 
-                       FontSize="11" 
-                       Foreground="#666" 
-                       LineHeight="18"
-                       Margin="0,0,0,6">
-              <Run Text="2. Calves stay in this stage for: " FontWeight="SemiBold"/>
-              <Run Text="{Binding SelectedDairyComponentDto.CalfStageDurationDays, StringFormat='{}{0} days'}" FontWeight="Bold" Foreground="#F57C00"/>
-              <Run Text=" before moving to the heifer stage"/>
-            </TextBlock>
-            
-            <TextBlock x:Name="ExampleStep3TextBlock"
-                       TextWrapping="Wrap" 
-                       FontSize="11" 
-                       Foreground="#666" 
-                       LineHeight="18"
-                       Margin="0,0,0,6">
-              <Run Text="3. Calculate the ratio: " FontWeight="SemiBold"/>
-              <Run Text="{Binding SelectedDairyComponentDto.CalfStageDurationDays, StringFormat='{}{0}'}"/>
-              <Run Text=" / 365" FontWeight="Bold"/>
-            </TextBlock>
-            
-            <TextBlock x:Name="ExampleStep4TextBlock"
-                       TextWrapping="Wrap" 
-                       FontSize="11" 
-                       Foreground="#666" 
-                       LineHeight="18">
-              <Run Text="4. Multiply: " FontWeight="SemiBold"/>
-              <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0}'}" FontWeight="Bold" Foreground="#1976D2"/>
-              <Run Text=" × ("/>
-              <Run Text="{Binding SelectedDairyComponentDto.CalfStageDurationDays, StringFormat='{}{0}'}"/>
-              <Run Text="/365) = "/>
-              <Run Text="{Binding SelectedDairyComponentDto.SteadyStateCalves}" FontWeight="Bold" Foreground="#43A047" FontSize="12"/>
-              <Run Text=" calves present at any time"/>
-            </TextBlock>
-          </StackPanel>
-          
-          <Border x:Name="KeyInsightBorder"
-                  Background="#FFF3E0" 
-                  BorderBrush="#FF9800" 
-                  BorderThickness="1"
-                  CornerRadius="4" 
-                  Padding="12">
-            <StackPanel x:Name="KeyInsightStackPanel">
-              <TextBlock x:Name="KeyInsightHeaderTextBlock"
-                         Text="Key Insight" 
-                         FontSize="12" 
-                         FontWeight="SemiBold" 
-                         Foreground="#E65100"
-                         Margin="0,0,0,8"/>
-              <TextBlock x:Name="KeyInsightTextBlock"
-                         TextWrapping="Wrap" 
-                         FontSize="11" 
-                         Foreground="#666"
-                         LineHeight="18">
-                <Run Text="Even though "/>
-                <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0} calves'}" FontWeight="Bold"/>
-                <Run Text=" enter this stage each year, only "/>
-                <Run Text="{Binding SelectedDairyComponentDto.SteadyStateCalves}" FontWeight="Bold" Foreground="#43A047"/>
-                <Run Text=" calves are present at any given moment because each calf only spends "/>
-                <Run Text="{Binding SelectedDairyComponentDto.CalfStageDurationDays, StringFormat='{}{0} days'}" FontWeight="Bold"/>
-                <Run Text=" in this stage before moving to the heifer stage. This continuous flow creates the steady-state population."/>
-              </TextBlock>
-            </StackPanel>
-          </Border>
-        </StackPanel>
-      </Border>
     </StackPanel>
   </Border>
   

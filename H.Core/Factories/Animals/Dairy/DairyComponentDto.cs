@@ -508,11 +508,12 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     #region Properties - Staggered Progression Steady-State Calculations
     
     /// <summary>
-    /// Calculated steady-state population of calves in the herd.
+    /// Steady-state population of calves in the herd.
     /// This represents how many calves are present at any given moment in a continuous-flow operation.
     /// 
-    /// FORMULA: CalvesEnteringPerYear × (CalfStageDurationDays / 365)
-    /// Example: 100 calves/year × (120 days / 365) = 100 × 0.329 = 33 calves at steady-state
+    /// USER INPUT: User enters the number of calves present
+    /// CALCULATION: System calculates CalvesEnteringPerYear = SteadyStateCalves / (CalfStageDurationDays / 365)
+    /// Example: 33 calves / (120 days / 365) = 33 / 0.329 = 100 calves/year entering
     /// 
     /// (number of animals)
     /// </summary>
@@ -522,14 +523,25 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
         {
             return (int)Math.Round(CalvesEnteringPerYear * (CalfStageDurationDays / 365.0));
         }
+        set
+        {
+            // Reverse calculation: Calculate flow rate from steady-state population
+            if (CalfStageDurationDays > 0)
+            {
+                var calculatedFlowRate = (int)Math.Round(value / (CalfStageDurationDays / 365.0));
+                CalvesEnteringPerYear = calculatedFlowRate;
+                RaisePropertyChanged(nameof(TotalSteadyStateHerdSize));
+            }
+        }
     }
     
     /// <summary>
-    /// Calculated steady-state population of heifers in the herd.
+    /// Steady-state population of heifers in the herd.
     /// This represents how many replacement heifers are present at any given moment.
     /// 
-    /// FORMULA: HeifersEnteringPerYear × (HeiferStageDurationDays / 365)
-    /// Example: 30 heifers/year × (608 days / 365) = 30 × 1.666 = 50 heifers at steady-state
+    /// USER INPUT: User enters the number of heifers present
+    /// CALCULATION: System calculates HeifersEnteringPerYear = SteadyStateHeifers / (HeiferStageDurationDays / 365)
+    /// Example: 50 heifers / (608 days / 365) = 50 / 1.666 = 30 heifers/year entering
     /// 
     /// (number of animals)
     /// </summary>
@@ -539,14 +551,25 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
         {
             return (int)Math.Round(HeifersEnteringPerYear * (HeiferStageDurationDays / 365.0));
         }
+        set
+        {
+            // Reverse calculation: Calculate flow rate from steady-state population
+            if (HeiferStageDurationDays > 0)
+            {
+                var calculatedFlowRate = (int)Math.Round(value / (HeiferStageDurationDays / 365.0));
+                HeifersEnteringPerYear = calculatedFlowRate;
+                RaisePropertyChanged(nameof(TotalSteadyStateHerdSize));
+            }
+        }
     }
     
     /// <summary>
-    /// Calculated steady-state population of lactating cows in the herd.
+    /// Steady-state population of lactating cows in the herd.
     /// This represents how many cows are producing milk at any given moment.
     /// 
-    /// FORMULA: LactatingCowsEnteringPerYear × (LactationDurationDays / 365)
-    /// Example: 100 cows/year × (305 days / 365) = 100 × 0.836 = 84 lactating cows at steady-state
+    /// USER INPUT: User enters the number of lactating cows present
+    /// CALCULATION: System calculates LactatingCowsEnteringPerYear = SteadyStateLactating / (LactationDurationDays / 365)
+    /// Example: 84 cows / (305 days / 365) = 84 / 0.836 = 100 cows/year entering lactation
     /// 
     /// (number of animals)
     /// </summary>
@@ -556,14 +579,25 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
         {
             return (int)Math.Round(LactatingCowsEnteringPerYear * (LactationDurationDays / 365.0));
         }
+        set
+        {
+            // Reverse calculation: Calculate flow rate from steady-state population
+            if (LactationDurationDays > 0)
+            {
+                var calculatedFlowRate = (int)Math.Round(value / (LactationDurationDays / 365.0));
+                LactatingCowsEnteringPerYear = calculatedFlowRate;
+                RaisePropertyChanged(nameof(TotalSteadyStateHerdSize));
+            }
+        }
     }
     
     /// <summary>
-    /// Calculated steady-state population of dry cows in the herd.
+    /// Steady-state population of dry cows in the herd.
     /// This represents how many non-lactating cows (preparing for calving) are present at any given moment.
     /// 
-    /// FORMULA: DryCowsEnteringPerYear × (Dry period days / 365)
-    /// Example: 100 cows/year × (60 days / 365) = 100 × 0.164 = 16 dry cows at steady-state
+    /// USER INPUT: User enters the number of dry cows present
+    /// CALCULATION: System calculates DryCowsEnteringPerYear = SteadyStateDry / (DryPeriodDays / 365)
+    /// Example: 16 cows / (60 days / 365) = 16 / 0.164 = 100 cows/year entering dry period
     /// 
     /// NOTE: Uses the user-defined DryPeriodDays from Step 1
     /// 
@@ -574,6 +608,16 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
         get
         {
             return (int)Math.Round(DryCowsEnteringPerYear * (DryPeriodDays / 365.0));
+        }
+        set
+        {
+            // Reverse calculation: Calculate flow rate from steady-state population
+            if (DryPeriodDays > 0)
+            {
+                var calculatedFlowRate = (int)Math.Round(value / (DryPeriodDays / 365.0));
+                DryCowsEnteringPerYear = calculatedFlowRate;
+                RaisePropertyChanged(nameof(TotalSteadyStateHerdSize));
+            }
         }
     }
     

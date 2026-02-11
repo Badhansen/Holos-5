@@ -167,7 +167,7 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
           </StackPanel>
         </Border>
         
-        <!-- Staggered Progression Flow Rates Section (Right) -->
+        <!-- Staggered Progression Steady-State Section (Right) -->
         <Border x:Name="StaggeredProgressionCardBorder" 
                 Grid.Column="1"
                 Classes="input-card" 
@@ -177,14 +177,14 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
                 VerticalAlignment="Top">
           <StackPanel>
           <TextBlock x:Name="StaggeredProgressionTitleTextBlock"
-                     Text="Animal Flow Rates" 
+                     Text="Steady-State Animal Populations" 
                      FontWeight="Bold" 
                      Margin="0,0,0,8"/>
           
           <!-- Help Text -->
 
           
-          <!-- Calves Entering Per Year -->
+          <!-- Calves Present -->
           <Grid x:Name="CalvesEnteringRowGrid" Margin="0,0,0,8">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
@@ -193,7 +193,7 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="CalvesEnteringLabelTextBlock"
                        Grid.Column="0" 
-                       Text="Calves Entering:" 
+                       Text="Calves Present:" 
                        FontWeight="Medium" 
                        Foreground="RoyalBlue"
                        VerticalAlignment="Center" 
@@ -204,17 +204,17 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
                            Maximum="10000"
                            FormatString="0"
                            Increment="1"
-                           Value="{Binding Path=SelectedDairyComponentDto.CalvesEnteringPerYear}"
+                           Value="{Binding Path=SelectedDairyComponentDto.SteadyStateCalves}"
                            Margin="8,0"
                            HorizontalAlignment="Stretch"/>
             <TextBlock x:Name="CalvesEnteringUnitTextBlock"
                        Grid.Column="2" 
-                       Text="calves/year" 
+                       Text="animals" 
                        VerticalAlignment="Center"
                        Margin="8,0,0,0"/>
           </Grid>
           
-          <!-- Calves Per Month Tip -->
+          <!-- Calves Flow Rate Calculated Tip -->
           <TextBlock x:Name="CalvesPerMonthTipTextBlock"
                      TextWrapping="Wrap" 
                      FontSize="11" 
@@ -223,13 +223,13 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
                      Margin="0,0,0,12"
                      IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
             <Run Text="💡 "/>
-            <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
-            <Run Text=" calves/year ≈ "/>
-            <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, Converter={StaticResource DivideByTwelveConverter}, StringFormat='{}{0:F1}'}" FontWeight="SemiBold"/>
-            <Run Text=" calves/month"/>
+            <Run Text="{Binding SelectedDairyComponentDto.SteadyStateCalves, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
+            <Run Text=" calves present ≈ "/>
+            <Run Text="{Binding SelectedDairyComponentDto.CalvesEnteringPerYear, StringFormat='{}{0:F0}'}" FontWeight="SemiBold"/>
+            <Run Text=" calves entering/year"/>
           </TextBlock>
           
-          <!-- Heifers Entering Per Year -->
+          <!-- Heifers Present -->
           <Grid x:Name="HeifersEnteringRowGrid" Margin="0,0,0,8">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
@@ -238,7 +238,7 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="HeifersEnteringLabelTextBlock"
                        Grid.Column="0" 
-                       Text="Heifers Entering:" 
+                       Text="Heifers Present:" 
                        FontWeight="Medium" 
                        Foreground="RoyalBlue"
                        VerticalAlignment="Center" 
@@ -249,17 +249,17 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
                            Maximum="10000"
                            FormatString="0"
                            Increment="1"
-                           Value="{Binding Path=SelectedDairyComponentDto.HeifersEnteringPerYear}"
+                           Value="{Binding Path=SelectedDairyComponentDto.SteadyStateHeifers}"
                            Margin="8,0"
                            HorizontalAlignment="Stretch"/>
             <TextBlock x:Name="HeifersEnteringUnitTextBlock"
                        Grid.Column="2" 
-                       Text="heifers/year" 
+                       Text="animals" 
                        VerticalAlignment="Center"
                        Margin="8,0,0,0"/>
           </Grid>
           
-          <!-- Heifers Per Month Tip -->
+          <!-- Heifers Flow Rate Calculated Tip -->
           <TextBlock x:Name="HeifersPerMonthTipTextBlock"
                      TextWrapping="Wrap" 
                      FontSize="11" 
@@ -268,13 +268,13 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
                      Margin="0,0,0,12"
                      IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
             <Run Text="💡 "/>
-            <Run Text="{Binding SelectedDairyComponentDto.HeifersEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
-            <Run Text=" heifers/year ≈ "/>
-            <Run Text="{Binding SelectedDairyComponentDto.HeifersEnteringPerYear, Converter={StaticResource DivideByTwelveConverter}, StringFormat='{}{0:F1}'}" FontWeight="SemiBold"/>
-            <Run Text=" heifers/month"/>
+            <Run Text="{Binding SelectedDairyComponentDto.SteadyStateHeifers, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
+            <Run Text=" heifers present ≈ "/>
+            <Run Text="{Binding SelectedDairyComponentDto.HeifersEnteringPerYear, StringFormat='{}{0:F0}'}" FontWeight="SemiBold"/>
+            <Run Text=" heifers entering/year"/>
           </TextBlock>
           
-          <!-- Lactating Cows Entering Per Year -->
+          <!-- Lactating Cows Present -->
           <Grid x:Name="LactatingEnteringRowGrid" Margin="0,0,0,8">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
@@ -283,7 +283,7 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="LactatingEnteringLabelTextBlock"
                        Grid.Column="0" 
-                       Text="Lactating Entering:" 
+                       Text="Lactating Present:" 
                        FontWeight="Medium" 
                        Foreground="RoyalBlue"
                        VerticalAlignment="Center" 
@@ -294,17 +294,17 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
                            Maximum="10000"
                            FormatString="0"
                            Increment="1"
-                           Value="{Binding Path=SelectedDairyComponentDto.LactatingCowsEnteringPerYear}"
+                           Value="{Binding Path=SelectedDairyComponentDto.SteadyStateLactating}"
                            Margin="8,0"
                            HorizontalAlignment="Stretch"/>
             <TextBlock x:Name="LactatingEnteringUnitTextBlock"
                        Grid.Column="2" 
-                       Text="cows/year" 
+                       Text="animals" 
                        VerticalAlignment="Center"
                        Margin="8,0,0,0"/>
           </Grid>
           
-          <!-- Lactating Per Month Tip -->
+          <!-- Lactating Flow Rate Calculated Tip -->
           <TextBlock x:Name="LactatingPerMonthTipTextBlock"
                      TextWrapping="Wrap" 
                      FontSize="11" 
@@ -313,13 +313,13 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
                      Margin="0,0,0,12"
                      IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
             <Run Text="💡 "/>
-            <Run Text="{Binding SelectedDairyComponentDto.LactatingCowsEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
-            <Run Text=" cows/year ≈ "/>
-            <Run Text="{Binding SelectedDairyComponentDto.LactatingCowsEnteringPerYear, Converter={StaticResource DivideByTwelveConverter}, StringFormat='{}{0:F1}'}" FontWeight="SemiBold"/>
-            <Run Text=" cows/month"/>
+            <Run Text="{Binding SelectedDairyComponentDto.SteadyStateLactating, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
+            <Run Text=" cows present ≈ "/>
+            <Run Text="{Binding SelectedDairyComponentDto.LactatingCowsEnteringPerYear, StringFormat='{}{0:F0}'}" FontWeight="SemiBold"/>
+            <Run Text=" cows entering lactation/year"/>
           </TextBlock>
           
-          <!-- Dry Cows Entering Per Year -->
+          <!-- Dry Cows Present -->
           <Grid x:Name="DryEnteringRowGrid" Margin="0,0,0,8">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
@@ -328,7 +328,7 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="DryEnteringLabelTextBlock"
                        Grid.Column="0" 
-                       Text="Dry Cows Entering:" 
+                       Text="Dry Cows Present:" 
                        FontWeight="Medium" 
                        Foreground="RoyalBlue"
                        VerticalAlignment="Center" 
@@ -339,17 +339,17 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
                            Maximum="10000"
                            FormatString="0"
                            Increment="1"
-                           Value="{Binding Path=SelectedDairyComponentDto.DryCowsEnteringPerYear}"
+                           Value="{Binding Path=SelectedDairyComponentDto.SteadyStateDry}"
                            Margin="8,0"
                            HorizontalAlignment="Stretch"/>
             <TextBlock x:Name="DryEnteringUnitTextBlock"
                        Grid.Column="2" 
-                       Text="cows/year" 
+                       Text="animals" 
                        VerticalAlignment="Center"
                        Margin="8,0,0,0"/>
           </Grid>
           
-          <!-- Dry Per Month Tip -->
+          <!-- Dry Flow Rate Calculated Tip -->
           <TextBlock x:Name="DryPerMonthTipTextBlock"
                      TextWrapping="Wrap" 
                      FontSize="11" 
@@ -358,10 +358,10 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.HerdOverviewView">
                      Margin="0,4,0,0"
                      IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType={x:Type dairy:DairyComponentView}}}">
             <Run Text="💡 "/>
-            <Run Text="{Binding SelectedDairyComponentDto.DryCowsEnteringPerYear, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
-            <Run Text=" cows/year ≈ "/>
-            <Run Text="{Binding SelectedDairyComponentDto.DryCowsEnteringPerYear, Converter={StaticResource DivideByTwelveConverter}, StringFormat='{}{0:F1}'}" FontWeight="SemiBold"/>
-            <Run Text=" cows/month"/>
+            <Run Text="{Binding SelectedDairyComponentDto.SteadyStateDry, StringFormat='{}{0:N0}'}" FontWeight="SemiBold"/>
+            <Run Text=" cows present ≈ "/>
+            <Run Text="{Binding SelectedDairyComponentDto.DryCowsEnteringPerYear, StringFormat='{}{0:F0}'}" FontWeight="SemiBold"/>
+            <Run Text=" cows entering dry period/year"/>
           </TextBlock>
         </StackPanel>
       </Border>

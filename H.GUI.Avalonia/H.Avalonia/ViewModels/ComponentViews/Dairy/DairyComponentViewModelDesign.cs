@@ -47,6 +47,18 @@ public class DairyComponentViewModelDesign : DairyComponentViewModel
             CalfMortalityRate = 4.5,
             FemaleCalfRatio = 48.0,
             
+            // Lifecycle stage durations (used in steady-state calculations)
+            CalfStageDurationDays = 120,      // 4 months
+            HeiferStageDurationDays = 608,    // ~20 months
+            LactationDurationDays = 305,      // ~10 months (standard lactation)
+            
+            // Flow rates - these will be converted to steady-state populations for display
+            // User will enter steady-state values, system calculates these flow rates
+            CalvesEnteringPerYear = 100,      // Results in ~33 calves present (100 * 120/365)
+            HeifersEnteringPerYear = 30,      // Results in ~50 heifers present (30 * 608/365)
+            LactatingCowsEnteringPerYear = 100, // Results in ~84 lactating cows (100 * 305/365)
+            DryCowsEnteringPerYear = 100,     // Results in ~16 dry cows (100 * 60/365)
+            
             // Production defaults - typical Holstein values
             DefaultMilkProduction = 28.0,
             DefaultMilkFatContent = 3.7,

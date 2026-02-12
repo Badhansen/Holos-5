@@ -287,19 +287,19 @@
           BorderBrush="#FFA726"
           Margin="0,0,0,20"
           IsVisible="{Binding IsAnyStageSelected}">
-    <StackPanel>
+    <StackPanel Grid.IsSharedSizeScope="True">
       <!-- Step Header -->
       <StackPanel Orientation="Vertical" Classes="step-header">
         <!-- Step Badge -->
         <Border Classes="step-badge" HorizontalAlignment="Left">
           <TextBlock Text="Step 2" Classes="step-badge-text"/>
         </Border>
-        
+
         <!-- Title -->
         <TextBlock Text="Configure Stage Population and Duration"
                    Classes="step-number-description"
                    Margin="0,12,0,0"/>
-        
+
         <!-- Description -->
         <TextBlock Text="Enter the steady-state population and duration for the selected stage"
                    FontSize="13"
@@ -307,91 +307,90 @@
                    TextWrapping="Wrap"
                    Margin="0,12,0,0"/>
       </StackPanel>
-      
+
       <!-- Mode Toggle -->
-      <Border Background="White" BorderBrush="#DDD" BorderThickness="1"
-              CornerRadius="6" Padding="16" Margin="0,20,0,20">
-        <StackPanel>
-          <TextBlock Text="Entry Mode:"
-                     FontWeight="SemiBold"
-                     FontSize="13"
-                     Margin="0,0,0,8"/>
-          <StackPanel Orientation="Horizontal">
-            <RadioButton Content="Simple (Single Group)"
-                         IsChecked="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode, Converter={StaticResource InverseBooleanConverter}}"
-                         GroupName="PopulationMode"
-                         Margin="0,0,20,0"/>
-            <RadioButton Content="Advanced (Multiple Groups)"
-                         IsChecked="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode}"
-                         GroupName="PopulationMode"/>
-          </StackPanel>
+      <StackPanel Margin="0,20,0,20">
+        <TextBlock Text="Entry Mode:"
+                   FontWeight="SemiBold"
+                   FontSize="13"
+                   Margin="0,0,0,8"/>
+        <StackPanel Orientation="Horizontal">
+          <RadioButton Content="Simple (Single Group)"
+                       IsChecked="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode, Converter={StaticResource InverseBooleanConverter}}"
+                       GroupName="PopulationMode"
+                       Margin="0,0,20,0"/>
+          <RadioButton Content="Advanced (Multiple Groups)"
+                       IsChecked="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode}"
+                       GroupName="PopulationMode"/>
         </StackPanel>
-      </Border>
-      
-      <!-- Input Cards for Each Stage -->
+      </StackPanel>
+
+      <!-- Input Controls for Each Stage -->
       <StackPanel Margin="0,0,0,0">
               
         <!-- ====== CALF STAGE ====== -->
-        <Border Classes="input-card"
-                IsVisible="{Binding IsCalfSelected}">
-          <StackPanel>
-            <TextBlock Text="Calf Stage Configuration"
-                       FontWeight="Bold"
-                       FontSize="14"
-                       Foreground="#1976D2"
-                       Margin="0,0,0,12"/>
-            
-            <!-- Days in Stage (Common to both modes) -->
-            <Grid Margin="0,0,0,20">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto" MinWidth="120"/>
-                <ColumnDefinition Width="Auto"/>
-              </Grid.ColumnDefinitions>
+        <StackPanel IsVisible="{Binding IsCalfSelected}"
+                    Margin="0,0,0,20">
+          <TextBlock Text="Calf Stage Configuration"
+                     FontWeight="Bold"
+                     FontSize="14"
+                     Foreground="#1976D2"
+                     Margin="0,0,0,16"/>
+
+          <!-- Days in Stage (Common to both modes) -->
+          <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+              <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+            </Grid.ColumnDefinitions>
               
-              <TextBlock Grid.Column="0" Text="Days in stage:"
-                         FontWeight="Medium" Foreground="RoyalBlue"
-                         VerticalAlignment="Center" Margin="0,0,8,0"/>
-              <NumericUpDown Grid.Column="1"
-                             Value="{Binding SelectedDairyComponentDto.CalfStageDurationDays}"
-                             Minimum="30" Maximum="365"
-                             FormatString="0" Increment="5"
-                             HorizontalAlignment="Stretch"/>
-              <TextBlock Grid.Column="2" Text="days"
-                         VerticalAlignment="Center" Margin="8,0,0,0"/>
-            </Grid>
-            
-            <!-- SIMPLE MODE -->
-            <StackPanel IsVisible="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode, Converter={StaticResource InverseBooleanConverter}}">
-              <Grid>
-                <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="Auto"/>
-                  <ColumnDefinition Width="Auto" MinWidth="120"/>
-                  <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                
-                <TextBlock Grid.Column="0" Text="Animals:"
+                <TextBlock Grid.Column="0" Text="How long do calves remain in this stage?"
                            FontWeight="Medium" Foreground="RoyalBlue"
                            VerticalAlignment="Center" Margin="0,0,8,0"/>
                 <NumericUpDown Grid.Column="1"
-                               Value="{Binding SelectedDairyComponentDto.SteadyStateCalves}"
-                               Minimum="0" Maximum="10000"
-                               FormatString="0" Increment="1"
+                               Value="{Binding SelectedDairyComponentDto.CalfStageDurationDays}"
+                               Minimum="30" Maximum="365"
+                               FormatString="0" Increment="5"
+                               Margin="8,0"
                                HorizontalAlignment="Stretch"/>
-                <TextBlock Grid.Column="2" Text="head"
+                <TextBlock Grid.Column="2" Text="days"
                            VerticalAlignment="Center" Margin="8,0,0,0"/>
               </Grid>
-            </StackPanel>
-            
-            <!-- ADVANCED MODE -->
-            <StackPanel IsVisible="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode}">
-              <TextBlock Text="Animal Groups:"
-                         FontWeight="SemiBold" FontSize="13"
-                         Margin="0,0,0,8"/>
-              
-              <!-- Groups List -->
-              <Border BorderBrush="#DDD" BorderThickness="1"
-                      CornerRadius="4" Padding="12">
+
+              <!-- SIMPLE MODE -->
+              <StackPanel IsVisible="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode, Converter={StaticResource InverseBooleanConverter}}">
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+                    <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+                  </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="How many calves are in the herd?"
+                               FontWeight="Medium" Foreground="RoyalBlue"
+                               VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <NumericUpDown Grid.Column="1"
+                                   Value="{Binding SelectedDairyComponentDto.SteadyStateCalves}"
+                                   Minimum="0" Maximum="10000"
+                                   FormatString="0" Increment="1"
+                                   Margin="8,0"
+                                   HorizontalAlignment="Stretch"/>
+                    <TextBlock Grid.Column="2" Text="head"
+                               VerticalAlignment="Center" Margin="8,0,0,0"/>
+                  </Grid>
+                </StackPanel>
+
+                <!-- ADVANCED MODE -->
+                <StackPanel IsVisible="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode}">
+                  <TextBlock Text="Animal Groups:"
+                             FontWeight="SemiBold" FontSize="13"
+                             Margin="0,0,0,8"/>
+
+                  <!-- Groups List -->
+                  <Border BorderBrush="#DDD" BorderThickness="1"
+                          CornerRadius="4" Padding="12"
+                          Background="White">
                 <StackPanel>
                   <!-- Header Row -->
                   <Grid Margin="0,0,0,8">
@@ -450,49 +449,47 @@
                       </DataTemplate>
                     </ItemsControl.ItemTemplate>
                   </ItemsControl>
+                      </StackPanel>
+                    </Border>
+
+                    <!-- Add Group Button -->
+                    <Button Content="➕ Add New Group"
+                            Command="{Binding AddCalfGroupCommand}"
+                            HorizontalAlignment="Left"
+                            Margin="0,12,0,0"
+                            Classes="accent"/>
+
+                    <!-- Total Summary -->
+                    <Border Background="#E3F2FD" BorderBrush="#1976D2"
+                            BorderThickness="1" CornerRadius="4"
+                            Padding="12" Margin="0,16,0,0">
+                      <TextBlock HorizontalAlignment="Center">
+                        <Run Text="Total Animals: " FontSize="14" FontWeight="Medium"/>
+                        <Run Text="{Binding SelectedDairyComponentDto.TotalCalfPopulation, StringFormat='{}{0}'}"
+                             FontSize="16" FontWeight="Bold" Foreground="#1976D2"/>
+                      </TextBlock>
+                    </Border>
+                  </StackPanel>
                 </StackPanel>
-              </Border>
-              
-              <!-- Add Group Button -->
-              <Button Content="? Add New Group"
-                      Command="{Binding AddCalfGroupCommand}"
-                      HorizontalAlignment="Left"
-                      Margin="0,12,0,0"
-                      Classes="accent"/>
-              
-              <!-- Total Summary -->
-              <Border Background="#E3F2FD" BorderBrush="#1976D2"
-                      BorderThickness="1" CornerRadius="4"
-                      Padding="12" Margin="0,16,0,0">
-                <TextBlock HorizontalAlignment="Center">
-                  <Run Text="Total Animals: " FontSize="14" FontWeight="Medium"/>
-                  <Run Text="{Binding SelectedDairyComponentDto.TotalCalfPopulation, StringFormat='{}{0}'}"
-                       FontSize="16" FontWeight="Bold" Foreground="#1976D2"/>
-                </TextBlock>
-              </Border>
-            </StackPanel>
-          </StackPanel>
-        </Border>
         
         <!-- ====== HEIFER STAGE ====== -->
-        <Border Classes="input-card"
-                IsVisible="{Binding IsHeiferSelected}">
-          <StackPanel>
-            <TextBlock Text="Heifer Stage Configuration"
-                       FontWeight="Bold"
-                       FontSize="14"
-                       Foreground="#7B1FA2"
-                       Margin="0,0,0,12"/>
-            
-            <!-- Days in Stage -->
-            <Grid Margin="0,0,0,20">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto" MinWidth="120"/>
-                <ColumnDefinition Width="Auto"/>
-              </Grid.ColumnDefinitions>
-              
-              <TextBlock Grid.Column="0" Text="Days in stage:"
+        <StackPanel IsVisible="{Binding IsHeiferSelected}"
+                    Margin="0,0,0,20">
+          <TextBlock Text="Heifer Stage Configuration"
+                     FontWeight="Bold"
+                     FontSize="14"
+                     Foreground="#7B1FA2"
+                     Margin="0,0,0,16"/>
+
+          <!-- Days in Stage -->
+          <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+              <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+            </Grid.ColumnDefinitions>
+
+              <TextBlock Grid.Column="0" Text="How long do heifers remain in this stage?"
                          FontWeight="Medium" Foreground="RoyalBlue"
                          VerticalAlignment="Center" Margin="0,0,8,0"/>
               <NumericUpDown Grid.Column="1"
@@ -512,8 +509,8 @@
                   <ColumnDefinition Width="Auto" MinWidth="120"/>
                   <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                
-                <TextBlock Grid.Column="0" Text="Animals:"
+
+                <TextBlock Grid.Column="0" Text="How many heifers are in the herd?"
                            FontWeight="Medium" Foreground="RoyalBlue"
                            VerticalAlignment="Center" Margin="0,0,8,0"/>
                 <NumericUpDown Grid.Column="1"
@@ -603,28 +600,26 @@
                 </TextBlock>
               </Border>
             </StackPanel>
-          </StackPanel>
-        </Border>
-        
+        </StackPanel>
+
         <!-- ====== LACTATING STAGE ====== -->
-        <Border Classes="input-card"
-                IsVisible="{Binding IsLactatingSelected}">
-          <StackPanel>
-            <TextBlock Text="Lactating Stage Configuration"
-                       FontWeight="Bold"
-                       FontSize="14"
-                       Foreground="#388E3C"
-                       Margin="0,0,0,12"/>
-            
-            <!-- Days in Stage -->
-            <Grid Margin="0,0,0,20">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto" MinWidth="120"/>
-                <ColumnDefinition Width="Auto"/>
-              </Grid.ColumnDefinitions>
-              
-              <TextBlock Grid.Column="0" Text="Days in stage:"
+        <StackPanel IsVisible="{Binding IsLactatingSelected}"
+                    Margin="0,0,0,20">
+          <TextBlock Text="Lactating Stage Configuration"
+                     FontWeight="Bold"
+                     FontSize="14"
+                     Foreground="#388E3C"
+                     Margin="0,0,0,16"/>
+
+          <!-- Days in Stage -->
+          <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+              <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+            </Grid.ColumnDefinitions>
+
+              <TextBlock Grid.Column="0" Text="How long is the lactation period?"
                          FontWeight="Medium" Foreground="RoyalBlue"
                          VerticalAlignment="Center" Margin="0,0,8,0"/>
               <NumericUpDown Grid.Column="1"
@@ -644,8 +639,8 @@
                   <ColumnDefinition Width="Auto" MinWidth="120"/>
                   <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                
-                <TextBlock Grid.Column="0" Text="Animals:"
+
+                <TextBlock Grid.Column="0" Text="How many lactating cows are in the herd?"
                            FontWeight="Medium" Foreground="RoyalBlue"
                            VerticalAlignment="Center" Margin="0,0,8,0"/>
                 <NumericUpDown Grid.Column="1"
@@ -735,28 +730,26 @@
                 </TextBlock>
               </Border>
             </StackPanel>
-          </StackPanel>
-        </Border>
-        
+        </StackPanel>
+
         <!-- ====== DRY STAGE ====== -->
-        <Border Classes="input-card"
-                IsVisible="{Binding IsDrySelected}">
-          <StackPanel>
-            <TextBlock Text="Dry Stage Configuration"
-                       FontWeight="Bold"
-                       FontSize="14"
-                       Foreground="#F57C00"
-                       Margin="0,0,0,12"/>
-            
-            <!-- Days in Stage -->
-            <Grid Margin="0,0,0,20">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto" MinWidth="120"/>
-                <ColumnDefinition Width="Auto"/>
-              </Grid.ColumnDefinitions>
-              
-              <TextBlock Grid.Column="0" Text="Days in stage:"
+        <StackPanel IsVisible="{Binding IsDrySelected}"
+                    Margin="0,0,0,20">
+          <TextBlock Text="Dry Stage Configuration"
+                     FontWeight="Bold"
+                     FontSize="14"
+                     Foreground="#F57C00"
+                     Margin="0,0,0,16"/>
+
+          <!-- Days in Stage -->
+          <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+              <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+            </Grid.ColumnDefinitions>
+
+              <TextBlock Grid.Column="0" Text="How long is the dry period?"
                          FontWeight="Medium" Foreground="RoyalBlue"
                          VerticalAlignment="Center" Margin="0,0,8,0"/>
               <NumericUpDown Grid.Column="1"
@@ -776,8 +769,8 @@
                   <ColumnDefinition Width="Auto" MinWidth="120"/>
                   <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                
-                <TextBlock Grid.Column="0" Text="Animals:"
+
+                <TextBlock Grid.Column="0" Text="How many dry cows are in the herd?"
                            FontWeight="Medium" Foreground="RoyalBlue"
                            VerticalAlignment="Center" Margin="0,0,8,0"/>
                 <NumericUpDown Grid.Column="1"
@@ -867,9 +860,8 @@
                 </TextBlock>
               </Border>
             </StackPanel>
-          </StackPanel>
-        </Border>
-              
+        </StackPanel>
+
       </StackPanel>
     </StackPanel>
   </Border>

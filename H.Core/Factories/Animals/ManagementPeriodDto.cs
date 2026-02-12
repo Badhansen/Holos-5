@@ -30,6 +30,7 @@ namespace H.Core.Factories.Animals
         private double _liveWeightChangeOfPregnantAnimal;
         private double _liveWeightOfYoungAtWeaningAge;
         private double _liveWeightOfYoungAtBirth;
+        private ManureStateType _manureStateType;
 
         #endregion
 
@@ -202,6 +203,15 @@ namespace H.Core.Factories.Animals
         {
             get => _liveWeightOfYoungAtBirth;
             set => SetProperty(ref _liveWeightOfYoungAtBirth, value);
+        }
+
+        /// <summary>
+        /// The manure storage/handling system being used for this management period.
+        /// </summary>
+        public ManureStateType ManureStateType
+        {
+            get => _manureStateType;
+            set => SetProperty(ref _manureStateType, value);
         }
 
         #endregion

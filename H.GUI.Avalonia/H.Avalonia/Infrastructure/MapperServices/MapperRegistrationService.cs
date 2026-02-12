@@ -137,11 +137,17 @@ public class MapperRegistrationService
             expression.AddProfile<AnimalGroupDtoToAnimalGroupDtoMapper>();
         });
 
+        var animalGroupToAnimalGroupDtoConfiguration = new MapperConfiguration(expression =>
+        {
+            expression.AddProfile<AnimalGroupToAnimalGroupDtoMapper>();
+        });
+
         containerRegistry.RegisterInstance(animalComponentDtoToAnimalComponentConfiguration.CreateMapper(), nameof(AnimalComponentDtoToAnimalComponentMapper));
         containerRegistry.RegisterInstance(animalComponentDtoToAnimalComponentDtoConfiguration.CreateMapper(), nameof(AnimalComponentDtoToAnimalComponentDtoMapper));
         containerRegistry.RegisterInstance(animalComponentToAnimalComponentDtoConfiguration.CreateMapper(), nameof(AnimalComponentBaseToAnimalComponentDtoMapper));
         containerRegistry.RegisterInstance(animalGroupDtoToAnimalGroupConfiguration.CreateMapper(), nameof(AnimalGroupDtoToAnimalGroupMapper));
         containerRegistry.RegisterInstance(animalGroupDtoToAnimalGroupDtoConfiguration.CreateMapper(), nameof(AnimalGroupDtoToAnimalGroupDtoMapper));
+        containerRegistry.RegisterInstance(animalGroupToAnimalGroupDtoConfiguration.CreateMapper(), nameof(AnimalGroupToAnimalGroupDtoMapper));
     }
 
     private void RegisterDairyComponentMappers(IContainerRegistry containerRegistry)

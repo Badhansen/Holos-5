@@ -286,7 +286,7 @@
               BorderThickness="2"
               CornerRadius="6"
               Padding="16"
-              Margin="0,0,0,16"
+              Margin="0,16,0,16"
               IsVisible="{Binding HasSelection}">
         <StackPanel>
           <Grid ColumnDefinitions="*,Auto">
@@ -312,65 +312,6 @@
                      LineHeight="18"
                      Margin="0,8,0,0"/>
         </StackPanel>
-      </Border>
-
-      <!-- Legend and Key Information -->
-      <Border Grid.Row="3" 
-              Background="#F5F5F5" 
-              CornerRadius="6" 
-              Padding="16"
-              Margin="0,24,0,0">
-        <Grid ColumnDefinitions="*,*,*">
-          
-          <!-- Key Concept 1 -->
-          <StackPanel Grid.Column="0">
-            <TextBlock Text="?? Key Concept: Herd Balance" 
-                       FontSize="13" 
-                       FontWeight="SemiBold"
-                       Margin="0,0,0,8"/>
-            <TextBlock TextWrapping="Wrap" 
-                       FontSize="11" 
-                       Foreground="#666"
-                       LineHeight="16">
-              The number of animals in each stage is determined by your herd parameters. 
-              Replacement rate controls how many heifers are needed, while dry period 
-              determines the lactating/dry cow ratio.
-            </TextBlock>
-          </StackPanel>
-
-          <!-- Key Concept 2 -->
-          <StackPanel Grid.Column="1" Margin="16,0">
-            <TextBlock Text="?? The Production Cycle" 
-                       FontSize="13" 
-                       FontWeight="SemiBold"
-                       Margin="0,0,0,8"/>
-            <TextBlock TextWrapping="Wrap" 
-                       FontSize="11" 
-                       Foreground="#666"
-                       LineHeight="16">
-              After calving, cows lactate for ~305 days (10 months), then have a dry 
-              period before the next calving. Your calving interval setting determines 
-              how long this complete cycle takes.
-            </TextBlock>
-          </StackPanel>
-
-          <!-- Key Concept 3 -->
-          <StackPanel Grid.Column="2">
-            <TextBlock Text="? Emissions Impact" 
-                       FontSize="13" 
-                       FontWeight="SemiBold"
-                       Margin="0,0,0,8"/>
-            <TextBlock TextWrapping="Wrap" 
-                       FontSize="11" 
-                       Foreground="#666"
-                       LineHeight="16">
-              Each lifecycle stage has different feed requirements, manure production, 
-              and emissions. Lactating cows have the highest emissions but also 
-              produce valuable milk as the primary product.
-            </TextBlock>
-          </StackPanel>
-          
-        </Grid>
       </Border>
       
     </Grid>

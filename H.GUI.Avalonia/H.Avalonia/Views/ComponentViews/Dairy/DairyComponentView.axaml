@@ -44,33 +44,12 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.DairyComponentView">
       <dairy:DairyLifecycleVisualizationView Margin="0,0,0,24"
                                               IsVisible="{Binding ShowAdvancedOptions, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
 
-      <!-- Step 1: Herd Overview -->
-      <dairy:HerdOverviewView Margin="0,0,0,16"/>
-
-      <!-- Calculated Herd Composition Panel -->
+      <!-- Step 1: Select Stage & Step 2: Configure Population/Duration (CalculatedHerdCompositionView contains both) -->
       <dairy:CalculatedHerdCompositionView Margin="0,0,0,20"/>
 
-      <!-- Step 2: Lifecycle Configuration -->
-      <dairy:LifecycleConfigurationView Margin="0,0,0,16"/>
-
-        <!-- Help Panel -->
-        <Border Background="#E3F2FD" BorderBrush="#1976D2" BorderThickness="1" CornerRadius="4">
-          <Border Padding="16">
-            <StackPanel>
-              <Grid ColumnDefinitions="Auto,*">
-                <StackPanel Grid.Column="1">
-                  <TextBlock Text="Understanding the Lifecycle Approach" FontSize="14" FontWeight="Bold" Margin="0,0,0,8"/>
-                  <TextBlock TextWrapping="Wrap" FontSize="12" LineHeight="18" Text="This configuration method follows the natural flow of dairy cattle through their productive life. Instead of manually creating separate animal groups, you define your herd size and key parameters, and the system automatically calculates how many animals are in each lifecycle stage."/>
-                  <TextBlock TextWrapping="Wrap" FontSize="12" LineHeight="18" Margin="0,12,0,0" FontWeight="SemiBold" Text="Benefits:"/>
-                  <TextBlock TextWrapping="Wrap" FontSize="12" LineHeight="18" Margin="0,4,0,0" Text="• Reduces configuration errors by auto-calculating animal numbers"/>
-                  <TextBlock TextWrapping="Wrap" FontSize="12" LineHeight="18" Margin="0,4,0,0" Text="• Ensures all lifecycle stages are accounted for"/>
-                  <TextBlock TextWrapping="Wrap" FontSize="12" LineHeight="18" Margin="0,4,0,0" Text="• Provides a visual understanding of herd dynamics"/>
-                  <TextBlock TextWrapping="Wrap" FontSize="12" LineHeight="18" Margin="0,4,0,0" Text="• Simplifies complex dairy operation modeling"/>
-                </StackPanel>
-              </Grid>
-            </StackPanel>
-          </Border>
-        </Border>
+      <!-- Step 3: Management Practices Configuration - Only show when a stage card is selected -->
+      <dairy:LifecycleConfigurationView Margin="0,0,0,16"
+                                        IsVisible="{Binding IsAnyStageSelected}"/>
 
       </StackPanel>
     </ScrollViewer>

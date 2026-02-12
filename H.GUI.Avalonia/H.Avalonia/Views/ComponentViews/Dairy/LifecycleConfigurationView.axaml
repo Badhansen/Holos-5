@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -6,101 +6,367 @@ xmlns:dairy="clr-namespace:H.Avalonia.Views.ComponentViews.Dairy"
 mc:Ignorable="d" d:DesignWidth="1400"
 x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
   
-<!-- Step 2: Lifecycle Timeline -->
-      <Border BorderBrush="#1976D2" BorderThickness="2" CornerRadius="8" Margin="0,0,0,20">
-        <StackPanel>
-          <Border Background="#1976D2" CornerRadius="6,6,0,0" Padding="20">
-            <Grid ColumnDefinitions="Auto,*,Auto">
-              <Border Grid.Column="0" Background="White" Width="40" Height="40" 
-                     CornerRadius="20" Margin="0,0,16,0">
-                <TextBlock Text="2" FontSize="20" FontWeight="Bold" Foreground="#1976D2" 
-                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
-              </Border>
-              <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                <TextBlock Text="Lifecycle Configuration" FontSize="20" FontWeight="Bold" Foreground="White"/>
-                <TextBlock Text="Configure management practices for each lifecycle stage" 
+<!-- Step 3: Management Practices Configuration -->
+      <!-- Dynamic colored header based on selected stage -->
+      <Panel Margin="0,0,0,20">
+        <!-- Calf: Blue -->
+        <Border BorderBrush="#2196F3" BorderThickness="2" CornerRadius="8"
+                IsVisible="{Binding IsCalfSelected}">
+          <StackPanel>
+            <Border Background="#2196F3" CornerRadius="6,6,0,0" Padding="20">
+              <StackPanel>
+                <!-- Step Badge -->
+                <Border Classes="step-badge" HorizontalAlignment="Left" Background="White" Margin="0,0,0,12">
+                  <TextBlock Text="Step 3" Classes="step-badge-text" Foreground="#2196F3"/>
+                </Border>
+                <!-- Title and Description -->
+                <TextBlock Text="Management Practices - Calf Stage" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="Configure management practices for calf stage (birth to 4 months)" 
                           FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0"/>
               </StackPanel>
-              
-            </Grid>
-          </Border>
-          
-          <Border Background="White" Padding="24">
-            <StackPanel>
-              <!-- Lifecycle Flow Visualization -->
-              <Border Background="#F5F5F5" CornerRadius="8" Padding="24" Margin="0,0,0,24">
-                <StackPanel>
-                  <TextBlock Text="Dairy Cattle Lifecycle Flow" FontSize="16" FontWeight="SemiBold" 
-                            HorizontalAlignment="Center" Margin="0,0,0,20"/>
-                  
-                  <Grid ColumnDefinitions="*,Auto,*,Auto,*,Auto,*" HorizontalAlignment="Center">
-                    <Border Grid.Column="0" Background="#E3F2FD" CornerRadius="8" Padding="20" MinWidth="140">
-                      <StackPanel>
-                        
-                        <TextBlock Text="CALF" FontSize="14" FontWeight="Bold" 
-                                  HorizontalAlignment="Center" Margin="0,8,0,4"/>
-                        <TextBlock Text="0-4 months" FontSize="11" Foreground="#666" 
-                                  HorizontalAlignment="Center"/>
-                      </StackPanel>
-                    </Border>
-                    
-                    
-                    
-                    <Border Grid.Column="2" Background="#F3E5F5" CornerRadius="8" Padding="20" MinWidth="140">
-                      <StackPanel>
-                        
-                        <TextBlock Text="HEIFER" FontSize="14" FontWeight="Bold" 
-                                  HorizontalAlignment="Center" Margin="0,8,0,4"/>
-                        <TextBlock Text="4mo-1st calving" FontSize="11" Foreground="#666" 
-                                  HorizontalAlignment="Center"/>
-                      </StackPanel>
-                    </Border>
-                    
-                    
-                    
-                    <Border Grid.Column="4" Background="#E8F5E9" CornerRadius="8" Padding="20" MinWidth="140">
-                      <StackPanel>
-                        
-                        <TextBlock Text="LACTATING" FontSize="14" FontWeight="Bold" 
-                                  HorizontalAlignment="Center" Margin="0,8,0,4"/>
-                        <TextBlock Text="Post-calving" FontSize="11" Foreground="#666" 
-                                  HorizontalAlignment="Center"/>
-                      </StackPanel>
-                    </Border>
-                    
-                    
-                    
-                    <Border Grid.Column="6" Background="#FFF3E0" CornerRadius="8" Padding="20" MinWidth="140">
-                      <StackPanel>
-                        
-                        <TextBlock Text="DRY" FontSize="14" FontWeight="Bold" 
-                                  HorizontalAlignment="Center" Margin="0,8,0,4"/>
-                        <TextBlock Text="Pre-calving" FontSize="11" Foreground="#666" 
-                                  HorizontalAlignment="Center"/>
-                      </StackPanel>
-                    </Border>
-                  </Grid>
+            </Border>
+            <Border Background="White" Padding="24">
+              <StackPanel>
+                <!-- Group Selector (Advanced Mode Only) -->
+                <Border Background="#F0F8FF" BorderBrush="#2196F3" BorderThickness="1"
+                        CornerRadius="6" Padding="16" Margin="0,0,0,20"
+                        IsVisible="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode}">
+                  <StackPanel>
+                    <TextBlock Text="Select Group to Configure:"
+                               FontWeight="SemiBold"
+                               FontSize="14"
+                               Foreground="#2196F3"
+                               Margin="0,0,0,8"/>
+                    <TextBlock Text="You have multiple groups. Select which group's management practices you want to configure:"
+                               FontSize="12"
+                               Foreground="#666"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,12"/>
+                    <ComboBox ItemsSource="{Binding SelectedDairyComponentDto.CalfPopulationGroups}"
+                              SelectedItem="{Binding SelectedCalfGroup}"
+                              PlaceholderText="Choose a group..."
+                              HorizontalAlignment="Stretch"
+                              MinWidth="300">
+                      <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                          <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding GroupName}" FontWeight="SemiBold" Margin="0,0,8,0"/>
+                            <TextBlock Text="-" Foreground="#999" Margin="0,0,8,0"/>
+                            <TextBlock>
+                              <Run Text="{Binding NumberOfAnimals}"/>
+                              <Run Text=" animals" Foreground="#666"/>
+                            </TextBlock>
+                          </StackPanel>
+                        </DataTemplate>
+                      </ComboBox.ItemTemplate>
+                    </ComboBox>
+                  </StackPanel>
+                </Border>
+                
+                <!-- Management Practices Content -->
+                <dairy:CalfStageView IsVisible="{Binding SelectedCalfGroup, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                
+                <!-- No Group Selected Message (Advanced Mode) -->
+                <Border Background="#FFF3CD" BorderBrush="#FFC107" BorderThickness="1"
+                        CornerRadius="6" Padding="20"
+                        IsVisible="{Binding SelectedCalfGroup, Converter={x:Static ObjectConverters.IsNull}}">
+                  <StackPanel HorizontalAlignment="Center">
+                    <TextBlock Text="⚠️ No Group Selected"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="#856404"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,8"/>
+                    <TextBlock Text="Please select a group from the dropdown above to configure its management practices."
+                               FontSize="13"
+                               Foreground="#856404"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap"/>
+                  </StackPanel>
+                </Border>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </Border>
+        
+        <!-- Heifer: Purple -->
+        <Border BorderBrush="#7B1FA2" BorderThickness="2" CornerRadius="8"
+                IsVisible="{Binding IsHeiferSelected}">
+          <StackPanel>
+            <Border Background="#7B1FA2" CornerRadius="6,6,0,0" Padding="20">
+              <StackPanel>
+                <!-- Step Badge -->
+                <Border Classes="step-badge" HorizontalAlignment="Left" Background="White" Margin="0,0,0,12">
+                  <TextBlock Text="Step 3" Classes="step-badge-text" Foreground="#7B1FA2"/>
+                </Border>
+                <!-- Title and Description -->
+                <TextBlock Text="Management Practices - Heifer Stage" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="Configure management practices for heifer stage (4 months to first calving)" 
+                          FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0"/>
+              </StackPanel>
+            </Border>
+            <Border Background="White" Padding="24">
+              <StackPanel>
+                <!-- Group Selector (Advanced Mode Only) -->
+                <Border Background="#F3E5F5" BorderBrush="#7B1FA2" BorderThickness="1"
+                        CornerRadius="6" Padding="16" Margin="0,0,0,20"
+                        IsVisible="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode}">
+                  <StackPanel>
+                    <TextBlock Text="Select Group to Configure:"
+                               FontWeight="SemiBold"
+                               FontSize="14"
+                               Foreground="#7B1FA2"
+                               Margin="0,0,0,8"/>
+                    <TextBlock Text="You have multiple groups. Select which group's management practices you want to configure:"
+                               FontSize="12"
+                               Foreground="#666"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,12"/>
+                    <ComboBox ItemsSource="{Binding SelectedDairyComponentDto.HeiferPopulationGroups}"
+                              SelectedItem="{Binding SelectedHeiferGroup}"
+                              PlaceholderText="Choose a group..."
+                              HorizontalAlignment="Stretch"
+                              MinWidth="300">
+                      <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                          <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding GroupName}" FontWeight="SemiBold" Margin="0,0,8,0"/>
+                            <TextBlock Text="-" Foreground="#999" Margin="0,0,8,0"/>
+                            <TextBlock>
+                              <Run Text="{Binding NumberOfAnimals}"/>
+                              <Run Text=" animals" Foreground="#666"/>
+                            </TextBlock>
+                          </StackPanel>
+                        </DataTemplate>
+                      </ComboBox.ItemTemplate>
+                    </ComboBox>
+                  </StackPanel>
+                </Border>
+                
+                <!-- Management Practices Content -->
+                <dairy:HeiferStageView IsVisible="{Binding SelectedHeiferGroup, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                
+                <!-- No Group Selected Message (Advanced Mode) -->
+                <Border Background="#FFF3CD" BorderBrush="#FFC107" BorderThickness="1"
+                        CornerRadius="6" Padding="20"
+                        IsVisible="{Binding SelectedHeiferGroup, Converter={x:Static ObjectConverters.IsNull}}">
+                  <StackPanel HorizontalAlignment="Center">
+                    <TextBlock Text="⚠️ No Group Selected"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="#856404"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,8"/>
+                    <TextBlock Text="Please select a group from the dropdown above to configure its management practices."
+                               FontSize="13"
+                               Foreground="#856404"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap"/>
+                  </StackPanel>
+                </Border>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </Border>
+        
+        <!-- Lactating: Green -->
+        <Border BorderBrush="#388E3C" BorderThickness="2" CornerRadius="8"
+                IsVisible="{Binding IsLactatingSelected}">
+          <StackPanel>
+            <Border Background="#388E3C" CornerRadius="6,6,0,0" Padding="20">
+              <StackPanel>
+                <!-- Step Badge -->
+                <Border Classes="step-badge" HorizontalAlignment="Left" Background="White" Margin="0,0,0,12">
+                  <TextBlock Text="Step 3" Classes="step-badge-text" Foreground="#388E3C"/>
+                </Border>
+                <!-- Title and Description -->
+                <TextBlock Text="Management Practices - Lactating Stage" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="Configure management practices for lactating cow stage (active milk production)" 
+                          FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0"/>
+              </StackPanel>
+            </Border>
+            <Border Background="White" Padding="24">
+              <StackPanel>
+                <!-- Group Selector (Advanced Mode Only) -->
+                <Border Background="#E8F5E9" BorderBrush="#388E3C" BorderThickness="1"
+                        CornerRadius="6" Padding="16" Margin="0,0,0,20"
+                        IsVisible="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode}">
+                  <StackPanel>
+                    <TextBlock Text="Select Group to Configure:"
+                               FontWeight="SemiBold"
+                               FontSize="14"
+                               Foreground="#388E3C"
+                               Margin="0,0,0,8"/>
+                    <TextBlock Text="You have multiple groups. Select which group's management practices you want to configure:"
+                               FontSize="12"
+                               Foreground="#666"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,12"/>
+                    <ComboBox ItemsSource="{Binding SelectedDairyComponentDto.LactatingPopulationGroups}"
+                              SelectedItem="{Binding SelectedLactatingGroup}"
+                              PlaceholderText="Choose a group..."
+                              HorizontalAlignment="Stretch"
+                              MinWidth="300">
+                      <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                          <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding GroupName}" FontWeight="SemiBold" Margin="0,0,8,0"/>
+                            <TextBlock Text="-" Foreground="#999" Margin="0,0,8,0"/>
+                            <TextBlock>
+                              <Run Text="{Binding NumberOfAnimals}"/>
+                              <Run Text=" animals" Foreground="#666"/>
+                            </TextBlock>
+                          </StackPanel>
+                        </DataTemplate>
+                      </ComboBox.ItemTemplate>
+                    </ComboBox>
+                  </StackPanel>
+                </Border>
+                
+                <!-- Management Practices Content -->
+                <dairy:LactatingStageView IsVisible="{Binding SelectedLactatingGroup, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                
+                <!-- No Group Selected Message (Advanced Mode) -->
+                <Border Background="#FFF3CD" BorderBrush="#FFC107" BorderThickness="1"
+                        CornerRadius="6" Padding="20"
+                        IsVisible="{Binding SelectedLactatingGroup, Converter={x:Static ObjectConverters.IsNull}}">
+                  <StackPanel HorizontalAlignment="Center">
+                    <TextBlock Text="⚠️ No Group Selected"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="#856404"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,8"/>
+                    <TextBlock Text="Please select a group from the dropdown above to configure its management practices."
+                               FontSize="13"
+                               Foreground="#856404"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap"/>
+                  </StackPanel>
+                </Border>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </Border>
+        
+        <!-- Dry: Orange -->
+        <Border BorderBrush="#F57C00" BorderThickness="2" CornerRadius="8"
+                IsVisible="{Binding IsDrySelected}">
+          <StackPanel>
+            <Border Background="#F57C00" CornerRadius="6,6,0,0" Padding="20">
+              <StackPanel>
+                <!-- Step Badge -->
+                <Border Classes="step-badge" HorizontalAlignment="Left" Background="White" Margin="0,0,0,12">
+                  <TextBlock Text="Step 3" Classes="step-badge-text" Foreground="#F57C00"/>
+                </Border>
+                <!-- Title and Description -->
+                <TextBlock Text="Management Practices - Dry Stage" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="Configure management practices for dry cow stage (pre-calving period)" 
+                          FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0"/>
+              </StackPanel>
+            </Border>
+            <Border Background="White" Padding="24">
+              <StackPanel>
+                <!-- Group Selector (Advanced Mode Only) -->
+                <Border Background="#FFF3E0" BorderBrush="#F57C00" BorderThickness="1"
+                        CornerRadius="6" Padding="16" Margin="0,0,0,20"
+                        IsVisible="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode}">
+                  <StackPanel>
+                    <TextBlock Text="Select Group to Configure:"
+                               FontWeight="SemiBold"
+                               FontSize="14"
+                               Foreground="#F57C00"
+                               Margin="0,0,0,8"/>
+                    <TextBlock Text="You have multiple groups. Select which group's management practices you want to configure:"
+                               FontSize="12"
+                               Foreground="#666"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,12"/>
+                    <ComboBox ItemsSource="{Binding SelectedDairyComponentDto.DryPopulationGroups}"
+                              SelectedItem="{Binding SelectedDryGroup}"
+                              PlaceholderText="Choose a group..."
+                              HorizontalAlignment="Stretch"
+                              MinWidth="300">
+                      <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                          <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding GroupName}" FontWeight="SemiBold" Margin="0,0,8,0"/>
+                            <TextBlock Text="-" Foreground="#999" Margin="0,0,8,0"/>
+                            <TextBlock>
+                              <Run Text="{Binding NumberOfAnimals}"/>
+                              <Run Text=" animals" Foreground="#666"/>
+                            </TextBlock>
+                          </StackPanel>
+                        </DataTemplate>
+                      </ComboBox.ItemTemplate>
+                    </ComboBox>
+                  </StackPanel>
+                </Border>
+                
+                <!-- Management Practices Content -->
+                <dairy:DryStageView IsVisible="{Binding SelectedDryGroup, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                
+                <!-- No Group Selected Message (Advanced Mode) -->
+                <Border Background="#FFF3CD" BorderBrush="#FFC107" BorderThickness="1"
+                        CornerRadius="6" Padding="20"
+                        IsVisible="{Binding SelectedDryGroup, Converter={x:Static ObjectConverters.IsNull}}">
+                  <StackPanel HorizontalAlignment="Center">
+                    <TextBlock Text="⚠️ No Group Selected"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="#856404"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,8"/>
+                    <TextBlock Text="Please select a group from the dropdown above to configure its management practices."
+                               FontSize="13"
+                               Foreground="#856404"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap"/>
+                  </StackPanel>
+                </Border>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </Border>
+        
+        <!-- Default: No stage selected -->
+        <Border BorderBrush="#1976D2" BorderThickness="2" CornerRadius="8">
+          <Border.IsVisible>
+            <MultiBinding Converter="{x:Static BoolConverters.And}">
+              <Binding Path="!IsCalfSelected"/>
+              <Binding Path="!IsHeiferSelected"/>
+              <Binding Path="!IsLactatingSelected"/>
+              <Binding Path="!IsDrySelected"/>
+            </MultiBinding>
+          </Border.IsVisible>
+          <StackPanel>
+            <Border Background="#1976D2" CornerRadius="6,6,0,0" Padding="20">
+              <StackPanel>
+                <!-- Step Badge -->
+                <Border Classes="step-badge" HorizontalAlignment="Left" Background="White" Margin="0,0,0,12">
+                  <TextBlock Text="Step 3" Classes="step-badge-text" Foreground="#1976D2"/>
+                </Border>
+                <!-- Title and Description -->
+                <TextBlock Text="Management Practices Configuration" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="⬆️ Click a stage card above to configure management practices" 
+                          FontSize="14" Foreground="White" Opacity="0.95" Margin="0,4,0,0" FontWeight="SemiBold"/>
+              </StackPanel>
+            </Border>
+            <Border Background="White" Padding="24">
+              <Border Background="#E3F2FD" BorderBrush="#1976D2" BorderThickness="1" CornerRadius="6" Padding="20">
+                <StackPanel HorizontalAlignment="Center">
+                  <TextBlock Text="Select a Stage to Begin" FontSize="18" FontWeight="Bold" 
+                            Foreground="#1976D2" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                  <TextBlock Text="Click on one of the stage cards above (Calf, Heifer, Lactating, or Dry)" 
+                            FontSize="14" Foreground="#666" HorizontalAlignment="Center" TextWrapping="Wrap"
+                            TextAlignment="Center" MaxWidth="500" Margin="0,0,0,8"/>
+                  <TextBlock Text="to configure its specific management practices and production parameters." 
+                            FontSize="14" Foreground="#666" HorizontalAlignment="Center" TextWrapping="Wrap"
+                            TextAlignment="Center" MaxWidth="500"/>
                 </StackPanel>
               </Border>
-
-              <!-- Expanded Lifecycle Stage Cards -->
-              <StackPanel>
-                
-                <!-- Calf Stage Card -->
-                <dairy:CalfStageView Margin="0,0,0,16"/>
-
-                <!-- Heifer Stage Card -->
-                <dairy:HeiferStageView Margin="0,0,0,16"/>
-
-                <!-- Lactating Stage Card -->
-                <dairy:LactatingStageView Margin="0,0,0,16"/>
-
-                <!-- Dry Stage Card -->
-                <dairy:DryStageView/>
-                
-              </StackPanel>
-            </StackPanel>
-          </Border>
-        </StackPanel>
-      </Border>
+            </Border>
+          </StackPanel>
+        </Border>
+      </Panel>
 </UserControl>

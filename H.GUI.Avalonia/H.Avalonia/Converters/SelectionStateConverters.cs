@@ -69,6 +69,32 @@ public class BoolToBorderThicknessConverter : IValueConverter
 }
 
 /// <summary>
+/// Inverts a boolean value (true -> false, false -> true)
+/// </summary>
+public class InverseBooleanConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is bool boolValue)
+        {
+            return !boolValue;
+        }
+        
+        return true;
+    }
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is bool boolValue)
+        {
+            return !boolValue;
+        }
+        
+        return false;
+    }
+}
+
+/// <summary>
 /// Converts a boolean value to a render transform for the "pressed in" effect
 /// </summary>
 public class BoolToScaleTransformConverter : IValueConverter

@@ -1,37 +1,27 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="1000"
-             x:Class="H.Avalonia.Views.ComponentViews.Dairy.DryStageView">
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:converters="clr-namespace:H.Avalonia.Converters"
+           xmlns:infrastructure="clr-namespace:H.Avalonia.Infrastructure;assembly=H.Avalonia.Infrastructure"
+           xmlns:dairy="clr-namespace:H.Avalonia.ViewModels.ComponentViews.Dairy"
+           mc:Ignorable="d" d:DesignWidth="1000"
+           x:Class="H.Avalonia.Views.ComponentViews.Dairy.DryStageView">
+
+<Design.DataContext>
+  <dairy:DairyComponentViewModelDesign/>
+</Design.DataContext>
   
-  <!-- Dry Stage Card -->
-  <Border BorderBrush="#F57C00" BorderThickness="2" CornerRadius="8">
+<UserControl.Resources>
+  <converters:DivideByTwelveConverter x:Key="DivideByTwelveConverter"/>
+  <infrastructure:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
+</UserControl.Resources>
+  
+<!-- Dry Stage Card -->
+
   <StackPanel>
-    <Border Background="#FFF3E0" Padding="16" CornerRadius="6,6,0,0">
-      <Grid ColumnDefinitions="Auto,*,Auto,Auto">
-        <Border Grid.Column="0" Background="#F57C00" Width="48" Height="48" 
-               CornerRadius="24" Margin="0,0,12,0">
-          <TextBlock Text="•" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        </Border>
-        <StackPanel Grid.Column="1" VerticalAlignment="Center">
-          <TextBlock Text="Dry Period Stage" FontSize="16" FontWeight="Bold"/>
-          <TextBlock Text="14 animals • Pre-calving rest • 2 phases" 
-                    FontSize="12" Foreground="#666" Margin="0,2,0,0"/>
-        </StackPanel>
-        <Border Grid.Column="2" Background="White" Padding="8,4" 
-               CornerRadius="4" Margin="0,0,8,0">
-          <TextBlock Text="Configured" FontSize="11" Foreground="#43A047" FontWeight="SemiBold"/>
-        </Border>
-        <Button Grid.Column="3" Content="Collapse" Padding="12,6" 
-               Background="#F57C00" Foreground="White" CornerRadius="4"/>
-      </Grid>
-    </Border>
-    
-    <!-- Expanded Content -->
-    <Border Background="White" Padding="20">
-      <StackPanel>
-        <TextBlock Text="Management Phases" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,12"/>
+      
+    <TextBlock Text="Management Phases" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,12"/>
         
         <Grid ColumnDefinitions="*,*">
           <!-- Phase 1: Far-off Dry Period -->
@@ -43,12 +33,45 @@
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
                 <TextBlock Grid.Row="0" Grid.Column="1" Text="Days 1-45" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="Dry cow pen" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="Low energy forage" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,0"/>
-                <TextBlock Grid.Row="3" Grid.Column="1" Text="680 kg avg weight" FontSize="11" Foreground="#666"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="Low energy forage" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,0"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="680 kg avg weight" FontSize="11" Foreground="#666" Margin="0,0,0,8"/>
+                
+                <!-- Manure Handling System Selection -->
+                <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" 
+                          Text="Manure Handling System:" 
+                          FontSize="12" FontWeight="SemiBold" 
+                          Margin="0,8,0,4"/>
               </Grid>
+              
+              <ComboBox ItemsSource="{Binding ManureStateTypes}"
+                       SelectedItem="{Binding SelectedDairyComponentDto.DryPhase1ManureHandlingSystem}"
+                       HorizontalAlignment="Stretch"
+                       Margin="0,0,0,8">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" 
+                              FontSize="11"/>
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+              
+              <!-- Housing Type Selection -->
+              <TextBlock Text="Housing Type:" 
+                        FontSize="12" FontWeight="SemiBold" 
+                        Margin="0,0,0,4"/>
+              
+              <ComboBox ItemsSource="{Binding HousingTypes}"
+                       SelectedItem="{Binding SelectedDairyComponentDto.DryPhase1HousingType}"
+                       HorizontalAlignment="Stretch"
+                       Margin="0,0,0,0">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" 
+                              FontSize="11"/>
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
             </StackPanel>
           </Border>
           
@@ -61,12 +84,45 @@
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
                 <TextBlock Grid.Row="0" Grid.Column="1" Text="Days 46-60" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="Maternity pen" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="Transition diet" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,0"/>
-                <TextBlock Grid.Row="3" Grid.Column="1" Text="700 kg avg weight" FontSize="11" Foreground="#666"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="Transition diet" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,0"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="700 kg avg weight" FontSize="11" Foreground="#666" Margin="0,0,0,8"/>
+                
+                <!-- Manure Handling System Selection -->
+                <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" 
+                          Text="Manure Handling System:" 
+                          FontSize="12" FontWeight="SemiBold" 
+                          Margin="0,8,0,4"/>
               </Grid>
+              
+              <ComboBox ItemsSource="{Binding ManureStateTypes}"
+                       SelectedItem="{Binding SelectedDairyComponentDto.DryPhase2ManureHandlingSystem}"
+                       HorizontalAlignment="Stretch"
+                       Margin="0,0,0,8">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" 
+                              FontSize="11"/>
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+              
+              <!-- Housing Type Selection -->
+              <TextBlock Text="Housing Type:" 
+                        FontSize="12" FontWeight="SemiBold" 
+                        Margin="0,0,0,4"/>
+              
+              <ComboBox ItemsSource="{Binding HousingTypes}"
+                       SelectedItem="{Binding SelectedDairyComponentDto.DryPhase2HousingType}"
+                       HorizontalAlignment="Stretch"
+                       Margin="0,0,0,0">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" 
+                              FontSize="11"/>
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
             </StackPanel>
           </Border>
         </Grid>
@@ -75,18 +131,15 @@
                CornerRadius="6" Padding="12" Margin="0,16,0,0">
           <Grid ColumnDefinitions="*,*">
             <StackPanel Grid.Column="0">
-              <TextBlock Text="• Manure: Pack manure" FontSize="12" Margin="0,0,0,4"/>
-              <TextBlock Text="• Bedding: Straw pack" FontSize="12"/>
+              <TextBlock Text="• Bedding: Straw pack" FontSize="12" Margin="0,0,0,4"/>
+              <TextBlock Text="• Group Pairing: N/A" FontSize="12"/>
             </StackPanel>
             <StackPanel Grid.Column="1">
               <TextBlock Text="• Purpose: Prep for calving" FontSize="12" Margin="0,0,0,4"/>
-              <TextBlock Text="• Group Pairing: N/A" FontSize="12"/>
+              <TextBlock Text="• Monitoring: Intensive" FontSize="12"/>
             </StackPanel>
           </Grid>
         </Border>
       </StackPanel>
-    </Border>
-  </StackPanel>
-</Border>
   
 </UserControl>

@@ -149,6 +149,7 @@
 	<!--TextBlock Styles - Disclaimer text-->
 	<Style Selector="TextBlock.disclaimer">
 		<Setter Property="FontStyle" Value="Italic"/>
+		<Setter Property="FontSize" Value="12"/>
 	</Style>
 
 	<Style Selector="TextBlock.step-number">

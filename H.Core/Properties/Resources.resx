@@ -6419,7 +6419,7 @@ Please note: emissions related to the deposition or application of livestock man
     <value>Verify this before proceeding...</value>
   </data>
   <data name="CantFindCoordinate" xml:space="preserve">
-    <value>Coordinates for the given address could not be found.</value>
+    <value>Coordinates for the given address could not be found, check address formatting and try again.</value>
   </data>
   <data name="CoordinateError" xml:space="preserve">
     <value>Coordinate error</value>
@@ -6428,7 +6428,7 @@ Please note: emissions related to the deposition or application of livestock man
     <value>Select the province in which the farm is located.</value>
   </data>
   <data name="SoilDataViewStepTwoDesc" xml:space="preserve">
-    <value>Enter the address, coordinates, or right-click on the map to set farms location.</value>
+    <value>Right-click on the map, or enter coordinates to set farms location.</value>
   </data>
   <data name="SoilDataViewStepThreeDesc" xml:space="preserve">
     <value>Once you've entered your location, click below to retrieve soil data.</value>
@@ -6438,5 +6438,50 @@ Please note: emissions related to the deposition or application of livestock man
   </data>
   <data name="SoilDataViewStepThree" xml:space="preserve">
     <value>Select Soil Type</value>
+  </data>
+  <data name="TooManyAddressSearches" xml:space="preserve">
+    <value>Too many address searches made.</value>
+  </data>
+  <data name="DescriptionTooManyAddressSearches" xml:space="preserve">
+    <value>Please find the farm location by selecting a province and right clicking the location on the map or by entering the coordinates directly.</value>
+  </data>
+  <data name="SoilDataViewStepTwoRightClickOnMap" xml:space="preserve">
+    <value>Right-click farm location on map</value>
+  </data>
+  <data name="SoilDataViewStepTwoLatitudeAndLongitude" xml:space="preserve">
+    <value>Latitude and longitude</value>
+  </data>
+  <data name="SoilDataViewStepTwoRoadSearch" xml:space="preserve">
+    <value>Road Search</value>
+  </data>
+  <data name="SoilDataViewCivicNumber" xml:space="preserve">
+    <value>Civic Number (Optional)</value>
+  </data>
+  <data name="SoilDataViewRoadName" xml:space="preserve">
+    <value>Road Name</value>
+  </data>
+  <data name="SoilDataViewCounty" xml:space="preserve">
+    <value>County (Optional)</value>
+  </data>
+  <data name="SoilDataViewMunicipality" xml:space="preserve">
+    <value>Municipality</value>
+  </data>
+  <data name="SoilDataViewPostalCode" xml:space="preserve">
+    <value>Postal Code</value>
+  </data>
+  <data name="SoilDataViewUrbanAddressFormatToggle" xml:space="preserve">
+    <value>Urban Address Format</value>
+  </data>
+  <data name="SoilDataViewAddressSearchDisclaimer" xml:space="preserve">
+    <value>Road search will acquire the approximate location of the farm, once found, navigate on the map and right-click the exact location of the farm.</value>
+  </data>
+  <data name="LabelGetCoordinates" xml:space="preserve">
+    <value>Get Coordinates</value>
+  </data>
+  <data name="ErrorCouldNotReachNominatimApi" xml:space="preserve">
+    <value>Could not reach Nominatim.</value>
+  </data>
+  <data name="ErrorCouldNotReachNominatimApiDescription" xml:space="preserve">
+    <value>Location data could not be retrieved from Nominatim API, try another method of setting farm location.</value>
   </data>
 </root>

@@ -745,7 +745,7 @@ namespace H.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Coordinates for the given address could not be found..
+        ///   Looks up a localized string similar to Coordinates for the given address could not be found, check address formatting and try again..
         /// </summary>
         public static string CantFindCoordinate {
             get {
@@ -1227,6 +1227,15 @@ namespace H.Core.Properties {
         public static string DescriptionSaveHolos {
             get {
                 return ResourceManager.GetString("DescriptionSaveHolos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please find the farm location by selecting a province and right clicking the location on the map or by entering the coordinates directly..
+        /// </summary>
+        public static string DescriptionTooManyAddressSearches {
+            get {
+                return ResourceManager.GetString("DescriptionTooManyAddressSearches", resourceCulture);
             }
         }
         
@@ -6289,6 +6298,24 @@ namespace H.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not reach Nominatim..
+        /// </summary>
+        public static string ErrorCouldNotReachNominatimApi {
+            get {
+                return ResourceManager.GetString("ErrorCouldNotReachNominatimApi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location data could not be retrieved from Nominatim API, try another method of setting farm location..
+        /// </summary>
+        public static string ErrorCouldNotReachNominatimApiDescription {
+            get {
+                return ResourceManager.GetString("ErrorCouldNotReachNominatimApiDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Must be a valid date later than the Start Date..
         /// </summary>
         public static string ErrorEndDate {
@@ -10362,6 +10389,15 @@ namespace H.Core.Properties {
         public static string LabelGestationDiet {
             get {
                 return ResourceManager.GetString("LabelGestationDiet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Coordinates.
+        /// </summary>
+        public static string LabelGetCoordinates {
+            get {
+                return ResourceManager.GetString("LabelGetCoordinates", resourceCulture);
             }
         }
         
@@ -16103,6 +16139,60 @@ namespace H.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Road search will acquire the approximate location of the farm, once found, navigate on the map and right-click the exact location of the farm..
+        /// </summary>
+        public static string SoilDataViewAddressSearchDisclaimer {
+            get {
+                return ResourceManager.GetString("SoilDataViewAddressSearchDisclaimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Civic Number (Optional).
+        /// </summary>
+        public static string SoilDataViewCivicNumber {
+            get {
+                return ResourceManager.GetString("SoilDataViewCivicNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to County (Optional).
+        /// </summary>
+        public static string SoilDataViewCounty {
+            get {
+                return ResourceManager.GetString("SoilDataViewCounty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Municipality.
+        /// </summary>
+        public static string SoilDataViewMunicipality {
+            get {
+                return ResourceManager.GetString("SoilDataViewMunicipality", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Postal Code.
+        /// </summary>
+        public static string SoilDataViewPostalCode {
+            get {
+                return ResourceManager.GetString("SoilDataViewPostalCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Road Name.
+        /// </summary>
+        public static string SoilDataViewRoadName {
+            get {
+                return ResourceManager.GetString("SoilDataViewRoadName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select the province in which the farm is located..
         /// </summary>
         public static string SoilDataViewStepOneDesc {
@@ -16139,11 +16229,47 @@ namespace H.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter the address, coordinates, or right-click on the map to set farms location..
+        ///   Looks up a localized string similar to Right-click on the map, or enter coordinates to set farms location..
         /// </summary>
         public static string SoilDataViewStepTwoDesc {
             get {
                 return ResourceManager.GetString("SoilDataViewStepTwoDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latitude and longitude.
+        /// </summary>
+        public static string SoilDataViewStepTwoLatitudeAndLongitude {
+            get {
+                return ResourceManager.GetString("SoilDataViewStepTwoLatitudeAndLongitude", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Right-click farm location on map.
+        /// </summary>
+        public static string SoilDataViewStepTwoRightClickOnMap {
+            get {
+                return ResourceManager.GetString("SoilDataViewStepTwoRightClickOnMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Road Search.
+        /// </summary>
+        public static string SoilDataViewStepTwoRoadSearch {
+            get {
+                return ResourceManager.GetString("SoilDataViewStepTwoRoadSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Urban Address Format.
+        /// </summary>
+        public static string SoilDataViewUrbanAddressFormatToggle {
+            get {
+                return ResourceManager.GetString("SoilDataViewUrbanAddressFormatToggle", resourceCulture);
             }
         }
         
@@ -18478,6 +18604,15 @@ namespace H.Core.Properties {
         public static string ToolTipUpstreamEmissions {
             get {
                 return ResourceManager.GetString("ToolTipUpstreamEmissions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Too many address searches made..
+        /// </summary>
+        public static string TooManyAddressSearches {
+            get {
+                return ResourceManager.GetString("TooManyAddressSearches", resourceCulture);
             }
         }
         

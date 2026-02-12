@@ -20,13 +20,17 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using FastExpressionCompiler.LightExpression;
 using H.Avalonia.Services;
 using H.Core.Services;
 using H.Core.Services.StorageService;
+using H.Infrastructure.Controls.ValueConverters;
 using Microsoft.Extensions.Logging;
+using SharpKml.Dom.Xal;
 using SoilResultsView = H.Avalonia.Views.ResultViews.SoilResultsView;
 
 namespace H.Avalonia.ViewModels
@@ -40,7 +44,19 @@ namespace H.Avalonia.ViewModels
         private readonly IDefaultGeocoderService _defaultGeocoderService;
         private double _longitude;
         private double _latitude;
+        
+        private bool _isComplexRuralAddressMode = false;
         private string _address = string.Empty;
+        private string _streetAddress = string.Empty;
+        private string _municipality = string.Empty;
+        private string _postalCode = string.Empty;
+
+        private string _ruralCivicNumbering = string.Empty;
+        private string _ruralRoadName = string.Empty;
+        private string _ruralCounty = string.Empty;
+        private string _ruralMunicipality = string.Empty;
+        private string _ruralPostalCode = string.Empty;
+        
         private MPoint _navigationPoint;
         private ImportHelpers _importHelper;
         private SoilViewItemMap _soilViewItemMap;
@@ -53,13 +69,43 @@ namespace H.Avalonia.ViewModels
                                             StoragePlaceholder.SoilViewItems.Any(item => item.IsSelected);
         public bool AllViewItemsSelected { get; set; }
 
+        private bool _stepTwoAddressSearchSelected;
+        private bool _stepTwoLongLatSelected;
+        private bool _stepTwoRightClickMapSelected = true;
+
         private readonly KmlHelpers _kmlHelpers;
 
         public readonly Dictionary<Province, List<Polygon>> WktPolygonMap = new();
         private bool _isDataProcessing;
-        private bool _showPolygonsOnMap;
         private Province _selectedProvince;
         private ICountrySettings _countrySettings;
+
+        /// <summary>
+        /// Boolean that indicates if the address search option is selected in step two of the location selection process.
+        /// </summary>
+        public bool StepTwoAddressSearchSelected
+        {
+            get => _stepTwoAddressSearchSelected;
+            set => SetProperty(ref _stepTwoAddressSearchSelected, value);
+        }
+
+        /// <summary>
+        /// Boolean that indicates if the longitude/latitude input option is selected in step two of the location selection process.
+        /// </summary>
+        public bool StepTwoLongLatSelected
+        {
+            get => _stepTwoLongLatSelected;
+            set => SetProperty(ref _stepTwoLongLatSelected, value);
+        }
+
+        /// <summary>
+        /// Boolean that indicates if the right click on map option is selected in step two of the location selection process.
+        /// </summary>
+        public bool StepTwoRightClickMapSelected
+        {
+            get => _stepTwoRightClickMapSelected;
+            set => SetProperty(ref _stepTwoRightClickMapSelected, value);
+        }
 
         /// <summary>
         /// The longitude value of a coordinate
@@ -89,6 +135,151 @@ namespace H.Avalonia.ViewModels
         }
 
         /// <summary>
+        /// The street address entered by the user when not in rural address mode.
+        /// </summary>
+        public string StreetAddress
+        {
+            get => _streetAddress;
+            set
+            {
+                if (SetProperty(ref _streetAddress, value))
+                {
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
+                }
+            }
+        }
+
+        /// <summary>
+        /// The municipality entered by the user when not in rural address mode.
+        /// </summary>
+        public string Municipality
+        {
+            get => _municipality;
+            set
+            {
+                if (SetProperty(ref _municipality, value))
+                {
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
+                }
+            }
+        }
+
+        /// <summary>
+        /// The postal code entered by the user when not in rural address mode.
+        /// </summary>
+        public string PostalCode
+        {
+            get => _postalCode;
+            set
+            {
+                if (SetProperty(ref _postalCode, value))
+                {
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
+                }
+            }
+        }
+
+        /// <summary>
+        /// The civic numbering of the address entered by the user, only used when rural address mode is enabled.
+        /// </summary>
+        public string RuralCivicNumbering
+        {
+            get => _ruralCivicNumbering;
+            set
+            {
+                if (SetProperty(ref _ruralCivicNumbering, value))
+                {
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
+                }
+            }
+        }
+
+        /// <summary>
+        /// The road name entered by the user, only used when rural address mode is enabled.
+        /// </summary>
+        public string RuralRoadName
+        {
+            get => _ruralRoadName;
+            set
+            {
+                if (SetProperty(ref _ruralRoadName, value))
+                {
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
+                }
+            }
+        }
+
+        /// <summary>
+        /// The county entered by the user, only used when rural address mode is enabled.
+        /// </summary>
+        public string RuralCounty
+        {
+            get => _ruralCounty;
+            set
+            {
+                if (SetProperty(ref _ruralCounty, value))
+                {
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
+                }
+            }
+        }
+
+        /// <summary>
+        /// The municipality entered by the user, only used when rural address mode is enabled.
+        /// </summary>
+        public string RuralMunicipality
+        {
+            get => _ruralMunicipality;
+            set
+            {
+                if (SetProperty(ref _ruralMunicipality, value))
+                {
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
+                }
+            }
+        }
+
+        /// <summary>
+        /// The postal code entered by the user, only used when rural address mode is enabled.
+        /// </summary>
+        public string RuralPostalCode
+        {
+            get => _ruralPostalCode;
+            set
+            {
+                if (SetProperty(ref _ruralPostalCode, value))
+                {
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Boolean that indicates if all address data has been entered by the user or if user exceeded failed search attempts.
+        /// </summary>
+        public bool IsAddressSearchEnabled
+        {
+            get
+            {
+                if (!IsComplexRuralAddressMode)
+                {
+                    return (SelectedProvince != Province.SelectProvince &&
+                     !string.IsNullOrWhiteSpace(StreetAddress) &&
+                     !string.IsNullOrWhiteSpace(Municipality) &&
+                     !string.IsNullOrWhiteSpace(PostalCode));
+                }
+                else
+                {
+                    return (SelectedProvince != Province.SelectProvince &&
+                     !string.IsNullOrWhiteSpace(RuralRoadName) &&
+                     !string.IsNullOrWhiteSpace(RuralMunicipality) &&
+                     !string.IsNullOrWhiteSpace(RuralPostalCode));
+                }
+            }
+
+        }
+
+        /// <summary>
         /// A point that the user wants to navigate to. This point is what the user selects when they specify a location in the <see cref="SoilDataView"/>
         /// </summary>
         public MPoint NavigationPoint
@@ -114,6 +305,21 @@ namespace H.Avalonia.ViewModels
         {
             get => _provinces;
             set => SetProperty(ref _provinces, value);
+        }
+
+        /// <summary>
+        /// Boolean indicating whether complex rural address mode is enabled (enables civic number and county fields).
+        /// </summary>
+        public bool IsComplexRuralAddressMode
+        {
+            get => _isComplexRuralAddressMode;
+            set
+            {
+                if (SetProperty(ref _isComplexRuralAddressMode, value))
+                {
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
+                }
+            }
         }
 
         public SoilDataViewModel() { }
@@ -219,7 +425,13 @@ namespace H.Avalonia.ViewModels
         public Province SelectedProvince
         {
             get => _selectedProvince;
-            set => SetProperty(ref _selectedProvince, value);
+            set
+            {
+                if (SetProperty(ref _selectedProvince, value))
+                {
+                    RaisePropertyChanged(nameof(IsAddressSearchEnabled));
+                }
+            }
         }
 
         /// <summary>
@@ -489,36 +701,24 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private async void OnGetCoordinates()
         {
-            if (string.IsNullOrEmpty(Address))
-            {
-                Logger.LogDebug($@"Cannot find location as an empty address was entered.");
-                NotificationManager.ShowToast(H.Core.Properties.Resources.AddressFieldEmpty, Core.Properties.Resources.MessageEmptyAddress, NotificationType.Information);
-                return;
-            }
             try
             {
                 // Call the geocoding service to get coordinates from the address, return early if problem encountered.
-                Logger.LogInformation($"Attempting coordinate acquisition from address in {nameof(SoilDataViewModel)}.{nameof(OnGetAddress)}");
-                var point = await _defaultGeocoderService.GetCoordinates(Address);
-                if (point.latitude == 0 || point.longitude == 0)
+                var coordinates = (latitude: 0d, longitude: 0d);
+                Logger.LogInformation($"Attempting coordinate acquisition from address in {nameof(SoilDataViewModel)}.{nameof(OnGetCoordinates)}");
+                // Join civic numbering and road name as geocoder does not have separate parameter field for civic numbering.
+                if (IsComplexRuralAddressMode)
+                    coordinates = await _defaultGeocoderService.GetCoordinates(RuralCivicNumbering+" "+RuralRoadName, RuralMunicipality, SelectedProvince, RuralPostalCode, RuralCounty);
+                else
+                    coordinates = await _defaultGeocoderService.GetCoordinates(StreetAddress, Municipality, SelectedProvince, PostalCode);
+                if (coordinates.latitude == 0 || coordinates.longitude == 0)
                 {
                     Logger.LogDebug($@"Cannot find the coordinate from the address entered.");
-                    NotificationManager.ShowToast(H.Core.Properties.Resources.CoordinateError, H.Core.Properties.Resources.CantFindCoordinate, NotificationType.Error);
                     return;
                 }
-                // Call the geocoding service to get province from the address, return early if problem encountered.
-                var province = await _defaultGeocoderService.GetProvince(Address);
-                if (province == null)
-                {
-                    Logger.LogDebug($@"Cannot find the province from the address entered.");
-                    NotificationManager.ShowToast(H.Core.Properties.Resources.InvalidAddress, H.Core.Properties.Resources.CantFindAddress, NotificationType.Error);
-                    return;
-                }
-                // Load province polygon and set coordinates.
-                SelectedProvince = (Province)province;
-                Logger.LogInformation($"Coordinate acquired from address in {nameof(SoilDataViewModel)}.{nameof(OnGetAddress)}");
-                Latitude = point.latitude;
-                Longitude = point.longitude;
+                Logger.LogInformation($"Coordinate acquired from address in {nameof(SoilDataViewModel)}.{nameof(OnGetCoordinates)}");
+                Latitude = coordinates.latitude;
+                Longitude = coordinates.longitude;
                 NavigationPoint = GetNavigationPoint();
             }
             catch (ArgumentOutOfRangeException e)
@@ -527,21 +727,12 @@ namespace H.Avalonia.ViewModels
                 NotificationManager.ShowToast(H.Core.Properties.Resources.InvalidAddress, Core.Properties.Resources.MessageIncorrectAddress, NotificationType.Error);
             }
         }
-
+         
         /// <summary>
         /// Gets the new address values based on the coordinates provided by the user.
         /// </summary>
-        private async void OnGetAddress()
+        private void OnGetAddress()
         {
-            var address = await _mapHelpers.GetAddressFromLocationAsync(Latitude, Longitude);
-            if (string.IsNullOrEmpty(address))
-            {
-                Logger.LogDebug($@"Cannot find the coordinate. Please enter correct latitude and longitude values");
-                NotificationManager.ShowToast(H.Core.Properties.Resources.IncorrectCoordinate, Core.Properties.Resources.MessageInValidCoordinateEntered, NotificationType.Information);
-                return;
-            }
-
-            Address = address;
             NavigationPoint = GetNavigationPoint();
         }
 
@@ -564,15 +755,6 @@ namespace H.Avalonia.ViewModels
             var point = _mapHelpers.ConvertSphericalMercatorToCoordinate(NavigationPoint);
             Latitude = point.latitude;
             Longitude = point.longitude;
-
-            var address = await _mapHelpers.GetAddressFromLocationAsync(Latitude, Longitude);
-            if (string.IsNullOrEmpty(address))
-            {
-                Logger.LogDebug($@"Incorrect coordinate location cannot find matching address.");
-                NotificationManager.ShowToast(H.Core.Properties.Resources.CantFindAddress, Core.Properties.Resources.MessageIncorrectLocationSelected, NotificationType.Information);
-                return;
-            }
-            Address = address;
 
         }
 

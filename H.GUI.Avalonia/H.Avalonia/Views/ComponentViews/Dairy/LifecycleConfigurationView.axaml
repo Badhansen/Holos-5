@@ -3,9 +3,14 @@ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 xmlns:dairy="clr-namespace:H.Avalonia.Views.ComponentViews.Dairy"
+xmlns:dairy1="clr-namespace:H.Avalonia.ViewModels.ComponentViews.Dairy"
 mc:Ignorable="d" d:DesignWidth="1400"
 x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
   
+    <Design.DataContext>
+        <dairy1:DairyComponentViewModelDesign/>
+    </Design.DataContext>
+
 <!-- Step 3: Management Practices Configuration -->
       <!-- Dynamic colored header based on selected stage -->
       <Panel Margin="0,0,0,20">
@@ -64,12 +69,22 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                 </Border>
                 
                 <!-- Management Practices Content -->
-                <dairy:CalfStageView IsVisible="{Binding SelectedCalfGroup, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                <!-- Show in Simple mode (UseAdvancedPopulationMode=false) OR when a group is selected in Advanced mode -->
+                <Panel>
+                  <dairy:CalfStageView IsVisible="{Binding !SelectedDairyComponentDto.UseAdvancedPopulationMode}"/>
+                  <dairy:CalfStageView IsVisible="{Binding SelectedCalfGroup, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                </Panel>
                 
-                <!-- No Group Selected Message (Advanced Mode) -->
+                <!-- No Group Selected Message (Advanced Mode Only) -->
                 <Border Background="#FFF3CD" BorderBrush="#FFC107" BorderThickness="1"
-                        CornerRadius="6" Padding="20"
-                        IsVisible="{Binding SelectedCalfGroup, Converter={x:Static ObjectConverters.IsNull}}">
+                        CornerRadius="6" Padding="20">
+                  <!-- MultiBinding: Show only if (UseAdvancedPopulationMode=true AND SelectedCalfGroup=null) -->
+                  <Border.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                      <Binding Path="SelectedDairyComponentDto.UseAdvancedPopulationMode"/>
+                      <Binding Path="SelectedCalfGroup" Converter="{x:Static ObjectConverters.IsNull}"/>
+                    </MultiBinding>
+                  </Border.IsVisible>
                   <StackPanel HorizontalAlignment="Center">
                     <TextBlock Text="⚠️ No Group Selected"
                                FontSize="16"
@@ -144,12 +159,22 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                 </Border>
                 
                 <!-- Management Practices Content -->
-                <dairy:HeiferStageView IsVisible="{Binding SelectedHeiferGroup, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                <!-- Show in Simple mode (UseAdvancedPopulationMode=false) OR when a group is selected in Advanced mode -->
+                <Panel>
+                  <dairy:HeiferStageView IsVisible="{Binding !SelectedDairyComponentDto.UseAdvancedPopulationMode}"/>
+                  <dairy:HeiferStageView IsVisible="{Binding SelectedHeiferGroup, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                </Panel>
                 
-                <!-- No Group Selected Message (Advanced Mode) -->
+                <!-- No Group Selected Message (Advanced Mode Only) -->
                 <Border Background="#FFF3CD" BorderBrush="#FFC107" BorderThickness="1"
-                        CornerRadius="6" Padding="20"
-                        IsVisible="{Binding SelectedHeiferGroup, Converter={x:Static ObjectConverters.IsNull}}">
+                        CornerRadius="6" Padding="20">
+                  <!-- MultiBinding: Show only if (UseAdvancedPopulationMode=true AND SelectedHeiferGroup=null) -->
+                  <Border.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                      <Binding Path="SelectedDairyComponentDto.UseAdvancedPopulationMode"/>
+                      <Binding Path="SelectedHeiferGroup" Converter="{x:Static ObjectConverters.IsNull}"/>
+                    </MultiBinding>
+                  </Border.IsVisible>
                   <StackPanel HorizontalAlignment="Center">
                     <TextBlock Text="⚠️ No Group Selected"
                                FontSize="16"
@@ -224,12 +249,22 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                 </Border>
                 
                 <!-- Management Practices Content -->
-                <dairy:LactatingStageView IsVisible="{Binding SelectedLactatingGroup, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                <!-- Show in Simple mode (UseAdvancedPopulationMode=false) OR when a group is selected in Advanced mode -->
+                <Panel>
+                  <dairy:LactatingStageView IsVisible="{Binding !SelectedDairyComponentDto.UseAdvancedPopulationMode}"/>
+                  <dairy:LactatingStageView IsVisible="{Binding SelectedLactatingGroup, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                </Panel>
                 
-                <!-- No Group Selected Message (Advanced Mode) -->
+                <!-- No Group Selected Message (Advanced Mode Only) -->
                 <Border Background="#FFF3CD" BorderBrush="#FFC107" BorderThickness="1"
-                        CornerRadius="6" Padding="20"
-                        IsVisible="{Binding SelectedLactatingGroup, Converter={x:Static ObjectConverters.IsNull}}">
+                        CornerRadius="6" Padding="20">
+                  <!-- MultiBinding: Show only if (UseAdvancedPopulationMode=true AND SelectedLactatingGroup=null) -->
+                  <Border.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                      <Binding Path="SelectedDairyComponentDto.UseAdvancedPopulationMode"/>
+                      <Binding Path="SelectedLactatingGroup" Converter="{x:Static ObjectConverters.IsNull}"/>
+                    </MultiBinding>
+                  </Border.IsVisible>
                   <StackPanel HorizontalAlignment="Center">
                     <TextBlock Text="⚠️ No Group Selected"
                                FontSize="16"
@@ -304,12 +339,22 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                 </Border>
                 
                 <!-- Management Practices Content -->
-                <dairy:DryStageView IsVisible="{Binding SelectedDryGroup, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                <!-- Show in Simple mode (UseAdvancedPopulationMode=false) OR when a group is selected in Advanced mode -->
+                <Panel>
+                  <dairy:DryStageView IsVisible="{Binding !SelectedDairyComponentDto.UseAdvancedPopulationMode}"/>
+                  <dairy:DryStageView IsVisible="{Binding SelectedDryGroup, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                </Panel>
                 
-                <!-- No Group Selected Message (Advanced Mode) -->
+                <!-- No Group Selected Message (Advanced Mode Only) -->
                 <Border Background="#FFF3CD" BorderBrush="#FFC107" BorderThickness="1"
-                        CornerRadius="6" Padding="20"
-                        IsVisible="{Binding SelectedDryGroup, Converter={x:Static ObjectConverters.IsNull}}">
+                        CornerRadius="6" Padding="20">
+                  <!-- MultiBinding: Show only if (UseAdvancedPopulationMode=true AND SelectedDryGroup=null) -->
+                  <Border.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                      <Binding Path="SelectedDairyComponentDto.UseAdvancedPopulationMode"/>
+                      <Binding Path="SelectedDryGroup" Converter="{x:Static ObjectConverters.IsNull}"/>
+                    </MultiBinding>
+                  </Border.IsVisible>
                   <StackPanel HorizontalAlignment="Center">
                     <TextBlock Text="⚠️ No Group Selected"
                                FontSize="16"

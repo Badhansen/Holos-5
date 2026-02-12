@@ -387,11 +387,24 @@
                              FontWeight="SemiBold" FontSize="13"
                              Margin="0,0,0,8"/>
 
+                  <!-- Helpful explanation -->
+                  <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#666" 
+                             FontStyle="Italic" Margin="0,0,0,12" LineHeight="18">
+                    <Run Text="You can add multiple groups to represent different animal cohorts with unique management practices. In Step 3, you'll select which group to configure management practices for (diet, housing, etc.)."/>
+                  </TextBlock>
+
                   <!-- Groups List -->
                   <Border BorderBrush="#DDD" BorderThickness="1"
                           CornerRadius="4" Padding="12"
-                          Background="White">
+                          Background="White"
+                          IsVisible="{Binding SelectedDairyComponentDto.CalfPopulationGroups.Count}">
                 <StackPanel>
+                  <!-- Instruction text -->
+                  <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#888" 
+                             FontStyle="Italic" Margin="0,0,0,12">
+                    <Run Text="Enter a descriptive name for each group and specify the number of animals in that group."/>
+                  </TextBlock>
+
                   <!-- Header Row -->
                   <Grid Margin="0,0,0,8">
                     <Grid.ColumnDefinitions>
@@ -459,16 +472,7 @@
                             Margin="0,12,0,0"
                             Classes="accent"/>
 
-                    <!-- Total Summary -->
-                    <Border Background="#E3F2FD" BorderBrush="#1976D2"
-                            BorderThickness="1" CornerRadius="4"
-                            Padding="12" Margin="0,16,0,0">
-                      <TextBlock HorizontalAlignment="Center">
-                        <Run Text="Total Animals: " FontSize="14" FontWeight="Medium"/>
-                        <Run Text="{Binding SelectedDairyComponentDto.TotalCalfPopulation, StringFormat='{}{0}'}"
-                             FontSize="16" FontWeight="Bold" Foreground="#1976D2"/>
-                      </TextBlock>
-                    </Border>
+                   
                   </StackPanel>
                 </StackPanel>
         
@@ -500,7 +504,7 @@
               <TextBlock Grid.Column="2" Text="days"
                          VerticalAlignment="Center" Margin="8,0,0,0"/>
             </Grid>
-            
+
             <!-- SIMPLE MODE -->
             <StackPanel IsVisible="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode, Converter={StaticResource InverseBooleanConverter}}">
               <Grid>
@@ -522,23 +526,36 @@
                            VerticalAlignment="Center" Margin="8,0,0,0"/>
               </Grid>
             </StackPanel>
-            
+
             <!-- ADVANCED MODE -->
             <StackPanel IsVisible="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode}">
               <TextBlock Text="Animal Groups:"
                          FontWeight="SemiBold" FontSize="13"
                          Margin="0,0,0,8"/>
-              
+
+              <!-- Helpful explanation -->
+              <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#666" 
+                         FontStyle="Italic" Margin="0,0,0,12" LineHeight="18">
+                <Run Text="You can add multiple groups to represent different animal cohorts with unique management practices. In Step 3, you'll select which group to configure management practices for (diet, housing, etc.)."/>
+              </TextBlock>
+
               <Border BorderBrush="#DDD" BorderThickness="1"
-                      CornerRadius="4" Padding="12">
+                      CornerRadius="4" Padding="12"
+                      IsVisible="{Binding SelectedDairyComponentDto.HeiferPopulationGroups.Count}">
                 <StackPanel>
+                  <!-- Instruction text -->
+                  <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#888" 
+                             FontStyle="Italic" Margin="0,0,0,12">
+                    <Run Text="Enter a descriptive name for each group and specify the number of animals in that group."/>
+                  </TextBlock>
+
                   <Grid Margin="0,0,0,8">
                     <Grid.ColumnDefinitions>
                       <ColumnDefinition Width="2*"/>
                       <ColumnDefinition Width="*"/>
                       <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <TextBlock Grid.Column="0" Text="Group Name"
                                FontWeight="Medium" FontSize="11" Foreground="#666"/>
                     <TextBlock Grid.Column="1" Text="Animals"
@@ -546,7 +563,7 @@
                     <TextBlock Grid.Column="2" Text="Actions"
                                FontWeight="Medium" FontSize="11" Foreground="#666"/>
                   </Grid>
-                  
+
                   <ItemsControl ItemsSource="{Binding SelectedDairyComponentDto.HeiferPopulationGroups}">
                     <ItemsControl.ItemTemplate>
                       <DataTemplate>
@@ -630,7 +647,7 @@
               <TextBlock Grid.Column="2" Text="days"
                          VerticalAlignment="Center" Margin="8,0,0,0"/>
             </Grid>
-            
+
             <!-- SIMPLE MODE -->
             <StackPanel IsVisible="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode, Converter={StaticResource InverseBooleanConverter}}">
               <Grid>
@@ -652,23 +669,36 @@
                            VerticalAlignment="Center" Margin="8,0,0,0"/>
               </Grid>
             </StackPanel>
-            
+
             <!-- ADVANCED MODE -->
             <StackPanel IsVisible="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode}">
               <TextBlock Text="Animal Groups:"
                          FontWeight="SemiBold" FontSize="13"
                          Margin="0,0,0,8"/>
-              
+
+              <!-- Helpful explanation -->
+              <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#666" 
+                         FontStyle="Italic" Margin="0,0,0,12" LineHeight="18">
+                <Run Text="You can add multiple groups to represent different animal cohorts with unique management practices. In Step 3, you'll select which group to configure management practices for (diet, housing, etc.)."/>
+              </TextBlock>
+
               <Border BorderBrush="#DDD" BorderThickness="1"
-                      CornerRadius="4" Padding="12">
+                      CornerRadius="4" Padding="12"
+                      IsVisible="{Binding SelectedDairyComponentDto.LactatingPopulationGroups.Count}">
                 <StackPanel>
+                  <!-- Instruction text -->
+                  <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#888" 
+                             FontStyle="Italic" Margin="0,0,0,12">
+                    <Run Text="Enter a descriptive name for each group and specify the number of animals in that group."/>
+                  </TextBlock>
+
                   <Grid Margin="0,0,0,8">
                     <Grid.ColumnDefinitions>
                       <ColumnDefinition Width="2*"/>
                       <ColumnDefinition Width="*"/>
                       <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <TextBlock Grid.Column="0" Text="Group Name"
                                FontWeight="Medium" FontSize="11" Foreground="#666"/>
                     <TextBlock Grid.Column="1" Text="Animals"
@@ -676,7 +706,7 @@
                     <TextBlock Grid.Column="2" Text="Actions"
                                FontWeight="Medium" FontSize="11" Foreground="#666"/>
                   </Grid>
-                  
+
                   <ItemsControl ItemsSource="{Binding SelectedDairyComponentDto.LactatingPopulationGroups}">
                     <ItemsControl.ItemTemplate>
                       <DataTemplate>
@@ -714,7 +744,7 @@
                 </StackPanel>
               </Border>
               
-              <Button Content="? Add New Group"
+              <Button Content="Add New Group"
                       Command="{Binding AddLactatingGroupCommand}"
                       HorizontalAlignment="Left"
                       Margin="0,12,0,0"
@@ -760,7 +790,7 @@
               <TextBlock Grid.Column="2" Text="days"
                          VerticalAlignment="Center" Margin="8,0,0,0"/>
             </Grid>
-            
+
             <!-- SIMPLE MODE -->
             <StackPanel IsVisible="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode, Converter={StaticResource InverseBooleanConverter}}">
               <Grid>
@@ -782,23 +812,36 @@
                            VerticalAlignment="Center" Margin="8,0,0,0"/>
               </Grid>
             </StackPanel>
-            
+
             <!-- ADVANCED MODE -->
             <StackPanel IsVisible="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode}">
               <TextBlock Text="Animal Groups:"
                          FontWeight="SemiBold" FontSize="13"
                          Margin="0,0,0,8"/>
-              
+
+              <!-- Helpful explanation -->
+              <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#666" 
+                         FontStyle="Italic" Margin="0,0,0,12" LineHeight="18">
+                <Run Text="You can add multiple groups to represent different animal cohorts with unique management practices. In Step 3, you'll select which group to configure management practices for (diet, housing, etc.)."/>
+              </TextBlock>
+
               <Border BorderBrush="#DDD" BorderThickness="1"
-                      CornerRadius="4" Padding="12">
+                      CornerRadius="4" Padding="12"
+                      IsVisible="{Binding SelectedDairyComponentDto.DryPopulationGroups.Count}">
                 <StackPanel>
+                  <!-- Instruction text -->
+                  <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#888" 
+                             FontStyle="Italic" Margin="0,0,0,12">
+                    <Run Text="Enter a descriptive name for each group and specify the number of animals in that group."/>
+                  </TextBlock>
+
                   <Grid Margin="0,0,0,8">
                     <Grid.ColumnDefinitions>
                       <ColumnDefinition Width="2*"/>
                       <ColumnDefinition Width="*"/>
                       <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <TextBlock Grid.Column="0" Text="Group Name"
                                FontWeight="Medium" FontSize="11" Foreground="#666"/>
                     <TextBlock Grid.Column="1" Text="Animals"
@@ -806,7 +849,7 @@
                     <TextBlock Grid.Column="2" Text="Actions"
                                FontWeight="Medium" FontSize="11" Foreground="#666"/>
                   </Grid>
-                  
+
                   <ItemsControl ItemsSource="{Binding SelectedDairyComponentDto.DryPopulationGroups}">
                     <ItemsControl.ItemTemplate>
                       <DataTemplate>
@@ -844,7 +887,7 @@
                 </StackPanel>
               </Border>
               
-              <Button Content="? Add New Group"
+              <Button Content="Add New Group"
                       Command="{Binding AddDryGroupCommand}"
                       HorizontalAlignment="Left"
                       Margin="0,12,0,0"

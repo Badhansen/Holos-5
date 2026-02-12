@@ -6419,7 +6419,7 @@ Please note: emissions related to the deposition or application of livestock man
     <value>Verify this before proceeding...</value>
   </data>
   <data name="CantFindCoordinate" xml:space="preserve">
-    <value>Coordinates for the given address could not be found.</value>
+    <value>Coordinates for the given address could not be found, check address formatting and try again.</value>
   </data>
   <data name="CoordinateError" xml:space="preserve">
     <value>Coordinate error</value>
@@ -6443,7 +6443,7 @@ Please note: emissions related to the deposition or application of livestock man
     <value>Too many address searches made.</value>
   </data>
   <data name="DescriptionTooManyAddressSearches" xml:space="preserve">
-    <value>Please find the farm location by selected a province and right clicking the location on the map or by entering the coordinates directly.</value>
+    <value>Please find the farm location by selecting a province and right clicking the location on the map or by entering the coordinates directly.</value>
   </data>
   <data name="SoilDataViewStepTwoRightClickOnMap" xml:space="preserve">
     <value>Right-click farm location on map</value>

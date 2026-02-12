@@ -745,7 +745,7 @@ namespace H.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Coordinates for the given address could not be found..
+        ///   Looks up a localized string similar to Coordinates for the given address could not be found, check address formatting and try again..
         /// </summary>
         public static string CantFindCoordinate {
             get {
@@ -1231,7 +1231,7 @@ namespace H.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please find the farm location by selected a province and right clicking the location on the map or by entering the coordinates directly..
+        ///   Looks up a localized string similar to Please find the farm location by selecting a province and right clicking the location on the map or by entering the coordinates directly..
         /// </summary>
         public static string DescriptionTooManyAddressSearches {
             get {

@@ -25,6 +25,16 @@ namespace H.Avalonia.Services
     {
         #region Fields
 
+        private enum InputValidationType
+        {
+            General,
+            Address,
+            Municipality,
+            PostalCode,
+            Country,
+            County
+        }
+
         private ILogger _logger;
         private INotificationManagerService _notificationManagerService;
 
@@ -81,7 +91,8 @@ namespace H.Avalonia.Services
         /// <returns>True if cached file exists for this address, false otherwise</returns>
         public bool IsCached(string street, string municipality, Province province, string postalCode, string? county = null, string country = "Canada")
         {
-            street = PrepareStreetStringForAPI(street);
+            InputValidation(street, municipality, postalCode, county, country);
+            street = PrepareStreetStringForApi(street);
             var path = this.GetCachePath(street, municipality, province, postalCode, county, country);
             return File.Exists(path);
         }
@@ -107,7 +118,8 @@ namespace H.Avalonia.Services
         /// <returns>Longitude and latitude coordinates</returns>
         public async Task<(double latitude, double longitude)> GetCoordinates(string street, string municipality, Province province, string postalCode, string? county = null, string country = "Canada")
         {
-            street = PrepareStreetStringForAPI(street);
+            InputValidation(street, municipality, postalCode, county, country);
+            street = PrepareStreetStringForApi(street);
             // If no cached data, get data from Nominatim API and cache it.
             string content = this.GetCachedData(street, municipality, province, postalCode, county, country);
             if (string.IsNullOrWhiteSpace(content))
@@ -136,7 +148,8 @@ namespace H.Avalonia.Services
         /// <returns>JObject containing all the data returned from the Nominatim API for the given address</returns>
         public async Task <JObject> GetApiContent(string street, string municipality, Province province, string postalCode, string? county = null, string country = "Canada")
         {
-            street = PrepareStreetStringForAPI(street);
+            InputValidation(street, municipality, postalCode, county, country);
+            street = PrepareStreetStringForApi(street);
             // If no cached data, get data from Nominatim API and cache it.
             string content = this.GetCachedData(street, municipality, province, postalCode, county, country);
             if (string.IsNullOrWhiteSpace(content))
@@ -155,7 +168,7 @@ namespace H.Avalonia.Services
         /// </summary>
         /// <param name="street">The street address string to reformat to a preferable format</param>
         /// <returns>String with sanitized address formatting specialized for Nominatim API Call.</returns>
-        private string PrepareStreetStringForAPI(string street)
+        private string PrepareStreetStringForApi(string street)
         {
             // Dictionary containing directions that can be converted to their abbreviated counterpart
             // Nominatim requires street name direction suffix be abbreviated
@@ -259,30 +272,30 @@ namespace H.Avalonia.Services
             string content = null;
             try 
             {
-                    // Run a task that forces the Nominatim API to timeout if the timeout property isn't able to gracefully time out the API call. If the API
-                    // does not respond within this time (slow internet connection or API issues), we return null.
-                    var getNominatimApi = Task.Run(() => DownloadNominatimApiData(apiUrl));
-                    if (getNominatimApi.Wait(TimeSpan.FromSeconds(ApiTimeout)))
+                // Run a task that forces the Nominatim API to timeout if the timeout property isn't able to gracefully time out the API call. If the API
+                // does not respond within this time (slow internet connection or API issues), we return null.
+                var getNominatimApi = Task.Run(() => DownloadNominatimApiData(apiUrl));
+                if (getNominatimApi.Wait(TimeSpan.FromSeconds(ApiTimeout)))
+                {
+                    _logger.LogInformation($"{nameof(NominatimGeocoderService)}.{nameof(GetCoordinates)}, Nominatim API Task Status: {getNominatimApi.Status}");
+                    content = getNominatimApi.Result;
+                    // Check if content returned by API is empty, if so do not return
+                    if (content == "[]")
                     {
-                        _logger.LogInformation($"{nameof(NominatimGeocoderService)}.{nameof(GetCoordinates)}, Nominatim API Task Status: {getNominatimApi.Status}");
-                        content = getNominatimApi.Result;
-                        // Check if content returned by API is empty, if so do not return
-                        if (content == "[]")
-                        {
-                            _searchAttemptsMade += 1; // Increment search attempts since we got an empty response
-                            _logger.LogError($"{nameof(NominatimGeocoderService)}.{nameof(DownloadNominatimApiData)}: API content empty. Address not valid.");
-                            _notificationManagerService.ShowToast(H.Core.Properties.Resources.CoordinateError, H.Core.Properties.Resources.CantFindCoordinate, NotificationType.Error);
-                            return null;
-                        }
-                        _searchAttemptsMade = 0; // Reset the search attempts since we were successful.
-                        CacheData(content, street, municipality, province, postalCode, county, country);
+                        _searchAttemptsMade += 1; // Increment search attempts since we got an empty response
+                        _logger.LogError($"{nameof(NominatimGeocoderService)}.{nameof(DownloadNominatimApiData)}: API content empty. Address not valid.");
+                        _notificationManagerService.ShowToast(H.Core.Properties.Resources.InvalidAddress, H.Core.Properties.Resources.CantFindCoordinate, NotificationType.Error);
+                        return null;
                     }
-                    else
-                    {
-                        _notificationManagerService.ShowToast(H.Core.Properties.Resources.ErrorCouldNotReachNominatimApi, H.Core.Properties.Resources.ErrorCouldNotReachNominatimApiDescription, NotificationType.Error);
-                        _logger.LogError($"{nameof(NominatimGeocoderService)}.{nameof(GetCoordinates)}, Nominatim API Task Status: {getNominatimApi.Status}");
-                        throw new Exception("Nominatim API couldn't be reached or connection timed out.");
-                    }
+                    _searchAttemptsMade = 0; // Reset the search attempts since we were successful.
+                    CacheData(content, street, municipality, province, postalCode, county, country);
+                }
+                else
+                {
+                    _notificationManagerService.ShowToast(H.Core.Properties.Resources.ErrorCouldNotReachNominatimApi, H.Core.Properties.Resources.ErrorCouldNotReachNominatimApiDescription, NotificationType.Error);
+                    _logger.LogError($"{nameof(NominatimGeocoderService)}.{nameof(GetCoordinates)}, Nominatim API Task Status: {getNominatimApi.Status}");
+                    throw new Exception("Nominatim API couldn't be reached or connection timed out.");
+                }
             }
             catch (Exception e)
             {
@@ -331,6 +344,7 @@ namespace H.Avalonia.Services
         /// <returns>The path based off of the given address.</returns>
         private string GetCachePath(string street, string municipality, Province province, string postalCode, string? county, string country)
         {
+            // If county is not null, we prefix it with an underscore to separate it from the municipality in the file name
             string countyStringAppend = string.Empty;
             if (county != null)
             {
@@ -398,6 +412,114 @@ namespace H.Avalonia.Services
             var lon = double.Parse(jObject["lon"]?.ToString());
             return (latitude: lat, longitude: lon);
         }
+
+        private void InputValidation(string street, string municipality, string postalCode, string? county, string country)
+        {
+            street = InputValidation(street, InputValidationType.Address);
+            municipality = InputValidation(municipality, InputValidationType.Municipality);
+            postalCode = InputValidation(postalCode, InputValidationType.PostalCode);
+            county = InputValidation(county, InputValidationType.County);
+            country = InputValidation(country, InputValidationType.Country);
+        }
+
+        private string InputValidation(string inputString, InputValidationType inputType = InputValidationType.General)
+        {
+            // Basic null/whitespace check
+            if (string.IsNullOrWhiteSpace(inputString))
+            {
+                return string.Empty;
+            }
+
+            // Remove potentially dangerous characters and sequences
+            inputString = RemoveMaliciousPatterns(inputString);
+
+            // Apply input-type specific validation
+            return ApplySpecificValidation(inputString, inputType);
+        }
+
+        private string RemoveMaliciousPatterns(string input)
+        {
+            // Remove common injection patterns
+            var dangerousPatterns = new[]
+            {
+                @"<script[^>]*>.*?</script>",  // Script tags
+                @"javascript:",                // Javascript protocols
+                @"vbscript:",                  // VBScript protocols
+                @"on\w+\s*=",                 // Event handlers
+                @"expression\s*\(",           // CSS expressions
+                @"url\s*\(",                  // URL functions
+                @"@import",                    // CSS imports
+                @"<!--.*?-->",                 // HTML comments
+                @"<[^>]*>",                   // All HTML/XML tags
+                @"&[#\w]+;",                  // HTML entities
+                @"\{\{.*?\}\}",               // Template injection patterns
+                @"\$\{.*?\}",                 // Variable substitution
+                @"<%.*?%>",                   // Server-side includes
+                @"\[\[.*?\]\]",               // Wiki-style markup
+                @"' OR '1'='1"                // SQL injection pattern
+            };
+
+            foreach (var pattern in dangerousPatterns)
+            {
+                input = Regex.Replace(input, pattern, "", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            }
+
+            // Remove control characters (except common whitespace)
+            input = Regex.Replace(input, @"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]", "");
+
+            // Normalize whitespace
+            input = Regex.Replace(input, @"\s+", " ").Trim();
+
+            return input;
+        }
+
+        private string ApplySpecificValidation(string input, InputValidationType inputType)
+        {
+            switch (inputType)
+            {
+                case InputValidationType.Address:
+                    // Allow alphanumeric, spaces, hyphens, apostrophes, periods, commas, and common address characters
+                    return Regex.Replace(input, @"[^a-zA-Z0-9\s\-'.,#/\\()&]", "");
+
+                case InputValidationType.Municipality:
+                    // Allow alphanumeric, spaces, hyphens, apostrophes, and periods
+                    return Regex.Replace(input, @"[^a-zA-Z0-9\s\-'.]", "");
+
+                case InputValidationType.PostalCode:
+                {
+                        // Allow alphanumeric and spaces only
+                        // Canadian postal code pattern: Letter-Digit-Letter-Digit-Letter-Digit
+                        var canadianRegexPattern = @"^[A-Z]\d[A-Z]\d[A-Z]\d$";
+
+                        // Remove all whitespace and convert to uppercase
+                        input = input.Replace(" ", "").ToUpperInvariant();
+                        // Check if it matches Canadian format
+                        if (Regex.IsMatch(input, canadianRegexPattern))
+                        {
+                            // Format Canadian postal code with space
+                            if (input.Length == 6)
+                            {
+                                return $"{input.Substring(0, 3)} {input.Substring(3, 3)}";
+                            }
+                        }
+                        return Regex.Replace(input, @"[^a-zA-Z0-9\s]", "");
+                }
+
+                case InputValidationType.Country:
+                    // Allow only letters, spaces, and basic punctuation
+                    return Regex.Replace(input, @"[^a-zA-Z\s\-'.]", "");
+
+                case InputValidationType.County:
+                    // Similar to municipality but may include "County", "Parish", etc.
+                    return Regex.Replace(input, @"[^a-zA-Z0-9\s\-'.]", "");
+
+                case InputValidationType.General:
+                default:
+                    // Allow only alphanumeric and basic punctuation
+                    return Regex.Replace(input, @"[^a-zA-Z0-9\s\-'.,]", "");
+            }
+        }
+
         #endregion
     }
 }

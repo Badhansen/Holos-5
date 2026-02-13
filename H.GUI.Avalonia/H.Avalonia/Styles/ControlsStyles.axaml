@@ -162,7 +162,7 @@
 
 	<Style Selector="TextBlock.step-number-description">
 		<Setter Property="FontSize" Value="16"/>
-		<Setter Property="FontStyle" Value="Normal"/>
+		<Setter Property="FontWeight" Value="Bold"/>
 		<Setter Property="Foreground" Value="#605D5D"/>
 		<Setter Property="Margin" Value="0,0,4,0"/>
 	</Style>
@@ -221,9 +221,16 @@
 		<Setter Property="VerticalContentAlignment" Value="Center"/>
 		<Setter Property="HorizontalContentAlignment" Value="Left"/>
 		<Setter Property="HorizontalAlignment" Value="Left"/>
-		<Setter Property="Foreground" Value="RoyalBlue"/>
+		<Setter Property="Foreground" Value="Black"/>
 		<Setter Property="MinWidth" Value="220"/>
-		<Setter Property="FontWeight" Value="Medium"/>
+		<Setter Property="FontWeight" Value="Normal"/>
+	</Style>
+
+	<!-- TextBlock style for input labels (used in grids with SharedSizeGroup) -->
+	<Style Selector="TextBlock.input-label-text">
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Foreground" Value="Black"/>
+		<Setter Property="FontWeight" Value="Normal"/>
 	</Style>
 
 	<!-- Style for unit labels -->
@@ -501,5 +508,19 @@
 		<Setter Property="Foreground" Value="White"/>
 		<Setter Property="HorizontalAlignment" Value="Center"/>
 		<Setter Property="VerticalAlignment" Value="Center"/>
+	</Style>
+
+	<!-- Section Heading Styles - For subsections within step containers -->
+	<Style Selector="TextBlock.section-heading">
+		<Setter Property="FontWeight" Value="Medium"/>
+		<Setter Property="FontSize" Value="13"/>
+		<Setter Property="Foreground" Value="#333333"/>
+		<Setter Property="Margin" Value="0,0,0,12"/>
+	</Style>
+
+	<Style Selector="TextBlock.stage-section-heading">
+		<Setter Property="FontWeight" Value="Medium"/>
+		<Setter Property="FontSize" Value="14"/>
+		<Setter Property="Margin" Value="0,0,0,16"/>
 	</Style>
 </Styles>

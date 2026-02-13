@@ -37,34 +37,64 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                         CornerRadius="6" Padding="16" Margin="0,0,0,20"
                         IsVisible="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode}">
                   <StackPanel>
-                    <TextBlock Text="Select Group to Configure:"
-                               FontWeight="SemiBold"
-                               FontSize="14"
-                               Foreground="#2196F3"
-                               Margin="0,0,0,8"/>
-                    <TextBlock Text="You have multiple groups. Select which group's management practices you want to configure:"
-                               FontSize="12"
-                               Foreground="#666"
-                               TextWrapping="Wrap"
-                               Margin="0,0,0,12"/>
-                    <ComboBox ItemsSource="{Binding SelectedDairyComponentDto.CalfPopulationGroups}"
-                              SelectedItem="{Binding SelectedCalfGroup}"
-                              PlaceholderText="Choose a group..."
-                              HorizontalAlignment="Stretch"
-                              MinWidth="300">
-                      <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                          <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding GroupName}" FontWeight="SemiBold" Margin="0,0,8,0"/>
-                            <TextBlock Text="-" Foreground="#999" Margin="0,0,8,0"/>
-                            <TextBlock>
-                              <Run Text="{Binding NumberOfAnimals}"/>
-                              <Run Text=" animals" Foreground="#666"/>
-                            </TextBlock>
-                          </StackPanel>
-                        </DataTemplate>
-                      </ComboBox.ItemTemplate>
-                    </ComboBox>
+                    <!-- Show ComboBox only when groups exist -->
+                    <StackPanel IsVisible="{Binding SelectedDairyComponentDto.CalfPopulationGroups.Count}">
+                      <TextBlock Text="Select Group to Configure:"
+                                 FontWeight="SemiBold"
+                                 FontSize="14"
+                                 Foreground="#2196F3"
+                                 Margin="0,0,0,8"/>
+                      <TextBlock Text="You have multiple groups. Select which group's management practices you want to configure:"
+                                 FontSize="12"
+                                 Foreground="#666"
+                                 TextWrapping="Wrap"
+                                 Margin="0,0,0,12"/>
+                      <ComboBox ItemsSource="{Binding SelectedDairyComponentDto.CalfPopulationGroups}"
+                                SelectedItem="{Binding SelectedCalfGroup}"
+                                PlaceholderText="Choose a group..."
+                                HorizontalAlignment="Stretch"
+                                MinWidth="300">
+                        <ComboBox.ItemTemplate>
+                          <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                              <TextBlock Text="{Binding GroupName}" FontWeight="SemiBold" Margin="0,0,8,0"/>
+                              <TextBlock Text="-" Foreground="#999" Margin="0,0,8,0"/>
+                              <TextBlock>
+                                <Run Text="{Binding NumberOfAnimals}"/>
+                                <Run Text=" animals" Foreground="#666"/>
+                              </TextBlock>
+                            </StackPanel>
+                          </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                      </ComboBox>
+                    </StackPanel>
+                    
+                    <!-- No Groups Available Message -->
+                    <StackPanel HorizontalAlignment="Center">
+                      <StackPanel.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                          <Binding Path="SelectedDairyComponentDto.UseAdvancedPopulationMode"/>
+                          <Binding Path="!SelectedDairyComponentDto.CalfPopulationGroups.Count"/>
+                        </MultiBinding>
+                      </StackPanel.IsVisible>
+                      <TextBlock Text="⚠️ No Groups Defined"
+                                 FontSize="16"
+                                 FontWeight="Bold"
+                                 Foreground="#856404"
+                                 HorizontalAlignment="Center"
+                                 Margin="0,0,0,8"/>
+                      <TextBlock TextWrapping="Wrap"
+                                 FontSize="13"
+                                 Foreground="#856404"
+                                 TextAlignment="Center"
+                                 MaxWidth="400">
+                        <Run Text="You haven't added any groups yet. Go back to "/>
+                        <Run Text="Step 2" FontWeight="Bold"/>
+                        <Run Text=" above and click '"/>
+                        <Run Text="Add New Group" FontWeight="SemiBold"/>
+                        <Run Text="' to create groups before configuring management practices."/>
+                      </TextBlock>
+                    </StackPanel>
                   </StackPanel>
                 </Border>
                 
@@ -76,13 +106,14 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                 </Panel>
                 
                 <!-- No Group Selected Message (Advanced Mode Only) -->
+                <!-- Only show when in Advanced mode, groups exist, but none is selected -->
                 <Border Background="#FFF3CD" BorderBrush="#FFC107" BorderThickness="1"
                         CornerRadius="6" Padding="20">
-                  <!-- MultiBinding: Show only if (UseAdvancedPopulationMode=true AND SelectedCalfGroup=null) -->
                   <Border.IsVisible>
                     <MultiBinding Converter="{x:Static BoolConverters.And}">
                       <Binding Path="SelectedDairyComponentDto.UseAdvancedPopulationMode"/>
                       <Binding Path="SelectedCalfGroup" Converter="{x:Static ObjectConverters.IsNull}"/>
+                      <Binding Path="SelectedDairyComponentDto.CalfPopulationGroups.Count"/>
                     </MultiBinding>
                   </Border.IsVisible>
                   <StackPanel HorizontalAlignment="Center">
@@ -127,34 +158,64 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                         CornerRadius="6" Padding="16" Margin="0,0,0,20"
                         IsVisible="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode}">
                   <StackPanel>
-                    <TextBlock Text="Select Group to Configure:"
-                               FontWeight="SemiBold"
-                               FontSize="14"
-                               Foreground="#7B1FA2"
-                               Margin="0,0,0,8"/>
-                    <TextBlock Text="You have multiple groups. Select which group's management practices you want to configure:"
-                               FontSize="12"
-                               Foreground="#666"
-                               TextWrapping="Wrap"
-                               Margin="0,0,0,12"/>
-                    <ComboBox ItemsSource="{Binding SelectedDairyComponentDto.HeiferPopulationGroups}"
-                              SelectedItem="{Binding SelectedHeiferGroup}"
-                              PlaceholderText="Choose a group..."
-                              HorizontalAlignment="Stretch"
-                              MinWidth="300">
-                      <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                          <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding GroupName}" FontWeight="SemiBold" Margin="0,0,8,0"/>
-                            <TextBlock Text="-" Foreground="#999" Margin="0,0,8,0"/>
-                            <TextBlock>
-                              <Run Text="{Binding NumberOfAnimals}"/>
-                              <Run Text=" animals" Foreground="#666"/>
-                            </TextBlock>
-                          </StackPanel>
-                        </DataTemplate>
-                      </ComboBox.ItemTemplate>
-                    </ComboBox>
+                    <!-- Show ComboBox only when groups exist -->
+                    <StackPanel IsVisible="{Binding SelectedDairyComponentDto.HeiferPopulationGroups.Count}">
+                      <TextBlock Text="Select Group to Configure:"
+                                 FontWeight="SemiBold"
+                                 FontSize="14"
+                                 Foreground="#7B1FA2"
+                                 Margin="0,0,0,8"/>
+                      <TextBlock Text="You have multiple groups. Select which group's management practices you want to configure:"
+                                 FontSize="12"
+                                 Foreground="#666"
+                                 TextWrapping="Wrap"
+                                 Margin="0,0,0,12"/>
+                      <ComboBox ItemsSource="{Binding SelectedDairyComponentDto.HeiferPopulationGroups}"
+                                SelectedItem="{Binding SelectedHeiferGroup}"
+                                PlaceholderText="Choose a group..."
+                                HorizontalAlignment="Stretch"
+                                MinWidth="300">
+                        <ComboBox.ItemTemplate>
+                          <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                              <TextBlock Text="{Binding GroupName}" FontWeight="SemiBold" Margin="0,0,8,0"/>
+                              <TextBlock Text="-" Foreground="#999" Margin="0,0,8,0"/>
+                              <TextBlock>
+                                <Run Text="{Binding NumberOfAnimals}"/>
+                                <Run Text=" animals" Foreground="#666"/>
+                              </TextBlock>
+                            </StackPanel>
+                          </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                      </ComboBox>
+                    </StackPanel>
+                    
+                    <!-- No Groups Available Message -->
+                    <StackPanel HorizontalAlignment="Center">
+                      <StackPanel.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                          <Binding Path="SelectedDairyComponentDto.UseAdvancedPopulationMode"/>
+                          <Binding Path="!SelectedDairyComponentDto.HeiferPopulationGroups.Count"/>
+                        </MultiBinding>
+                      </StackPanel.IsVisible>
+                      <TextBlock Text="⚠️ No Groups Defined"
+                                 FontSize="16"
+                                 FontWeight="Bold"
+                                 Foreground="#856404"
+                                 HorizontalAlignment="Center"
+                                 Margin="0,0,0,8"/>
+                      <TextBlock TextWrapping="Wrap"
+                                 FontSize="13"
+                                 Foreground="#856404"
+                                 TextAlignment="Center"
+                                 MaxWidth="400">
+                        <Run Text="You haven't added any groups yet. Go back to "/>
+                        <Run Text="Step 2" FontWeight="Bold"/>
+                        <Run Text=" above and click '"/>
+                        <Run Text="Add New Group" FontWeight="SemiBold"/>
+                        <Run Text="' to create groups before configuring management practices."/>
+                      </TextBlock>
+                    </StackPanel>
                   </StackPanel>
                 </Border>
                 
@@ -166,13 +227,17 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                 </Panel>
                 
                 <!-- No Group Selected Message (Advanced Mode Only) -->
-                <Border Background="#FFF3CD" BorderBrush="#FFC107" BorderThickness="1"
-                        CornerRadius="6" Padding="20">
-                  <!-- MultiBinding: Show only if (UseAdvancedPopulationMode=true AND SelectedHeiferGroup=null) -->
+                <!-- Only show when in Advanced mode, groups exist, but none is selected -->
+                <Border Background="#FFF3CD" 
+                        BorderBrush="#FFC107" 
+                        BorderThickness="1"
+                        CornerRadius="6" 
+                        Padding="20">
                   <Border.IsVisible>
                     <MultiBinding Converter="{x:Static BoolConverters.And}">
                       <Binding Path="SelectedDairyComponentDto.UseAdvancedPopulationMode"/>
                       <Binding Path="SelectedHeiferGroup" Converter="{x:Static ObjectConverters.IsNull}"/>
+                      <Binding Path="SelectedDairyComponentDto.HeiferPopulationGroups.Count"/>
                     </MultiBinding>
                   </Border.IsVisible>
                   <StackPanel HorizontalAlignment="Center">
@@ -217,34 +282,64 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                         CornerRadius="6" Padding="16" Margin="0,0,0,20"
                         IsVisible="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode}">
                   <StackPanel>
-                    <TextBlock Text="Select Group to Configure:"
-                               FontWeight="SemiBold"
-                               FontSize="14"
-                               Foreground="#388E3C"
-                               Margin="0,0,0,8"/>
-                    <TextBlock Text="You have multiple groups. Select which group's management practices you want to configure:"
-                               FontSize="12"
-                               Foreground="#666"
-                               TextWrapping="Wrap"
-                               Margin="0,0,0,12"/>
-                    <ComboBox ItemsSource="{Binding SelectedDairyComponentDto.LactatingPopulationGroups}"
-                              SelectedItem="{Binding SelectedLactatingGroup}"
-                              PlaceholderText="Choose a group..."
-                              HorizontalAlignment="Stretch"
-                              MinWidth="300">
-                      <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                          <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding GroupName}" FontWeight="SemiBold" Margin="0,0,8,0"/>
-                            <TextBlock Text="-" Foreground="#999" Margin="0,0,8,0"/>
-                            <TextBlock>
-                              <Run Text="{Binding NumberOfAnimals}"/>
-                              <Run Text=" animals" Foreground="#666"/>
-                            </TextBlock>
-                          </StackPanel>
-                        </DataTemplate>
-                      </ComboBox.ItemTemplate>
-                    </ComboBox>
+                    <!-- Show ComboBox only when groups exist -->
+                    <StackPanel IsVisible="{Binding SelectedDairyComponentDto.LactatingPopulationGroups.Count}">
+                      <TextBlock Text="Select Group to Configure:"
+                                 FontWeight="SemiBold"
+                                 FontSize="14"
+                                 Foreground="#388E3C"
+                                 Margin="0,0,0,8"/>
+                      <TextBlock Text="You have multiple groups. Select which group's management practices you want to configure:"
+                                 FontSize="12"
+                                 Foreground="#666"
+                                 TextWrapping="Wrap"
+                                 Margin="0,0,0,12"/>
+                      <ComboBox ItemsSource="{Binding SelectedDairyComponentDto.LactatingPopulationGroups}"
+                                SelectedItem="{Binding SelectedLactatingGroup}"
+                                PlaceholderText="Choose a group..."
+                                HorizontalAlignment="Stretch"
+                                MinWidth="300">
+                        <ComboBox.ItemTemplate>
+                          <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                              <TextBlock Text="{Binding GroupName}" FontWeight="SemiBold" Margin="0,0,8,0"/>
+                              <TextBlock Text="-" Foreground="#999" Margin="0,0,8,0"/>
+                              <TextBlock>
+                                <Run Text="{Binding NumberOfAnimals}"/>
+                                <Run Text=" animals" Foreground="#666"/>
+                              </TextBlock>
+                            </StackPanel>
+                          </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                      </ComboBox>
+                    </StackPanel>
+                    
+                    <!-- No Groups Available Message -->
+                    <StackPanel HorizontalAlignment="Center">
+                      <StackPanel.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                          <Binding Path="SelectedDairyComponentDto.UseAdvancedPopulationMode"/>
+                          <Binding Path="!SelectedDairyComponentDto.LactatingPopulationGroups.Count"/>
+                        </MultiBinding>
+                      </StackPanel.IsVisible>
+                      <TextBlock Text="⚠️ No Groups Defined"
+                                 FontSize="16"
+                                 FontWeight="Bold"
+                                 Foreground="#856404"
+                                 HorizontalAlignment="Center"
+                                 Margin="0,0,0,8"/>
+                      <TextBlock TextWrapping="Wrap"
+                                 FontSize="13"
+                                 Foreground="#856404"
+                                 TextAlignment="Center"
+                                 MaxWidth="400">
+                        <Run Text="You haven't added any groups yet. Go back to "/>
+                        <Run Text="Step 2" FontWeight="Bold"/>
+                        <Run Text=" above and click '"/>
+                        <Run Text="Add New Group" FontWeight="SemiBold"/>
+                        <Run Text="' to create groups before configuring management practices."/>
+                      </TextBlock>
+                    </StackPanel>
                   </StackPanel>
                 </Border>
                 
@@ -256,13 +351,14 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                 </Panel>
                 
                 <!-- No Group Selected Message (Advanced Mode Only) -->
+                <!-- Only show when in Advanced mode, groups exist, but none is selected -->
                 <Border Background="#FFF3CD" BorderBrush="#FFC107" BorderThickness="1"
                         CornerRadius="6" Padding="20">
-                  <!-- MultiBinding: Show only if (UseAdvancedPopulationMode=true AND SelectedLactatingGroup=null) -->
                   <Border.IsVisible>
                     <MultiBinding Converter="{x:Static BoolConverters.And}">
                       <Binding Path="SelectedDairyComponentDto.UseAdvancedPopulationMode"/>
                       <Binding Path="SelectedLactatingGroup" Converter="{x:Static ObjectConverters.IsNull}"/>
+                      <Binding Path="SelectedDairyComponentDto.LactatingPopulationGroups.Count"/>
                     </MultiBinding>
                   </Border.IsVisible>
                   <StackPanel HorizontalAlignment="Center">
@@ -307,34 +403,64 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                         CornerRadius="6" Padding="16" Margin="0,0,0,20"
                         IsVisible="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode}">
                   <StackPanel>
-                    <TextBlock Text="Select Group to Configure:"
-                               FontWeight="SemiBold"
-                               FontSize="14"
-                               Foreground="#F57C00"
-                               Margin="0,0,0,8"/>
-                    <TextBlock Text="You have multiple groups. Select which group's management practices you want to configure:"
-                               FontSize="12"
-                               Foreground="#666"
-                               TextWrapping="Wrap"
-                               Margin="0,0,0,12"/>
-                    <ComboBox ItemsSource="{Binding SelectedDairyComponentDto.DryPopulationGroups}"
-                              SelectedItem="{Binding SelectedDryGroup}"
-                              PlaceholderText="Choose a group..."
-                              HorizontalAlignment="Stretch"
-                              MinWidth="300">
-                      <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                          <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding GroupName}" FontWeight="SemiBold" Margin="0,0,8,0"/>
-                            <TextBlock Text="-" Foreground="#999" Margin="0,0,8,0"/>
-                            <TextBlock>
-                              <Run Text="{Binding NumberOfAnimals}"/>
-                              <Run Text=" animals" Foreground="#666"/>
-                            </TextBlock>
-                          </StackPanel>
-                        </DataTemplate>
-                      </ComboBox.ItemTemplate>
-                    </ComboBox>
+                    <!-- Show ComboBox only when groups exist -->
+                    <StackPanel IsVisible="{Binding SelectedDairyComponentDto.DryPopulationGroups.Count}">
+                      <TextBlock Text="Select Group to Configure:"
+                                 FontWeight="SemiBold"
+                                 FontSize="14"
+                                 Foreground="#F57C00"
+                                 Margin="0,0,0,8"/>
+                      <TextBlock Text="You have multiple groups. Select which group's management practices you want to configure:"
+                                 FontSize="12"
+                                 Foreground="#666"
+                                 TextWrapping="Wrap"
+                                 Margin="0,0,0,12"/>
+                      <ComboBox ItemsSource="{Binding SelectedDairyComponentDto.DryPopulationGroups}"
+                                SelectedItem="{Binding SelectedDryGroup}"
+                                PlaceholderText="Choose a group..."
+                                HorizontalAlignment="Stretch"
+                                MinWidth="300">
+                        <ComboBox.ItemTemplate>
+                          <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                              <TextBlock Text="{Binding GroupName}" FontWeight="SemiBold" Margin="0,0,8,0"/>
+                              <TextBlock Text="-" Foreground="#999" Margin="0,0,8,0"/>
+                              <TextBlock>
+                                <Run Text="{Binding NumberOfAnimals}"/>
+                                <Run Text=" animals" Foreground="#666"/>
+                              </TextBlock>
+                            </StackPanel>
+                          </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                      </ComboBox>
+                    </StackPanel>
+                    
+                    <!-- No Groups Available Message -->
+                    <StackPanel HorizontalAlignment="Center">
+                      <StackPanel.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                          <Binding Path="SelectedDairyComponentDto.UseAdvancedPopulationMode"/>
+                          <Binding Path="!SelectedDairyComponentDto.DryPopulationGroups.Count"/>
+                        </MultiBinding>
+                      </StackPanel.IsVisible>
+                      <TextBlock Text="⚠️ No Groups Defined"
+                                 FontSize="16"
+                                 FontWeight="Bold"
+                                 Foreground="#856404"
+                                 HorizontalAlignment="Center"
+                                 Margin="0,0,0,8"/>
+                      <TextBlock TextWrapping="Wrap"
+                                 FontSize="13"
+                                 Foreground="#856404"
+                                 TextAlignment="Center"
+                                 MaxWidth="400">
+                        <Run Text="You haven't added any groups yet. Go back to "/>
+                        <Run Text="Step 2" FontWeight="Bold"/>
+                        <Run Text=" above and click '"/>
+                        <Run Text="Add New Group" FontWeight="SemiBold"/>
+                        <Run Text="' to create groups before configuring management practices."/>
+                      </TextBlock>
+                    </StackPanel>
                   </StackPanel>
                 </Border>
                 
@@ -346,13 +472,14 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                 </Panel>
                 
                 <!-- No Group Selected Message (Advanced Mode Only) -->
+                <!-- Only show when in Advanced mode, groups exist, but none is selected -->
                 <Border Background="#FFF3CD" BorderBrush="#FFC107" BorderThickness="1"
                         CornerRadius="6" Padding="20">
-                  <!-- MultiBinding: Show only if (UseAdvancedPopulationMode=true AND SelectedDryGroup=null) -->
                   <Border.IsVisible>
                     <MultiBinding Converter="{x:Static BoolConverters.And}">
                       <Binding Path="SelectedDairyComponentDto.UseAdvancedPopulationMode"/>
                       <Binding Path="SelectedDryGroup" Converter="{x:Static ObjectConverters.IsNull}"/>
+                      <Binding Path="SelectedDairyComponentDto.DryPopulationGroups.Count"/>
                     </MultiBinding>
                   </Border.IsVisible>
                   <StackPanel HorizontalAlignment="Center">

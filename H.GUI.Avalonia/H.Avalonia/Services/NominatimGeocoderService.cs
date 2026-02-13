@@ -215,7 +215,7 @@ namespace H.Avalonia.Services
             municipality = Uri.EscapeDataString(municipality);
             string cityParameter = $"&city={municipality}";
 
-            string provinceString = Uri.EscapeDataString(province.ToString());
+            string provinceString = Uri.EscapeDataString(FormatProvinceStringForApiCall(province));
             string stateParameter = $"&state={provinceString}";
 
             postalCode = Uri.EscapeDataString(postalCode);
@@ -237,6 +237,25 @@ namespace H.Avalonia.Services
 
             string Url = $"https://nominatim.openstreetmap.org/search?{streetParameter}{cityParameter}{countyParameter}{stateParameter}{countryParameter}{postalCodeParameter}&format={format}&addressdetails=1&limit=1";
             return Url;
+        }
+
+        /// <summary>
+        /// Takes in province enum and outputs province in string form containing spaces if province contains space in name (Nova Scotia) as converting enum directly to string lacks space and causes issue wih API call
+        /// </summary>
+        /// <param name="province">The province being converted to api formatted string</param>
+        /// <returns>The formatted province string</returns>
+        private string FormatProvinceStringForApiCall(Province province)
+        {
+            switch (province)
+            {
+                case Province.NovaScotia:
+                    return "Nova Scotia";
+                case Province.PrinceEdwardIsland:
+                    return "Prince Edward Island";
+                default:
+                    return province.ToString();
+            }
+
         }
 
         /// <summary>
@@ -350,7 +369,7 @@ namespace H.Avalonia.Services
             {
                 countyStringAppend = $"_{county}";
             }
-            var joinedAddress = street+"_"+municipality+countyStringAppend+"_"+province+"_"+postalCode+"_"+country;
+            var joinedAddress = (street+"_"+municipality+countyStringAppend+"_"+province+"_"+postalCode+"_"+country).ToLower();
             // Sanitize address for file name, replace common address characters with underscores.
             var invalidCharacters = Path.GetInvalidFileNameChars();
             var cleanedFileName = invalidCharacters.Aggregate(joinedAddress, (current, c) => current.Replace(c, '_')).Replace(" ", "_").Replace(",", "");

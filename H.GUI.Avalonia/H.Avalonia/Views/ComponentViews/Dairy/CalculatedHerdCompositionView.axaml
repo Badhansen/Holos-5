@@ -309,14 +309,14 @@
 
       <!-- Mode Toggle -->
       <StackPanel Margin="0,20,0,20">
-        <TextBlock Text="Entry Mode:"
+        <TextBlock Text="How many animal groups would you like to create?"
                    Classes="section-heading"/>
         <StackPanel Orientation="Horizontal">
-          <RadioButton Content="Simple (Single Group)"
+          <RadioButton Content="A single animal group"
                        IsChecked="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode, Converter={StaticResource InverseBooleanConverter}}"
                        GroupName="PopulationMode"
                        Margin="0,0,20,0"/>
-          <RadioButton Content="Advanced (Multiple Groups)"
+          <RadioButton Content="Multiple groups"
                        IsChecked="{Binding SelectedDairyComponentDto.UseAdvancedPopulationMode}"
                        GroupName="PopulationMode"/>
         </StackPanel>
@@ -385,76 +385,72 @@
                   </TextBlock>
 
                   <!-- Groups List -->
-                  <Border BorderBrush="#DDD" BorderThickness="1"
-                          CornerRadius="4" Padding="12"
-                          Background="White"
-                          IsVisible="{Binding SelectedDairyComponentDto.CalfPopulationGroups.Count}">
-                <StackPanel>
-                  <!-- Instruction text -->
-                  <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#888" 
-                             FontStyle="Italic" Margin="0,0,0,12">
-                    <Run Text="Enter a descriptive name for each group and specify the number of animals in that group."/>
-                  </TextBlock>
+                  <StackPanel IsVisible="{Binding SelectedDairyComponentDto.CalfPopulationGroups.Count}"
+                              Margin="0,0,0,12">
+                    <!-- Instruction text -->
+                    <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#888" 
+                               FontStyle="Italic" Margin="0,0,0,12">
+                      <Run Text="Enter a descriptive name for each group and specify the number of animals in that group."/>
+                    </TextBlock>
 
-                  <!-- Header Row -->
-                  <Grid Margin="0,0,0,8">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="2*"/>
-                      <ColumnDefinition Width="*"/>
-                      <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    
-                    <TextBlock Grid.Column="0" Text="Group Name"
-                               FontWeight="Medium" FontSize="11"
-                               Foreground="#666"/>
-                    <TextBlock Grid.Column="1" Text="Animals"
-                               FontWeight="Medium" FontSize="11"
-                               Foreground="#666"/>
-                    <TextBlock Grid.Column="2" Text="Actions"
-                               FontWeight="Medium" FontSize="11"
-                               Foreground="#666"/>
-                  </Grid>
-                  
-                  <!-- Groups ItemsControl -->
-                  <ItemsControl ItemsSource="{Binding SelectedDairyComponentDto.CalfPopulationGroups}">
-                    <ItemsControl.ItemTemplate>
-                      <DataTemplate>
-                        <Grid Margin="0,4">
-                          <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                          </Grid.ColumnDefinitions>
-                          
-                          <!-- Group Name TextBox -->
-                          <TextBox Grid.Column="0"
-                                   Text="{Binding GroupName}"
-                                   Watermark="Enter group name"
-                                   Margin="0,0,8,0"/>
-                          
-                          <!-- Animals NumericUpDown -->
-                          <NumericUpDown Grid.Column="1"
-                                         Value="{Binding NumberOfAnimals}"
-                                         Minimum="0" Maximum="10000"
-                                         FormatString="0" Increment="1"
-                                         Margin="0,0,8,0"/>
-                          
-                          <!-- Delete Button -->
-                          <Button Grid.Column="2"
-                                  Command="{Binding $parent[ItemsControl].((dairyVm:DairyComponentViewModel)DataContext).RemoveGroupCommand}"
-                                  CommandParameter="{Binding}"
-                                  Background="Transparent"
-                                  ToolTip.Tip="Remove group"
-                                  Padding="4">
-                            <Path Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
-                                  Fill="Red" Width="16" Height="16" Stretch="Uniform"/>
-                          </Button>
-                        </Grid>
-                      </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                  </ItemsControl>
-                      </StackPanel>
-                    </Border>
+                    <!-- Header Row -->
+                    <Grid Margin="0,0,0,8">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="250"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="Auto"/>
+                      </Grid.ColumnDefinitions>
+
+                      <TextBlock Grid.Column="0" Text="Group Name"
+                                 FontWeight="Medium" FontSize="11"
+                                 Foreground="#666"/>
+                      <TextBlock Grid.Column="1" Text="Animals"
+                                 FontWeight="Medium" FontSize="11"
+                                 Foreground="#666"/>
+                      <TextBlock Grid.Column="2" Text="Actions"
+                                 FontWeight="Medium" FontSize="11"
+                                 Foreground="#666"/>
+                    </Grid>
+
+                    <!-- Groups ItemsControl -->
+                    <ItemsControl ItemsSource="{Binding SelectedDairyComponentDto.CalfPopulationGroups}">
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                          <Grid Margin="0,4">
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="250"/>
+                              <ColumnDefinition Width="120"/>
+                              <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Group Name TextBox -->
+                            <TextBox Grid.Column="0"
+                                     Text="{Binding GroupName}"
+                                     Watermark="Enter group name"
+                                     Margin="0,0,8,0"/>
+
+                            <!-- Animals NumericUpDown -->
+                            <NumericUpDown Grid.Column="1"
+                                           Value="{Binding NumberOfAnimals}"
+                                           Minimum="0" Maximum="10000"
+                                           FormatString="0" Increment="1"
+                                           Margin="0,0,8,0"/>
+
+                            <!-- Delete Button -->
+                            <Button Grid.Column="2"
+                                    Command="{Binding $parent[ItemsControl].((dairyVm:DairyComponentViewModel)DataContext).RemoveGroupCommand}"
+                                    CommandParameter="{Binding}"
+                                    Background="Transparent"
+                                    ToolTip.Tip="Remove group"
+                                    Padding="4">
+                              <Path Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
+                                    Fill="Red" Width="16" Height="16" Stretch="Uniform"/>
+                            </Button>
+                          </Grid>
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                  </StackPanel>
 
                     <!-- Add Group Button -->
                     <Button Content="Add New Group"
@@ -522,67 +518,64 @@
                 <Run Text="You can add multiple groups to represent different animal cohorts with unique management practices. In Step 3, you'll select which group to configure management practices for (diet, housing, etc.)."/>
               </TextBlock>
 
-              <Border BorderBrush="#DDD" BorderThickness="1"
-                      CornerRadius="4" Padding="12"
-                      IsVisible="{Binding SelectedDairyComponentDto.HeiferPopulationGroups.Count}">
-                <StackPanel>
-                  <!-- Instruction text -->
-                  <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#888"
-                             FontStyle="Italic" Margin="0,0,0,12">
-                    <Run Text="Enter a descriptive name for each group and specify the number of animals in that group."/>
-                  </TextBlock>
+              <StackPanel IsVisible="{Binding SelectedDairyComponentDto.HeiferPopulationGroups.Count}"
+                          Margin="0,0,0,12">
+                <!-- Instruction text -->
+                <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#888"
+                           FontStyle="Italic" Margin="0,0,0,12">
+                  <Run Text="Enter a descriptive name for each group and specify the number of animals in that group."/>
+                </TextBlock>
 
-                  <Grid Margin="0,0,0,8">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="2*"/>
-                      <ColumnDefinition Width="*"/>
-                      <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                <Grid Margin="0,0,0,8">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="Auto"/>
+                  </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" Text="Group Name"
-                               FontWeight="Medium" FontSize="11" Foreground="#666"/>
-                    <TextBlock Grid.Column="1" Text="Animals"
-                               FontWeight="Medium" FontSize="11" Foreground="#666"/>
-                    <TextBlock Grid.Column="2" Text="Actions"
-                               FontWeight="Medium" FontSize="11" Foreground="#666"/>
-                  </Grid>
+                  <TextBlock Grid.Column="0" Text="Group Name"
+                             FontWeight="Medium" FontSize="11" Foreground="#666"/>
+                  <TextBlock Grid.Column="1" Text="Animals"
+                             FontWeight="Medium" FontSize="11" Foreground="#666"/>
+                  <TextBlock Grid.Column="2" Text="Actions"
+                             FontWeight="Medium" FontSize="11" Foreground="#666"/>
+                </Grid>
 
-                  <ItemsControl ItemsSource="{Binding SelectedDairyComponentDto.HeiferPopulationGroups}">
-                    <ItemsControl.ItemTemplate>
-                      <DataTemplate>
-                        <Grid Margin="0,4">
-                          <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                          </Grid.ColumnDefinitions>
-                          
-                          <TextBox Grid.Column="0"
-                                   Text="{Binding GroupName}"
-                                   Watermark="Enter group name"
-                                   Margin="0,0,8,0"/>
-                          
-                          <NumericUpDown Grid.Column="1"
-                                         Value="{Binding NumberOfAnimals}"
-                                         Minimum="0" Maximum="10000"
-                                         FormatString="0" Increment="1"
-                                         Margin="0,0,8,0"/>
-                          
-                          <Button Grid.Column="2"
-                                  Command="{Binding $parent[ItemsControl].((dairyVm:DairyComponentViewModel)DataContext).RemoveGroupCommand}"
-                                  CommandParameter="{Binding}"
-                                  Background="Transparent"
-                                  ToolTip.Tip="Remove group"
-                                  Padding="4">
-                            <Path Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
-                                  Fill="Red" Width="16" Height="16" Stretch="Uniform"/>
-                          </Button>
-                        </Grid>
-                      </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                  </ItemsControl>
-                </StackPanel>
-              </Border>
+                <ItemsControl ItemsSource="{Binding SelectedDairyComponentDto.HeiferPopulationGroups}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Grid Margin="0,4">
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="250"/>
+                          <ColumnDefinition Width="120"/>
+                          <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Grid.Column="0"
+                                 Text="{Binding GroupName}"
+                                 Watermark="Enter group name"
+                                 Margin="0,0,8,0"/>
+
+                        <NumericUpDown Grid.Column="1"
+                                       Value="{Binding NumberOfAnimals}"
+                                       Minimum="0" Maximum="10000"
+                                       FormatString="0" Increment="1"
+                                       Margin="0,0,8,0"/>
+
+                        <Button Grid.Column="2"
+                                Command="{Binding $parent[ItemsControl].((dairyVm:DairyComponentViewModel)DataContext).RemoveGroupCommand}"
+                                CommandParameter="{Binding}"
+                                Background="Transparent"
+                                ToolTip.Tip="Remove group"
+                                Padding="4">
+                          <Path Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
+                                Fill="Red" Width="16" Height="16" Stretch="Uniform"/>
+                        </Button>
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
               
               <Button Content="Add New Group"
                       Command="{Binding AddHeiferGroupCommand}"
@@ -649,67 +642,64 @@
                 <Run Text="You can add multiple groups to represent different animal cohorts with unique management practices. In Step 3, you'll select which group to configure management practices for (diet, housing, etc.)."/>
               </TextBlock>
 
-              <Border BorderBrush="#DDD" BorderThickness="1"
-                      CornerRadius="4" Padding="12"
-                      IsVisible="{Binding SelectedDairyComponentDto.LactatingPopulationGroups.Count}">
-                <StackPanel>
-                  <!-- Instruction text -->
-                  <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#888" 
-                             FontStyle="Italic" Margin="0,0,0,12">
-                    <Run Text="Enter a descriptive name for each group and specify the number of animals in that group."/>
-                  </TextBlock>
+              <StackPanel IsVisible="{Binding SelectedDairyComponentDto.LactatingPopulationGroups.Count}"
+                          Margin="0,0,0,12">
+                <!-- Instruction text -->
+                <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#888" 
+                           FontStyle="Italic" Margin="0,0,0,12">
+                  <Run Text="Enter a descriptive name for each group and specify the number of animals in that group."/>
+                </TextBlock>
 
-                  <Grid Margin="0,0,0,8">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="2*"/>
-                      <ColumnDefinition Width="*"/>
-                      <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                <Grid Margin="0,0,0,8">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="Auto"/>
+                  </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" Text="Group Name"
-                               FontWeight="Medium" FontSize="11" Foreground="#666"/>
-                    <TextBlock Grid.Column="1" Text="Animals"
-                               FontWeight="Medium" FontSize="11" Foreground="#666"/>
-                    <TextBlock Grid.Column="2" Text="Actions"
-                               FontWeight="Medium" FontSize="11" Foreground="#666"/>
-                  </Grid>
+                  <TextBlock Grid.Column="0" Text="Group Name"
+                             FontWeight="Medium" FontSize="11" Foreground="#666"/>
+                  <TextBlock Grid.Column="1" Text="Animals"
+                             FontWeight="Medium" FontSize="11" Foreground="#666"/>
+                  <TextBlock Grid.Column="2" Text="Actions"
+                             FontWeight="Medium" FontSize="11" Foreground="#666"/>
+                </Grid>
 
-                  <ItemsControl ItemsSource="{Binding SelectedDairyComponentDto.LactatingPopulationGroups}">
-                    <ItemsControl.ItemTemplate>
-                      <DataTemplate>
-                        <Grid Margin="0,4">
-                          <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                          </Grid.ColumnDefinitions>
-                          
-                          <TextBox Grid.Column="0"
-                                   Text="{Binding GroupName}"
-                                   Watermark="Enter group name"
-                                   Margin="0,0,8,0"/>
-                          
-                          <NumericUpDown Grid.Column="1"
-                                         Value="{Binding NumberOfAnimals}"
-                                         Minimum="0" Maximum="10000"
-                                         FormatString="0" Increment="1"
-                                         Margin="0,0,8,0"/>
-                          
-                          <Button Grid.Column="2"
-                                  Command="{Binding $parent[ItemsControl].((dairyVm:DairyComponentViewModel)DataContext).RemoveGroupCommand}"
-                                  CommandParameter="{Binding}"
-                                  Background="Transparent"
-                                  ToolTip.Tip="Remove group"
-                                  Padding="4">
-                            <Path Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
-                                  Fill="Red" Width="16" Height="16" Stretch="Uniform"/>
-                          </Button>
-                        </Grid>
-                      </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                  </ItemsControl>
-                </StackPanel>
-              </Border>
+                <ItemsControl ItemsSource="{Binding SelectedDairyComponentDto.LactatingPopulationGroups}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Grid Margin="0,4">
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="250"/>
+                          <ColumnDefinition Width="120"/>
+                          <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Grid.Column="0"
+                                 Text="{Binding GroupName}"
+                                 Watermark="Enter group name"
+                                 Margin="0,0,8,0"/>
+
+                        <NumericUpDown Grid.Column="1"
+                                       Value="{Binding NumberOfAnimals}"
+                                       Minimum="0" Maximum="10000"
+                                       FormatString="0" Increment="1"
+                                       Margin="0,0,8,0"/>
+
+                        <Button Grid.Column="2"
+                                Command="{Binding $parent[ItemsControl].((dairyVm:DairyComponentViewModel)DataContext).RemoveGroupCommand}"
+                                CommandParameter="{Binding}"
+                                Background="Transparent"
+                                ToolTip.Tip="Remove group"
+                                Padding="4">
+                          <Path Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
+                                Fill="Red" Width="16" Height="16" Stretch="Uniform"/>
+                        </Button>
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
               
               <Button Content="Add New Group"
                       Command="{Binding AddLactatingGroupCommand}"
@@ -776,67 +766,64 @@
                 <Run Text="You can add multiple groups to represent different animal cohorts with unique management practices. In Step 3, you'll select which group to configure management practices for (diet, housing, etc.)."/>
               </TextBlock>
 
-              <Border BorderBrush="#DDD" BorderThickness="1"
-                      CornerRadius="4" Padding="12"
-                      IsVisible="{Binding SelectedDairyComponentDto.DryPopulationGroups.Count}">
-                <StackPanel>
-                  <!-- Instruction text -->
-                  <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#888" 
-                             FontStyle="Italic" Margin="0,0,0,12">
-                    <Run Text="Enter a descriptive name for each group and specify the number of animals in that group."/>
-                  </TextBlock>
+              <StackPanel IsVisible="{Binding SelectedDairyComponentDto.DryPopulationGroups.Count}"
+                          Margin="0,0,0,12">
+                <!-- Instruction text -->
+                <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#888" 
+                           FontStyle="Italic" Margin="0,0,0,12">
+                  <Run Text="Enter a descriptive name for each group and specify the number of animals in that group."/>
+                </TextBlock>
 
-                  <Grid Margin="0,0,0,8">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="2*"/>
-                      <ColumnDefinition Width="*"/>
-                      <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                <Grid Margin="0,0,0,8">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="Auto"/>
+                  </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" Text="Group Name"
-                               FontWeight="Medium" FontSize="11" Foreground="#666"/>
-                    <TextBlock Grid.Column="1" Text="Animals"
-                               FontWeight="Medium" FontSize="11" Foreground="#666"/>
-                    <TextBlock Grid.Column="2" Text="Actions"
-                               FontWeight="Medium" FontSize="11" Foreground="#666"/>
-                  </Grid>
+                  <TextBlock Grid.Column="0" Text="Group Name"
+                             FontWeight="Medium" FontSize="11" Foreground="#666"/>
+                  <TextBlock Grid.Column="1" Text="Animals"
+                             FontWeight="Medium" FontSize="11" Foreground="#666"/>
+                  <TextBlock Grid.Column="2" Text="Actions"
+                             FontWeight="Medium" FontSize="11" Foreground="#666"/>
+                </Grid>
 
-                  <ItemsControl ItemsSource="{Binding SelectedDairyComponentDto.DryPopulationGroups}">
-                    <ItemsControl.ItemTemplate>
-                      <DataTemplate>
-                        <Grid Margin="0,4">
-                          <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                          </Grid.ColumnDefinitions>
-                          
-                          <TextBox Grid.Column="0"
-                                   Text="{Binding GroupName}"
-                                   Watermark="Enter group name"
-                                   Margin="0,0,8,0"/>
-                          
-                          <NumericUpDown Grid.Column="1"
-                                         Value="{Binding NumberOfAnimals}"
-                                         Minimum="0" Maximum="10000"
-                                         FormatString="0" Increment="1"
-                                         Margin="0,0,8,0"/>
-                          
-                          <Button Grid.Column="2"
-                                  Command="{Binding $parent[ItemsControl].((dairyVm:DairyComponentViewModel)DataContext).RemoveGroupCommand}"
-                                  CommandParameter="{Binding}"
-                                  Background="Transparent"
-                                  ToolTip.Tip="Remove group"
-                                  Padding="4">
-                            <Path Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
-                                  Fill="Red" Width="16" Height="16" Stretch="Uniform"/>
-                          </Button>
-                        </Grid>
-                      </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                  </ItemsControl>
-                </StackPanel>
-              </Border>
+                <ItemsControl ItemsSource="{Binding SelectedDairyComponentDto.DryPopulationGroups}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Grid Margin="0,4">
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="250"/>
+                          <ColumnDefinition Width="120"/>
+                          <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Grid.Column="0"
+                                 Text="{Binding GroupName}"
+                                 Watermark="Enter group name"
+                                 Margin="0,0,8,0"/>
+
+                        <NumericUpDown Grid.Column="1"
+                                       Value="{Binding NumberOfAnimals}"
+                                       Minimum="0" Maximum="10000"
+                                       FormatString="0" Increment="1"
+                                       Margin="0,0,8,0"/>
+
+                        <Button Grid.Column="2"
+                                Command="{Binding $parent[ItemsControl].((dairyVm:DairyComponentViewModel)DataContext).RemoveGroupCommand}"
+                                CommandParameter="{Binding}"
+                                Background="Transparent"
+                                ToolTip.Tip="Remove group"
+                                Padding="4">
+                          <Path Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
+                                Fill="Red" Width="16" Height="16" Stretch="Uniform"/>
+                        </Button>
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
               
               <Button Content="Add New Group"
                       Command="{Binding AddDryGroupCommand}"

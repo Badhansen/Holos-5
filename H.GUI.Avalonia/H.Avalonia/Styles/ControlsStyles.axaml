@@ -1,5 +1,7 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+		xmlns:behaviors="clr-namespace:H.Avalonia.Behaviors">
 	<Design.PreviewWith>
 		<Border Padding="20">
 			<!-- Add Controls for Previewer Here -->
@@ -522,5 +524,17 @@
 		<Setter Property="FontWeight" Value="Medium"/>
 		<Setter Property="FontSize" Value="14"/>
 		<Setter Property="Margin" Value="0,0,0,16"/>
+	</Style>
+
+	<!-- NumericUpDown Styles -->
+	<!-- Default style to select all text when the control receives focus -->
+	<Style Selector="NumericUpDown">
+		<Setter Property="(i:Interaction.Behaviors)">
+			<i:BehaviorCollectionTemplate>
+				<i:BehaviorCollection>
+					<behaviors:SelectAllOnFocusBehavior/>
+				</i:BehaviorCollection>
+			</i:BehaviorCollectionTemplate>
+		</Setter>
 	</Style>
 </Styles>

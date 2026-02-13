@@ -1,4 +1,5 @@
 using H.Core.Factories.Animals.Dairy;
+using H.Core.Models.Animals.Dairy;
 using H.Core.Services.Animals.Dairy;
 using H.Core.Services.StorageService;
 using Microsoft.Extensions.Logging;
@@ -65,8 +66,8 @@ public class DairyComponentViewModelDesign : DairyComponentViewModel
             LactatingCowsEnteringPerYear = 100, // Results in ~84 lactating cows (100 * 305/365)
             DryCowsEnteringPerYear = 100,     // Results in ~16 dry cows (100 * 60/365)
 
-            // Simple mode (single group) - not using advanced population groups
-            UseAdvancedPopulationMode = false,
+            // Advanced mode - using multiple population groups for design-time visualization
+            UseAdvancedPopulationMode = true,
 
             // Production defaults - typical Holstein values
             DefaultMilkProduction = 28.0,
@@ -112,6 +113,27 @@ public class DairyComponentViewModelDesign : DairyComponentViewModel
 
         // Assign the sample DTO to the bound property
         base.SelectedDairyComponentDto = dairyDto;
+
+        // Add sample population groups for design-time visualization
+        // Calf groups - representing different pens or management groups
+        dairyDto.CalfPopulationGroups.Add(new DairyPopulationGroup("Calf Pen 1", 15));
+        dairyDto.CalfPopulationGroups.Add(new DairyPopulationGroup("Calf Pen 2", 12));
+        dairyDto.CalfPopulationGroups.Add(new DairyPopulationGroup("Hutch Group", 8));
+
+        // Heifer groups - representing different age cohorts
+        dairyDto.HeiferPopulationGroups.Add(new DairyPopulationGroup("Young Heifers", 20));
+        dairyDto.HeiferPopulationGroups.Add(new DairyPopulationGroup("Breeding Heifers", 18));
+        dairyDto.HeiferPopulationGroups.Add(new DairyPopulationGroup("Pregnant Heifers", 15));
+
+        // Lactating groups - representing different production levels
+        dairyDto.LactatingPopulationGroups.Add(new DairyPopulationGroup("High Producers", 35));
+        dairyDto.LactatingPopulationGroups.Add(new DairyPopulationGroup("Mid Producers", 30));
+        dairyDto.LactatingPopulationGroups.Add(new DairyPopulationGroup("Fresh Cows", 12));
+        dairyDto.LactatingPopulationGroups.Add(new DairyPopulationGroup("Late Lactation", 10));
+
+        // Dry groups - representing different management approaches
+        dairyDto.DryPopulationGroups.Add(new DairyPopulationGroup("Far-off Dry", 8));
+        dairyDto.DryPopulationGroups.Add(new DairyPopulationGroup("Close-up Dry", 10));
 
         // Set Calf stage as selected for design-time visualization of Step 2 and Step 3
         IsCalfSelected = true;

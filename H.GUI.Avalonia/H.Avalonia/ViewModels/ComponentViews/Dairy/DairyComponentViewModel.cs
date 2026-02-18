@@ -286,6 +286,31 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// Command to remove a population group from any stage
         /// </summary>
         public ICommand RemoveGroupCommand { get; private set; }
+
+        /// <summary>
+        /// Command to add a new management practice to the calf stage
+        /// </summary>
+        public ICommand AddCalfManagementPracticeCommand { get; private set; }
+
+        /// <summary>
+        /// Command to add a new management practice to the heifer stage
+        /// </summary>
+        public ICommand AddHeiferManagementPracticeCommand { get; private set; }
+
+        /// <summary>
+        /// Command to add a new management practice to the lactating stage
+        /// </summary>
+        public ICommand AddLactatingManagementPracticeCommand { get; private set; }
+
+        /// <summary>
+        /// Command to add a new management practice to the dry stage
+        /// </summary>
+        public ICommand AddDryManagementPracticeCommand { get; private set; }
+
+        /// <summary>
+        /// Command to remove a management practice from any stage
+        /// </summary>
+        public ICommand RemoveManagementPracticeCommand { get; private set; }
         
         /// <summary>
         /// Gets or sets the currently selected calf group for management configuration.
@@ -478,6 +503,13 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
             AddLactatingGroupCommand = new DelegateCommand(AddLactatingGroup);
             AddDryGroupCommand = new DelegateCommand(AddDryGroup);
             RemoveGroupCommand = new DelegateCommand<DairyPopulationGroup>(RemoveGroup);
+
+            // Initialize commands for adding/removing management practices
+            AddCalfManagementPracticeCommand = new DelegateCommand(AddCalfManagementPractice);
+            AddHeiferManagementPracticeCommand = new DelegateCommand(AddHeiferManagementPractice);
+            AddLactatingManagementPracticeCommand = new DelegateCommand(AddLactatingManagementPractice);
+            AddDryManagementPracticeCommand = new DelegateCommand(AddDryManagementPractice);
+            RemoveManagementPracticeCommand = new DelegateCommand<DairyManagementPractice>(RemoveManagementPractice);
         }
 
         /// <summary>
@@ -660,6 +692,84 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
                 }
                 
                 Logger?.LogDebug($"Removed population group: {group.GroupName}");
+            }
+        }
+
+        /// <summary>
+        /// Adds a new management practice to the calf stage
+        /// </summary>
+        private void AddCalfManagementPractice()
+        {
+            if (SelectedDairyComponentDto?.CalfManagementPractices == null) return;
+
+            var practiceNumber = SelectedDairyComponentDto.CalfManagementPractices.Count + 1;
+            var newPractice = new DairyManagementPractice($"Practice {practiceNumber}");
+
+            SelectedDairyComponentDto.CalfManagementPractices.Add(newPractice);
+
+            Logger?.LogDebug("Added new calf management practice");
+        }
+
+        /// <summary>
+        /// Adds a new management practice to the heifer stage
+        /// </summary>
+        private void AddHeiferManagementPractice()
+        {
+            if (SelectedDairyComponentDto?.HeiferManagementPractices == null) return;
+
+            var practiceNumber = SelectedDairyComponentDto.HeiferManagementPractices.Count + 1;
+            var newPractice = new DairyManagementPractice($"Practice {practiceNumber}");
+
+            SelectedDairyComponentDto.HeiferManagementPractices.Add(newPractice);
+
+            Logger?.LogDebug("Added new heifer management practice");
+        }
+
+        /// <summary>
+        /// Adds a new management practice to the lactating stage
+        /// </summary>
+        private void AddLactatingManagementPractice()
+        {
+            if (SelectedDairyComponentDto?.LactatingManagementPractices == null) return;
+
+            var practiceNumber = SelectedDairyComponentDto.LactatingManagementPractices.Count + 1;
+            var newPractice = new DairyManagementPractice($"Practice {practiceNumber}");
+
+            SelectedDairyComponentDto.LactatingManagementPractices.Add(newPractice);
+
+            Logger?.LogDebug("Added new lactating management practice");
+        }
+
+        /// <summary>
+        /// Adds a new management practice to the dry stage
+        /// </summary>
+        private void AddDryManagementPractice()
+        {
+            if (SelectedDairyComponentDto?.DryManagementPractices == null) return;
+
+            var practiceNumber = SelectedDairyComponentDto.DryManagementPractices.Count + 1;
+            var newPractice = new DairyManagementPractice($"Practice {practiceNumber}");
+
+            SelectedDairyComponentDto.DryManagementPractices.Add(newPractice);
+
+            Logger?.LogDebug("Added new dry management practice");
+        }
+
+        /// <summary>
+        /// Removes a management practice from the appropriate stage
+        /// </summary>
+        private void RemoveManagementPractice(DairyManagementPractice practice)
+        {
+            if (practice == null || SelectedDairyComponentDto == null) return;
+
+            var removed = SelectedDairyComponentDto.CalfManagementPractices.Remove(practice) ||
+                         SelectedDairyComponentDto.HeiferManagementPractices.Remove(practice) ||
+                         SelectedDairyComponentDto.LactatingManagementPractices.Remove(practice) ||
+                         SelectedDairyComponentDto.DryManagementPractices.Remove(practice);
+
+            if (removed)
+            {
+                Logger?.LogDebug($"Removed management practice: {practice.PracticeName}");
             }
         }
 

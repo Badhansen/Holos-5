@@ -135,6 +135,19 @@ public class DairyComponentViewModelDesign : DairyComponentViewModel
         dairyDto.DryPopulationGroups.Add(new DairyPopulationGroup("Far-off Dry", 8));
         dairyDto.DryPopulationGroups.Add(new DairyPopulationGroup("Close-up Dry", 10));
 
+        // Management practices are auto-initialized in the DairyComponentDto constructor
+        // with sensible defaults for each stage. Add an extra custom practice to demonstrate
+        // the dynamic add/remove capability in the designer.
+        dairyDto.CalfManagementPractices.Add(new DairyManagementPractice(
+            "Phase 3: Transition Period",
+            ManureStateType.SolidStorage,
+            HousingType.HousedInBarnSolid));
+
+        dairyDto.LactatingManagementPractices.Add(new DairyManagementPractice(
+            "Phase 5: Extended Lactation",
+            ManureStateType.LiquidNoCrust,
+            HousingType.FreeStallBarnSlurryScraping));
+
         // Set Calf stage as selected for design-time visualization of Step 2 and Step 3
         IsCalfSelected = true;
     }

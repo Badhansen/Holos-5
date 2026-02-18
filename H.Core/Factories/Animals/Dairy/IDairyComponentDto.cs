@@ -60,8 +60,14 @@ public interface IDairyComponentDto : IAnimalComponentDto
     int TotalHeiferPopulation { get; }
     int TotalLactatingPopulation { get; }
     int TotalDryPopulation { get; }
-    
-    // Manure Handling Systems - Phase-specific configurations
+
+    // Dynamic Management Practices - per-stage collections that users can add/remove
+    ObservableCollection<DairyManagementPractice> CalfManagementPractices { get; }
+    ObservableCollection<DairyManagementPractice> HeiferManagementPractices { get; }
+    ObservableCollection<DairyManagementPractice> LactatingManagementPractices { get; }
+    ObservableCollection<DairyManagementPractice> DryManagementPractices { get; }
+
+    // Manure Handling Systems - Phase-specific configurations (legacy fixed properties)
     ManureStateType HeiferPhase1ManureHandlingSystem { get; set; }
     ManureStateType HeiferPhase2ManureHandlingSystem { get; set; }
     ManureStateType CalfPhase1ManureHandlingSystem { get; set; }

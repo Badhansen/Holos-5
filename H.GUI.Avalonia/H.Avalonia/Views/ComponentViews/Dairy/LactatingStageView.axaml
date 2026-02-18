@@ -5,395 +5,235 @@
            xmlns:converters="clr-namespace:H.Avalonia.Converters"
            xmlns:infrastructure="clr-namespace:H.Avalonia.Infrastructure;assembly=H.Avalonia.Infrastructure"
            xmlns:dairy="clr-namespace:H.Avalonia.ViewModels.ComponentViews.Dairy"
+           xmlns:dairyModel="clr-namespace:H.Core.Models.Animals.Dairy;assembly=H.Core"
            mc:Ignorable="d" d:DesignWidth="1000"
            x:Class="H.Avalonia.Views.ComponentViews.Dairy.LactatingStageView">
 
 <Design.DataContext>
   <dairy:DairyComponentViewModelDesign/>
 </Design.DataContext>
-  
+
 <UserControl.Resources>
   <converters:DivideByTwelveConverter x:Key="DivideByTwelveConverter"/>
   <infrastructure:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
 </UserControl.Resources>
-  
-<!-- Lactating Stage Card -->
 
+<!-- Lactating Stage Card -->
   <StackPanel>
-        
-      <!-- Production Values Section -->
-      <Border Background="#E8F5E9" 
-              BorderBrush="#388E3C" 
-              BorderThickness="1" 
-              CornerRadius="6" 
-              Padding="16" 
-              Margin="0,0,0,16"
-              Grid.IsSharedSizeScope="True">
-        <StackPanel>
-          <TextBlock Text="🥛 Production Values" 
-                    FontSize="14" 
-                    FontWeight="SemiBold" 
-                    Foreground="#388E3C" 
-                    Margin="0,0,0,8"/>
-          <TextBlock TextWrapping="Wrap" 
-                    FontSize="12" 
-                    Foreground="#666" 
-                    Margin="0,0,0,12">
-            Enter the default milk production values for lactating cows. 
-            These values will be used across all lactation phases.
-          </TextBlock>
-            
-          <!-- Milk Production -->
-          <Grid Margin="0,0,0,8">
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
-              <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
-              <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" 
-                      Text="Milk Production:" 
-                      FontWeight="Medium" 
-                      Foreground="RoyalBlue"
-                      VerticalAlignment="Center" 
-                      Margin="0,0,8,0"/>
-            <NumericUpDown Grid.Column="1" 
-                          Minimum="0" 
-                          Maximum="100"
-                          FormatString="0.0"
-                          Increment="0.5"
-                          Value="{Binding SelectedDairyComponentDto.DefaultMilkProduction}"
-                          Margin="8,0"
-                          HorizontalAlignment="Stretch"/>
-            <TextBlock Grid.Column="2" 
-                      Text="kg/day" 
-                      VerticalAlignment="Center" 
-                      Margin="8,0,0,0"/>
-          </Grid>
-            
-          <!-- Milk Fat -->
-          <Grid Margin="0,0,0,8">
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
-              <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
-              <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" 
-                      Text="Milk Fat:" 
-                      FontWeight="Medium" 
-                      Foreground="RoyalBlue"
-                      VerticalAlignment="Center" 
-                      Margin="0,0,8,0"/>
-            <NumericUpDown Grid.Column="1" 
-                          Minimum="0" 
-                          Maximum="10"
-                          FormatString="0.0"
-                          Increment="0.1"
-                          Value="{Binding SelectedDairyComponentDto.DefaultMilkFatContent}"
-                          Margin="8,0"
-                          HorizontalAlignment="Stretch"/>
-            <TextBlock Grid.Column="2" 
-                      Text="%" 
-                      VerticalAlignment="Center" 
-                      Margin="8,0,0,0"/>
-          </Grid>
-            
-          <!-- Milk Protein -->
-          <Grid Margin="0,0,0,0">
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
-              <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
-              <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" 
-                      Text="Milk Protein:" 
-                      FontWeight="Medium" 
-                      Foreground="RoyalBlue"
-                      VerticalAlignment="Center" 
-                      Margin="0,0,8,0"/>
-            <NumericUpDown Grid.Column="1" 
-                          Minimum="0" 
-                          Maximum="10"
-                          FormatString="0.0"
-                          Increment="0.1"
-                          Value="{Binding SelectedDairyComponentDto.DefaultMilkProteinContent}"
-                          Margin="8,0"
-                          HorizontalAlignment="Stretch"/>
-            <TextBlock Grid.Column="2" 
-                      Text="%" 
-                      VerticalAlignment="Center" 
-                      Margin="8,0,0,0"/>
-          </Grid>
-        </StackPanel>
-      </Border>
-        
-      <TextBlock Text="Lactation Phases" 
-                 FontSize="14" 
-                 FontWeight="SemiBold" 
-                 Margin="0,0,0,12"/>
-        
-        <Grid ColumnDefinitions="*,*" RowDefinitions="*,*">
-          <!-- Phase 1: Early Lactation -->
-          <Border Grid.Row="0" Grid.Column="0" 
-                  Background="#F9F9F9" 
-                  BorderBrush="#E0E0E0" 
-                  BorderThickness="1" 
-                  CornerRadius="6" 
-                  Padding="16" 
-                  Margin="0,0,6,6">
-            <StackPanel>
-              <TextBlock Text="Phase 1: Early Lactation" 
-                         FontSize="13" 
-                         FontWeight="SemiBold" 
-                         Margin="0,0,0,8"/>
-              <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="Days 1-150" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="35 kg/day milk" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="4.0% fat | 3.3% protein" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,0"/>
-                <TextBlock Grid.Row="3" Grid.Column="1" Text="600 kg avg weight" FontSize="11" Foreground="#666" Margin="0,0,0,8"/>
-                
-                <!-- Manure Handling System Selection -->
-                <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" 
-                          Text="Manure Handling System:" 
-                          FontSize="12" FontWeight="SemiBold" 
-                          Margin="0,8,0,4"/>
-              </Grid>
-              
-              <ComboBox ItemsSource="{Binding ManureStateTypes}"
-                       SelectedItem="{Binding SelectedDairyComponentDto.LactatingPhase1ManureHandlingSystem}"
-                       HorizontalAlignment="Stretch"
-                       Margin="0,0,0,8">
-                <ComboBox.ItemTemplate>
-                  <DataTemplate>
-                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" 
-                              FontSize="11"/>
-                  </DataTemplate>
-                </ComboBox.ItemTemplate>
-              </ComboBox>
-              
-              <!-- Housing Type Selection -->
-              <TextBlock Text="Housing Type:" 
-                        FontSize="12" FontWeight="SemiBold" 
-                        Margin="0,0,0,4"/>
-              
-              <ComboBox ItemsSource="{Binding HousingTypes}"
-                       SelectedItem="{Binding SelectedDairyComponentDto.LactatingPhase1HousingType}"
-                       HorizontalAlignment="Stretch"
-                       Margin="0,0,0,0">
-                <ComboBox.ItemTemplate>
-                  <DataTemplate>
-                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" 
-                              FontSize="11"/>
-                  </DataTemplate>
-                </ComboBox.ItemTemplate>
-              </ComboBox>
-            </StackPanel>
-          </Border>
-          
-          <!-- Phase 2: Mid Lactation -->
-          <Border Grid.Row="0" Grid.Column="1" 
-                  Background="#F9F9F9" 
-                  BorderBrush="#E0E0E0" 
-                  BorderThickness="1" 
-                  CornerRadius="6" 
-                  Padding="16" 
-                  Margin="6,0,0,6">
-            <StackPanel>
-              <TextBlock Text="Phase 2: Mid Lactation" 
-                         FontSize="13" 
-                         FontWeight="SemiBold" 
-                         Margin="0,0,0,8"/>
-              <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="Days 151-240" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="28 kg/day milk" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="4.0% fat | 3.3% protein" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,0"/>
-                <TextBlock Grid.Row="3" Grid.Column="1" Text="620 kg avg weight" FontSize="11" Foreground="#666" Margin="0,0,0,8"/>
-                
-                <!-- Manure Handling System Selection -->
-                <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" 
-                          Text="Manure Handling System:" 
-                          FontSize="12" FontWeight="SemiBold" 
-                          Margin="0,8,0,4"/>
-              </Grid>
-              
-              <ComboBox ItemsSource="{Binding ManureStateTypes}"
-                       SelectedItem="{Binding SelectedDairyComponentDto.LactatingPhase2ManureHandlingSystem}"
-                       HorizontalAlignment="Stretch"
-                       Margin="0,0,0,8">
-                <ComboBox.ItemTemplate>
-                  <DataTemplate>
-                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" 
-                              FontSize="11"/>
-                  </DataTemplate>
-                </ComboBox.ItemTemplate>
-              </ComboBox>
-              
-              <!-- Housing Type Selection -->
-              <TextBlock Text="Housing Type:" 
-                        FontSize="12" FontWeight="SemiBold" 
-                        Margin="0,0,0,4"/>
-              
-              <ComboBox ItemsSource="{Binding HousingTypes}"
-                       SelectedItem="{Binding SelectedDairyComponentDto.LactatingPhase2HousingType}"
-                       HorizontalAlignment="Stretch"
-                       Margin="0,0,0,0">
-                <ComboBox.ItemTemplate>
-                  <DataTemplate>
-                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" 
-                              FontSize="11"/>
-                  </DataTemplate>
-                </ComboBox.ItemTemplate>
-              </ComboBox>
-            </StackPanel>
-          </Border>
-          
-          <!-- Phase 3: Late Lactation -->
-          <Border Grid.Row="1" Grid.Column="0" 
-                  Background="#F9F9F9" 
-                  BorderBrush="#E0E0E0" 
-                  BorderThickness="1" 
-                  CornerRadius="6" 
-                  Padding="16" 
-                  Margin="0,6,6,0">
-            <StackPanel>
-              <TextBlock Text="Phase 3: Late Lactation" 
-                         FontSize="13" 
-                         FontWeight="SemiBold" 
-                         Margin="0,0,0,8"/>
-              <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="Days 241-305" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="20 kg/day milk" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="4.0% fat | 3.3% protein" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,0"/>
-                <TextBlock Grid.Row="3" Grid.Column="1" Text="640 kg avg weight" FontSize="11" Foreground="#666" Margin="0,0,0,8"/>
-                
-                <!-- Manure Handling System Selection -->
-                <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" 
-                          Text="Manure Handling System:" 
-                          FontSize="12" FontWeight="SemiBold" 
-                          Margin="0,8,0,4"/>
-              </Grid>
-              
-              <ComboBox ItemsSource="{Binding ManureStateTypes}"
-                       SelectedItem="{Binding SelectedDairyComponentDto.LactatingPhase3ManureHandlingSystem}"
-                       HorizontalAlignment="Stretch"
-                       Margin="0,0,0,8">
-                <ComboBox.ItemTemplate>
-                  <DataTemplate>
-                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" 
-                              FontSize="11"/>
-                  </DataTemplate>
-                </ComboBox.ItemTemplate>
-              </ComboBox>
-              
-              <!-- Housing Type Selection -->
-              <TextBlock Text="Housing Type:" 
-                        FontSize="12" FontWeight="SemiBold" 
-                        Margin="0,0,0,4"/>
-              
-              <ComboBox ItemsSource="{Binding HousingTypes}"
-                       SelectedItem="{Binding SelectedDairyComponentDto.LactatingPhase3HousingType}"
-                       HorizontalAlignment="Stretch"
-                       Margin="0,0,0,0">
-                <ComboBox.ItemTemplate>
-                  <DataTemplate>
-                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" 
-                              FontSize="11"/>
-                  </DataTemplate>
-                </ComboBox.ItemTemplate>
-              </ComboBox>
-            </StackPanel>
-          </Border>
-          
-          <!-- Phase 4: End Lactation -->
-          <Border Grid.Row="1" Grid.Column="1" 
-                  Background="#F9F9F9" 
-                  BorderBrush="#E0E0E0" 
-                  BorderThickness="1" 
-                  CornerRadius="6" 
-                  Padding="16" 
-                  Margin="6,6,0,0">
-            <StackPanel>
-              <TextBlock Text="Phase 4: End Lactation" 
-                         FontSize="13" 
-                         FontWeight="SemiBold" 
-                         Margin="0,0,0,8"/>
-              <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="Days 306-365" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="12 kg/day milk" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,4"/>
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="4.2% fat | 3.4% protein" FontSize="11" Foreground="#666" Margin="0,0,0,4"/>
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="• " FontSize="11" Margin="0,0,4,0"/>
-                <TextBlock Grid.Row="3" Grid.Column="1" Text="650 kg avg weight" FontSize="11" Foreground="#666" Margin="0,0,0,8"/>
-                
-                <!-- Manure Handling System Selection -->
-                <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" 
-                          Text="Manure Handling System:" 
-                          FontSize="12" FontWeight="SemiBold" 
-                          Margin="0,8,0,4"/>
-              </Grid>
-              
-              <ComboBox ItemsSource="{Binding ManureStateTypes}"
-                       SelectedItem="{Binding SelectedDairyComponentDto.LactatingPhase4ManureHandlingSystem}"
-                       HorizontalAlignment="Stretch"
-                       Margin="0,0,0,8">
-                <ComboBox.ItemTemplate>
-                  <DataTemplate>
-                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" 
-                              FontSize="11"/>
-                  </DataTemplate>
-                </ComboBox.ItemTemplate>
-              </ComboBox>
-              
-              <!-- Housing Type Selection -->
-              <TextBlock Text="Housing Type:" 
-                        FontSize="12" FontWeight="SemiBold" 
-                        Margin="0,0,0,4"/>
-              
-              <ComboBox ItemsSource="{Binding HousingTypes}"
-                       SelectedItem="{Binding SelectedDairyComponentDto.LactatingPhase4HousingType}"
-                       HorizontalAlignment="Stretch"
-                       Margin="0,0,0,0">
-                <ComboBox.ItemTemplate>
-                  <DataTemplate>
-                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" 
-                              FontSize="11"/>
-                  </DataTemplate>
-                </ComboBox.ItemTemplate>
-              </ComboBox>
-            </StackPanel>
-          </Border>
+
+    <!-- Production Values Section -->
+    <Border Background="#E8F5E9"
+            BorderBrush="#388E3C"
+            BorderThickness="1"
+            CornerRadius="6"
+            Padding="16"
+            Margin="0,0,0,16"
+            Grid.IsSharedSizeScope="True">
+      <StackPanel>
+        <TextBlock Text="Production Values"
+                  FontSize="14"
+                  FontWeight="SemiBold"
+                  Foreground="#388E3C"
+                  Margin="0,0,0,8"/>
+        <TextBlock TextWrapping="Wrap"
+                  FontSize="12"
+                  Foreground="#666"
+                  Margin="0,0,0,12">
+          Enter the default milk production values for lactating cows.
+          These values will be used across all lactation phases.
+        </TextBlock>
+
+        <!-- Milk Production -->
+        <Grid Margin="0,0,0,8">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+            <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+            <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+          </Grid.ColumnDefinitions>
+          <TextBlock Grid.Column="0"
+                    Text="Milk Production:"
+                    FontWeight="Medium"
+                    Foreground="RoyalBlue"
+                    VerticalAlignment="Center"
+                    Margin="0,0,8,0"/>
+          <NumericUpDown Grid.Column="1"
+                        Minimum="0"
+                        Maximum="100"
+                        FormatString="0.0"
+                        Increment="0.5"
+                        Value="{Binding SelectedDairyComponentDto.DefaultMilkProduction}"
+                        Margin="8,0"
+                        HorizontalAlignment="Stretch"/>
+          <TextBlock Grid.Column="2"
+                    Text="kg/day"
+                    VerticalAlignment="Center"
+                    Margin="8,0,0,0"/>
         </Grid>
-        
-        <Border Background="#FFFEF7" 
-                BorderBrush="#FFD54F" 
-                BorderThickness="1" 
-                CornerRadius="6" 
-                Padding="12" 
-                Margin="0,16,0,0">
-          <Grid ColumnDefinitions="*,*">
-            <StackPanel Grid.Column="0">
-              <TextBlock Text="• Diet: High energy TMR" FontSize="12" Margin="0,0,0,4"/>
-              <TextBlock Text="• Group Pairing: 1" FontSize="12"/>
-            </StackPanel>
-            <StackPanel Grid.Column="1">
-              <TextBlock Text="• Target: High milk production" FontSize="12" Margin="0,0,0,4"/>
-              <TextBlock Text="• Monitoring: Daily" FontSize="12"/>
-            </StackPanel>
-          </Grid>
-        </Border>
+
+        <!-- Milk Fat -->
+        <Grid Margin="0,0,0,8">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+            <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+            <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+          </Grid.ColumnDefinitions>
+          <TextBlock Grid.Column="0"
+                    Text="Milk Fat:"
+                    FontWeight="Medium"
+                    Foreground="RoyalBlue"
+                    VerticalAlignment="Center"
+                    Margin="0,0,8,0"/>
+          <NumericUpDown Grid.Column="1"
+                        Minimum="0"
+                        Maximum="10"
+                        FormatString="0.0"
+                        Increment="0.1"
+                        Value="{Binding SelectedDairyComponentDto.DefaultMilkFatContent}"
+                        Margin="8,0"
+                        HorizontalAlignment="Stretch"/>
+          <TextBlock Grid.Column="2"
+                    Text="%"
+                    VerticalAlignment="Center"
+                    Margin="8,0,0,0"/>
+        </Grid>
+
+        <!-- Milk Protein -->
+        <Grid Margin="0,0,0,0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn"/>
+            <ColumnDefinition Width="Auto" MinWidth="120" SharedSizeGroup="InputColumn"/>
+            <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn"/>
+          </Grid.ColumnDefinitions>
+          <TextBlock Grid.Column="0"
+                    Text="Milk Protein:"
+                    FontWeight="Medium"
+                    Foreground="RoyalBlue"
+                    VerticalAlignment="Center"
+                    Margin="0,0,8,0"/>
+          <NumericUpDown Grid.Column="1"
+                        Minimum="0"
+                        Maximum="10"
+                        FormatString="0.0"
+                        Increment="0.1"
+                        Value="{Binding SelectedDairyComponentDto.DefaultMilkProteinContent}"
+                        Margin="8,0"
+                        HorizontalAlignment="Stretch"/>
+          <TextBlock Grid.Column="2"
+                    Text="%"
+                    VerticalAlignment="Center"
+                    Margin="8,0,0,0"/>
+        </Grid>
       </StackPanel>
-  
+    </Border>
+
+    <!-- Header with Add button -->
+    <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+      <TextBlock Grid.Column="0" Text="Lactation Phases" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
+      <Button Grid.Column="1"
+              Content="+ Add Practice"
+              Command="{Binding AddLactatingManagementPracticeCommand}"
+              Classes="accent"
+              FontSize="12"
+              Padding="12,6"/>
+    </Grid>
+
+    <!-- Dynamic Management Practices -->
+    <ItemsControl ItemsSource="{Binding SelectedDairyComponentDto.LactatingManagementPractices}">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <WrapPanel Orientation="Horizontal"/>
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate DataType="dairyModel:DairyManagementPractice">
+          <Border Background="#F9F9F9" BorderBrush="#E0E0E0"
+                  BorderThickness="1" CornerRadius="6" Padding="16" Margin="0,0,8,8"
+                  MinWidth="280" MaxWidth="350">
+            <StackPanel>
+              <!-- Practice Name (editable) and Remove button -->
+              <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+                <TextBox Grid.Column="0"
+                         Text="{Binding PracticeName}"
+                         FontSize="13" FontWeight="SemiBold"
+                         Watermark="Enter practice name"
+                         BorderThickness="0" Background="Transparent"
+                         Padding="0"/>
+                <Button Grid.Column="1"
+                        Command="{Binding $parent[ItemsControl].((dairy:DairyComponentViewModel)DataContext).RemoveManagementPracticeCommand}"
+                        CommandParameter="{Binding}"
+                        Background="Transparent"
+                        ToolTip.Tip="Remove practice"
+                        Padding="4">
+                  <Path Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
+                        Fill="Red" Width="14" Height="14" Stretch="Uniform"/>
+                </Button>
+              </Grid>
+
+              <!-- Manure Handling System Selection -->
+              <TextBlock Text="Manure Handling System:"
+                        FontSize="12" FontWeight="SemiBold"
+                        Margin="0,0,0,4"/>
+
+              <ComboBox ItemsSource="{Binding $parent[ItemsControl].((dairy:DairyComponentViewModel)DataContext).ManureStateTypes}"
+                       SelectedItem="{Binding ManureHandlingSystem}"
+                       HorizontalAlignment="Stretch"
+                       Margin="0,0,0,8">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"
+                              FontSize="11"/>
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+
+              <!-- Housing Type Selection -->
+              <TextBlock Text="Housing Type:"
+                        FontSize="12" FontWeight="SemiBold"
+                        Margin="0,0,0,4"/>
+
+              <ComboBox ItemsSource="{Binding $parent[ItemsControl].((dairy:DairyComponentViewModel)DataContext).HousingTypes}"
+                       SelectedItem="{Binding HousingType}"
+                       HorizontalAlignment="Stretch"
+                       Margin="0,0,0,0">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"
+                              FontSize="11"/>
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+            </StackPanel>
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+
+    <!-- Empty state message -->
+    <Border Background="#FFF3CD" BorderBrush="#FFC107" BorderThickness="1"
+            CornerRadius="6" Padding="16" Margin="0,4,0,0"
+            IsVisible="{Binding !SelectedDairyComponentDto.LactatingManagementPractices.Count}">
+      <TextBlock Text="No management practices defined. Click '+ Add Practice' to add one."
+                 FontSize="12" Foreground="#856404" TextAlignment="Center"
+                 HorizontalAlignment="Center"/>
+    </Border>
+
+    <Border Background="#FFFEF7"
+            BorderBrush="#FFD54F"
+            BorderThickness="1"
+            CornerRadius="6"
+            Padding="12"
+            Margin="0,16,0,0">
+      <Grid ColumnDefinitions="*,*">
+        <StackPanel Grid.Column="0">
+          <TextBlock Text="Diet: High energy TMR" FontSize="12" Margin="0,0,0,4"/>
+          <TextBlock Text="Group Pairing: 1" FontSize="12"/>
+        </StackPanel>
+        <StackPanel Grid.Column="1">
+          <TextBlock Text="Target: High milk production" FontSize="12" Margin="0,0,0,4"/>
+          <TextBlock Text="Monitoring: Daily" FontSize="12"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+  </StackPanel>
+
 </UserControl>

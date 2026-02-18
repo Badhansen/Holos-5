@@ -100,19 +100,28 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     public DairyComponentDto()
     {
         this.PropertyChanged += OnPropertyChanged;
-        
+
         // Initialize population group collections
         CalfPopulationGroups = new ObservableCollection<DairyPopulationGroup>();
         HeiferPopulationGroups = new ObservableCollection<DairyPopulationGroup>();
         LactatingPopulationGroups = new ObservableCollection<DairyPopulationGroup>();
         DryPopulationGroups = new ObservableCollection<DairyPopulationGroup>();
-        
+
+        // Initialize dynamic management practice collections
+        CalfManagementPractices = new ObservableCollection<DairyManagementPractice>();
+        HeiferManagementPractices = new ObservableCollection<DairyManagementPractice>();
+        LactatingManagementPractices = new ObservableCollection<DairyManagementPractice>();
+        DryManagementPractices = new ObservableCollection<DairyManagementPractice>();
+
+        // Populate default management practices for each stage
+        InitializeDefaultManagementPractices();
+
         // Subscribe to collection changes
         CalfPopulationGroups.CollectionChanged += OnCalfGroupsCollectionChanged;
         HeiferPopulationGroups.CollectionChanged += OnHeiferGroupsCollectionChanged;
         LactatingPopulationGroups.CollectionChanged += OnLactatingGroupsCollectionChanged;
         DryPopulationGroups.CollectionChanged += OnDryGroupsCollectionChanged;
-        
+
         // Calculate initial values
         CalculateHerdComposition();
     }
@@ -356,7 +365,7 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     /// 2. System uses it to populate all lactating cow management periods
     /// 3. Advanced users can override individual management period values later
     /// 
-    /// (kg head?¹ day?¹)
+    /// (kg head?ï¿½ day?ï¿½)
     /// </summary>
     [Units(MetricUnitsOfMeasurement.KilogramPerHeadPerDay)]
     public double DefaultMilkProduction
@@ -420,8 +429,8 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     /// 
     /// CALCULATION NOTE:
     /// This value can be used to calculate steady-state populations:
-    /// - Steady-state calves = (CalvesEnteringPerYear) × (Duration in calf stage / 365 days)
-    /// - Example: 100 calves/year × (4 months / 12 months) = ~33 calves at any given time
+    /// - Steady-state calves = (CalvesEnteringPerYear) ï¿½ (Duration in calf stage / 365 days)
+    /// - Example: 100 calves/year ï¿½ (4 months / 12 months) = ~33 calves at any given time
     /// 
     /// (number of animals per year)
     /// </summary>
@@ -447,8 +456,8 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     /// stock pool. In a steady-state operation, this equals the number of calves surviving to 4 months.
     /// 
     /// CALCULATION NOTE:
-    /// - Steady-state heifers = (HeifersEnteringPerYear) × (Duration in heifer stage / 365 days)
-    /// - Example: 30 heifers/year × (20 months / 12 months) = ~50 heifers at any given time
+    /// - Steady-state heifers = (HeifersEnteringPerYear) ï¿½ (Duration in heifer stage / 365 days)
+    /// - Example: 30 heifers/year ï¿½ (20 months / 12 months) = ~50 heifers at any given time
     /// 
     /// (number of animals per year)
     /// </summary>
@@ -475,8 +484,8 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     /// plus any herd expansion.
     /// 
     /// CALCULATION NOTE:
-    /// - Steady-state lactating = (LactatingCowsEnteringPerYear) × (Lactation period / 365 days)
-    /// - Example: 100 cows/year × (305 days / 365 days) = ~84 lactating cows at any given time
+    /// - Steady-state lactating = (LactatingCowsEnteringPerYear) ï¿½ (Lactation period / 365 days)
+    /// - Example: 100 cows/year ï¿½ (305 days / 365 days) = ~84 lactating cows at any given time
     /// 
     /// (number of animals per year)
     /// </summary>
@@ -503,8 +512,8 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     /// the udder to regenerate.
     /// 
     /// CALCULATION NOTE:
-    /// - Steady-state dry cows = (DryCowsEnteringPerYear) × (Dry period / 365 days)
-    /// - Example: 100 cows/year × (60 days / 365 days) = ~16 dry cows at any given time
+    /// - Steady-state dry cows = (DryCowsEnteringPerYear) ï¿½ (Dry period / 365 days)
+    /// - Example: 100 cows/year ï¿½ (60 days / 365 days) = ~16 dry cows at any given time
     /// 
     /// (number of animals per year)
     /// </summary>
@@ -723,9 +732,37 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     /// Total dry population from all groups (used in Advanced mode)
     /// </summary>
     public int TotalDryPopulation => DryPopulationGroups?.Sum(g => g.NumberOfAnimals) ?? 0;
-    
+
     #endregion
-    
+
+    #region Properties - Dynamic Management Practices
+
+    /// <summary>
+    /// Dynamic collection of management practices for the calf stage.
+    /// Users can add/remove practices to model their specific operation.
+    /// </summary>
+    public ObservableCollection<DairyManagementPractice> CalfManagementPractices { get; private set; }
+
+    /// <summary>
+    /// Dynamic collection of management practices for the heifer stage.
+    /// Users can add/remove practices to model their specific operation.
+    /// </summary>
+    public ObservableCollection<DairyManagementPractice> HeiferManagementPractices { get; private set; }
+
+    /// <summary>
+    /// Dynamic collection of management practices for the lactating stage.
+    /// Users can add/remove practices to model their specific operation.
+    /// </summary>
+    public ObservableCollection<DairyManagementPractice> LactatingManagementPractices { get; private set; }
+
+    /// <summary>
+    /// Dynamic collection of management practices for the dry stage.
+    /// Users can add/remove practices to model their specific operation.
+    /// </summary>
+    public ObservableCollection<DairyManagementPractice> DryManagementPractices { get; private set; }
+
+    #endregion
+
     #region Properties - Manure Handling Systems
     
     /// <summary>
@@ -935,6 +972,62 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     #endregion
     
     #region Private Methods
+
+    /// <summary>
+    /// Initializes default management practices for each lifecycle stage.
+    /// These defaults match the legacy fixed-phase properties and provide
+    /// a starting point that users can customize by adding or removing practices.
+    /// </summary>
+    private void InitializeDefaultManagementPractices()
+    {
+        // Calf stage defaults (2 phases)
+        CalfManagementPractices.Add(new DairyManagementPractice(
+            "Phase 1: Milk-Fed Period",
+            ManureStateType.SolidStorage,
+            HousingType.HousedInBarnSolid));
+        CalfManagementPractices.Add(new DairyManagementPractice(
+            "Phase 2: Weaning Period",
+            ManureStateType.SolidStorage,
+            HousingType.HousedInBarnSolid));
+
+        // Heifer stage defaults (2 phases)
+        HeiferManagementPractices.Add(new DairyManagementPractice(
+            "Phase 1: Growing Phase",
+            ManureStateType.LiquidNoCrust,
+            HousingType.FreeStallBarnSlurryScraping));
+        HeiferManagementPractices.Add(new DairyManagementPractice(
+            "Phase 2: Breeding Phase",
+            ManureStateType.LiquidNoCrust,
+            HousingType.FreeStallBarnSlurryScraping));
+
+        // Lactating stage defaults (4 phases)
+        LactatingManagementPractices.Add(new DairyManagementPractice(
+            "Phase 1: Early Lactation",
+            ManureStateType.LiquidNoCrust,
+            HousingType.FreeStallBarnSlurryScraping));
+        LactatingManagementPractices.Add(new DairyManagementPractice(
+            "Phase 2: Mid Lactation",
+            ManureStateType.LiquidNoCrust,
+            HousingType.FreeStallBarnSlurryScraping));
+        LactatingManagementPractices.Add(new DairyManagementPractice(
+            "Phase 3: Late Lactation",
+            ManureStateType.LiquidNoCrust,
+            HousingType.FreeStallBarnSlurryScraping));
+        LactatingManagementPractices.Add(new DairyManagementPractice(
+            "Phase 4: End Lactation",
+            ManureStateType.LiquidNoCrust,
+            HousingType.FreeStallBarnSlurryScraping));
+
+        // Dry stage defaults (2 phases)
+        DryManagementPractices.Add(new DairyManagementPractice(
+            "Phase 1: Far-off Dry",
+            ManureStateType.DeepBedding,
+            HousingType.FreeStallBarnSolidLitter));
+        DryManagementPractices.Add(new DairyManagementPractice(
+            "Phase 2: Close-up Period",
+            ManureStateType.DeepBedding,
+            HousingType.FreeStallBarnSolidLitter));
+    }
 
     /// <summary>
     /// Calculates the herd composition based on the input parameters

@@ -215,7 +215,7 @@ namespace H.Avalonia.Services
             municipality = Uri.EscapeDataString(municipality);
             string cityParameter = $"&city={municipality}";
 
-            string provinceString = Uri.EscapeDataString(province.ToString());
+            string provinceString = Uri.EscapeDataString(FormatProvinceStringForApiCall(province));
             string stateParameter = $"&state={provinceString}";
 
             postalCode = Uri.EscapeDataString(postalCode);
@@ -237,6 +237,25 @@ namespace H.Avalonia.Services
 
             string Url = $"https://nominatim.openstreetmap.org/search?{streetParameter}{cityParameter}{countyParameter}{stateParameter}{countryParameter}{postalCodeParameter}&format={format}&addressdetails=1&limit=1";
             return Url;
+        }
+
+        /// <summary>
+        /// Takes in province enum and outputs province in string form containing spaces if province contains space in name (Nova Scotia) as converting enum directly to string lacks space and causes issue wih API call
+        /// </summary>
+        /// <param name="province">The province being converted to api formatted string</param>
+        /// <returns>The formatted province string</returns>
+        private string FormatProvinceStringForApiCall(Province province)
+        {
+            switch (province)
+            {
+                case Province.NovaScotia:
+                    return "Nova Scotia";
+                case Province.PrinceEdwardIsland:
+                    return "Prince Edward Island";
+                default:
+                    return province.ToString();
+            }
+
         }
 
         /// <summary>
@@ -350,7 +369,7 @@ namespace H.Avalonia.Services
             {
                 countyStringAppend = $"_{county}";
             }
-            var joinedAddress = street+"_"+municipality+countyStringAppend+"_"+province+"_"+postalCode+"_"+country;
+            var joinedAddress = (street+"_"+municipality+countyStringAppend+"_"+province+"_"+postalCode+"_"+country).ToLower();
             // Sanitize address for file name, replace common address characters with underscores.
             var invalidCharacters = Path.GetInvalidFileNameChars();
             var cleanedFileName = invalidCharacters.Aggregate(joinedAddress, (current, c) => current.Replace(c, '_')).Replace(" ", "_").Replace(",", "");
@@ -413,6 +432,14 @@ namespace H.Avalonia.Services
             return (latitude: lat, longitude: lon);
         }
 
+        /// <summary>
+        /// Validates the input for the geocoding request to ensure it is in a format that can be processed and to prevent malicious input. Street, municipality, postal code, county, and country are all validated with different criteria to allow for the best possible formatting for the Nominatim API and to prevent malicious input.
+        /// </summary>
+        /// <param name="street">The street address to be validated.</param>
+        /// <param name="municipality">The municipality to be validated.</param>
+        /// <param name="postalCode">The postal code to be validated.</param>
+        /// <param name="county">The county to be validated.</param>
+        /// <param name="country">The country to be validated.</param>
         private void InputValidation(string street, string municipality, string postalCode, string? county, string country)
         {
             street = InputValidation(street, InputValidationType.Address);
@@ -422,6 +449,12 @@ namespace H.Avalonia.Services
             country = InputValidation(country, InputValidationType.Country);
         }
 
+        /// <summary>
+        /// Validates the input string based on an <see cref="InputValidationType"/> to validate string based on what type of address component it is
+        /// </summary>
+        /// <param name="inputString">The address component</param>
+        /// <param name="inputType">The type of address component, defaults to general formatting</param>
+        /// <returns>Sanitized input string based on parameters defined by <see cref="InputValidationType"/>.</returns>
         private string InputValidation(string inputString, InputValidationType inputType = InputValidationType.General)
         {
             // Basic null/whitespace check
@@ -437,6 +470,11 @@ namespace H.Avalonia.Services
             return ApplySpecificValidation(inputString, inputType);
         }
 
+        /// <summary>
+        /// Check for blacklisted patterns existing in the string and remove them
+        /// </summary>
+        /// <param name="input">The string to be checked for malicious patterns</param>
+        /// <returns>Input string sanitized of blacklisted patterns</returns>
         private string RemoveMaliciousPatterns(string input)
         {
             // Remove common injection patterns
@@ -473,6 +511,12 @@ namespace H.Avalonia.Services
             return input;
         }
 
+        /// <summary>
+        /// Based on the type of <see cref="InputValidationType"/> validate the string to allow only certain characters
+        /// </summary>
+        /// <param name="input">The string to be validated</param>
+        /// <param name="inputType">The type of validation to apply to the input string</param>
+        /// <returns>Returns string containing only whitelisted characters</returns>
         private string ApplySpecificValidation(string input, InputValidationType inputType)
         {
             switch (inputType)

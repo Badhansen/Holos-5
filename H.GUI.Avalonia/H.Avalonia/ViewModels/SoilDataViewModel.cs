@@ -2,19 +2,26 @@
 using Avalonia.Platform.Storage;
 using CsvHelper;
 using CsvHelper.TypeConversion;
+using FastExpressionCompiler.LightExpression;
 using H.Avalonia.Infrastructure;
 using H.Avalonia.Infrastructure.Dialogs;
 using H.Avalonia.Models;
 using H.Avalonia.Models.ClassMaps;
+using H.Avalonia.Services;
 using H.Avalonia.Views;
 using H.Core.Enumerations;
+using H.Core.Services;
+using H.Core.Services.StorageService;
+using H.Infrastructure.Controls.ValueConverters;
 using Mapsui;
 using Mapsui.Extensions;
+using Microsoft.Extensions.Logging;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using Prism.Commands;
 using Prism.Regions;
 using Prism.Services.Dialogs;
+using SharpKml.Dom.Xal;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,14 +30,8 @@ using System.ComponentModel;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using FastExpressionCompiler.LightExpression;
-using H.Avalonia.Services;
-using H.Core.Services;
-using H.Core.Services.StorageService;
-using H.Infrastructure.Controls.ValueConverters;
-using Microsoft.Extensions.Logging;
-using SharpKml.Dom.Xal;
 using SoilResultsView = H.Avalonia.Views.ResultViews.SoilResultsView;
 
 namespace H.Avalonia.ViewModels
@@ -255,7 +256,7 @@ namespace H.Avalonia.ViewModels
         }
 
         /// <summary>
-        /// Boolean that indicates if all address data has been entered by the user or if user exceeded failed search attempts.
+        /// Boolean that indicates if all address data has been entered by the user following valid address protocols, or if user exceeded failed search attempts.
         /// </summary>
         public bool IsAddressSearchEnabled
         {
@@ -266,14 +267,14 @@ namespace H.Avalonia.ViewModels
                     return (SelectedProvince != Province.SelectProvince &&
                      !string.IsNullOrWhiteSpace(StreetAddress) &&
                      !string.IsNullOrWhiteSpace(Municipality) &&
-                     !string.IsNullOrWhiteSpace(PostalCode));
+                     !string.IsNullOrWhiteSpace(PostalCode)) && IsPostalCodeValid(PostalCode);
                 }
                 else
                 {
                     return (SelectedProvince != Province.SelectProvince &&
                      !string.IsNullOrWhiteSpace(RuralRoadName) &&
                      !string.IsNullOrWhiteSpace(RuralMunicipality) &&
-                     !string.IsNullOrWhiteSpace(RuralPostalCode));
+                     !string.IsNullOrWhiteSpace(RuralPostalCode)) && IsPostalCodeValid(PostalCode);
                 }
             }
 
@@ -788,6 +789,17 @@ namespace H.Avalonia.ViewModels
                     WktPolygonMap.TryAdd(province, result);
                 }
             });
+        }
+
+        /// <summary>
+        /// Validates postal code input based on the pattern required for Canadian postal codes. The pattern is as follows: Letter, Digit, Letter, Space (optional), Digit, Letter, Digit.
+        /// </summary>
+        /// <param name="postalCode">The postal code to be validated.</param>
+        /// <returns>True if postal code follows Canadian postal code patterns, false otherwise.</returns>
+        private bool IsPostalCodeValid(string postalCode)
+        {
+            var regex = new Regex(@"^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$|^[A-Za-z]\d[A-Za-z] \d[A-Za-z]\d$", RegexOptions.IgnoreCase);
+            return regex.IsMatch(postalCode ?? string.Empty);
         }
     }
 }

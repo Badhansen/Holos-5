@@ -509,7 +509,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
             AddHeiferManagementPracticeCommand = new DelegateCommand(AddHeiferManagementPractice);
             AddLactatingManagementPracticeCommand = new DelegateCommand(AddLactatingManagementPractice);
             AddDryManagementPracticeCommand = new DelegateCommand(AddDryManagementPractice);
-            RemoveManagementPracticeCommand = new DelegateCommand<DairyManagementPractice>(RemoveManagementPractice);
+            RemoveManagementPracticeCommand = new DelegateCommand<ManagementPeriodDto>(RemoveManagementPractice);
         }
 
         /// <summary>
@@ -703,7 +703,12 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
             if (SelectedDairyComponentDto?.CalfManagementPractices == null) return;
 
             var practiceNumber = SelectedDairyComponentDto.CalfManagementPractices.Count + 1;
-            var newPractice = new DairyManagementPractice($"Practice {practiceNumber}");
+            var newPractice = new ManagementPeriodDto
+            {
+                Name = $"Practice {practiceNumber}",
+                ManureStateType = ManureStateType.NotSelected,
+                HousingType = HousingType.NotSelected,
+            };
 
             SelectedDairyComponentDto.CalfManagementPractices.Add(newPractice);
 
@@ -718,7 +723,12 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
             if (SelectedDairyComponentDto?.HeiferManagementPractices == null) return;
 
             var practiceNumber = SelectedDairyComponentDto.HeiferManagementPractices.Count + 1;
-            var newPractice = new DairyManagementPractice($"Practice {practiceNumber}");
+            var newPractice = new ManagementPeriodDto
+            {
+                Name = $"Practice {practiceNumber}",
+                ManureStateType = ManureStateType.NotSelected,
+                HousingType = HousingType.NotSelected,
+            };
 
             SelectedDairyComponentDto.HeiferManagementPractices.Add(newPractice);
 
@@ -733,7 +743,12 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
             if (SelectedDairyComponentDto?.LactatingManagementPractices == null) return;
 
             var practiceNumber = SelectedDairyComponentDto.LactatingManagementPractices.Count + 1;
-            var newPractice = new DairyManagementPractice($"Practice {practiceNumber}");
+            var newPractice = new ManagementPeriodDto
+            {
+                Name = $"Practice {practiceNumber}",
+                ManureStateType = ManureStateType.NotSelected,
+                HousingType = HousingType.NotSelected,
+            };
 
             SelectedDairyComponentDto.LactatingManagementPractices.Add(newPractice);
 
@@ -748,7 +763,12 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
             if (SelectedDairyComponentDto?.DryManagementPractices == null) return;
 
             var practiceNumber = SelectedDairyComponentDto.DryManagementPractices.Count + 1;
-            var newPractice = new DairyManagementPractice($"Practice {practiceNumber}");
+            var newPractice = new ManagementPeriodDto
+            {
+                Name = $"Practice {practiceNumber}",
+                ManureStateType = ManureStateType.NotSelected,
+                HousingType = HousingType.NotSelected,
+            };
 
             SelectedDairyComponentDto.DryManagementPractices.Add(newPractice);
 
@@ -758,7 +778,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// <summary>
         /// Removes a management practice from the appropriate stage
         /// </summary>
-        private void RemoveManagementPractice(DairyManagementPractice practice)
+        private void RemoveManagementPractice(ManagementPeriodDto practice)
         {
             if (practice == null || SelectedDairyComponentDto == null) return;
 
@@ -769,7 +789,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
 
             if (removed)
             {
-                Logger?.LogDebug($"Removed management practice: {practice.PracticeName}");
+                Logger?.LogDebug($"Removed management practice: {practice.Name}");
             }
         }
 

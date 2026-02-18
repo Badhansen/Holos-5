@@ -108,10 +108,10 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
         DryPopulationGroups = new ObservableCollection<DairyPopulationGroup>();
 
         // Initialize dynamic management practice collections
-        CalfManagementPractices = new ObservableCollection<DairyManagementPractice>();
-        HeiferManagementPractices = new ObservableCollection<DairyManagementPractice>();
-        LactatingManagementPractices = new ObservableCollection<DairyManagementPractice>();
-        DryManagementPractices = new ObservableCollection<DairyManagementPractice>();
+        CalfManagementPractices = new ObservableCollection<ManagementPeriodDto>();
+        HeiferManagementPractices = new ObservableCollection<ManagementPeriodDto>();
+        LactatingManagementPractices = new ObservableCollection<ManagementPeriodDto>();
+        DryManagementPractices = new ObservableCollection<ManagementPeriodDto>();
 
         // Populate default management practices for each stage
         InitializeDefaultManagementPractices();
@@ -741,25 +741,25 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     /// Dynamic collection of management practices for the calf stage.
     /// Users can add/remove practices to model their specific operation.
     /// </summary>
-    public ObservableCollection<DairyManagementPractice> CalfManagementPractices { get; private set; }
+    public ObservableCollection<ManagementPeriodDto> CalfManagementPractices { get; private set; }
 
     /// <summary>
     /// Dynamic collection of management practices for the heifer stage.
     /// Users can add/remove practices to model their specific operation.
     /// </summary>
-    public ObservableCollection<DairyManagementPractice> HeiferManagementPractices { get; private set; }
+    public ObservableCollection<ManagementPeriodDto> HeiferManagementPractices { get; private set; }
 
     /// <summary>
     /// Dynamic collection of management practices for the lactating stage.
     /// Users can add/remove practices to model their specific operation.
     /// </summary>
-    public ObservableCollection<DairyManagementPractice> LactatingManagementPractices { get; private set; }
+    public ObservableCollection<ManagementPeriodDto> LactatingManagementPractices { get; private set; }
 
     /// <summary>
     /// Dynamic collection of management practices for the dry stage.
     /// Users can add/remove practices to model their specific operation.
     /// </summary>
-    public ObservableCollection<DairyManagementPractice> DryManagementPractices { get; private set; }
+    public ObservableCollection<ManagementPeriodDto> DryManagementPractices { get; private set; }
 
     #endregion
 
@@ -981,52 +981,72 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     private void InitializeDefaultManagementPractices()
     {
         // Calf stage defaults (2 phases)
-        CalfManagementPractices.Add(new DairyManagementPractice(
-            "Phase 1: Milk-Fed Period",
-            ManureStateType.SolidStorage,
-            HousingType.HousedInBarnSolid));
-        CalfManagementPractices.Add(new DairyManagementPractice(
-            "Phase 2: Weaning Period",
-            ManureStateType.SolidStorage,
-            HousingType.HousedInBarnSolid));
+        CalfManagementPractices.Add(new ManagementPeriodDto
+        {
+            Name = "Phase 1: Milk-Fed Period",
+            ManureStateType = ManureStateType.NotSelected,
+            HousingType = HousingType.HousedInBarnSolid,
+        });
+        CalfManagementPractices.Add(new ManagementPeriodDto
+        {
+            Name = "Phase 2: Weaning Period",
+            ManureStateType = ManureStateType.NotSelected,
+            HousingType = HousingType.HousedInBarnSolid,
+        });
 
         // Heifer stage defaults (2 phases)
-        HeiferManagementPractices.Add(new DairyManagementPractice(
-            "Phase 1: Growing Phase",
-            ManureStateType.LiquidNoCrust,
-            HousingType.FreeStallBarnSlurryScraping));
-        HeiferManagementPractices.Add(new DairyManagementPractice(
-            "Phase 2: Breeding Phase",
-            ManureStateType.LiquidNoCrust,
-            HousingType.FreeStallBarnSlurryScraping));
+        HeiferManagementPractices.Add(new ManagementPeriodDto
+        {
+            Name = "Phase 1: Growing Phase",
+            ManureStateType = ManureStateType.NotSelected,
+            HousingType = HousingType.FreeStallBarnSlurryScraping,
+        });
+        HeiferManagementPractices.Add(new ManagementPeriodDto
+        {
+            Name = "Phase 2: Breeding Phase",
+            ManureStateType = ManureStateType.NotSelected,
+            HousingType = HousingType.FreeStallBarnSlurryScraping,
+        });
 
         // Lactating stage defaults (4 phases)
-        LactatingManagementPractices.Add(new DairyManagementPractice(
-            "Phase 1: Early Lactation",
-            ManureStateType.LiquidNoCrust,
-            HousingType.FreeStallBarnSlurryScraping));
-        LactatingManagementPractices.Add(new DairyManagementPractice(
-            "Phase 2: Mid Lactation",
-            ManureStateType.LiquidNoCrust,
-            HousingType.FreeStallBarnSlurryScraping));
-        LactatingManagementPractices.Add(new DairyManagementPractice(
-            "Phase 3: Late Lactation",
-            ManureStateType.LiquidNoCrust,
-            HousingType.FreeStallBarnSlurryScraping));
-        LactatingManagementPractices.Add(new DairyManagementPractice(
-            "Phase 4: End Lactation",
-            ManureStateType.LiquidNoCrust,
-            HousingType.FreeStallBarnSlurryScraping));
+        LactatingManagementPractices.Add(new ManagementPeriodDto
+        {
+            Name = "Phase 1: Early Lactation",
+            ManureStateType = ManureStateType.NotSelected,
+            HousingType = HousingType.FreeStallBarnSlurryScraping,
+        });
+        LactatingManagementPractices.Add(new ManagementPeriodDto
+        {
+            Name = "Phase 2: Mid Lactation",
+            ManureStateType = ManureStateType.NotSelected,
+            HousingType = HousingType.FreeStallBarnSlurryScraping,
+        });
+        LactatingManagementPractices.Add(new ManagementPeriodDto
+        {
+            Name = "Phase 3: Late Lactation",
+            ManureStateType = ManureStateType.NotSelected,
+            HousingType = HousingType.FreeStallBarnSlurryScraping,
+        });
+        LactatingManagementPractices.Add(new ManagementPeriodDto
+        {
+            Name = "Phase 4: End Lactation",
+            ManureStateType = ManureStateType.NotSelected,
+            HousingType = HousingType.FreeStallBarnSlurryScraping,
+        });
 
         // Dry stage defaults (2 phases)
-        DryManagementPractices.Add(new DairyManagementPractice(
-            "Phase 1: Far-off Dry",
-            ManureStateType.DeepBedding,
-            HousingType.FreeStallBarnSolidLitter));
-        DryManagementPractices.Add(new DairyManagementPractice(
-            "Phase 2: Close-up Period",
-            ManureStateType.DeepBedding,
-            HousingType.FreeStallBarnSolidLitter));
+        DryManagementPractices.Add(new ManagementPeriodDto
+        {
+            Name = "Phase 1: Far-off Dry",
+            ManureStateType = ManureStateType.NotSelected,
+            HousingType = HousingType.FreeStallBarnSolidLitter,
+        });
+        DryManagementPractices.Add(new ManagementPeriodDto
+        {
+            Name = "Phase 2: Close-up Period",
+            ManureStateType = ManureStateType.NotSelected,
+            HousingType = HousingType.FreeStallBarnSolidLitter,
+        });
     }
 
     /// <summary>

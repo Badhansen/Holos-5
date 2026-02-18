@@ -5,7 +5,7 @@
            xmlns:converters="clr-namespace:H.Avalonia.Converters"
            xmlns:infrastructure="clr-namespace:H.Avalonia.Infrastructure;assembly=H.Avalonia.Infrastructure"
            xmlns:dairy="clr-namespace:H.Avalonia.ViewModels.ComponentViews.Dairy"
-           xmlns:dairyModel="clr-namespace:H.Core.Models.Animals.Dairy;assembly=H.Core"
+           xmlns:dtoModel="clr-namespace:H.Core.Factories.Animals;assembly=H.Core"
            mc:Ignorable="d" d:DesignWidth="1000"
            x:Class="H.Avalonia.Views.ComponentViews.Dairy.LactatingStageView">
 
@@ -19,7 +19,7 @@
 </UserControl.Resources>
 
 <!-- Lactating Stage Card -->
-  <StackPanel>
+  <StackPanel x:Name="RootPanel">
 
     <!-- Production Values Section -->
     <Border Background="#E8F5E9"
@@ -145,7 +145,7 @@
         </ItemsPanelTemplate>
       </ItemsControl.ItemsPanel>
       <ItemsControl.ItemTemplate>
-        <DataTemplate DataType="dairyModel:DairyManagementPractice">
+        <DataTemplate DataType="dtoModel:ManagementPeriodDto">
           <Border Background="#F9F9F9" BorderBrush="#E0E0E0"
                   BorderThickness="1" CornerRadius="6" Padding="16" Margin="0,0,8,8"
                   MinWidth="280" MaxWidth="350">
@@ -153,13 +153,13 @@
               <!-- Practice Name (editable) and Remove button -->
               <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
                 <TextBox Grid.Column="0"
-                         Text="{Binding PracticeName}"
+                         Text="{Binding Name}"
                          FontSize="13" FontWeight="SemiBold"
                          Watermark="Enter practice name"
                          BorderThickness="0" Background="Transparent"
                          Padding="0"/>
                 <Button Grid.Column="1"
-                        Command="{Binding $parent[ItemsControl].((dairy:DairyComponentViewModel)DataContext).RemoveManagementPracticeCommand}"
+                        Command="{Binding #RootPanel.DataContext.RemoveManagementPracticeCommand}"
                         CommandParameter="{Binding}"
                         Background="Transparent"
                         ToolTip.Tip="Remove practice"
@@ -174,8 +174,8 @@
                         FontSize="12" FontWeight="SemiBold"
                         Margin="0,0,0,4"/>
 
-              <ComboBox ItemsSource="{Binding $parent[ItemsControl].((dairy:DairyComponentViewModel)DataContext).ManureStateTypes}"
-                       SelectedItem="{Binding ManureHandlingSystem}"
+              <ComboBox ItemsSource="{Binding #RootPanel.DataContext.ManureStateTypes}"
+                       SelectedItem="{Binding ManureStateType}"
                        HorizontalAlignment="Stretch"
                        Margin="0,0,0,8">
                 <ComboBox.ItemTemplate>
@@ -191,7 +191,7 @@
                         FontSize="12" FontWeight="SemiBold"
                         Margin="0,0,0,4"/>
 
-              <ComboBox ItemsSource="{Binding $parent[ItemsControl].((dairy:DairyComponentViewModel)DataContext).HousingTypes}"
+              <ComboBox ItemsSource="{Binding #RootPanel.DataContext.HousingTypes}"
                        SelectedItem="{Binding HousingType}"
                        HorizontalAlignment="Stretch"
                        Margin="0,0,0,0">

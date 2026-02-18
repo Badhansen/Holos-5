@@ -30,7 +30,8 @@ namespace H.Core.Factories.Animals
         private double _liveWeightChangeOfPregnantAnimal;
         private double _liveWeightOfYoungAtWeaningAge;
         private double _liveWeightOfYoungAtBirth;
-        private ManureStateType _manureStateType;
+        private ManureStateType _manureStateType = ManureStateType.NotSelected;
+        private HousingType _housingType = HousingType.NotSelected;
 
         #endregion
 
@@ -212,6 +213,15 @@ namespace H.Core.Factories.Animals
         {
             get => _manureStateType;
             set => SetProperty(ref _manureStateType, value);
+        }
+
+        /// <summary>
+        /// The type of housing facility used during this management period.
+        /// </summary>
+        public HousingType HousingType
+        {
+            get => _housingType;
+            set => SetProperty(ref _housingType, value);
         }
 
         #endregion

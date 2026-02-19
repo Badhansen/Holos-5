@@ -34,7 +34,7 @@ namespace H.Avalonia.Test.Services
             var path = Path.GetTempPath();
             var invalidCharacters = Path.GetInvalidFileNameChars();
             var cleanedFileName = invalidCharacters.Aggregate("5403 1 Ave S, Lethbridge, Alberta, T1J 4B1, Canada", (current, c) => current.Replace(c, '_')).Replace(" ", "_").Replace(",", "");
-            var filename = $"nominatim_geocoder_data_address_{cleanedFileName}";
+            var filename = $"nominatim_geocoder_data_address_{cleanedFileName}".ToLower();
             var fullPath = Path.Combine(path, filename);
             if (File.Exists(fullPath))
             {

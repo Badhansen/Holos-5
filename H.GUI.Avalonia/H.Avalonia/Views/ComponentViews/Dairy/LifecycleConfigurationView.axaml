@@ -113,7 +113,6 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                     <MultiBinding Converter="{x:Static BoolConverters.And}">
                       <Binding Path="SelectedDairyComponentDto.UseAdvancedPopulationMode"/>
                       <Binding Path="SelectedCalfGroup" Converter="{x:Static ObjectConverters.IsNull}"/>
-                      <Binding Path="SelectedDairyComponentDto.CalfPopulationGroups.Count"/>
                     </MultiBinding>
                   </Border.IsVisible>
                   <StackPanel HorizontalAlignment="Center">
@@ -237,7 +236,6 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                     <MultiBinding Converter="{x:Static BoolConverters.And}">
                       <Binding Path="SelectedDairyComponentDto.UseAdvancedPopulationMode"/>
                       <Binding Path="SelectedHeiferGroup" Converter="{x:Static ObjectConverters.IsNull}"/>
-                      <Binding Path="SelectedDairyComponentDto.HeiferPopulationGroups.Count"/>
                     </MultiBinding>
                   </Border.IsVisible>
                   <StackPanel HorizontalAlignment="Center">
@@ -358,7 +356,6 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                     <MultiBinding Converter="{x:Static BoolConverters.And}">
                       <Binding Path="SelectedDairyComponentDto.UseAdvancedPopulationMode"/>
                       <Binding Path="SelectedLactatingGroup" Converter="{x:Static ObjectConverters.IsNull}"/>
-                      <Binding Path="SelectedDairyComponentDto.LactatingPopulationGroups.Count"/>
                     </MultiBinding>
                   </Border.IsVisible>
                   <StackPanel HorizontalAlignment="Center">
@@ -479,7 +476,6 @@ x:Class="H.Avalonia.Views.ComponentViews.Dairy.LifecycleConfigurationView">
                     <MultiBinding Converter="{x:Static BoolConverters.And}">
                       <Binding Path="SelectedDairyComponentDto.UseAdvancedPopulationMode"/>
                       <Binding Path="SelectedDryGroup" Converter="{x:Static ObjectConverters.IsNull}"/>
-                      <Binding Path="SelectedDairyComponentDto.DryPopulationGroups.Count"/>
                     </MultiBinding>
                   </Border.IsVisible>
                   <StackPanel HorizontalAlignment="Center">

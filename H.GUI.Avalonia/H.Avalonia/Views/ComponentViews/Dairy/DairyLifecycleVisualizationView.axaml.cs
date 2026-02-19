@@ -12,7 +12,7 @@ namespace H.Avalonia.Views.ComponentViews.Dairy;
 /// </summary>
 public partial class DairyLifecycleVisualizationView : UserControl, INotifyPropertyChanged
 {
-    private string _selectedStage;
+    private string? _selectedStage;
     private bool _hasSelection;
 
     public DairyLifecycleVisualizationView()
@@ -21,7 +21,7 @@ public partial class DairyLifecycleVisualizationView : UserControl, INotifyPrope
         DataContext = this;
     }
 
-    public string SelectedStage
+    public string? SelectedStage
     {
         get => _selectedStage;
         set
@@ -136,9 +136,9 @@ public partial class DairyLifecycleVisualizationView : UserControl, INotifyPrope
         SelectedStage = null;
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

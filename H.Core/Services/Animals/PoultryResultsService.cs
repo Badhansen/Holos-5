@@ -34,7 +34,7 @@ namespace H.Core.Services.Animals
             AnimalComponentBase animalComponentBase,
             ManagementPeriod managementPeriod,
             DateTime dateTime,
-            GroupEmissionsByDay previousDaysEmissions,
+            GroupEmissionsByDay? previousDaysEmissions,
             AnimalGroup animalGroup,
             Farm farm)
         {

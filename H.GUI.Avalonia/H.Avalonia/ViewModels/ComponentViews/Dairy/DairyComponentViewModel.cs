@@ -33,18 +33,18 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// <summary>
         /// The domain model object representing the dairy component being edited
         /// </summary>
-        private DairyComponent _selectedDairyComponent;
+        private DairyComponent? _selectedDairyComponent;
 
         /// <summary>
         /// Data transfer object containing dairy component parameters (herd overview, lactation stages, etc.)
         /// This DTO is bound to the view and includes validation logic
         /// </summary>
-        private IDairyComponentDto _selectedDairyComponentDto;
+        private IDairyComponentDto? _selectedDairyComponentDto;
 
         /// <summary>
         /// Tracks which herd stage card is currently selected (Calf, Heifer, Lactating, or Dry)
         /// </summary>
-        private string _selectedHerdStage;
+        private string? _selectedHerdStage;
 
         /// <summary>
         /// Indicates if the Calf card is selected
@@ -69,32 +69,32 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// <summary>
         /// Collection of available manure state types for dropdown selection
         /// </summary>
-        private IEnumerable<ManureStateType> _manureStateTypes;
+        private IEnumerable<ManureStateType>? _manureStateTypes;
 
         /// <summary>
         /// Collection of available housing types for dropdown selection
         /// </summary>
-        private IEnumerable<HousingType> _housingTypes;
+        private IEnumerable<HousingType>? _housingTypes;
         
         /// <summary>
         /// The currently selected calf group for management configuration
         /// </summary>
-        private DairyPopulationGroup _selectedCalfGroup;
-        
+        private DairyPopulationGroup? _selectedCalfGroup;
+
         /// <summary>
         /// The currently selected heifer group for management configuration
         /// </summary>
-        private DairyPopulationGroup _selectedHeiferGroup;
-        
+        private DairyPopulationGroup? _selectedHeiferGroup;
+
         /// <summary>
         /// The currently selected lactating group for management configuration
         /// </summary>
-        private DairyPopulationGroup _selectedLactatingGroup;
-        
+        private DairyPopulationGroup? _selectedLactatingGroup;
+
         /// <summary>
         /// The currently selected dry group for management configuration
         /// </summary>
-        private DairyPopulationGroup _selectedDryGroup;
+        private DairyPopulationGroup? _selectedDryGroup;
 
         #endregion
 
@@ -148,7 +148,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// This ensures proper validation and data flow through the DTO layer.
         /// The collection is guaranteed to be non-null (initialized in AnimalComponentDto constructor).
         /// </summary>
-        public IDairyComponentDto SelectedDairyComponentDto
+        public IDairyComponentDto? SelectedDairyComponentDto
         {
             get => _selectedDairyComponentDto;
             set
@@ -172,7 +172,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// <summary>
         /// Gets or sets the currently selected herd stage
         /// </summary>
-        public string SelectedHerdStage
+        public string? SelectedHerdStage
         {
             get => _selectedHerdStage;
             set => SetProperty(ref _selectedHerdStage, value);
@@ -241,7 +241,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// <summary>
         /// Gets or sets the collection of available manure state types
         /// </summary>
-        public IEnumerable<ManureStateType> ManureStateTypes
+        public IEnumerable<ManureStateType>? ManureStateTypes
         {
             get => _manureStateTypes;
             set => SetProperty(ref _manureStateTypes, value);
@@ -250,7 +250,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// <summary>
         /// Gets or sets the collection of available housing types
         /// </summary>
-        public IEnumerable<HousingType> HousingTypes
+        public IEnumerable<HousingType>? HousingTypes
         {
             get => _housingTypes;
             set => SetProperty(ref _housingTypes, value);
@@ -317,7 +317,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// In Simple mode, this is null (management applies to the single implicit group).
         /// In Advanced mode, user selects which group to configure.
         /// </summary>
-        public DairyPopulationGroup SelectedCalfGroup
+        public DairyPopulationGroup? SelectedCalfGroup
         {
             get => _selectedCalfGroup;
             set => SetProperty(ref _selectedCalfGroup, value);
@@ -326,7 +326,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// <summary>
         /// Gets or sets the currently selected heifer group for management configuration
         /// </summary>
-        public DairyPopulationGroup SelectedHeiferGroup
+        public DairyPopulationGroup? SelectedHeiferGroup
         {
             get => _selectedHeiferGroup;
             set => SetProperty(ref _selectedHeiferGroup, value);
@@ -335,7 +335,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// <summary>
         /// Gets or sets the currently selected lactating group for management configuration
         /// </summary>
-        public DairyPopulationGroup SelectedLactatingGroup
+        public DairyPopulationGroup? SelectedLactatingGroup
         {
             get => _selectedLactatingGroup;
             set => SetProperty(ref _selectedLactatingGroup, value);
@@ -344,7 +344,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// <summary>
         /// Gets or sets the currently selected dry group for management configuration
         /// </summary>
-        public DairyPopulationGroup SelectedDryGroup
+        public DairyPopulationGroup? SelectedDryGroup
         {
             get => _selectedDryGroup;
             set => SetProperty(ref _selectedDryGroup, value);

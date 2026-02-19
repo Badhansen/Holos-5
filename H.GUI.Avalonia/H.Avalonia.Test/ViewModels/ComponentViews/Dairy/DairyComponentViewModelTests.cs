@@ -129,7 +129,7 @@ public class DairyComponentViewModelTests
             _mockRegionManager.Object,
             _mockEventAggregator.Object,
             _mockStorageService.Object,
-            null, // Null dairy component service
+            null!, // Null dairy component service
             _mockLogger.Object);
 
         // Assert - Exception expected

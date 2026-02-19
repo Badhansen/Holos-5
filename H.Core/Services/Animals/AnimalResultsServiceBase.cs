@@ -80,7 +80,7 @@ namespace H.Core.Services.Animals
 
         public virtual AnimalGroupEmissionResults GetResultsForManagementPeriod(AnimalGroup animalGroup, ManagementPeriod managementPeriod, AnimalComponentBase animalComponent, Farm farm)
         {
-            GroupEmissionsByDay previousDaysEmissions = null;
+            GroupEmissionsByDay? previousDaysEmissions = null;
             var animalGroupEmissionResult = new AnimalGroupEmissionResults();
             animalGroupEmissionResult.AnimalGroup = animalGroup;
 
@@ -134,7 +134,7 @@ namespace H.Core.Services.Animals
 
         public virtual AnimalGroupEmissionResults GetResultsForGroup(AnimalGroup animalGroup, Farm farm, AnimalComponentBase animalComponent)
         {
-            GroupEmissionsByDay previousDaysEmissions = null;
+            GroupEmissionsByDay? previousDaysEmissions = null;
             var animalGroupEmissionResult = new AnimalGroupEmissionResults();
             animalGroupEmissionResult.AnimalGroup = animalGroup;
 
@@ -245,7 +245,7 @@ namespace H.Core.Services.Animals
             AnimalComponentBase animalComponentBase,
             ManagementPeriod managementPeriod,
             DateTime dateTime,
-            GroupEmissionsByDay previousDaysEmissions,
+            GroupEmissionsByDay? previousDaysEmissions,
             AnimalGroup animalGroup,
             Farm farm);
 
@@ -711,7 +711,7 @@ namespace H.Core.Services.Animals
 
         public void CalculateManureMethaneFromLiquidSystems(
             GroupEmissionsByDay dailyEmissions,
-            GroupEmissionsByDay previousDaysEmissions,
+            GroupEmissionsByDay? previousDaysEmissions,
             ManagementPeriod managementPeriod,
             double temperature)
         {
@@ -870,7 +870,7 @@ namespace H.Core.Services.Animals
         }
 
         public void CalculateCarbonInStorage(GroupEmissionsByDay dailyEmissions,
-            GroupEmissionsByDay previousDaysEmissions, ManagementPeriod managementPeriod)
+            GroupEmissionsByDay? previousDaysEmissions, ManagementPeriod managementPeriod)
         {
             dailyEmissions.AmountOfCarbonLostAsMethaneDuringManagement = this.CalculateCarbonLostAsMethaneDuringManagement(
                 monthlyManureMethaneEmission: dailyEmissions.ManureMethaneEmission);
@@ -1722,9 +1722,9 @@ namespace H.Core.Services.Animals
         }
 
         public void CalculateOrganicNitrogen(
-            GroupEmissionsByDay dailyEmissions, 
-            ManagementPeriod managementPeriod, 
-            GroupEmissionsByDay previousDaysEmissions)
+            GroupEmissionsByDay dailyEmissions,
+            ManagementPeriod managementPeriod,
+            GroupEmissionsByDay? previousDaysEmissions)
         {
             dailyEmissions.OrganicNitrogenCreatedOnDay = this.CalculateOrganicNitrogenCreatedOnDay(
                 fecalNitrogenExcretion: dailyEmissions.FecalNitrogenExcretion,

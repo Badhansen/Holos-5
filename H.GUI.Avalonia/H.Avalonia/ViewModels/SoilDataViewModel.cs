@@ -59,10 +59,10 @@ namespace H.Avalonia.ViewModels
         private string _ruralPostalCode = string.Empty;
         
         private MPoint _navigationPoint;
-        private ImportHelpers _importHelper;
-        private SoilViewItemMap _soilViewItemMap;
+        private ImportHelpers _importHelper = null!;
+        private SoilViewItemMap _soilViewItemMap = null!;
 
-        private ObservableCollection<Province> _provinces;
+        private ObservableCollection<Province> _provinces = null!;
 
         public bool HasViewItems => StoragePlaceholder?.SoilViewItems != null && StoragePlaceholder.SoilViewItems.Any();
 
@@ -79,7 +79,7 @@ namespace H.Avalonia.ViewModels
         public readonly Dictionary<Province, List<Polygon>> WktPolygonMap = new();
         private bool _isDataProcessing;
         private Province _selectedProvince;
-        private ICountrySettings _countrySettings;
+        private ICountrySettings _countrySettings = null!;
 
         /// <summary>
         /// Boolean that indicates if the address search option is selected in step two of the location selection process.
@@ -653,9 +653,9 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private void SetCoordinates()
         {
-            var activeFarm = this.StorageService.GetActiveFarm();
-            if (activeFarm != null)
+            if (this.StorageService != null)
             {
+                var activeFarm = this.StorageService.GetActiveFarm();
                 activeFarm.Latitude = this.Latitude;
                 activeFarm.Longitude = this.Longitude;
             }

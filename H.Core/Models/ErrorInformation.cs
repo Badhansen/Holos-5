@@ -20,7 +20,7 @@ namespace H.Core.Models
 
         #region Constructors
 
-        public ErrorInformation(string message, Exception exception = null, bool isCritical = false)
+        public ErrorInformation(string message, Exception? exception = null, bool isCritical = false)
         {
             base.Message = message;
             Exception = exception;

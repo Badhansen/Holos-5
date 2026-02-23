@@ -114,10 +114,10 @@ namespace H.Core.Services.Climate
         /// </summary>
         /// <param name="dailyClimateDto">DTO used to create the new domain object.</param>
         /// <returns>New domain object instance.</returns>
-        public DailyClimateData CreateDataFromDto(DailyClimateDto dailyClimateDto)
+        public DailyClimateData? CreateDataFromDto(DailyClimateDto? dailyClimateDto)
         {
             _logger?.LogDebug("Creating new DailyClimateData from DTO for year: {Year}", dailyClimateDto?.Year);
-            
+
             if (dailyClimateDto == null)
             {
                 _logger?.LogWarning("Cannot create DailyClimateData from null DTO");

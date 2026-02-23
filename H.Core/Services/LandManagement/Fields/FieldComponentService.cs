@@ -102,7 +102,7 @@ public class FieldComponentService : ComponentServiceBase, IFieldComponentServic
     /// <param name="fieldComponentGuid">The GUID of the field component</param>
     /// <param name="selectedCropGuid">The GUID of the currently selected crop</param>
     /// <param name="additionalState">Additional UI state to preserve</param>
-    public void SaveUIState(Guid fieldComponentGuid, Guid? selectedCropGuid, Dictionary<string, object> additionalState = null)
+    public void SaveUIState(Guid fieldComponentGuid, Guid? selectedCropGuid, Dictionary<string, object>? additionalState = null)
     {
         Logger?.LogDebug("Saving UI state for field component {FieldComponentGuid}", fieldComponentGuid);
 
@@ -284,7 +284,7 @@ public class FieldComponentService : ComponentServiceBase, IFieldComponentServic
     /// <param name="fieldComponentDto">Target DTO to receive crop copies.</param>
     public void ConvertCropViewItemsToDtoCollection(FieldSystemComponent fieldSystemComponent, IFieldComponentDto fieldComponentDto)
     {
-        if (fieldComponentDto != null && fieldSystemComponent != null)
+        if (fieldComponentDto is not null && fieldSystemComponent is not null)
         {
             // Clear stale and outdated crop DTOs before rebuilding from domain objects
             fieldComponentDto.CropDtos.Clear();
@@ -309,14 +309,14 @@ public class FieldComponentService : ComponentServiceBase, IFieldComponentServic
     /// <param name="fieldComponentDto">Source DTO containing edited crop values.</param>
     public void ConvertCropDtoCollectionToCropViewItemCollection(FieldSystemComponent fieldSystemComponent, IFieldComponentDto fieldComponentDto)
     {
-        if (fieldSystemComponent != null)
+        if (fieldSystemComponent is not null)
         {
-            if (fieldSystemComponent != null)
+            if (fieldSystemComponent is not null)
             {
                 foreach (var cropDto in fieldComponentDto.CropDtos)
                 {
                     var viewItem = fieldSystemComponent.CropViewItems.SingleOrDefault(viewItem => viewItem.Guid.Equals(cropDto.Guid));
-                    if (viewItem != null)
+                    if (viewItem is not null)
                     {
                         this.TransferCropDtoToSystem(cropDto, viewItem);
                     }
@@ -332,9 +332,9 @@ public class FieldComponentService : ComponentServiceBase, IFieldComponentServic
     /// <param name="cropDto">DTO used to create the new view item.</param>
     public void AddCropDtoToSystem(FieldSystemComponent fieldSystemComponent, ICropDto cropDto)
     {
-        if (fieldSystemComponent != null)
+        if (fieldSystemComponent is not null)
         {
-            if (cropDto != null)
+            if (cropDto is not null)
             {
                 var cropViewItem = _cropFactory.CreateCropViewItem(cropDto);
 
@@ -350,11 +350,11 @@ public class FieldComponentService : ComponentServiceBase, IFieldComponentServic
     /// <param name="cropDto">DTO identifying which crop to remove.</param>
     public void RemoveCropFromSystem(FieldSystemComponent fieldSystemComponent, ICropDto cropDto)
     {
-        if (cropDto != null)
+        if (cropDto is not null)
         {
             // By default, all DTO objects will have their GUID property set to be equal to the GUID of the associated domain object
             var cropViewItem = fieldSystemComponent.CropViewItems.SingleOrDefault(x => x.Guid.Equals(cropDto.Guid));
-            if (cropViewItem != null)
+            if (cropViewItem is not null)
             {
                 fieldSystemComponent.CropViewItems.Remove(cropViewItem);
             }

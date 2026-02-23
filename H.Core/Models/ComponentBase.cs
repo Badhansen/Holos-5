@@ -201,7 +201,7 @@ namespace H.Core.Models
             allComponents.AddRange(this.ProjectedComponents);
 
             var indexOfUpdatedComponent = allComponents.IndexOf(updatedComponent);
-            var nextComponent = allComponents.ElementAtOrDefault(indexOfUpdatedComponent + 1);
+            ComponentBase? nextComponent = allComponents.ElementAtOrDefault(indexOfUpdatedComponent + 1);
             if (nextComponent != null)
             {
                 nextComponent.StartYear = updatedComponent.EndYear + 1;
@@ -216,7 +216,7 @@ namespace H.Core.Models
             allComponents.AddRange(this.ProjectedComponents);
 
             var indexOfUpdatedComponent = allComponents.IndexOf(updatedComponent);
-            var previousComponent = allComponents.ElementAtOrDefault(indexOfUpdatedComponent - 1);
+            ComponentBase? previousComponent = allComponents.ElementAtOrDefault(indexOfUpdatedComponent - 1);
             if (previousComponent != null)
             {
                 previousComponent.EndYear = updatedComponent.StartYear - 1;

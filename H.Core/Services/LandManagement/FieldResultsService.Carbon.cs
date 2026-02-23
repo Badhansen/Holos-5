@@ -10,9 +10,9 @@ namespace H.Core.Services.LandManagement
     {
         public class AdjoiningYears
         {
-            public CropViewItem PreviousYearViewItem { get; set; }
+            public CropViewItem? PreviousYearViewItem { get; set; }
             public CropViewItem CurrentYearViewItem { get; set; }
-            public CropViewItem NextYearViewItem { get; set; }
+            public CropViewItem? NextYearViewItem { get; set; }
         }
 
         #region Public Methods

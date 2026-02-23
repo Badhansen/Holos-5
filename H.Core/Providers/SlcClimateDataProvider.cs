@@ -136,7 +136,7 @@ namespace H.Core.Providers
         /// <returns>EvapotranspirationData</returns>
         public EvapotranspirationData GetEvapotranspirationDataByPolygonId(int polygonId, TimeFrame timeFrame)
         {
-            EvapotranspirationData result;
+            EvapotranspirationData? result;
             //get the appropriate data for the timeframe
             switch (timeFrame)
             {
@@ -178,7 +178,7 @@ namespace H.Core.Providers
         /// <returns>PrecipitationData</returns>
         public PrecipitationData GetPrecipitationDataByPolygonId(int polygonId, TimeFrame timeFrame)
         {
-            PrecipitationData result;
+            PrecipitationData? result;
             switch (timeFrame)
             {
                 case TimeFrame.NineteenFiftyToNineteenEighty:
@@ -219,7 +219,7 @@ namespace H.Core.Providers
         /// <returns>TemperatureData</returns>
         public TemperatureData GetTemperatureDataByPolygonId(int polygonId, TimeFrame timeFrame)
         {
-            TemperatureData result;
+            TemperatureData? result;
             switch (timeFrame)
             {
                 case TimeFrame.NineteenFiftyToNineteenEighty:

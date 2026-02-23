@@ -36,7 +36,7 @@ public class InMemoryCacheService : ICacheService
         _memoryCache.Set(key, value, options);
     }
 
-    public void Set<T>(string key, T value, MemoryCacheEntryOptions options)
+    public void Set<T>(string key, T value, MemoryCacheEntryOptions? options)
     {
         _memoryCache.Set(key, value, options);
     }

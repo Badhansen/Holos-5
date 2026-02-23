@@ -107,7 +107,7 @@ public abstract class ComponentServiceBase : IComponentService
         return proposedName;
     }
 
-    public void InitializeComponent(Farm farm, ComponentBase component)
+    public void InitializeComponent(Farm farm, ComponentBase? component)
     {
         if (component == null)
         {

@@ -108,7 +108,7 @@ namespace H.Core.Services
             return result;
         }
         
-        public string GetUniqueGroupName(IEnumerable<AnimalGroup> animalGroups, AnimalGroup animalGroup, string suggestedName = null)
+        public string GetUniqueGroupName(IEnumerable<AnimalGroup> animalGroups, AnimalGroup animalGroup, string? suggestedName = null)
         {
             var i = 1;
 

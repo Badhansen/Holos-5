@@ -15,7 +15,7 @@ namespace H.Avalonia.ViewModels.OptionsViews
     {
         #region Fields
 
-        private object _selectedItem;
+        private object? _selectedItem;
 
         #endregion
 
@@ -34,7 +34,7 @@ namespace H.Avalonia.ViewModels.OptionsViews
 
         #region Properties
 
-        public object SelectedItem
+        public object? SelectedItem
         {
             get => _selectedItem;
             set => SetProperty(ref _selectedItem, value);

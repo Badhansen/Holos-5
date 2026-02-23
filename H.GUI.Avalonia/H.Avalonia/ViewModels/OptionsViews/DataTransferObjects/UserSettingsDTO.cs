@@ -30,10 +30,10 @@ namespace H.Avalonia.ViewModels.OptionsViews.DataTransferObjects
         private EquilibriumCalculationStrategies _equilibriumCalculationStrategy;
         private TillageType _runInPeriodTillageType;
         private PumpType _defaultPumpType;
-        private ObservableCollection<CarbonModellingStrategies> _carbonModellingStrategiesList;
-        private ObservableCollection<EquilibriumCalculationStrategies> _equilibriumCalculationStrategiesList;
-        private ObservableCollection<TillageType> _runInPeriodTillageList;
-        private ObservableCollection<PumpType> _pumpTypeList;
+        private ObservableCollection<CarbonModellingStrategies>? _carbonModellingStrategiesList;
+        private ObservableCollection<EquilibriumCalculationStrategies>? _equilibriumCalculationStrategiesList;
+        private ObservableCollection<TillageType>? _runInPeriodTillageList;
+        private ObservableCollection<PumpType>? _pumpTypeList;
 
         #endregion
 
@@ -357,25 +357,25 @@ namespace H.Avalonia.ViewModels.OptionsViews.DataTransferObjects
         }
 
         //Collections for ComboBox
-        public ObservableCollection<CarbonModellingStrategies> CarbonModellingStrategiesList
+        public ObservableCollection<CarbonModellingStrategies>? CarbonModellingStrategiesList
         {
             get => _carbonModellingStrategiesList;
             set => SetProperty(ref _carbonModellingStrategiesList, value);
         }
 
-        public ObservableCollection<EquilibriumCalculationStrategies> EquilibriumCalculationStrategiesList
+        public ObservableCollection<EquilibriumCalculationStrategies>? EquilibriumCalculationStrategiesList
         {
             get => _equilibriumCalculationStrategiesList;
             set => SetProperty(ref _equilibriumCalculationStrategiesList, value);
         }
 
-        public ObservableCollection<TillageType> RunInPeriodTillageList
+        public ObservableCollection<TillageType>? RunInPeriodTillageList
         {
             get => _runInPeriodTillageList;
             set => SetProperty(ref _runInPeriodTillageList, value);
         }
 
-        public ObservableCollection<PumpType> PumpTypeList
+        public ObservableCollection<PumpType>? PumpTypeList
         {
             get => _pumpTypeList;
             set => SetProperty(ref _pumpTypeList, value);

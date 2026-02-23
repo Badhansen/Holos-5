@@ -227,7 +227,7 @@ namespace H.Core.Services.LandManagement
                 {
                     var fieldGuid = groupingByFieldSystem.Key;
                     var fieldSystemComponent = farm.GetFieldSystemComponent(fieldGuid);
-                    if (fieldSystemComponent == null)
+                    if (fieldSystemComponent is null)
                     {
                         continue;
                     }

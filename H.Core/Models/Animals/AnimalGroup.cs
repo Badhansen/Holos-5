@@ -129,7 +129,7 @@ namespace H.Core.Models.Animals
 
         public double GetNumberOfAnimalsInFirstManagementPeriodByProductionStage(ProductionStages productionStage)
         {
-            var firstManagementPeriod = this.ManagementPeriods.OrderBy(x => x.Start).Where(x => x.ProductionStage == productionStage).FirstOrDefault();
+            ManagementPeriod? firstManagementPeriod = this.ManagementPeriods.OrderBy(x => x.Start).Where(x => x.ProductionStage == productionStage).FirstOrDefault();
             if (firstManagementPeriod != null)
             {
                 return firstManagementPeriod.NumberOfAnimals;
@@ -169,7 +169,7 @@ namespace H.Core.Models.Animals
             {
                 if (i == 0)
                 {
-                    var firstManagementPeriod = this.ManagementPeriods.ElementAtOrDefault(i);
+                    ManagementPeriod? firstManagementPeriod = this.ManagementPeriods.ElementAtOrDefault(i);
                     if (firstManagementPeriod != null)
                     {
                         startingNumber = firstManagementPeriod.NumberOfAnimals;
@@ -178,7 +178,7 @@ namespace H.Core.Models.Animals
 
                 if (i == this.ManagementPeriods.Count - 1)
                 {
-                    var lastManagementPeriod = this.ManagementPeriods.ElementAtOrDefault(i);
+                    ManagementPeriod? lastManagementPeriod = this.ManagementPeriods.ElementAtOrDefault(i);
                     if (lastManagementPeriod != null)
                     {
                         endingNumber = lastManagementPeriod.NumberOfAnimals;
@@ -205,7 +205,7 @@ namespace H.Core.Models.Animals
 
         public int GetNumberOfAnimalDuringMonth(int month, int year)
         {
-            var managementPeriod = this.GetManagementPeriodByMonthAndYear(month, year);
+            ManagementPeriod? managementPeriod = this.GetManagementPeriodByMonthAndYear(month, year);
             if (managementPeriod != null)
             {
                 return managementPeriod.NumberOfAnimals;
@@ -223,7 +223,7 @@ namespace H.Core.Models.Animals
         {
             var result = 0;
 
-            var managementPeriod = this.GetManagementPeriodByDate(dateTime);
+            ManagementPeriod? managementPeriod = this.GetManagementPeriodByDate(dateTime);
             if (managementPeriod != null)
             {
                 result = managementPeriod.NumberOfAnimals;
@@ -238,10 +238,10 @@ namespace H.Core.Models.Animals
         /// </summary>
         /// <param name="dateTime">The <see cref="DateTime"/> to search by</param>
         /// <returns>The <see cref="ManagementPeriod"/> that contains the given <see cref="DateTime"/>, or null if the <see cref="ManagementPeriod"/> doesn't exist</returns>
-        public ManagementPeriod GetManagementPeriodByDate(DateTime dateTime)
+        public ManagementPeriod? GetManagementPeriodByDate(DateTime dateTime)
         {
 
-            var result = this.ManagementPeriods.OrderBy(managementPeriod => managementPeriod.Start).FirstOrDefault(managementPeriod => managementPeriod.Start <= dateTime && managementPeriod.End >= dateTime);
+            ManagementPeriod? result = this.ManagementPeriods.OrderBy(managementPeriod => managementPeriod.Start).FirstOrDefault(managementPeriod => managementPeriod.Start <= dateTime && managementPeriod.End >= dateTime);
             if (result != null)
             {
                 return result;
@@ -256,9 +256,9 @@ namespace H.Core.Models.Animals
         /// <summary>
         /// Returns the management period that contains the given month and year.
         /// </summary>
-        public ManagementPeriod GetManagementPeriodByMonthAndYear(int month, int year)
+        public ManagementPeriod? GetManagementPeriodByMonthAndYear(int month, int year)
         {
-            var managementPeriod = this.ManagementPeriods.OrderBy(x => x.Start).FirstOrDefault(x => x.Start.Year >= year && x.Start.Month <= month);
+            ManagementPeriod? managementPeriod = this.ManagementPeriods.OrderBy(x => x.Start).FirstOrDefault(x => x.Start.Year >= year && x.Start.Month <= month);
             if (managementPeriod != null)
             {
                 return managementPeriod;
@@ -287,7 +287,7 @@ namespace H.Core.Models.Animals
             {
                 // Need to update subsequent management period start dates
                 var currentManagementPeriod = this.ManagementPeriods.ElementAt(index);
-                var nextManagementPeriod = this.ManagementPeriods.ElementAtOrDefault(index + 1);
+                ManagementPeriod? nextManagementPeriod = this.ManagementPeriods.ElementAtOrDefault(index + 1);
                 if (nextManagementPeriod != null)
                 {
                     nextManagementPeriod.Start = currentManagementPeriod.End.AddDays(1);
@@ -311,7 +311,7 @@ namespace H.Core.Models.Animals
             {
                 // Need to update subsequent management period start weights
                 var currentManagementPeriod = this.ManagementPeriods.ElementAt(index);
-                var nextManagementPeriod = this.ManagementPeriods.ElementAtOrDefault(index + 1);
+                ManagementPeriod? nextManagementPeriod = this.ManagementPeriods.ElementAtOrDefault(index + 1);
                 if (nextManagementPeriod != null)
                 {
                     nextManagementPeriod.StartWeight = currentManagementPeriod.EndWeight;  

@@ -149,9 +149,9 @@ namespace H.Core.Services.LandManagement
         /// Determines which view item is the main crop for a particular year. Will use the boolean <see cref="H.Core.Models.LandManagement.Fields.CropViewItem.IsSecondaryCrop"/> to determine which view item
         /// is the main crop for the particular year.
         /// </summary>
-        public CropViewItem GetMainCropForYear(
-            IEnumerable<CropViewItem> viewItems, 
-            int year, 
+        public CropViewItem? GetMainCropForYear(
+            IEnumerable<CropViewItem> viewItems,
+            int year,
             FieldSystemComponent fieldSystemComponent)
         {
             var detailViewItemsForYear = viewItems.Where(x => x.Year == year).ToList();
@@ -167,7 +167,7 @@ namespace H.Core.Services.LandManagement
             }
 
             var mainCrop = detailViewItemsForYear.FirstOrDefault(x => x.IsSecondaryCrop == false);
-            if (mainCrop != null)
+            if (mainCrop is not null)
             {
                 return mainCrop;
             }
@@ -285,7 +285,7 @@ namespace H.Core.Services.LandManagement
             FieldSystemComponent fieldSystemComponent)
         {
             var component = farm.Components.OfType<AnaerobicDigestionComponent>().SingleOrDefault();
-            if (component == null)
+            if (component is null)
             {
                 return;
             }
@@ -521,7 +521,7 @@ namespace H.Core.Services.LandManagement
                 runInPeriodItems.Add(createdMainCrop);
 
                 var coverCropAtYear = coverCrops.ElementAtOrDefault(moduloIndex);
-                if (coverCropAtYear != null)
+                if (coverCropAtYear is not null)
                 {
                     var createdCoverCrop = this.MapDetailsScreenViewItemFromComponentScreenViewItem(coverCropAtYear, indexYear);
                     createdCoverCrop.Year = indexYear;
@@ -605,7 +605,7 @@ namespace H.Core.Services.LandManagement
                 {
                     // Check if the main crop is the same
                     var mainCrop = fieldSystemComponent.CropViewItems.SingleOrDefault(x => x.Year == secondaryCrop.Year);
-                    if (mainCrop == null)
+                    if (mainCrop is null)
                     {
                         // If main crop is null, then we are in a situation where we are considering a projected system since the year for the main crop will not be equal to the year for the cover crops
                         // in the context of a current rotation (as opposed to a future projection)

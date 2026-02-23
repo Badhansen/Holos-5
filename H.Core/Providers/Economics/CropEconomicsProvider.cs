@@ -191,7 +191,7 @@ namespace H.Core.Providers.Economics
         /// <param name="soilCategory">the soil category</param>
         /// <param name="mapper">the mapper</param>
         /// <returns>CropEconomicData matching the search but from another province</returns>
-        private CropEconomicData GetMatchInNeighbouringProvince(Province province, CropType originalCropType,
+        private CropEconomicData? GetMatchInNeighbouringProvince(Province province, CropType originalCropType,
             SoilFunctionalCategory soilCategory, IMapper mapper)
         {
             const int searchLimit = 2;
@@ -201,7 +201,7 @@ namespace H.Core.Providers.Economics
             //we have a province with no economic neighbour
             if (provinceNeighbour == province) return null;
 
-            CropEconomicData econData = null;
+            CropEconomicData? econData = null;
             for (var i = 0; i < searchLimit; i++)
             {
                 //we need to get the econ croptype everytime we look a new province
@@ -237,11 +237,11 @@ namespace H.Core.Providers.Economics
         /// <summary>
         /// Cycle through all of the soil zones in the province and try and find economic data for the croptype
         /// </summary>
-        private CropEconomicData GetMatchAcrossTheProvince(Province province, CropType econCropType,
+        private CropEconomicData? GetMatchAcrossTheProvince(Province province, CropType econCropType,
             SoilFunctionalCategory soilFunctionalCategory, IMapper mapper)
         {
             if (soilFunctionalCategory == SoilFunctionalCategory.NotApplicable) return new CropEconomicData();
-            CropEconomicData econData = null;
+            CropEconomicData? econData = null;
             var soilNeighbour = soilFunctionalCategory.GetNeighbouringCategory();
 
             while (soilNeighbour != soilFunctionalCategory && soilNeighbour != SoilFunctionalCategory.NotApplicable)
@@ -264,10 +264,10 @@ namespace H.Core.Providers.Economics
         /// <summary>
         /// Get economic data that matches directly to province, soil zone, and croptype
         /// </summary>
-        private CropEconomicData GetDirectMatch(CropType cropType, Province province,
+        private CropEconomicData? GetDirectMatch(CropType cropType, Province province,
             SoilFunctionalCategory soilCategory, CropType econCropType, IMapper mapper)
         {
-            CropEconomicData result;
+            CropEconomicData? result;
             if (soilCategory == SoilFunctionalCategory.Brown && province == Province.Alberta &&
                 (cropType == CropType.SummerFallow || cropType == CropType.Fallow))
             {

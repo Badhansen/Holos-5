@@ -124,7 +124,7 @@ namespace H.Core.Calculators.Nitrogen
         }
 
         public double CalculateSyntheticNitrogenEmissionFactor(
-            CropViewItem viewItem,
+            CropViewItem? viewItem,
             Farm farm)
         {
             if (viewItem == null)
@@ -169,7 +169,7 @@ namespace H.Core.Calculators.Nitrogen
         }
 
         public double CalculateOrganicNitrogenEmissionFactor(
-            CropViewItem viewItem,
+            CropViewItem? viewItem,
             Farm farm)
         {
             if (viewItem == null)
@@ -207,7 +207,7 @@ namespace H.Core.Calculators.Nitrogen
         }
 
         public double GetEmissionFactorForCropResidues(
-            CropViewItem viewItem, 
+            CropViewItem? viewItem,
             Farm farm)
         {
             if (viewItem == null)

@@ -475,7 +475,7 @@ namespace H.Core.Providers.Feed
         /// </summary>
         /// <param name="dietToCopy">the diet to copy</param>
         /// <returns>a copied diet</returns>
-        public static Diet CopyDiet(Diet dietToCopy)
+        public static Diet CopyDiet(Diet? dietToCopy)
         {
             if (dietToCopy == null)
             {

@@ -294,7 +294,7 @@ namespace H.Core.Services.Animals
         }
 
         public List<ManureStateType> GetValidManureStateTypes(
-            Farm farm,
+            Farm? farm,
             ManureLocationSourceType locationSourceType,
             AnimalType animalType)
         {
@@ -769,7 +769,7 @@ namespace H.Core.Services.Animals
             }
         }
 
-        public DefaultManureCompositionData GetManureCompositionData(ManureItemBase manureItemBase, Farm farm)
+        public DefaultManureCompositionData GetManureCompositionData(ManureItemBase? manureItemBase, Farm? farm)
         {
             if (manureItemBase != null && farm != null)
             {

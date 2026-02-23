@@ -26,7 +26,7 @@ namespace H.Avalonia.ViewModels.ComponentViews
 {
     public class ComponentGroup
     {
-        public string CategoryName { get; set; }
+        public string CategoryName { get; set; } = string.Empty;
         public ObservableCollection<ComponentBase> Components { get; set; } = new ObservableCollection<ComponentBase>();
     }
 
@@ -34,13 +34,13 @@ namespace H.Avalonia.ViewModels.ComponentViews
     {
         #region Fields
 
-        private string _selectedComponentTitle;
-        private string _selectedComponentDescription;
+        private string? _selectedComponentTitle;
+        private string? _selectedComponentDescription;
 
-        private ComponentBase _selectedComponent;
+        private ComponentBase? _selectedComponent;
 
-        private ObservableCollection<ComponentBase> _availableComponents;
-        private ObservableCollection<ComponentGroup> _groupedComponents;
+        private ObservableCollection<ComponentBase> _availableComponents = null!;
+        private ObservableCollection<ComponentGroup> _groupedComponents = null!;
 
         #endregion
 
@@ -69,13 +69,13 @@ namespace H.Avalonia.ViewModels.ComponentViews
 
         #region Properties
 
-        public string SelectedComponentTitle
+        public string? SelectedComponentTitle
         {
             get => _selectedComponentTitle;
             set => SetProperty(ref _selectedComponentTitle, value);
         }
 
-        public string SelectedComponentDescription
+        public string? SelectedComponentDescription
         {
             get => _selectedComponentDescription;
             set => SetProperty(ref _selectedComponentDescription, value);
@@ -93,7 +93,7 @@ namespace H.Avalonia.ViewModels.ComponentViews
             private set => SetProperty(ref _groupedComponents, value);
         }
 
-        public ComponentBase SelectedComponent
+        public ComponentBase? SelectedComponent
         {
             get => _selectedComponent;
             set => SetProperty(ref _selectedComponent, value);
@@ -131,9 +131,9 @@ namespace H.Avalonia.ViewModels.ComponentViews
             SelectComponentCommand = new DelegateCommand<ComponentBase>(OnSelectComponent);
         }
 
-        private void OnSelectComponent(ComponentBase component)
+        private void OnSelectComponent(ComponentBase? component)
         {
-            if (component != null)
+            if (component is not null)
             {
                 SelectedComponent = component;
             }

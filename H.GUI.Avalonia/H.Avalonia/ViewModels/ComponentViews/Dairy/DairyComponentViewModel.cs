@@ -28,7 +28,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// <summary>
         /// Service for managing dairy component operations and data transfer
         /// </summary>
-        private readonly IDairyComponentService _dairyComponentService;
+        private readonly IDairyComponentService? _dairyComponentService;
 
         /// <summary>
         /// The domain model object representing the dairy component being edited
@@ -381,20 +381,17 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
             base.OnNavigatedFrom(navigationContext);
 
             // Perform final transfer from DTO to domain model before leaving
-            if (_selectedDairyComponent != null && _selectedDairyComponentDto != null)
+            if (_selectedDairyComponent is not null && _dairyComponentService is not null && _selectedDairyComponentDto is DairyComponentDto dairyComponentDto)
             {
-                // Cast to concrete type to access validation properties
-                var dairyComponentDto = _selectedDairyComponentDto as DairyComponentDto;
-                
                 // Only transfer if there are no validation errors
-                if (dairyComponentDto != null && !dairyComponentDto.HasErrors)
+                if (!dairyComponentDto.HasErrors)
                 {
                     try
                     {
                         _dairyComponentService.TransferDairyDtoToSystem(
-                            dairyComponentDto, 
+                            dairyComponentDto,
                             _selectedDairyComponent);
-                        
+
                         Logger?.LogInformation("Successfully saved dairy component changes");
                     }
                     catch (Exception exception)
@@ -445,9 +442,9 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// The service layer handles the conversion between domain objects and DTOs.
         /// </summary>
         /// <param name="dairyComponent">The dairy component to initialize</param>
-        public void InitializeDairyComponent(DairyComponent dairyComponent)
+        public void InitializeDairyComponent(DairyComponent? dairyComponent)
         {
-            if (dairyComponent == null)
+            if (dairyComponent is null)
             {
                 return;
             }
@@ -457,6 +454,8 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
 
             // Build a DTO to represent the model/domain object using the dairy-specific service
             // This will also convert AnimalGroup domain objects to AnimalGroupDtos
+            if (_dairyComponentService is null) return;
+
             var dairyComponentDto = _dairyComponentService.TransferToDairyComponentDto(dairyComponent);
 
             // Listen for changes on the DTO so we can validate user input before assigning values to the model
@@ -636,9 +635,9 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// <summary>
         /// Removes a population group from the appropriate stage
         /// </summary>
-        private void RemoveGroup(DairyPopulationGroup group)
+        private void RemoveGroup(DairyPopulationGroup? group)
         {
-            if (group == null || SelectedDairyComponentDto == null) return;
+            if (group is null || SelectedDairyComponentDto is null) return;
             
             // Check if we're removing the currently selected group
             bool wasSelectedCalf = group == SelectedCalfGroup;
@@ -778,9 +777,9 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// <summary>
         /// Removes a management practice from the appropriate stage
         /// </summary>
-        private void RemoveManagementPractice(ManagementPeriodDto practice)
+        private void RemoveManagementPractice(ManagementPeriodDto? practice)
         {
-            if (practice == null || SelectedDairyComponentDto == null) return;
+            if (practice is null || SelectedDairyComponentDto is null) return;
 
             var removed = SelectedDairyComponentDto.CalfManagementPractices.Remove(practice) ||
                          SelectedDairyComponentDto.HeiferManagementPractices.Remove(practice) ||
@@ -801,7 +800,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// Handles property changes on the DairyComponentDto.
         /// This is where we can add logic to respond to specific property changes.
         /// </summary>
-        private void OnDairyComponentDtoPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnDairyComponentDtoPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             // Handle property change notifications from the DTO
             // Views binding directly to SelectedDairyComponentDto.AnimalGroupDtos will
@@ -816,7 +815,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// Changes to AnimalGroupDtos will also flow through this handler.
         /// The service layer handles transferring AnimalGroupDto changes back to AnimalGroup domain objects.
         /// </summary>
-        private void DairyComponentDtoOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void DairyComponentDtoOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (IsDisposed)
             {
@@ -830,7 +829,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
                  * we should not proceed with the transfer of user input from the DTO to the model until the validation errors are fixed
                  */
 
-                if (!dairyComponentDto.HasErrors)
+                if (!dairyComponentDto.HasErrors && _selectedDairyComponent is not null && _dairyComponentService is not null)
                 {
                     try
                     {

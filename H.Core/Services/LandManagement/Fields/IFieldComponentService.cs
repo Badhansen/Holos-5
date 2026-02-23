@@ -100,7 +100,7 @@ public interface IFieldComponentService
     /// <param name="fieldComponentGuid">The GUID of the field component</param>
     /// <param name="selectedCropGuid">The GUID of the currently selected crop</param>
     /// <param name="additionalState">Additional UI state to preserve</param>
-    void SaveUIState(Guid fieldComponentGuid, Guid? selectedCropGuid, Dictionary<string, object> additionalState = null);
+    void SaveUIState(Guid fieldComponentGuid, Guid? selectedCropGuid, Dictionary<string, object>? additionalState = null);
 
     /// <summary>
     /// Retrieves previously saved UI state for a field component

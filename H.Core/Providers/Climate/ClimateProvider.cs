@@ -54,7 +54,7 @@ namespace H.Core.Providers.Climate
             return climateData;
         }
 
-        public ClimateData Get(List<DailyClimateData> dailyClimateData, TimeFrame timeFrame)
+        public ClimateData? Get(List<DailyClimateData> dailyClimateData, TimeFrame timeFrame)
         {
             if (dailyClimateData.Any() == false)
             {
@@ -73,11 +73,11 @@ namespace H.Core.Providers.Climate
             };
         }
 
-        public ClimateData Get(double latitude, double longitude, TimeFrame climateNormalTimeFrame)
+        public ClimateData? Get(double latitude, double longitude, TimeFrame climateNormalTimeFrame)
         {
             var dailyClimateData = _nasaClimateProvider.GetCustomClimateData(latitude, longitude);
             if (dailyClimateData.Any() == false)
-            {                
+            {
                 // This will happen when timeouts to the NASA API occur
                 return null;
             }
@@ -85,7 +85,7 @@ namespace H.Core.Providers.Climate
             return this.Get(dailyClimateData, climateNormalTimeFrame);
         }
 
-        public ClimateData Get(double latitude, double longitude, TimeFrame climateNormalTimeFrame, Farm farm)
+        public ClimateData? Get(double latitude, double longitude, TimeFrame climateNormalTimeFrame, Farm farm)
         {
             var climateData = this.Get(latitude, longitude, climateNormalTimeFrame);
             if (climateData != null)

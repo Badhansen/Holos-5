@@ -8,7 +8,7 @@ namespace H.Avalonia.Views.SupportingViews.MeasurementProvince
     {
         #region Fields
 
-        private MeasurementProvinceViewModel _measurementProvinceViewModel;
+        private MeasurementProvinceViewModel? _measurementProvinceViewModel;
 
         #endregion
 
@@ -17,15 +17,7 @@ namespace H.Avalonia.Views.SupportingViews.MeasurementProvince
         public MeasurementProvinceView(MeasurementProvinceViewModel measurementProvinceViewModel)
         {
             InitializeComponent();
-
-            if (measurementProvinceViewModel != null)
-            {
-                _measurementProvinceViewModel = measurementProvinceViewModel;
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(measurementProvinceViewModel));
-            }
+            _measurementProvinceViewModel = measurementProvinceViewModel ?? throw new ArgumentNullException(nameof(measurementProvinceViewModel));
         }
 
         #endregion

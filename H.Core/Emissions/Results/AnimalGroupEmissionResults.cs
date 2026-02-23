@@ -197,7 +197,7 @@ namespace H.Core.Emissions.Results
         /// DMI over check needs to consider JUST the dates that the animals have the specific diet
         /// </summary>
         /// <param name="managementPeriod"></param>
-        public bool IsDmiOverDmiMaxForPeriod(ManagementPeriod managementPeriod)
+        public bool IsDmiOverDmiMaxForPeriod(ManagementPeriod? managementPeriod)
         {
             if (managementPeriod != null)
             {

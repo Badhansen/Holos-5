@@ -18,13 +18,13 @@ public class MyComponentsViewModel : ViewModelBase
 {
     #region Fields
 
-    private ComponentBase _selectedComponent;
-    private ComponentItemViewModel _selectedComponentItem;
-    private ObservableCollection<ComponentBase> _myComponents;
-    private ObservableCollection<ComponentItemViewModel> _myComponentItems;
-    private H.Core.Models.Farm _selectedFarm;
+    private ComponentBase? _selectedComponent;
+    private ComponentItemViewModel? _selectedComponentItem;
+    private ObservableCollection<ComponentBase> _myComponents = null!;
+    private ObservableCollection<ComponentItemViewModel> _myComponentItems = null!;
+    private H.Core.Models.Farm? _selectedFarm;
 
-    private IComponentInitializationService _componentInitializationService;
+    private IComponentInitializationService? _componentInitializationService;
 
     #endregion
 
@@ -65,7 +65,7 @@ public class MyComponentsViewModel : ViewModelBase
 
     #region Properties
 
-    public ComponentBase SelectedComponent
+    public ComponentBase? SelectedComponent
     {
         get => _selectedComponent;
         set 
@@ -79,7 +79,7 @@ public class MyComponentsViewModel : ViewModelBase
         }
     }
 
-    public ComponentItemViewModel SelectedComponentItem
+    public ComponentItemViewModel? SelectedComponentItem
     {
         get => _selectedComponentItem;
         set 
@@ -103,7 +103,7 @@ public class MyComponentsViewModel : ViewModelBase
         get => _myComponentItems;
         set => SetProperty(ref _myComponentItems, value);
     }
-    public H.Core.Models.Farm SelectedFarm
+    public H.Core.Models.Farm? SelectedFarm
     {
         get => _selectedFarm;
         set => SetProperty(ref _selectedFarm, value);
@@ -125,11 +125,11 @@ public class MyComponentsViewModel : ViewModelBase
 
     public void InitializeViewModel()
     {
-        if (!base.IsInitialized)
+        if (!base.IsInitialized && base.ActiveFarm is not null)
         {
             MyComponents.Clear();
             MyComponentItems.Clear();
-            
+
             foreach (var component in base.ActiveFarm.Components)
             {
                 this.MyComponents.Add(component);
@@ -177,7 +177,7 @@ public class MyComponentsViewModel : ViewModelBase
                 componentItem.Cleanup(); // Cleanup the wrapper
                 
                 // Remove from the farm's Components collection
-                base.ActiveFarm.Components.Remove(componentToRemove);
+                base.ActiveFarm?.Components.Remove(componentToRemove);
 
                 // If the removed component was selected, select another component
                 if (this.SelectedComponent == componentToRemove)
@@ -201,7 +201,7 @@ public class MyComponentsViewModel : ViewModelBase
     /// Updates the IsSelected property on all component items based on the currently selected component
     /// </summary>
     /// <param name="selectedComponent">The currently selected component</param>
-    private void UpdateComponentSelectionStates(ComponentBase selectedComponent)
+    private void UpdateComponentSelectionStates(ComponentBase? selectedComponent)
     {
         foreach (var item in this.MyComponentItems)
         {
@@ -223,7 +223,7 @@ public class MyComponentsViewModel : ViewModelBase
 
     public void OnRemoveComponentExecute()
     {
-        if (this.SelectedComponent != null)
+        if (this.SelectedComponent is not null)
         {
             // Store the component to remove since the SelectedComponent will be null after removal from the local collection
             var componentToRemove = this.SelectedComponent;
@@ -238,7 +238,7 @@ public class MyComponentsViewModel : ViewModelBase
             }
             
             // Remove from the farm's Components collection
-            base.ActiveFarm.Components.Remove(componentToRemove);
+            base.ActiveFarm?.Components.Remove(componentToRemove);
 
             this.SelectedComponent = this.MyComponents.LastOrDefault();
 
@@ -251,7 +251,7 @@ public class MyComponentsViewModel : ViewModelBase
 
     private bool OnRemoveComponentCanExecute()
     {
-        return this.SelectedComponent != null;
+        return this.SelectedComponent is not null;
     }
 
     private void OnComponentAddedEvent(ComponentBase componentBase)
@@ -259,14 +259,19 @@ public class MyComponentsViewModel : ViewModelBase
         var instanceType = componentBase.GetType();
         var instance = Activator.CreateInstance(instanceType) as ComponentBase;
 
-        _componentInitializationService.Initialize(instance);
+        if (instance is null) return;
+
+        _componentInitializationService?.Initialize(instance);
 
         this.MyComponents.Add(instance);
         this.MyComponentItems.Add(new ComponentItemViewModel(instance));
         this.SelectedComponent = instance;
 
-        base.ActiveFarm.Components.Add(instance);
-        base.ActiveFarm.SelectedComponent = instance;
+        base.ActiveFarm?.Components.Add(instance);
+        if (base.ActiveFarm is not null)
+        {
+            base.ActiveFarm.SelectedComponent = instance;
+        }
     }
 
     public void OnOptionsExecute()
@@ -308,7 +313,7 @@ public class MyComponentsViewModel : ViewModelBase
     private void NavigateToSelectedComponent()
     {
         // When the user is finished editing components, navigate to the selected component
-        if (this.SelectedComponent != null)
+        if (this.SelectedComponent is not null)
         {
             var viewName = ComponentTypeToViewTypeMapper.GetViewName(this.SelectedComponent);
 

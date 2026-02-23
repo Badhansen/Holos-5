@@ -243,7 +243,7 @@ namespace H.Avalonia.ViewModels
         /// </summary>
         private void OnAddRowExecute()
         {
-            if (base.ActiveFarm != null)
+            if (base.ActiveFarm is not null)
             {
                 var climateViewItem = new ClimateViewItem()
                 {

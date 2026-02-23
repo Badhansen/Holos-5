@@ -126,7 +126,7 @@ namespace H.Core.Services
             foreach (var soilData in farm.GeographicData.SoilDataForAllComponentsWithinPolygon)
             {
                 // Add this type of soil if it does not already exist
-                if (component.SoilDataAvailableForField.FirstOrDefault(x => x.SoilGreatGroup == soilData.SoilGreatGroup) == null)
+                if (!component.SoilDataAvailableForField.Any(x => x.SoilGreatGroup == soilData.SoilGreatGroup))
                 {
                     // We don't model organic soil at this time
                     if (soilData.SoilFunctionalCategory != SoilFunctionalCategory.Organic)

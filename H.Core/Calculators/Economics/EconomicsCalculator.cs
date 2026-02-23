@@ -67,7 +67,7 @@ namespace H.Core.Calculators.Economics
         public bool ExportEconomicsDataToFile(Farm farm, string path, bool exportFromGui,
             ApplicationData applicationData,
             FarmEmissionResults farmEmissionResults,
-            string languageAddon = null)
+            string? languageAddon = null)
         {
             this.MeasurementSystem = farm.MeasurementSystemType;
 

@@ -27,7 +27,7 @@ namespace H.Core.Models.LandManagement.Shelterbelt
         private double _treeSpacing;
         private double _treeCount;
         private TreeSpecies _treeSpecies;
-        private CircumferenceData _circumferenceData;
+        private CircumferenceData? _circumferenceData;
         private double _year;
         private double _aboveGroundCarbonKgPerTree;
         private double _belowGroundCarbonKgPerTree;
@@ -82,7 +82,7 @@ namespace H.Core.Models.LandManagement.Shelterbelt
         /// <param name="row">The row this trannum represents.</param>
         /// <param name="treeGroup">The treegroup this trannum represents.</param>
         /// <param name="year">The year this trannum represents.</param>
-        public TrannumData(ShelterbeltComponent shelterbeltComponent, RowData row, TreeGroupData treeGroup, double year)
+        public TrannumData(ShelterbeltComponent? shelterbeltComponent, RowData? row, TreeGroupData? treeGroup, double year)
         {
             if (shelterbeltComponent == null || row == null || treeGroup == null)
             {
@@ -214,7 +214,7 @@ namespace H.Core.Models.LandManagement.Shelterbelt
             set { this.SetProperty(ref _treeSpecies, value); }
         }
 
-        public CircumferenceData CircumferenceData
+        public CircumferenceData? CircumferenceData
         {
             get { return _circumferenceData; }
             set

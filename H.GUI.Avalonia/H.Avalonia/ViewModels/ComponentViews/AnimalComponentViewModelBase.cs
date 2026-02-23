@@ -262,11 +262,11 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
         }
     }
 
-    protected void InitializeAnimalComponent(AnimalComponentBase animalComponent)
+    protected void InitializeAnimalComponent(AnimalComponentBase? animalComponent)
     {
         Logger?.LogDebug("Starting component initialization: {ComponentName}", animalComponent?.Name ?? "null");
 
-        if (animalComponent == null)
+        if (animalComponent is null)
         {
             Logger?.LogWarning("Component is null, exiting initialization");
             return;
@@ -300,8 +300,8 @@ public abstract class AnimalComponentViewModelBase : ViewModelBase
     private void OnAnimalComponentDtoPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         Logger?.LogDebug("DTO property changed: {PropertyName}", e.PropertyName ?? "Unknown");
-        
-        if (sender is IAnimalComponentDto dto)
+
+        if (sender is IAnimalComponentDto dto && _selectedAnimalComponent is not null)
         {
             Logger?.LogDebug("Transferring changes to domain object");
             try

@@ -445,7 +445,7 @@ namespace H.Core.Models
         {
             get
             {
-                return this.FieldSystemComponents.Where(x => x.GetSingleYearViewItem() != null).Sum(x => x.GetSingleYearViewItem().Area);
+                return this.FieldSystemComponents.Where(x => x.GetSingleYearViewItem() != null).Sum(x => x.GetSingleYearViewItem()!.Area);
             }
         }
 
@@ -454,7 +454,7 @@ namespace H.Core.Models
             get
             {
                 var fieldSystemComponents = this.FieldSystemComponents.Where(x => x.IsIrrigated);
-                var sum = fieldSystemComponents.Sum(x => x.GetSingleYearViewItem().Area);
+                var sum = fieldSystemComponents.Sum(x => x.GetSingleYearViewItem()!.Area);
 
                 return sum;
             }
@@ -885,7 +885,7 @@ namespace H.Core.Models
             }
         }
 
-        public FieldSystemComponent GetFieldSystemComponent(Guid guid)
+        public FieldSystemComponent? GetFieldSystemComponent(Guid guid)
         {
             var result = this.FieldSystemComponents.SingleOrDefault(x => x.Guid == guid);
 
@@ -1009,9 +1009,9 @@ namespace H.Core.Models
             return this.Latitude != 0 && this.Latitude != 0;
         }
 
-        public Diet GetDietByName(DietType dietType)
+        public Diet? GetDietByName(DietType dietType)
         {
-            var result = this.Diets.FirstOrDefault(x => x.DietType == dietType);
+            Diet? result = this.Diets.FirstOrDefault(x => x.DietType == dietType);
             if (result != null)
             {
                 return result;

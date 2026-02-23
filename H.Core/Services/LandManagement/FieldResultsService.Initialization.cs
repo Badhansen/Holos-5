@@ -126,7 +126,7 @@ namespace H.Core.Services.LandManagement
         {
             // Check if user has defaults defined for the type of crop
             var cropDefaults = globalSettings.CropDefaults.SingleOrDefault(x => x.CropType == viewItem.CropType);
-            if (cropDefaults == null)
+            if (cropDefaults is null)
             {
                 return;
             }
@@ -324,7 +324,7 @@ namespace H.Core.Services.LandManagement
         public void AssignDefaultBlendData(FertilizerApplicationViewItem fertilizerApplicationViewItem)
         {
             var data = _carbonFootprintForFertilizerBlendsProvider.GetData(fertilizerApplicationViewItem.FertilizerBlendData.FertilizerBlend);
-            if (data != null)
+            if (data is not null)
             {
                 /*
                  * Don't reassign the FertilizerBlendData property to the object returned from the provider since the view model will have attached event handlers

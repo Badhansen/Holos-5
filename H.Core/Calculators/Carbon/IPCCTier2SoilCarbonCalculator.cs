@@ -361,7 +361,7 @@ namespace H.Core.Calculators.Carbon
 
         public void CalculatePools(
             CropViewItem currentYearViewItem,
-            CropViewItem previousYearViewItem,
+            CropViewItem? previousYearViewItem,
             Farm farm,
             bool isEquilibriumYear = false)
         {

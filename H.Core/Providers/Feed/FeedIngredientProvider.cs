@@ -118,7 +118,7 @@ namespace H.Core.Providers.Feed
                             $"{animalType}_{dietType}";
 
             // Try to retrieve the result from cache
-            IReadOnlyCollection<IFeedIngredient> cachedResult = null;
+            IReadOnlyCollection<IFeedIngredient>? cachedResult = null;
             if (_cacheService != null)
             {
                 cachedResult = _cacheService.Get<IReadOnlyCollection<IFeedIngredient>>(cacheKey);

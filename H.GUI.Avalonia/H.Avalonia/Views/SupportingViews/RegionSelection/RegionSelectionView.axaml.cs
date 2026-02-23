@@ -8,7 +8,7 @@ namespace H.Avalonia.Views.SupportingViews.RegionSelection
     {
         #region Fields
 
-        private RegionSelectionViewModel _regionSelectionViewModel;
+        private RegionSelectionViewModel? _regionSelectionViewModel;
 
         #endregion
 
@@ -17,16 +17,8 @@ namespace H.Avalonia.Views.SupportingViews.RegionSelection
         public RegionSelectionView(RegionSelectionViewModel regionSelectionViewModel)
         {
             InitializeComponent();
-
-            if (regionSelectionViewModel != null)
-            {
-                _regionSelectionViewModel = regionSelectionViewModel;
-                DataContext = _regionSelectionViewModel;
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(regionSelectionViewModel));
-            }
+            _regionSelectionViewModel = regionSelectionViewModel ?? throw new ArgumentNullException(nameof(regionSelectionViewModel));
+            DataContext = _regionSelectionViewModel;
         }
 
         #endregion

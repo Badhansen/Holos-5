@@ -11,11 +11,11 @@
   <converters:BoolToBorderThicknessConverter x:Key="BoolToBorderThicknessConverter"/>
 </UserControl.Resources>
 
-  <Border BorderBrush="#E0E0E0" 
-          BorderThickness="2" 
-          CornerRadius="8" 
+  <Border BorderBrush="#E0E0E0"
+          BorderThickness="2"
+          CornerRadius="8"
           Background="White"
-          Padding="24">
+          Padding="20">
     <Grid RowDefinitions="Auto,*,Auto,Auto">
       
       <!-- Title -->
@@ -281,9 +281,9 @@
 
       <!-- Stage Information Box (appears when a stage is selected) -->
       <Border Grid.Row="2"
-              Background="#FFF9E6"
-              BorderBrush="#FFA000"
-              BorderThickness="2"
+              Background="#F5F5F5"
+              BorderBrush="#E0E0E0"
+              BorderThickness="1"
               CornerRadius="6"
               Padding="16"
               Margin="0,16,0,16"
@@ -294,13 +294,13 @@
                        Text="{Binding SelectedStageTitle}"
                        FontSize="14"
                        FontWeight="Bold"
-                       Foreground="#F57C00"/>
+                       Foreground="#333"/>
             <Button Grid.Column="1"
-                    Content="?"
+                    Content="✕"
                     Background="Transparent"
                     BorderThickness="0"
-                    FontSize="16"
-                    Foreground="#F57C00"
+                    FontSize="14"
+                    Foreground="#999"
                     Cursor="Hand"
                     Click="CloseInfo_Click"
                     Padding="8,0"/>

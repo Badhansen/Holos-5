@@ -227,11 +227,11 @@ namespace H.Core.Models
 
         #region Event Handlers
 
-        private void ProjectedComponentsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        private void ProjectedComponentsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
             if (notifyCollectionChangedEventArgs.Action == NotifyCollectionChangedAction.Add)
             {
-                var addedItem = notifyCollectionChangedEventArgs.NewItems[0];
+                var addedItem = notifyCollectionChangedEventArgs.NewItems?[0];
                 if (addedItem is ComponentBase component)
                 {
                     component.PropertyChanged += ComponentOnPropertyChanged;
@@ -239,31 +239,31 @@ namespace H.Core.Models
             }
         }
 
-        private void ComponentOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        private void ComponentOnPropertyChanged(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
             if (sender is ComponentBase component)
             {
-                if (propertyChangedEventArgs.PropertyName.Equals(nameof(this.EndYear)))
+                if (propertyChangedEventArgs.PropertyName != null && propertyChangedEventArgs.PropertyName.Equals(nameof(this.EndYear)))
                 {
                     this.UpdateStartYearOfSubsequentComponent(component);
                 }
 
-                if (propertyChangedEventArgs.PropertyName.Equals(nameof(this.StartYear)))
+                if (propertyChangedEventArgs.PropertyName != null && propertyChangedEventArgs.PropertyName.Equals(nameof(this.StartYear)))
                 {
                     this.UpdateEndYearOfPreviousComponent(component);
                 }
 
-                if (propertyChangedEventArgs.PropertyName.Equals(nameof(this.Name)))
+                if (propertyChangedEventArgs.PropertyName != null && propertyChangedEventArgs.PropertyName.Equals(nameof(this.Name)))
                 {
                 }
             }
         }
 
-        private void HistoricalComponentsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        private void HistoricalComponentsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
             if (notifyCollectionChangedEventArgs.Action == NotifyCollectionChangedAction.Add)
             {
-                var addedItem = notifyCollectionChangedEventArgs.NewItems[0];
+                var addedItem = notifyCollectionChangedEventArgs.NewItems?[0];
                 if (addedItem is ComponentBase component)
                 {
                     component.PropertyChanged += ComponentOnPropertyChanged;

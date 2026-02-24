@@ -14,6 +14,14 @@ namespace H.Avalonia.Views.SupportingViews.RegionSelection
 
         #region Constructors
 
+        /// <summary>
+        /// Parameterless constructor required by the Avalonia XAML loader.
+        /// </summary>
+        public RegionSelectionView()
+        {
+            InitializeComponent();
+        }
+
         public RegionSelectionView(RegionSelectionViewModel regionSelectionViewModel)
         {
             InitializeComponent();

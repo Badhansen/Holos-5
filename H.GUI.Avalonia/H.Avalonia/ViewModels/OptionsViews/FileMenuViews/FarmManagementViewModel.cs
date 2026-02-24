@@ -74,7 +74,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
                 else
                 {
                     Farms.Clear();
-                    var farms = base.StorageService.GetAllFarms().Where(f => f.Name.ToLower().Contains(value.ToLower()) || f.DefaultSoilData.EcodistrictName.ToLower().Contains(value.ToLower()) || f.Province.ToString().ToLower().Contains(value.ToLower()));
+                    var farms = base.StorageService.GetAllFarms().Where(f => (f.Name?.ToLower().Contains(value.ToLower()) ?? false) || (f.DefaultSoilData?.EcodistrictName?.ToLower().Contains(value.ToLower()) ?? false) || f.Province.ToString().ToLower().Contains(value.ToLower()));
                     Farms.Add(farms);
                 }
             }
@@ -101,7 +101,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
         {
             if (this.Farms.Count > 1 && this.SelectedFarm is not null)
             {
-                var userDeletedCurrentFarm = this.SelectedFarm == base.StorageService?.GetActiveFarm();
+                var userDeletedCurrentFarm = Equals(this.SelectedFarm, base.StorageService?.GetActiveFarm());
 
                 base.StorageService?.Storage.ApplicationData.Farms.Remove(this.SelectedFarm);
                 this.Farms.Clear();
@@ -111,31 +111,31 @@ namespace H.Avalonia.ViewModels.OptionsViews.FileMenuViews
                 if (userDeletedCurrentFarm)
                 {
                     this.ClearActiveView();
-                    base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(FarmOptionsView));
+                    base.RegionManager?.RequestNavigate(UiRegions.ContentRegion, nameof(FarmOptionsView));
                 }
             }
             else
             {
-                NotificationManager.ShowToast(H.Core.Properties.Resources.CantDeleteCurrentFarmTitle, H.Core.Properties.Resources.CantDeleteCurrentFarmBody, NotificationType.Warning);
+                NotificationManager?.ShowToast(H.Core.Properties.Resources.CantDeleteCurrentFarmTitle, H.Core.Properties.Resources.CantDeleteCurrentFarmBody, NotificationType.Warning);
             }
         }
 
         private void ClearActiveView()
         {
             // Clear content region
-            var contentView = this.RegionManager.Regions[UiRegions.ContentRegion].ActiveViews.SingleOrDefault();
+            var contentView = this.RegionManager?.Regions[UiRegions.ContentRegion].ActiveViews.SingleOrDefault();
             if (contentView != null)
             {
-                this.RegionManager.Regions[UiRegions.ContentRegion].Deactivate(contentView);
-                this.RegionManager.Regions[UiRegions.ContentRegion].Remove(contentView);
+                this.RegionManager?.Regions[UiRegions.ContentRegion].Deactivate(contentView);
+                this.RegionManager?.Regions[UiRegions.ContentRegion].Remove(contentView);
             }
 
             // Clear sidebar region
-            var sidebarView = this.RegionManager.Regions[UiRegions.SidebarRegion].ActiveViews.SingleOrDefault();
+            var sidebarView = this.RegionManager?.Regions[UiRegions.SidebarRegion].ActiveViews.SingleOrDefault();
             if (sidebarView != null)
             {
-                this.RegionManager.Regions[UiRegions.SidebarRegion].Deactivate(sidebarView);
-                this.RegionManager.Regions[UiRegions.SidebarRegion].Remove(sidebarView);
+                this.RegionManager?.Regions[UiRegions.SidebarRegion].Deactivate(sidebarView);
+                this.RegionManager?.Regions[UiRegions.SidebarRegion].Remove(sidebarView);
             }
         }
 

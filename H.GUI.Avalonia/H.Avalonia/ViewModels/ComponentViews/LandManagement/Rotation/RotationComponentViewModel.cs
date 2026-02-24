@@ -78,19 +78,19 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         /// <summary>
         /// Collection of field component DTOs (one per crop in rotation, used for field system integration)
         /// </summary>
-        private ObservableCollection<IFieldComponentDto> _fieldComponentDtos;
-        
+        private ObservableCollection<IFieldComponentDto> _fieldComponentDtos = null!;
+
         /// <summary>
         /// Collection of crop DTOs representing the rotation sequence (Step 2 timeline)
         /// Each crop represents one year in the rotation cycle
         /// </summary>
-        private ObservableCollection<ICropDto> _cropDtos;
-        
+        private ObservableCollection<ICropDto> _cropDtos = null!;
+
         /// <summary>
         /// Collection of field assignment rows for the preview grid (Step 3)
         /// Each row represents one field, containing year/crop assignments
         /// </summary>
-        private ObservableCollection<FieldAssignmentRow> _fieldAssignmentRows;
+        private ObservableCollection<FieldAssignmentRow> _fieldAssignmentRows = null!;
         
         /// <summary>
         /// The direction in which crops shift across fields in the rotation.
@@ -100,11 +100,6 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         /// </summary>
         private RotationShiftDirection _shiftDirection = RotationShiftDirection.RightShift;
 
-        /// <summary>
-        /// Flag to track if the crop selection came from clicking a preview grid cell
-        /// This is used to determine if auto-scrolling should occur
-        /// </summary>
-        private bool _selectionFromGridCell = false;
 
         #endregion
 
@@ -305,22 +300,22 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         /// <summary>
         /// Command to add a new crop to the rotation
         /// </summary>
-        public ICommand AddCropToRotationCommand { get; private set; }
+        public ICommand AddCropToRotationCommand { get; private set; } = null!;
 
         /// <summary>
         /// Command to set the selected crop when a timeline card is clicked
         /// </summary>
-        public ICommand SetSelectedCropCommand { get; private set; }
+        public ICommand SetSelectedCropCommand { get; private set; } = null!;
 
         /// <summary>
         /// Command to set the selected crop when a preview grid cell is clicked
         /// </summary>
-        public ICommand SetSelectedCropFromCellCommand { get; private set; }
+        public ICommand SetSelectedCropFromCellCommand { get; private set; } = null!;
 
         /// <summary>
         /// Command to remove a specific crop from the rotation
         /// </summary>
-        public ICommand RemoveSpecificCropCommand { get; private set; }
+        public ICommand RemoveSpecificCropCommand { get; private set; } = null!;
 
         #endregion
 
@@ -693,13 +688,13 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
                         // Handle timeline selection management
                         // If we just deleted the selected timeline card, we need to select a different one
                         var wasSelected = cropDto.IsSelected;
-                        if (wasSelected && this.CropDtos.Any())
+                        if (wasSelected && this.CropDtos?.Any() == true)
                         {
                             // Select the last crop in the remaining sequence
                             var newSelectedCrop = this.CropDtos.Last();
                             UpdateCropSelectionStates(newSelectedCrop);
                         }
-                        else if (!this.CropDtos.Any())
+                        else if (this.CropDtos?.Any() != true)
                         {
                             // No crops remain, clear all selections
                             UpdateCropSelectionStates(null);
@@ -908,7 +903,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
         }
 
         // Handle copying values to similar crops
-        if (sender is ICropDto cropDto)
+        if (sender is ICropDto cropDto && e.PropertyName != null)
         {
             CopyValuesToSimilarCrops(cropDto, e.PropertyName);
         }
@@ -920,7 +915,7 @@ namespace H.Avalonia.ViewModels.ComponentViews.LandManagement.Rotation
     /// </summary>
     private void OnSelectedCropDtoPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (sender is ICropDto cropDto)
+        if (sender is ICropDto cropDto && e.PropertyName != null)
         {
             // Handle copying values to similar crops when properties change
             CopyValuesToSimilarCrops(cropDto, e.PropertyName);

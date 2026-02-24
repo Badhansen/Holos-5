@@ -46,8 +46,8 @@ namespace H.Avalonia.ViewModels.FarmCreationViews
 
         #region Properties
 
-        public DelegateCommand NavigateToPreviousPage { get; }
-        public DelegateCommand NavigateToNextPage { get; }
+        public DelegateCommand NavigateToPreviousPage { get; } = null!;
+        public DelegateCommand NavigateToNextPage { get; } = null!;
         public ObservableCollection<Farm> Farms
         {
             get => _farms;
@@ -84,7 +84,7 @@ namespace H.Avalonia.ViewModels.FarmCreationViews
                 else
                 {
                     Farms.Clear();
-                    var farms = base.StorageService.GetAllFarms().Where(f => f.Name.ToLower().Contains(value.ToLower()) || f.DefaultSoilData.EcodistrictName.ToLower().Contains(value.ToLower()) || f.Province.ToString().ToLower().Contains(value.ToLower()));
+                    var farms = base.StorageService!.GetAllFarms().Where(f => (f.Name?.ToLower().Contains(value.ToLower()) ?? false) || (f.DefaultSoilData?.EcodistrictName?.ToLower().Contains(value.ToLower()) ?? false) || f.Province.ToString().ToLower().Contains(value.ToLower()));
                     Farms.Add(farms);
                 }
             }
@@ -129,11 +129,11 @@ namespace H.Avalonia.ViewModels.FarmCreationViews
         private void ClearActiveView()
         {
             // Clear content region
-            var contentView = this.RegionManager.Regions[UiRegions.ContentRegion].ActiveViews.SingleOrDefault();
+            var contentView = this.RegionManager?.Regions[UiRegions.ContentRegion].ActiveViews.SingleOrDefault();
             if (contentView != null)
             {
-                this.RegionManager.Regions[UiRegions.ContentRegion].Deactivate(contentView);
-                this.RegionManager.Regions[UiRegions.ContentRegion].Remove(contentView);
+                this.RegionManager?.Regions[UiRegions.ContentRegion].Deactivate(contentView);
+                this.RegionManager?.Regions[UiRegions.ContentRegion].Remove(contentView);
             }
         }
 

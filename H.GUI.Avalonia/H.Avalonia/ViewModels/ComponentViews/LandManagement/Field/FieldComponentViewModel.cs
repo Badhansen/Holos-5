@@ -97,22 +97,22 @@ public class FieldComponentViewModel : ViewModelBase
     /// <summary>
     /// Responsible for handling the addition of new crops
     /// </summary>
-    public DelegateCommand<object> AddCropCommand { get; set; }
+    public DelegateCommand<object> AddCropCommand { get; set; } = null!;
 
     /// <summary>
     /// Responsible for handling the removal of crops
     /// </summary>
-    public DelegateCommand<object> RemoveCropCommand { get; set; }
+    public DelegateCommand<object> RemoveCropCommand { get; set; } = null!;
 
     /// <summary>
     /// Responsible for setting the selected crop when a card is clicked in the timeline view
     /// </summary>
-    public DelegateCommand<object> SetSelectedCropCommand { get; set; }
+    public DelegateCommand<object> SetSelectedCropCommand { get; set; } = null!;
 
     /// <summary>
     /// Responsible for removing a specific crop from the timeline cards
     /// </summary>
-    public DelegateCommand<object> RemoveSpecificCropCommand { get; set; }
+    public DelegateCommand<object> RemoveSpecificCropCommand { get; set; } = null!;
 
     /// <summary>
     /// The selected <see cref="SelectedFieldSystemComponentDto"/>
@@ -426,7 +426,7 @@ public class FieldComponentViewModel : ViewModelBase
     {
         if (IsDisposed) return;
 
-        if (e.PropertyName.Equals(nameof(SelectedCropDto)))
+        if (e.PropertyName != null && e.PropertyName.Equals(nameof(SelectedCropDto)))
         {
             RemoveCropCommand?.RaiseCanExecuteChanged();
 

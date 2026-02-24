@@ -451,8 +451,8 @@ namespace H.Core.Services.LandManagement
                 foreach (var customYieldItem in farm.GeographicData.CustomYieldData)
                 {
                     var yearMatch = customYieldItem.Year == viewItem.Year;
-                    var fieldNameMatch = fieldSystemComponent.Name.IndexOf(customYieldItem.FieldName.Trim(), StringComparison.InvariantCultureIgnoreCase) >= 0;
-                    var farmNameMatch = farm.Name.IndexOf(customYieldItem.RotationName.Trim(), StringComparison.InvariantCultureIgnoreCase) >= 0;
+                    var fieldNameMatch = (fieldSystemComponent.Name ?? string.Empty).IndexOf(customYieldItem.FieldName.Trim(), StringComparison.InvariantCultureIgnoreCase) >= 0;
+                    var farmNameMatch = (farm.Name ?? string.Empty).IndexOf(customYieldItem.RotationName.Trim(), StringComparison.InvariantCultureIgnoreCase) >= 0;
 
 
                     // Don't assign main year yields to a cover crop yield (for now)
@@ -462,10 +462,10 @@ namespace H.Core.Services.LandManagement
                     }
                 }
 
-                CustomUserYieldData yieldDataRow = null;
+                CustomUserYieldData? yieldDataRow = null;
                 if (results.Count > 1)
                 {
-                    yieldDataRow = results.FirstOrDefault(x => x.FieldName.Trim().Equals(fieldSystemComponent.Name.Trim(), StringComparison.InvariantCultureIgnoreCase));
+                    yieldDataRow = results.FirstOrDefault(x => x.FieldName.Trim().Equals(fieldSystemComponent.Name?.Trim(), StringComparison.InvariantCultureIgnoreCase));
                 }
                 else if (results.Count == 1)
                 {
@@ -635,7 +635,7 @@ namespace H.Core.Services.LandManagement
 
         public void AssignDefaultLigninContent(CropViewItem cropViewItem, Farm farm)
         {
-            Providers.Carbon.Table_7_Relative_Biomass_Information_Data table10RelativeBiomassData = this.GetResidueData(cropViewItem, farm);
+            Providers.Carbon.Table_7_Relative_Biomass_Information_Data? table10RelativeBiomassData = this.GetResidueData(cropViewItem, farm);
             
             if (table10RelativeBiomassData != null)
             {

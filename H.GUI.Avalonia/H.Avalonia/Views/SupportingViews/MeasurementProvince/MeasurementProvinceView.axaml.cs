@@ -14,6 +14,14 @@ namespace H.Avalonia.Views.SupportingViews.MeasurementProvince
 
         #region Constructors
 
+        /// <summary>
+        /// Parameterless constructor required by the Avalonia XAML loader.
+        /// </summary>
+        public MeasurementProvinceView()
+        {
+            InitializeComponent();
+        }
+
         public MeasurementProvinceView(MeasurementProvinceViewModel measurementProvinceViewModel)
         {
             InitializeComponent();

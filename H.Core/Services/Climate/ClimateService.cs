@@ -93,7 +93,7 @@ namespace H.Core.Services.Climate
         {
             _logger?.LogDebug("Transferring DailyClimateData to DTO for year: {Year}", dailyClimateData?.Year);
             
-            return _climateTransferService.TransferDomainObjectToDto(dailyClimateData);
+            return _climateTransferService.TransferDomainObjectToDto(dailyClimateData!);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace H.Core.Services.Climate
         {
             _logger?.LogDebug("Transferring DailyClimateDto to system for year: {Year}", dailyClimateDto?.Year);
             
-            return _climateTransferService.TransferDtoToDomainObject(dailyClimateDto, dailyClimateData);
+            return _climateTransferService.TransferDtoToDomainObject(dailyClimateDto!, dailyClimateData);
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace H.Core.Services.Climate
             _climateProvider.OutputDailyClimateData(farm, outputPath);
         }
 
-        public ClimateData Get(double latitude, double longitude, TimeFrame climateNormalTimeFrame)
+        public ClimateData? Get(double latitude, double longitude, TimeFrame climateNormalTimeFrame)
         {
             return _climateProvider.Get(latitude, longitude, climateNormalTimeFrame);
         }
@@ -194,7 +194,7 @@ namespace H.Core.Services.Climate
             return _climateProvider.GetGrowingSeasonEvapotranspiration(farm, year);
         }
 
-        public ClimateData Get(double latitude, double longitude, TimeFrame climateNormalTimeFrame, Farm farm)
+        public ClimateData? Get(double latitude, double longitude, TimeFrame climateNormalTimeFrame, Farm farm)
         {
             return _climateProvider.Get(latitude, longitude, climateNormalTimeFrame, farm);
         }

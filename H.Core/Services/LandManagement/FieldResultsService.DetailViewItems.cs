@@ -129,7 +129,10 @@ namespace H.Core.Services.LandManagement
                 // Create view items any historical component(s)
                 foreach (var historicalComponent in component.HistoricalComponents)
                 {
-                    this.CreateDetailViewItems(historicalComponent as FieldSystemComponent, farm);
+                    if (historicalComponent is FieldSystemComponent historicalField)
+                    {
+                        this.CreateDetailViewItems(historicalField, farm);
+                    }
                 }
 
                 // Create view items for the current component
@@ -138,7 +141,10 @@ namespace H.Core.Services.LandManagement
                 // Create view items any projected component(s)
                 foreach (var projectedComponent in component.ProjectedComponents)
                 {
-                    this.CreateDetailViewItems(projectedComponent as FieldSystemComponent, farm);
+                    if (projectedComponent is FieldSystemComponent projectedField)
+                    {
+                        this.CreateDetailViewItems(projectedField, farm);
+                    }
                 }
 
                this.PostProcessPerennials(component, farm);
@@ -197,6 +203,7 @@ namespace H.Core.Services.LandManagement
                 
                 // Get the main crop
                 var mainCrop = this.GetMainCropForYear(viewItemsForYear, year, fieldSystemComponent);
+                if (mainCrop == null) continue;
 
                 // Combine inputs from other crops grown in the same year (undersown, cover crop, etc.)
 
@@ -269,6 +276,7 @@ namespace H.Core.Services.LandManagement
 
                 // Get the main crop
                 var mainCropForYear = this.GetMainCropForYear(itemsForYear, year, fieldSystemComponent);
+                if (mainCropForYear == null) continue;
 
                 // Copy the item
                 var copiedItem = this.MapDetailsScreenViewItemFromComponentScreenViewItem(mainCropForYear, year);
@@ -658,8 +666,8 @@ namespace H.Core.Services.LandManagement
 
                 currentYearViewItem.TimePeriodCategoryString = fieldSystemComponent.TimePeriodCategory.GetDescription();
                 currentYearViewItem.Name = fieldSystemComponent.Name;
-                currentYearViewItem.FieldName = fieldSystemComponent.Name;
-                currentYearViewItem.ManagementPeriodName = fieldSystemComponent.Name;
+                currentYearViewItem.FieldName = fieldSystemComponent.Name ?? string.Empty;
+                currentYearViewItem.ManagementPeriodName = fieldSystemComponent.Name ?? string.Empty;
                 currentYearViewItem.SizeOfFirstRotationForField = fieldSystemComponent.CropViewItems.Count();
 
                 /*

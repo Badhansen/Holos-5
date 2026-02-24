@@ -12,7 +12,7 @@ namespace H.Core.Providers.Climate
         #region Fields
 
         private readonly NasaClimateProvider _nasaClimateProvider;
-        private readonly ISlcClimateProvider _slcClimateDataProvider;
+        private readonly ISlcClimateProvider _slcClimateDataProvider = null!;
         private readonly CustomFileClimateDataProvider _customFileClimateDataProvider;
         private readonly ClimateNormalCalculator _climateNormalCalculator;
 
@@ -88,7 +88,7 @@ namespace H.Core.Providers.Climate
         public ClimateData? Get(double latitude, double longitude, TimeFrame climateNormalTimeFrame, Farm farm)
         {
             var climateData = this.Get(latitude, longitude, climateNormalTimeFrame);
-            if (climateData != null)
+            if (climateData is not null)
             {
                 climateData.BarnTemperatureData = _indoorTemperatureProvider.GetIndoorTemperature(farm.Province);
             }

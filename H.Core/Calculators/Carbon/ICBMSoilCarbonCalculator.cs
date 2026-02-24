@@ -69,9 +69,9 @@ namespace H.Core.Calculators.Carbon
                 farm: farm);
 
             currentYearViewItem.CarbonInputFromProduct = this.CalculateCarbonInputFromProduct(
-                previousYearViewItem: previousYearViewItem,
+                previousYearViewItem: previousYearViewItem!,
                 currentYearViewItem: currentYearViewItem,
-                nextYearViewItem: nextYearViewItem,
+                nextYearViewItem: nextYearViewItem!,
                 farm: farm);
 
             if (isNonSwathingGrazingScenario)
@@ -92,17 +92,17 @@ namespace H.Core.Calculators.Carbon
             }
 
             currentYearViewItem.CarbonInputFromStraw = this.CalculateCarbonInputFromStraw(
-                previousYearViewItem: previousYearViewItem,
+                previousYearViewItem: previousYearViewItem!,
                 currentYearViewItem: currentYearViewItem,
                 farm: farm);
 
             currentYearViewItem.CarbonInputFromRoots = this.CalculateCarbonInputFromRoots(
-                previousYearViewItem: previousYearViewItem,
+                previousYearViewItem: previousYearViewItem!,
                 currentYearViewItem: currentYearViewItem,
                 farm: farm);
 
             currentYearViewItem.CarbonInputFromExtraroots = this.CalculateCarbonInputFromExtraroot(
-                previousYearViewItem: previousYearViewItem,
+                previousYearViewItem: previousYearViewItem!,
                 currentYearViewItem: currentYearViewItem,
                 farm: farm);
 

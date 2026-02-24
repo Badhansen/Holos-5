@@ -30,7 +30,7 @@ namespace H.Core.Emissions.Results
         /// <summary>
         /// The <see cref="AnimalGroup"/> that caused the emissions.
         /// </summary>
-        public AnimalGroup AnimalGroup { get; set; }
+        public AnimalGroup AnimalGroup { get; set; } = null!;
 
         /// <summary>
         /// A collection of emissions for each month created by the <see cref="AnimalGroup"/>.
@@ -199,7 +199,7 @@ namespace H.Core.Emissions.Results
         /// <param name="managementPeriod"></param>
         public bool IsDmiOverDmiMaxForPeriod(ManagementPeriod? managementPeriod)
         {
-            if (managementPeriod != null)
+            if (managementPeriod is not null)
             {
                 foreach (var groupEmissionsByMonth in this.GroupEmissionsByMonths)
                 {

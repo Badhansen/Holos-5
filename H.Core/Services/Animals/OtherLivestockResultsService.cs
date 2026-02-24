@@ -215,7 +215,7 @@ namespace H.Core.Services.Animals
         /// <param name="emissionFactor">Emission factor [kg N2O-N (kg N)^-1] </param>
         /// <param name="numberOfDays">Number of days in month</param>
         /// <returns>Manure direct N emission (kg N2O-N)</returns>
-        public new double CalculateManureDirectNitrogenEmission(double manureNitrogen, 
+        public double CalculateManureDirectNitrogenEmission(double manureNitrogen,
                                                             double emissionFactor,
                                                             double numberOfDays)
         {

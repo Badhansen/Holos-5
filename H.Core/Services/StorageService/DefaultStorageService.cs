@@ -77,7 +77,7 @@ public class DefaultStorageService : IStorageService
             }
             else
             {
-                if (Storage.ApplicationData.Farms.Any(x => x.Name.Equals(importedFarmName)))
+                if (Storage.ApplicationData.Farms.Any(x => x.Name != null && x.Name.Equals(importedFarmName)))
                 {
                     farm.Name = farm.Name + $"_Imported_{DateTime.Now.ToShortDateString()}";
                 }

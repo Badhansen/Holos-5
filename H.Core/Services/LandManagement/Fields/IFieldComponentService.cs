@@ -92,7 +92,7 @@ public interface IFieldComponentService
     /// <param name="cropDto">The <see cref="CropDto"/> that identifies which <see cref="CropViewItem"/> to remove</param>
     void RemoveCropFromSystem(FieldSystemComponent fieldSystemComponent, ICropDto cropDto);
 
-    CropViewItem GetCropViewItemFromDto(ICropDto cropDto, FieldSystemComponent fieldSystemComponent);
+    CropViewItem? GetCropViewItemFromDto(ICropDto cropDto, FieldSystemComponent fieldSystemComponent);
 
     /// <summary>
     /// Saves the UI state for a field component to preserve across ViewModel disposal cycles
@@ -107,7 +107,7 @@ public interface IFieldComponentService
     /// </summary>
     /// <param name="fieldComponentGuid">The GUID of the field component</param>
     /// <returns>The saved UI state, or null if not found</returns>
-    FieldComponentUIState GetUIState(Guid fieldComponentGuid);
+    FieldComponentUIState? GetUIState(Guid fieldComponentGuid);
 
     /// <summary>
     /// Clears old UI state entries to prevent memory growth

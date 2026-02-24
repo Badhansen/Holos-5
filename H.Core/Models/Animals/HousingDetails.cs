@@ -32,7 +32,6 @@ namespace H.Core.Models.Animals
 
         private double _indoorHousingTemperature;
 
-        private string _nameOfPastureLocation;
 
         private static readonly IMapper _housingDetailsMapper;
 
@@ -86,7 +85,7 @@ namespace H.Core.Models.Animals
             {
                 if (this.PastureLocation != null)
                 {
-                    return this.PastureLocation.Name;
+                    return this.PastureLocation.Name ?? string.Empty;
                 }
                 else
                 {
@@ -280,7 +279,7 @@ namespace H.Core.Models.Animals
 
         #region Event Handlers
 
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (sender is HousingDetails housingDetails)
             {

@@ -23,7 +23,7 @@ namespace H.Core.Calculators.Nitrogen
         public IManureService ManureService { get; set; }
         public IDigestateService DigestateService { get; set; }
 
-        public IClimateProvider ClimateProvider { get; set; }
+        public IClimateProvider ClimateProvider { get; set; } = null!;
 
         public IAnimalEmissionFactorsProvider LivestockEmissionConversionFactorsProvider { get; set; }
         public IAnimalAmmoniaEmissionFactorProvider AnimalAmmoniaEmissionFactorProvider { get; set; }
@@ -127,7 +127,7 @@ namespace H.Core.Calculators.Nitrogen
             CropViewItem? viewItem,
             Farm farm)
         {
-            if (viewItem == null)
+            if (viewItem is null)
             {
                 return 0;
             }
@@ -172,7 +172,7 @@ namespace H.Core.Calculators.Nitrogen
             CropViewItem? viewItem,
             Farm farm)
         {
-            if (viewItem == null)
+            if (viewItem is null)
             {
                 return 0;
             }
@@ -210,7 +210,7 @@ namespace H.Core.Calculators.Nitrogen
             CropViewItem? viewItem,
             Farm farm)
         {
-            if (viewItem == null)
+            if (viewItem is null)
             {
                 return 0;
             }

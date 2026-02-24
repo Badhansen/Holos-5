@@ -18,7 +18,7 @@ namespace H.Core.Models.Animals
     {
         #region Fields
 
-        private ObservableCollection<AnimalGroup> _groups;
+        private ObservableCollection<AnimalGroup> _groups = null!;
 
         #endregion
 
@@ -257,14 +257,14 @@ namespace H.Core.Models.Animals
 
         #region Event Handlers
 
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (sender is AnimalComponentBase animalComponent)
             {
             }
         }
 
-        private void GroupsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        private void GroupsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
             if (notifyCollectionChangedEventArgs.Action == NotifyCollectionChangedAction.Add)
             {
@@ -275,7 +275,7 @@ namespace H.Core.Models.Animals
             }
         }
 
-        private void AnimalGroupOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void AnimalGroupOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (sender is AnimalGroup animalGroup)
             {

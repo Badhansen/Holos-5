@@ -39,7 +39,7 @@ namespace H.Avalonia.ViewModels.OptionsViews
 
         public void Initialize()
         {
-            Data = new UserSettingsDTO(base.StorageService);
+            Data = new UserSettingsDTO(base.StorageService!);
         }
 
         public override void OnNavigatedTo(NavigationContext navigationContext)

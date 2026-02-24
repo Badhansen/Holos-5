@@ -13,7 +13,7 @@ namespace H.Core.Models.LandManagement.Fields
         
         private AnimalType _animalType;
         private ManureStateType _manureStateType;
-        private ObservableCollection<ManureStateType> _validManureStateTypesForSelectedTypeOfAnimalManure;
+        private ObservableCollection<ManureStateType> _validManureStateTypesForSelectedTypeOfAnimalManure = null!;
         private ManureLocationSourceType manureLocationSourceType;
         private DefaultManureCompositionData? _defaultManureCompositionData;
         protected double _amountOfNitrogenAppliedPerHectare;
@@ -102,7 +102,7 @@ namespace H.Core.Models.LandManagement.Fields
 
         #region Event Handlers
         
-        private void DefaultManureCompositionDataOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void DefaultManureCompositionDataOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
         } 
 

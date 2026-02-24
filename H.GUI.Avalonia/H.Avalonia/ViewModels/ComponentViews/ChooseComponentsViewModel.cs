@@ -99,7 +99,7 @@ namespace H.Avalonia.ViewModels.ComponentViews
             set => SetProperty(ref _selectedComponent, value);
         }
 
-        public DelegateCommand<ComponentBase> SelectComponentCommand { get; private set; }
+        public DelegateCommand<ComponentBase> SelectComponentCommand { get; private set; } = null!;
 
         #endregion
 
@@ -117,7 +117,7 @@ namespace H.Avalonia.ViewModels.ComponentViews
             base.OnNavigatedFrom(navigationContext);
         }
 
-        public void InitializeViewModel()
+        public override void InitializeViewModel()
         {
             this.SelectedComponent = this.AvailableComponents.First();
         }
@@ -249,23 +249,32 @@ namespace H.Avalonia.ViewModels.ComponentViews
         {
             if (e.PropertyName is nameof(this.SelectedComponent))
             {
-                this.SelectedComponentTitle = this.SelectedComponent.ComponentType.GetDescription();
-                this.SelectedComponentDescription = this.SelectedComponent.ComponentDescriptionString;
+                if (this.SelectedComponent is not null)
+                {
+                    this.SelectedComponentTitle = this.SelectedComponent.ComponentType.GetDescription();
+                    this.SelectedComponentDescription = this.SelectedComponent.ComponentDescriptionString;
+                }
             }
         }
 
         public void OnAddComponentExecute()
         {
-            base.EventAggregator.GetEvent<ComponentAddedEvent>().Publish(this.SelectedComponent);
+            if (this.SelectedComponent is not null)
+            {
+                base.EventAggregator?.GetEvent<ComponentAddedEvent>().Publish(this.SelectedComponent);
+            }
         }
 
         public void OnFinishedAddingComponentsExecute()
         {
-            var view = this.RegionManager.Regions[UiRegions.ContentRegion].ActiveViews.Single();
-            this.RegionManager.Regions[UiRegions.ContentRegion].Deactivate(view);
-            this.RegionManager.Regions[UiRegions.ContentRegion].Remove(view);
+            var view = this.RegionManager?.Regions[UiRegions.ContentRegion].ActiveViews.Single();
+            if (view != null)
+            {
+                this.RegionManager?.Regions[UiRegions.ContentRegion].Deactivate(view);
+                this.RegionManager?.Regions[UiRegions.ContentRegion].Remove(view);
+            }
 
-            base.EventAggregator.GetEvent<EditingComponentsCompletedEvent>().Publish();
+            base.EventAggregator?.GetEvent<EditingComponentsCompletedEvent>().Publish();
         }
 
         #endregion

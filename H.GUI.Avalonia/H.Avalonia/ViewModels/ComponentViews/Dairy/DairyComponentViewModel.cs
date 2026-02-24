@@ -265,52 +265,52 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
         /// <summary>
         /// Command to add a new population group to the calf stage
         /// </summary>
-        public ICommand AddCalfGroupCommand { get; private set; }
-        
+        public ICommand AddCalfGroupCommand { get; private set; } = null!;
+
         /// <summary>
         /// Command to add a new population group to the heifer stage
         /// </summary>
-        public ICommand AddHeiferGroupCommand { get; private set; }
-        
+        public ICommand AddHeiferGroupCommand { get; private set; } = null!;
+
         /// <summary>
         /// Command to add a new population group to the lactating stage
         /// </summary>
-        public ICommand AddLactatingGroupCommand { get; private set; }
-        
+        public ICommand AddLactatingGroupCommand { get; private set; } = null!;
+
         /// <summary>
         /// Command to add a new population group to the dry stage
         /// </summary>
-        public ICommand AddDryGroupCommand { get; private set; }
-        
+        public ICommand AddDryGroupCommand { get; private set; } = null!;
+
         /// <summary>
         /// Command to remove a population group from any stage
         /// </summary>
-        public ICommand RemoveGroupCommand { get; private set; }
+        public ICommand RemoveGroupCommand { get; private set; } = null!;
 
         /// <summary>
         /// Command to add a new management practice to the calf stage
         /// </summary>
-        public ICommand AddCalfManagementPracticeCommand { get; private set; }
+        public ICommand AddCalfManagementPracticeCommand { get; private set; } = null!;
 
         /// <summary>
         /// Command to add a new management practice to the heifer stage
         /// </summary>
-        public ICommand AddHeiferManagementPracticeCommand { get; private set; }
+        public ICommand AddHeiferManagementPracticeCommand { get; private set; } = null!;
 
         /// <summary>
         /// Command to add a new management practice to the lactating stage
         /// </summary>
-        public ICommand AddLactatingManagementPracticeCommand { get; private set; }
+        public ICommand AddLactatingManagementPracticeCommand { get; private set; } = null!;
 
         /// <summary>
         /// Command to add a new management practice to the dry stage
         /// </summary>
-        public ICommand AddDryManagementPracticeCommand { get; private set; }
+        public ICommand AddDryManagementPracticeCommand { get; private set; } = null!;
 
         /// <summary>
         /// Command to remove a management practice from any stage
         /// </summary>
-        public ICommand RemoveManagementPracticeCommand { get; private set; }
+        public ICommand RemoveManagementPracticeCommand { get; private set; } = null!;
         
         /// <summary>
         /// Gets or sets the currently selected calf group for management configuration.
@@ -640,10 +640,10 @@ namespace H.Avalonia.ViewModels.ComponentViews.Dairy
             if (group is null || SelectedDairyComponentDto is null) return;
             
             // Check if we're removing the currently selected group
-            bool wasSelectedCalf = group == SelectedCalfGroup;
-            bool wasSelectedHeifer = group == SelectedHeiferGroup;
-            bool wasSelectedLactating = group == SelectedLactatingGroup;
-            bool wasSelectedDry = group == SelectedDryGroup;
+            bool wasSelectedCalf = Equals(group, SelectedCalfGroup);
+            bool wasSelectedHeifer = Equals(group, SelectedHeiferGroup);
+            bool wasSelectedLactating = Equals(group, SelectedLactatingGroup);
+            bool wasSelectedDry = Equals(group, SelectedDryGroup);
             
             // Try to remove from each collection
             var removed = SelectedDairyComponentDto.CalfPopulationGroups.Remove(group) ||

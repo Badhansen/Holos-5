@@ -222,7 +222,7 @@ namespace H.Avalonia.ViewModels.OptionsViews.DataTransferObjects
             }
             if (total == 100.00)
             {
-                RemoveError(e.PropertyName);
+                if (e.PropertyName != null) RemoveError(e.PropertyName);
             }
         }
         #endregion

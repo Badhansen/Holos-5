@@ -32,7 +32,7 @@ public class ComponentItemViewModel : ModelBase
     /// <summary>
     /// Indicates whether this component is currently selected in the UI
     /// </summary>
-    public bool IsSelected
+    public new bool IsSelected
     {
         get => _isSelected;
         set => SetProperty(ref _isSelected, value);

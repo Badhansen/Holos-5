@@ -57,8 +57,8 @@ public class MyComponentsViewModel : ViewModelBase
         SetSelectedComponentCommand = new DelegateCommand<object>(OnSetSelectedComponentExecute);
         RemoveSpecificComponentCommand = new DelegateCommand<object>(OnRemoveSpecificComponentExecute);
         
-        base.EventAggregator.GetEvent<ComponentAddedEvent>().Subscribe(OnComponentAddedEvent);
-        base.EventAggregator.GetEvent<EditingComponentsCompletedEvent>().Subscribe(OnEditingComponentsCompletedEvent);
+        base.EventAggregator?.GetEvent<ComponentAddedEvent>().Subscribe(OnComponentAddedEvent);
+        base.EventAggregator?.GetEvent<EditingComponentsCompletedEvent>().Subscribe(OnEditingComponentsCompletedEvent);
     }
 
     #endregion
@@ -109,9 +109,9 @@ public class MyComponentsViewModel : ViewModelBase
         set => SetProperty(ref _selectedFarm, value);
     }
 
-    public DelegateCommand RemoveComponent { get; }
-    public DelegateCommand<object> SetSelectedComponentCommand { get; set; }
-    public DelegateCommand<object> RemoveSpecificComponentCommand { get; set; }
+    public DelegateCommand RemoveComponent { get; } = null!;
+    public DelegateCommand<object> SetSelectedComponentCommand { get; set; } = null!;
+    public DelegateCommand<object> RemoveSpecificComponentCommand { get; set; } = null!;
 
     #endregion
 
@@ -123,7 +123,7 @@ public class MyComponentsViewModel : ViewModelBase
         this.InitializeViewModel();
     }
 
-    public void InitializeViewModel()
+    public override void InitializeViewModel()
     {
         if (!base.IsInitialized && base.ActiveFarm is not null)
         {
@@ -172,15 +172,21 @@ public class MyComponentsViewModel : ViewModelBase
                 var componentToRemove = componentItem.Component;
 
                 // Remove from the local collections
-                this.MyComponents.Remove(componentToRemove);
+                if (componentToRemove is not null)
+                {
+                    this.MyComponents.Remove(componentToRemove);
+                }
                 this.MyComponentItems.Remove(componentItem);
                 componentItem.Cleanup(); // Cleanup the wrapper
-                
+
                 // Remove from the farm's Components collection
-                base.ActiveFarm?.Components.Remove(componentToRemove);
+                if (componentToRemove is not null)
+                {
+                    base.ActiveFarm?.Components.Remove(componentToRemove);
+                }
 
                 // If the removed component was selected, select another component
-                if (this.SelectedComponent == componentToRemove)
+                if (this.SelectedComponent is not null && Equals(this.SelectedComponent, componentToRemove))
                 {
                     this.SelectedComponent = this.MyComponents.LastOrDefault();
                 }
@@ -205,19 +211,19 @@ public class MyComponentsViewModel : ViewModelBase
     {
         foreach (var item in this.MyComponentItems)
         {
-            item.IsSelected = item.Component == selectedComponent;
+            item.IsSelected = Equals(item.Component, selectedComponent);
         }
         
         // Also update the SelectedComponentItem to match
-        this.SelectedComponentItem = this.MyComponentItems.FirstOrDefault(x => x.Component == selectedComponent);
+        this.SelectedComponentItem = this.MyComponentItems.FirstOrDefault(x => Equals(x.Component, selectedComponent));
     }
 
     public void OnEditComponentsExecute()
     {
-        var activeViews = this.RegionManager.Regions[UiRegions.ContentRegion].ActiveViews;
+        var activeViews = this.RegionManager?.Regions[UiRegions.ContentRegion].ActiveViews;
         if (activeViews != null && activeViews.All(x => x.GetType() != typeof(ChooseComponentsView)))
         {
-            this.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(ChooseComponentsView));
+            this.RegionManager?.RequestNavigate(UiRegions.ContentRegion, nameof(ChooseComponentsView));
         }
     }
 
@@ -227,7 +233,7 @@ public class MyComponentsViewModel : ViewModelBase
         {
             // Store the component to remove since the SelectedComponent will be null after removal from the local collection
             var componentToRemove = this.SelectedComponent;
-            var componentItemToRemove = this.MyComponentItems.FirstOrDefault(x => x.Component == componentToRemove);
+            var componentItemToRemove = this.MyComponentItems.FirstOrDefault(x => Equals(x.Component, componentToRemove));
 
             // Remove from the local collections
             this.MyComponents.Remove(componentToRemove);
@@ -275,17 +281,17 @@ public class MyComponentsViewModel : ViewModelBase
     }
 
     public void OnOptionsExecute()
-    {  
-        base.RegionManager.RequestNavigate(UiRegions.SidebarRegion, nameof(Views.OptionsViews.OptionsView));
-        base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(Views.OptionsViews.SelectOptionView));
+    {
+        base.RegionManager?.RequestNavigate(UiRegions.SidebarRegion, nameof(Views.OptionsViews.OptionsView));
+        base.RegionManager?.RequestNavigate(UiRegions.ContentRegion, nameof(Views.OptionsViews.SelectOptionView));
     }
 
     private void OnPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if (e.PropertyName.Equals(nameof(this.SelectedComponent)))
+        if (e.PropertyName != null && e.PropertyName.Equals(nameof(this.SelectedComponent)))
         {
             System.Diagnostics.Debug.WriteLine($"{SelectedComponent} has been selected");
-            var isInEditMode = this.RegionManager.Regions[UiRegions.ContentRegion].ActiveViews.Any(x => x.GetType() == typeof(ChooseComponentsView));
+            var isInEditMode = this.RegionManager?.Regions[UiRegions.ContentRegion].ActiveViews.Any(x => x.GetType() == typeof(ChooseComponentsView)) ?? false;
             if (!isInEditMode)
             {
                 
@@ -302,11 +308,11 @@ public class MyComponentsViewModel : ViewModelBase
     private void ClearActiveView()
     {
         // Clear current view
-        var activeView = this.RegionManager.Regions[UiRegions.ContentRegion].ActiveViews.SingleOrDefault();
+        var activeView = this.RegionManager?.Regions[UiRegions.ContentRegion].ActiveViews.SingleOrDefault();
         if (activeView != null)
         {
-            this.RegionManager.Regions[UiRegions.ContentRegion].Deactivate(activeView);
-            this.RegionManager.Regions[UiRegions.ContentRegion].Remove(activeView);
+            this.RegionManager?.Regions[UiRegions.ContentRegion].Deactivate(activeView);
+            this.RegionManager?.Regions[UiRegions.ContentRegion].Remove(activeView);
         }
     }
 
@@ -318,7 +324,7 @@ public class MyComponentsViewModel : ViewModelBase
             var viewName = ComponentTypeToViewTypeMapper.GetViewName(this.SelectedComponent);
 
             var navigationParameters = new NavigationParameters { { GuiConstants.ComponentKey, this.SelectedComponent } };
-            this.RegionManager.RequestNavigate(UiRegions.ContentRegion, viewName, navigationParameters);
+            this.RegionManager?.RequestNavigate(UiRegions.ContentRegion, viewName, navigationParameters);
         }
     }
 

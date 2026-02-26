@@ -121,7 +121,7 @@ namespace H.Avalonia.Services
             InputValidation(street, municipality, postalCode, county, country);
             street = PrepareStreetStringForApi(street);
             // If no cached data, get data from Nominatim API and cache it.
-            string content = this.GetCachedData(street, municipality, province, postalCode, county, country);
+            string? content = this.GetCachedData(street, municipality, province, postalCode, county, country);
             if (string.IsNullOrWhiteSpace(content))
             {
                 content = await GetAndCacheNominatimData(street, municipality, province, postalCode, county, country);
@@ -146,15 +146,19 @@ namespace H.Avalonia.Services
         /// <param name="county">The county of the address to geocode and get coordinates</param>
         /// <param name="country">The country of the address to geocode and get coordinates for, defaults to Canada.</param>
         /// <returns>JObject containing all the data returned from the Nominatim API for the given address</returns>
-        public async Task <JObject> GetApiContent(string street, string municipality, Province province, string postalCode, string? county = null, string country = "Canada")
+        public async Task <JObject?> GetApiContent(string street, string municipality, Province province, string postalCode, string? county = null, string country = "Canada")
         {
             InputValidation(street, municipality, postalCode, county, country);
             street = PrepareStreetStringForApi(street);
             // If no cached data, get data from Nominatim API and cache it.
-            string content = this.GetCachedData(street, municipality, province, postalCode, county, country);
+            string? content = this.GetCachedData(street, municipality, province, postalCode, county, country);
             if (string.IsNullOrWhiteSpace(content))
             {
                 content = await GetAndCacheNominatimData(street, municipality, province, postalCode, county, country);
+            }
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return null;
             }
             return JArray.Parse(content).FirstOrDefault() as JObject;
         }
@@ -268,7 +272,7 @@ namespace H.Avalonia.Services
         /// <param name="county">The county used in the api call</param>
         /// <param name="country">The country used in the api call</param>
         /// <returns>A JSON string containing the geocoding data for the specified address if the API call is successful; otherwise, returns null.</returns>
-        private async Task<string> GetAndCacheNominatimData(string street, string municipality, Province province, string postalCode, string? county, string country)
+        private async Task<string?> GetAndCacheNominatimData(string street, string municipality, Province province, string postalCode, string? county, string country)
         {
             // Check if request is locked out due to previous request being made too recently
             if (((DateTime.Now - _lastApiRequestTime).TotalSeconds < ApiLockoutSeconds))
@@ -288,7 +292,7 @@ namespace H.Avalonia.Services
             }
 
             string apiUrl = GetCorrectApiUrl(street, municipality, province, postalCode, county, country);
-            string content = null;
+            string? content = null;
             try 
             {
                 // Run a task that forces the Nominatim API to timeout if the timeout property isn't able to gracefully time out the API call. If the API
@@ -389,7 +393,7 @@ namespace H.Avalonia.Services
         /// <param name="county">The county used in the naming of the cache file to be retrieved</param>
         /// <param name="country">The country used in the naming of the cache file to be retrieved, defaults to Canada.</param>
         /// <returns>Returns JSON array in string format from a previous Nominatim API call.</returns>
-        private string GetCachedData(string street, string municipality, Province province, string postalCode, string? county, string country)
+        private string? GetCachedData(string street, string municipality, Province province, string postalCode, string? county, string country)
         {
             var path = GetCachePath(street, municipality, province, postalCode, county, country);
             if (File.Exists(path))
@@ -425,10 +429,10 @@ namespace H.Avalonia.Services
         private (double latitude, double longitude) ParseNominatimApiContentForCoordinates(string content)
         {
             // Initially read as JArray since Nominatim returns an array of one JSON object.
-            JObject jObject = JArray.Parse(content).FirstOrDefault() as JObject;
+            JObject? jObject = JArray.Parse(content).FirstOrDefault() as JObject;
             // Access properties from the JObject
-            var lat = double.Parse(jObject["lat"]?.ToString());
-            var lon = double.Parse(jObject["lon"]?.ToString());
+            var lat = double.Parse(jObject?["lat"]?.ToString() ?? "0");
+            var lon = double.Parse(jObject?["lon"]?.ToString() ?? "0");
             return (latitude: lat, longitude: lon);
         }
 
@@ -445,7 +449,7 @@ namespace H.Avalonia.Services
             street = InputValidation(street, InputValidationType.Address);
             municipality = InputValidation(municipality, InputValidationType.Municipality);
             postalCode = InputValidation(postalCode, InputValidationType.PostalCode);
-            county = InputValidation(county, InputValidationType.County);
+            county = InputValidation(county ?? string.Empty, InputValidationType.County);
             country = InputValidation(country, InputValidationType.Country);
         }
 

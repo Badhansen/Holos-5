@@ -1520,7 +1520,7 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     /// <summary>
     /// Handles collection changes for calf groups
     /// </summary>
-    private void OnCalfGroupsCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    private void OnCalfGroupsCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         // Unsubscribe from removed items
         if (e.OldItems != null)
@@ -1552,7 +1552,7 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     /// <summary>
     /// Handles collection changes for heifer groups
     /// </summary>
-    private void OnHeiferGroupsCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    private void OnHeiferGroupsCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         // Unsubscribe from removed items
         if (e.OldItems != null)
@@ -1584,7 +1584,7 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     /// <summary>
     /// Handles collection changes for lactating groups
     /// </summary>
-    private void OnLactatingGroupsCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    private void OnLactatingGroupsCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         // Unsubscribe from removed items
         if (e.OldItems != null)
@@ -1616,7 +1616,7 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     /// <summary>
     /// Handles collection changes for dry groups
     /// </summary>
-    private void OnDryGroupsCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    private void OnDryGroupsCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         // Unsubscribe from removed items
         if (e.OldItems != null)
@@ -1648,7 +1648,7 @@ public class DairyComponentDto : AnimalComponentDto, IDairyComponentDto
     /// <summary>
     /// Handles property changes on individual population groups
     /// </summary>
-    private void OnGroupPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void OnGroupPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         // When a group's NumberOfAnimals changes, recalculate totals
         if (e.PropertyName == nameof(DairyPopulationGroup.NumberOfAnimals))

@@ -13,8 +13,8 @@ namespace H.Avalonia.Services
     {
         #region Fields
 
-        private WindowNotificationManager _notificationManager;
-        private readonly ILogger _logger;
+        private WindowNotificationManager _notificationManager = null!;
+        private readonly ILogger _logger = null!;
         private bool _isInitialized = false;
         // ConcurrentBag used over list as it avoids potential issues introduced by async timer for notification expirations
         // Bag used over queue as some notifications have greater lifespan
@@ -122,7 +122,7 @@ namespace H.Avalonia.Services
             // Remove notification from collection once timer expires
             Task.Delay(notification.Expiration).ContinueWith(x =>
             {
-                _activeNotifications.TryTake(out Notification discard);
+                _activeNotifications.TryTake(out Notification? discard);
             });
         }
 

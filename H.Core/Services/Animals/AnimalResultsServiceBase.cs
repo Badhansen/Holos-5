@@ -84,10 +84,10 @@ namespace H.Core.Services.Animals
             var animalGroupEmissionResult = new AnimalGroupEmissionResults();
             animalGroupEmissionResult.AnimalGroup = animalGroup;
 
-            if (managementPeriod.SelectedDiet == null)
+            if (managementPeriod.SelectedDiet == null!)
             {
                 managementPeriod.SelectedDiet = _diets.FirstOrDefault(x =>
-                    x.AnimalType.GetCategory() == managementPeriod.DietGroupType.GetCategory());
+                    x.AnimalType.GetCategory() == managementPeriod.DietGroupType.GetCategory())!;
             }
 
             var monthlyBreakdownForManagementPeriod = AnimalComponentHelper.GetMonthlyBreakdownFromManagementPeriod(managementPeriod);
@@ -140,10 +140,10 @@ namespace H.Core.Services.Animals
 
             foreach (var managementPeriod in animalGroup.ManagementPeriods)
             {
-                if (managementPeriod.SelectedDiet == null)
+                if (managementPeriod.SelectedDiet == null!)
                 {
                     managementPeriod.SelectedDiet = _diets.FirstOrDefault(x =>
-                        x.AnimalType.GetCategory() == managementPeriod.DietGroupType.GetCategory());
+                        x.AnimalType.GetCategory() == managementPeriod.DietGroupType.GetCategory())!;
                 }
 
                 var monthlyBreakdownForManagementPeriod = AnimalComponentHelper.GetMonthlyBreakdownFromManagementPeriod(managementPeriod);

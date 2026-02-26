@@ -23,9 +23,9 @@ namespace H.Avalonia.ViewModels.SupportingViews.Disclaimer
         private string _disclaimerText;
         private string _versionString;
 
-        private DelegateCommand<object> _okCommand;
+        private DelegateCommand<object> _okCommand = null!;
 
-        private readonly ICountrySettings _countrySettings;
+        private readonly ICountrySettings _countrySettings = null!;
 
         #endregion
 
@@ -56,7 +56,7 @@ namespace H.Avalonia.ViewModels.SupportingViews.Disclaimer
         #endregion
 
         #region Properties
-        public ObservableCollection<Languages> LanguageCollection { get; set; }
+        public ObservableCollection<Languages> LanguageCollection { get; set; } = null!;
 
         public Languages SelectedLanguage
         {
@@ -110,7 +110,7 @@ namespace H.Avalonia.ViewModels.SupportingViews.Disclaimer
 
         #region Public Methods
 
-        public new void Construct()
+        public void Construct()
         {
             this.UpdateDisplay();
             this.VersionString = GuiConstants.GetVersionString();
@@ -178,7 +178,7 @@ namespace H.Avalonia.ViewModels.SupportingViews.Disclaimer
         private void OnOkExecute(object obj)
         {                                        
             // Navigate to next view
-            base.RegionManager.RequestNavigate(UiRegions.ContentRegion, nameof(Views.SupportingViews.Start.StartView));
+            base.RegionManager?.RequestNavigate(UiRegions.ContentRegion, nameof(Views.SupportingViews.Start.StartView));
         }
 
         private bool OkCanExecute(object arg)
